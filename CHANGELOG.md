@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 [2026-09-16] 프로젝트 기획, 아키텍처 설계, 마일스톤 로드맵 수립 및 깃허브 푸시
+## 📌 [2026-09-16] 프로젝트 기획, 아키텍처 설계, GitHub Native Milestones 구축 및 원격 푸시
 
 ### 💡 1. 기획 및 필요성 수치화 (Business Rationale & ROI Analysis)
 - **HR 페인포인트 정량 분석**: 공고 1개당 380~500건 접수 ➔ 인사담당자 1명이 검토에 **80~100시간 소요** 문제 정의.
@@ -22,12 +22,12 @@
 
 ---
 
-### 🎯 3. 5단계 프로젝트 마일스톤 및 개발 로드맵 작성 ([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))
-- **Milestone 1 (`v1.0.0`) [완료]**: Core Grounding Engine & HR Dashboard (8대 UI 컴포넌트, Gemini API 연동).
-- **Milestone 2 (`v1.1.0`)**: Web Worker 파싱 분리 (Issue #1 해소) & Vitest 단위 테스트 추가.
-- **Milestone 3 (`v1.2.0`)**: Fuzzy Matching 매칭 엔진 (Issue #2 해소) & Client-side PII 익명화 필터 (Issue #3 해소).
-- **Milestone 4 (`v1.3.0`)**: PDF/TXT 일괄 업로드 파이프라인 & IndexedDB 캐싱 (Issue #4 해소).
-- **Milestone 5 (`v2.0.0`)**: Enterprise Custom Prompt Studio & 자소서 간 표절 매트릭스.
+### 🎯 3. GitHub Native Milestones & 이슈 연동 구축 ([https://github.com/jcm0314/CapStone-SW-/milestones](https://github.com/jcm0314/CapStone-SW-/milestones))
+- **[Milestone 1] `v1.0.0`** [완료 ✓]: Core Grounding Engine & HR Dashboard ([마일스톤 #1 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/1)).
+- **[Milestone 2] `v1.1.0`**: Web Worker 파싱 분리 & 테스트 구축 ([마일스톤 #2 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/2)) ➔ [이슈 #1](https://github.com/jcm0314/CapStone-SW-/issues/1) 연동.
+- **[Milestone 3] `v1.2.0`**: Fuzzy Matching 엔진 & PII 마스킹 ([마일스톤 #3 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/3)) ➔ [이슈 #2](https://github.com/jcm0314/CapStone-SW-/issues/2), [이슈 #3](https://github.com/jcm0314/CapStone-SW-/issues/3) 연동.
+- **[Milestone 4] `v1.3.0`**: PDF/TXT 일괄 업로드 & IndexedDB 캐싱 ([마일스톤 #4 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/4)) ➔ [이슈 #4](https://github.com/jcm0314/CapStone-SW-/issues/4) 연동.
+- **[Milestone 5] `v2.0.0`**: Custom Prompt Studio & 표절 매트릭스 ([마일스톤 #5 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/5)).
 
 ---
 
@@ -43,17 +43,19 @@
 
 ---
 
-### 📚 6. 깃허브 레포지토리 문서화 & 1기능 1커밋 체계 수립
-- **입문자 친화적 [README.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/README.md) 개편**: 프로젝트 필요성, 5대 기능, 수치 ROI, 마일스톤 로드맵 반영.
-- **[docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 작성**: 4대 주요 기술 병목 이슈화 및 `.github/ISSUE_TEMPLATE/` 반영.
+### 📚 6. 깃허브 레포지토리 문서화 & 1기능 1커밋 & 한글 커밋 체계 수립
+- **입문자 친화적 [README.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/README.md) 개편**: GitHub Native Milestones 링크, 프로젝트 필요성, 5대 기능, 수치 ROI, 마일스톤 로드맵 반영.
+- **[docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 및 GitHub Native Issues 생성**: 4대 주요 기술 병목 이슈화 및 마일스톤 연결.
 - **[docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md) 수립**: 탑티어 기업 7대 엔지니어링 표준 수립 및 `.github/PULL_REQUEST_TEMPLATE.md` 등록.
-- **1기능 1커밋 준수 및 깃허브 푸시**: [https://github.com/jcm0314/CapStone-SW-.git](https://github.com/jcm0314/CapStone-SW-.git) 원격 저장소 동기화 완수.
+- **1기능 1커밋 & 한글 커밋 준수 및 깃허브 푸시**: [https://github.com/jcm0314/CapStone-SW-.git](https://github.com/jcm0314/CapStone-SW-.git) 원격 저장소 동기화 완수.
 
 ---
 
 ### 📜 커밋 히스토리 (2026-09-16)
 
 ```bash
+* 5d2a0ee docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트
+* 004ab3b docs: add MILESTONES.md for 5-phase product roadmap & task tracking
 * 7329935 docs: add CHANGELOG.md for daily work log tracking
 * 3630c1f docs: add ENTERPRISE_GUIDELINES.md & pull request template
 * 3404d61 docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template

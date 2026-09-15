@@ -23,7 +23,7 @@
 - [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
 - [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
 - [11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#11--날짜별-작업-일지-daily-work-log--changelog)
-- [12. 🎯 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#12--프로젝트-마일스톤-및-로드맵-milestones--roadmap)
+- [12. 🎯 GitHub Native Milestones & 로드맵 (Milestones & Roadmap)](#12--github-native-milestones--로드맵-milestones--roadmap)
 
 ---
 
@@ -98,15 +98,6 @@ graph TD
 
 본 프로젝트는 코드 리뷰 및 명확한 작업 추적을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 및 **"모든 커밋 메시지는 한글로 작성"**하는 원칙을 준수합니다.
 
-### 📌 Commit Message Format (한글 규정)
-```
-<type>: <한글 기능/문서 설명>
-
-- 세부 변경 및 작업 내역 요약 (한글)
-```
-
-- 예시: `docs: 한글 커밋 메시지 규칙 및 엔지니어링 표준 반영`
-
 ---
 
 ## 6. 🚀 1분 만에 실행해보기 (Quick Start)
@@ -157,6 +148,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: 깃허브 네이티브 마일스톤 및 연동 이슈 등록` | 깃허브 네이티브 마일스톤(5개) 및 이슈(#1~#4) 생성 및 링크 연결 |
 | `docs` | `docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트` | 향후 모든 커밋 메시지를 한글로 작성하는 규칙 명시 및 문서 업데이트 |
 | `docs` | `docs: add MILESTONES.md for 5-phase product roadmap & task tracking` | 5단계 마일스톤 및 과제 로드맵 문서 MILESTONES.md 작성 |
 | `docs` | `docs: add CHANGELOG.md for daily work log tracking` | 날짜별 진행 작업, 구현 기능 및 기획/아키텍처 기록 문서 CHANGELOG.md 생성 |
@@ -185,9 +177,16 @@ hr-coverletter-evaluator/
 
 ---
 
-## 12. 🎯 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)
+## 12. 🎯 GitHub Native Milestones & 로드맵 (Milestones & Roadmap)
 
-본 프로젝트는 5단계 마일스톤([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))에 따라 체계적으로 발전해 나갑니다.
+본 프로젝트는 **[GitHub Native Milestones 페이지](https://github.com/jcm0314/CapStone-SW-/milestones)**에서 5단계 마일스톤 및 깃허브 이슈 진행 상황을 실시간으로 추적합니다:
+
+- 🔗 **GitHub Milestones 실시간 모니터링**: [https://github.com/jcm0314/CapStone-SW-/milestones](https://github.com/jcm0314/CapStone-SW-/milestones)
+- 📍 **Milestone 1 (`v1.0.0`)**: Core Grounding Engine & HR Dashboard [[마일스톤 #1 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/1)] (완료 ✓)
+- 📍 **Milestone 2 (`v1.1.0`)**: Web Worker 성능 최적화 & 테스트 구축 [[마일스톤 #2 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/2)] (이슈 #1 연동)
+- 📍 **Milestone 3 (`v1.2.0`)**: Fuzzy Matching 엔진 & PII 마스킹 [[마일스톤 #3 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/3)] (이슈 #2, #3 연동)
+- 📍 **Milestone 4 (`v1.3.0`)**: PDF/TXT 일괄 업로드 & IndexedDB 캐싱 [[마일스톤 #4 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/4)] (이슈 #4 연동)
+- 📍 **Milestone 5 (`v2.0.0`)**: Enterprise Custom Prompt Studio & 표절 매트릭스 [[마일스톤 #5 바로가기](https://github.com/jcm0314/CapStone-SW-/milestone/5)]
 
 ---
 
