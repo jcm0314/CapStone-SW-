@@ -20,6 +20,7 @@
 - [6. 🚀 1분 만에 실행해보기 (Quick Start)](#6--1분-만에-실행해보기-quick-start)
 - [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
 - [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
+- [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
 
 ---
 
@@ -101,13 +102,6 @@ graph TD
 - Summary of changes made for this specific feature
 ```
 
-### 🏷️ Commit Types
-- `feat`: 새로운 기능 구현 (예: `feat: add evidence highlighter component`)
-- `fix`: 버그 수정 (예: `fix: resolve score calculation overflow`)
-- `docs`: 문서 및 README 수정 (예: `docs: update README with new commit guidelines`)
-- `style`: UI 스타일 및 CSS 수정 (예: `style: apply glassmorphism dark theme`)
-- `refactor`: 코드 리팩토링 (예: `refactor: optimize string exact matching performance`)
-
 ---
 
 ## 6. 🚀 1분 만에 실행해보기 (Quick Start)
@@ -125,10 +119,6 @@ npm run dev
 ```
 브라우저에서 `http://localhost:3000` 접속 시 즉시 확인 가능합니다.
 
-### 3) Gemini API Key 설정 (선택 사항)
-- 상단 헤더의 ⚙️ **API Key 설정** 버튼을 눌러 본인의 Gemini API Key를 입력하면 실시간 AI 분석이 작동합니다.
-- API Key가 없어도 내장된 4가지 테스트 샘플 지원자 데이터로 모든 기능을 완성도 높게 체험할 수 있습니다.
-
 ---
 
 ## 7. 📂 프로젝트 구조 (Directory Structure)
@@ -140,26 +130,19 @@ hr-coverletter-evaluator/
 ├── package.json                       # 의존성 패키지 관리
 ├── vite.config.js                     # Vite 설정 (Port 3000)
 ├── tailwind.config.js                 # Tailwind CSS 다크 브랜드 테마
+├── .github/
+│   └── ISSUE_TEMPLATE/
+│       └── bottleneck_report.md       # GitHub Issue 템플릿
 ├── docs/
-│   └── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
+│   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
+│   └── ISSUES.md                      # 👈 기술 병목 및 고려사항 이슈 모음
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
     ├── index.css                      # 커스텀 글래스모피즘 CSS
-    ├── components/
-    │   ├── Header.jsx                 # 헤더 & API Key 설정 모달
-    │   ├── EvaluationCriteria.jsx     # 직무 가중치 슬라이더
-    │   ├── ApplicantInput.jsx         # 서류 입력 & 샘플 버튼
-    │   ├── DashboardSummary.jsx       # 종합 점수 & 레이더 차트
-    │   ├── EvidenceViewer.jsx         # 본문 문장별 근거 하이라이터
-    │   ├── InterviewQuestions.jsx      # 맞춤형 면접 질문 카드
-    │   ├── ApplicantComparison.jsx     # 지원자 비교 매트릭스
-    │   └── ReportExporter.jsx         # HR 서류 평가서 출력 모달
-    ├── data/
-    │   ├── jobTemplates.js            # 직무별 가중치 템플릿
-    │   └── sampleApplicants.js        # 사전 정의 지원자 시나리오 데이터
-    └── services/
-        └── aiEvaluator.js             # Gemini API & Grounding 엔진
+    ├── components/                    # 8대 UI 컴포넌트 모음
+    ├── data/                          # 직무 템플릿 및 샘플 지원자
+    └── services/                      # Gemini API & Grounding 엔진
 ```
 
 ---
@@ -168,8 +151,20 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template` | 성능 병목, AI Grounding 한계, PII 보안 및 Rate Limit 이슈 정의 및 템플릿 작성 |
 | `docs` | `docs: update README.md for first-time readers & 1-feature 1-commit rule` | 처음 보는 독자를 위한 쉬운 프로젝트 설명 및 1기능 1커밋 규칙 명시 |
 | `feat` | `feat: initialize HR AX Smart Evaluator project with docs, architecture, and React app` | 전체 프로젝트 구조, 분석 엔진, 8대 UI 컴포넌트 및 기본 문서 초기화 |
+
+---
+
+## 9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)
+
+상세한 병목 분석 및 고려사항은 [docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 파일에서 확인할 수 있으며, 다음과 같은 핵심 기술 과제를 관리하고 있습니다:
+
+1. 🔴 **[Issue #1] 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목** ➔ `Web Worker` 및 `Virtual Scrolling` 도입 예정
+2. 🔴 **[Issue #2] Exact Substring Matching의 줄바꿈/오타 미스매치 한계** ➔ `Fuzzy Matching(Levenshtein)` & `Index Mapping` 구상
+3. 🟡 **[Issue #3] 채용 서류 내 개인식별정보(PII) AI API 전송 전 마스킹 처리** ➔ `Client-side PII Anonymizer Filter` 구상
+4. 🟡 **[Issue #4] Gemini API Rate Limit (HTTP 429) 대처 및 Caching 레이어** ➔ `Async Throttling Queue` & `IndexedDB Caching` 구상
 
 ---
 
