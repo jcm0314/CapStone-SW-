@@ -119,7 +119,7 @@ npm run dev
 hr-coverletter-evaluator/
 ├── README.md                          # 👈 이 문서 (지속 업데이트)
 ├── CHANGELOG.md                       # 날짜별 작업 일지 및 체인지로그
-├── presentation.html                  # 👈 6대 목처 포함 중간 발표용 프리미엄 HTML
+├── presentation.html                  # 👈 핵심 키워드 중심 고가독성 발표용 HTML
 ├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
 ├── package.json                       # 의존성 패키지 관리
 ├── vite.config.js                     # Vite 설정 (Port 3000)
@@ -146,6 +146,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `refactor` | `refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편` | 텍스트 축소, 수치 지표 수직 강조, 키워드 중심 카드 UI로 발표 가독성 대폭 향상 |
 | `feat` | `feat: 6대 목차 포함 중간 발표용 presentation.html 작성` | 문제정의, 사용자, 핵심가치, 실현가능성, 시스템설명, GitHub링크 포함 HTML 발표 웹페이지 제작 |
 | `docs` | `docs: README.md에 구글 Gemini API Key 발급 안내 추가` | 구글 AI 스튜디오 링크 및 30초 발급 가이드 작성 |
 | `docs` | `docs: 마일스톤 및 스프린트 세부 일정표 구체화` | 5대 마일스톤을 스프린트(Sprint) 및 태스크(Task) 단위로 디테일 세분화 |
@@ -186,13 +187,7 @@ hr-coverletter-evaluator/
 
 ## 13. 🎤 프로젝트 중간 진행사항 발표 페이지 (Presentation HTML)
 
-프로젝트 발표 및 중간 보고를 위해 제작된 프리미엄 HTML웹 페이지 [presentation.html](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/presentation.html)은 다음 6가지 목차를 포함합니다:
-1. **문제 정의**: 서류 검토 80시간 피로도, AI 자소서 범람, Bad Hire 3,500만 원 손실
-2. **사용자**: 기업 HR 박현우 팀장, 리크루터 김서연 페르소나 및 니즈
-3. **핵심 가치**: Grounding Evidence 분리, 설명 가능한 점수, 서류-면접 파이프라인
-4. **실현 가능성**: 서류 검토 시간 80% 단축 ROI 표 및 기술 스택 검증
-5. **시스템 설명**: 5대 구현 기능 및 React + Gemini AI 아키텍처
-6. **GitHub 링크**: 메인 레포지토리, Native Milestones, Native Issues 및 문서 링크
+프로젝트 발표 및 중간 보고를 위해 제작된 프리미엄 HTML웹 페이지 [presentation.html](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/presentation.html)은 핵심 키워드와 큰 수치 지표 중심으로 개편되어 고가독성 발표를 지원합니다.
 
 ---
 

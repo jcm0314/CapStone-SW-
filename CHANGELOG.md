@@ -6,15 +6,15 @@
 
 ## 📌 [2026-09-16] 프로젝트 기획, 아키텍처 설계, 발표용 HTML 제작 및 깃허브 원격 동기화
 
-### 🎤 1. 6대 목차 포함 중간 발표용 프리미엄 HTML 제작 (`presentation.html`)
-- **요청 반영**: 요청하신 6가지 필수 목차(1. 문제 정의, 2. 사용자, 3. 핵심 가치, 4. 실현 가능성, 5. 시스템 설명, 6. GitHub 링크)를 포함하는 글래스모피즘 프리미엄 발표 전용 웹 페이지 제작.
-- **주요 내용**:
-  - `01. 문제 정의`: 80시간 서류 검토 피로도, AI 자소서 범람, Bad Hire 손실 카드.
-  - `02. 사용자`: 기업 HR 박현우 팀장 및 에이전시 리크루터 김서연 페르소나.
-  - `03. 핵심 가치`: Grounding Evidence, 설명 가능성, 서류-면접 단절 해소.
-  - `04. 실현 가능성`: 서류 검토 80% 단축 ROI 정량 표.
-  - `05. 시스템 설명`: 5대 구현 기능 및 React + Gemini AI 스택.
-  - `06. GitHub 링크`: 메인 저장소, Native Milestones, Native Issues 바로가기.
+### 🎤 1. 키워드 중심 고가독성 중간 발표용 HTML 개편 (`presentation.html`)
+- **요청 반영**: 발표 시 텍스트 과다로 인한 가독성 저하를 해결하기 위해 긴 문장을 제거하고 **핵심 키워드, 볼드 지표 수치(`380~500건`, `80시간`, `2.5분`, `80% 절감`), 카드형 비주얼 배지** 위주로 전면 리팩토링.
+- **6대 목차 강조 요소**:
+  - `01. 문제 정의`: 80시간 피로도, 68.4% AI 범람, 3,500만 원/건 손실 지표 수치 강조.
+  - `02. 사용자`: 기업 HR 박현우 팀장 (1초 스크리닝 & 0분 질문), 에이전시 김서연 리크루터 (가중치 조절 & PDF 평가서).
+  - `03. 핵심 가치`: 🟢 Grounding (성과 문장 캡처), 🔍 Explainable AI (원문 근거 100%), 🔗 Pipeline (면접 질문 직결).
+  - `04. 실현 가능성`: 2.5분(80% 단축), 2일(85% 감소), 100%(5배 향상), 0분(자동화) 수치 카드.
+  - `05. 시스템 설명`: 5대 구현 기능 및 React + Gemini AI 기술 스택.
+  - `06. GitHub 링크`: 메인 레포지토리, Native Milestones, Native Issues 연결.
 
 ---
 
@@ -64,16 +64,9 @@
 ### 📜 커밋 히스토리 (2026-09-16)
 
 ```bash
+* e91ead3 feat: 6대 목차 포함 중간 발표용 presentation.html 작성
+* f4eabd7 docs: README.md에 구글 Gemini API Key 발급 안내 추가
 * 7211eb3 docs: 마일스톤 및 스프린트 세부 일정표 구체화
-* a8a60dc docs: 깃허브 네이티브 마일스톤 생성 및 이슈 연동 반영
-* 5d2a0ee docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트
-* 004ab3b docs: add MILESTONES.md for 5-phase product roadmap & task tracking
-* 7329935 docs: add CHANGELOG.md for daily work log tracking
-* 3630c1f docs: add ENTERPRISE_GUIDELINES.md & pull request template
-* 3404d61 docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template
-* c93283b docs: update README.md for first-time readers & 1-feature 1-commit rule
-* 710f137 feat: initialize HR AX Smart Evaluator project with docs, architecture, and React app
-* abbfb52 Initial commit
 ```
 
 ---
