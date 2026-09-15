@@ -21,6 +21,7 @@
 - [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
 - [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
 - [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
+- [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
 
 ---
 
@@ -95,13 +96,6 @@ graph TD
 
 본 프로젝트는 코드 리뷰 및 가독성을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 원칙을 철저히 준수합니다.
 
-### 📌 Commit Message Format
-```
-<type>: <feature description>
-
-- Summary of changes made for this specific feature
-```
-
 ---
 
 ## 6. 🚀 1분 만에 실행해보기 (Quick Start)
@@ -117,7 +111,6 @@ npm install
 ```bash
 npm run dev
 ```
-브라우저에서 `http://localhost:3000` 접속 시 즉시 확인 가능합니다.
 
 ---
 
@@ -131,15 +124,15 @@ hr-coverletter-evaluator/
 ├── vite.config.js                     # Vite 설정 (Port 3000)
 ├── tailwind.config.js                 # Tailwind CSS 다크 브랜드 테마
 ├── .github/
-│   └── ISSUE_TEMPLATE/
-│       └── bottleneck_report.md       # GitHub Issue 템플릿
+│   ├── ISSUE_TEMPLATE/                # GitHub Issue 템플릿
+│   └── PULL_REQUEST_TEMPLATE.md       # PR 표준 템플릿
 ├── docs/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
-│   └── ISSUES.md                      # 👈 기술 병목 및 고려사항 이슈 모음
+│   ├── ENTERPRISE_GUIDELINES.md       # 👈 대기업 엔지니어링 표준 규정
+│   └── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
-    ├── index.css                      # 커스텀 글래스모피즘 CSS
     ├── components/                    # 8대 UI 컴포넌트 모음
     ├── data/                          # 직무 템플릿 및 샘플 지원자
     └── services/                      # Gemini API & Grounding 엔진
@@ -151,6 +144,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: add ENTERPRISE_GUIDELINES.md & pull request template` | 대기업/IT 탑티어 표준 7대 엔지니어링 규정 작성 및 PR 템플릿 반영 |
 | `docs` | `docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template` | 성능 병목, AI Grounding 한계, PII 보안 및 Rate Limit 이슈 정의 및 템플릿 작성 |
 | `docs` | `docs: update README.md for first-time readers & 1-feature 1-commit rule` | 처음 보는 독자를 위한 쉬운 프로젝트 설명 및 1기능 1커밋 규칙 명시 |
 | `feat` | `feat: initialize HR AX Smart Evaluator project with docs, architecture, and React app` | 전체 프로젝트 구조, 분석 엔진, 8대 UI 컴포넌트 및 기본 문서 초기화 |
@@ -159,12 +153,19 @@ hr-coverletter-evaluator/
 
 ## 9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)
 
-상세한 병목 분석 및 고려사항은 [docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 파일에서 확인할 수 있으며, 다음과 같은 핵심 기술 과제를 관리하고 있습니다:
+상세한 병목 분석 및 고려사항은 [docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 파일에서 관리되고 있습니다.
 
-1. 🔴 **[Issue #1] 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목** ➔ `Web Worker` 및 `Virtual Scrolling` 도입 예정
-2. 🔴 **[Issue #2] Exact Substring Matching의 줄바꿈/오타 미스매치 한계** ➔ `Fuzzy Matching(Levenshtein)` & `Index Mapping` 구상
-3. 🟡 **[Issue #3] 채용 서류 내 개인식별정보(PII) AI API 전송 전 마스킹 처리** ➔ `Client-side PII Anonymizer Filter` 구상
-4. 🟡 **[Issue #4] Gemini API Rate Limit (HTTP 429) 대처 및 Caching 레이어** ➔ `Async Throttling Queue` & `IndexedDB Caching` 구상
+---
+
+## 10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)
+
+본 프로젝트는 Google/Naver/Kakao 등 탑티어 기업 수준의 엔지니어링 규정([docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md))을 따릅니다:
+
+1. 🌿 **Git Feature Branch & PR 개발**: `main` 상시 프로덕션 상태 유지, PR 병합 후 배포.
+2. 📝 **Conventional Commits & 1기능 1커밋**: 명확한 커밋 메세지 타입 지정.
+3. 🧪 **자동화 빌드 & CI/CD 검증**: 빌드 무오류 및 린트 통과 필수.
+4. 🛡️ **개인정보(PII) 보안 마스킹**: 서류 내 성명/전화번호 마스킹 선처리.
+5. 📚 **지속적 문서화 (Living Documentation)**: README.md 및 아키텍처 실시간 반영.
 
 ---
 
