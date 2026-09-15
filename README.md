@@ -24,6 +24,7 @@
 - [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
 - [11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#11--날짜별-작업-일지-daily-work-log--changelog)
 - [12. 🎯 디테일 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#12--디테일-프로젝트-마일스톤-및-로드맵-milestones--roadmap)
+- [13. 🎤 프로젝트 중간 진행사항 발표 페이지 (Presentation HTML)](#13--프로젝트-중간-진행사항-발표-페이지-presentation-html)
 
 ---
 
@@ -110,13 +111,6 @@ npm install
 npm run dev
 ```
 
-### 2) 🔑 Google Gemini API Key 무료 발급 받는 방법 (30초)
-1. **[Google AI Studio (aistudio.google.com/app/apikey)](https://aistudio.google.com/app/apikey)** 에 접속하여 구글 계정으로 로그인합니다.
-2. **`Create API key`** 버튼을 클릭하여 무료 API Key를 만듭니다.
-3. 생성된 `AIzaSy...` 형식의 Key를 복사합니다.
-4. 앱 상단 헤더의 ⚙️ **API Key 설정** 버튼을 눌러 붙여넣으면 즉시 실시간 Gemini 2.5/1.5 Flash AI 분석이 작동합니다!
-*(※ Key가 없어도 내장된 4가지 인재 시나리오로 완벽 테스트 가능합니다.)*
-
 ---
 
 ## 7. 📂 프로젝트 구조 (Directory Structure)
@@ -125,6 +119,7 @@ npm run dev
 hr-coverletter-evaluator/
 ├── README.md                          # 👈 이 문서 (지속 업데이트)
 ├── CHANGELOG.md                       # 날짜별 작업 일지 및 체인지로그
+├── presentation.html                  # 👈 6대 목처 포함 중간 발표용 프리미엄 HTML
 ├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
 ├── package.json                       # 의존성 패키지 관리
 ├── vite.config.js                     # Vite 설정 (Port 3000)
@@ -136,7 +131,7 @@ hr-coverletter-evaluator/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
-│   └── MILESTONES.md                  # 5대 마일스톤 및 개발 로드맵
+│   └── MILESTONES.md                  # 5대 세분화 마일스톤 및 개발 로드맵
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
@@ -151,6 +146,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `feat` | `feat: 6대 목차 포함 중간 발표용 presentation.html 작성` | 문제정의, 사용자, 핵심가치, 실현가능성, 시스템설명, GitHub링크 포함 HTML 발표 웹페이지 제작 |
 | `docs` | `docs: README.md에 구글 Gemini API Key 발급 안내 추가` | 구글 AI 스튜디오 링크 및 30초 발급 가이드 작성 |
 | `docs` | `docs: 마일스톤 및 스프린트 세부 일정표 구체화` | 5대 마일스톤을 스프린트(Sprint) 및 태스크(Task) 단위로 디테일 세분화 |
 | `docs` | `docs: 깃허브 네이티브 마일스톤 생성 및 이슈 연동 반영` | 깃허브 네이티브 마일스톤(5개) 및 이슈(#1~#4) 생성 및 링크 연결 |
@@ -185,6 +181,18 @@ hr-coverletter-evaluator/
 ## 12. 🎯 GitHub Native Milestones & 로드맵 (Milestones & Roadmap)
 
 본 프로젝트는 **[GitHub Native Milestones 페이지](https://github.com/jcm0314/CapStone-SW-/milestones)**에서 5단계 마일스톤 및 깃허브 이슈 진행 상황을 실시간으로 추적합니다.
+
+---
+
+## 13. 🎤 프로젝트 중간 진행사항 발표 페이지 (Presentation HTML)
+
+프로젝트 발표 및 중간 보고를 위해 제작된 프리미엄 HTML웹 페이지 [presentation.html](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/presentation.html)은 다음 6가지 목차를 포함합니다:
+1. **문제 정의**: 서류 검토 80시간 피로도, AI 자소서 범람, Bad Hire 3,500만 원 손실
+2. **사용자**: 기업 HR 박현우 팀장, 리크루터 김서연 페르소나 및 니즈
+3. **핵심 가치**: Grounding Evidence 분리, 설명 가능한 점수, 서류-면접 파이프라인
+4. **실현 가능성**: 서류 검토 시간 80% 단축 ROI 표 및 기술 스택 검증
+5. **시스템 설명**: 5대 구현 기능 및 React + Gemini AI 아키텍처
+6. **GitHub 링크**: 메인 레포지토리, Native Milestones, Native Issues 및 문서 링크
 
 ---
 
