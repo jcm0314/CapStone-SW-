@@ -22,6 +22,7 @@
 - [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
 - [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
 - [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
+- [11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#11--날짜별-작업-일지-daily-work-log--changelog)
 
 ---
 
@@ -119,6 +120,7 @@ npm run dev
 ```
 hr-coverletter-evaluator/
 ├── README.md                          # 👈 이 문서 (지속 업데이트)
+├── CHANGELOG.md                       # 👈 날짜별 작업 일지 및 체인지로그
 ├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
 ├── package.json                       # 의존성 패키지 관리
 ├── vite.config.js                     # Vite 설정 (Port 3000)
@@ -128,7 +130,7 @@ hr-coverletter-evaluator/
 │   └── PULL_REQUEST_TEMPLATE.md       # PR 표준 템플릿
 ├── docs/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
-│   ├── ENTERPRISE_GUIDELINES.md       # 👈 대기업 엔지니어링 표준 규정
+│   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
 │   └── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
 └── src/
     ├── main.jsx                       # React 진입점
@@ -144,6 +146,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: add CHANGELOG.md for daily work log tracking` | 날짜별 진행 작업, 구현 기능 및 기획/아키텍처 기록 문서 CHANGELOG.md 생성 |
 | `docs` | `docs: add ENTERPRISE_GUIDELINES.md & pull request template` | 대기업/IT 탑티어 표준 7대 엔지니어링 규정 작성 및 PR 템플릿 반영 |
 | `docs` | `docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template` | 성능 병목, AI Grounding 한계, PII 보안 및 Rate Limit 이슈 정의 및 템플릿 작성 |
 | `docs` | `docs: update README.md for first-time readers & 1-feature 1-commit rule` | 처음 보는 독자를 위한 쉬운 프로젝트 설명 및 1기능 1커밋 규칙 명시 |
@@ -159,13 +162,13 @@ hr-coverletter-evaluator/
 
 ## 10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)
 
-본 프로젝트는 Google/Naver/Kakao 등 탑티어 기업 수준의 엔지니어링 규정([docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md))을 따릅니다:
+본 프로젝트는 탑티어 기업 수준의 엔지니어링 규정([docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md))을 준수합니다.
 
-1. 🌿 **Git Feature Branch & PR 개발**: `main` 상시 프로덕션 상태 유지, PR 병합 후 배포.
-2. 📝 **Conventional Commits & 1기능 1커밋**: 명확한 커밋 메세지 타입 지정.
-3. 🧪 **자동화 빌드 & CI/CD 검증**: 빌드 무오류 및 린트 통과 필수.
-4. 🛡️ **개인정보(PII) 보안 마스킹**: 서류 내 성명/전화번호 마스킹 선처리.
-5. 📚 **지속적 문서화 (Living Documentation)**: README.md 및 아키텍처 실시간 반영.
+---
+
+## 11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)
+
+날짜별로 수행된 모든 기획, 아키텍처 수립, UI 구현 및 깃허브 푸시 작업 내역은 [CHANGELOG.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/CHANGELOG.md) 파일에서 타임라인별로 확인하실 수 있습니다.
 
 ---
 
