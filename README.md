@@ -17,7 +17,7 @@
 - [3. 🌟 주요 핵심 기능 5가지 (Key Features)](#3--주요-핵심-기능-5가지-key-features)
 - [4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)](#4--한눈에-보는-서비스-흐름-user-flow--architecture)
 - [5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)](#5--커밋-및-협업-규칙-1기능-1커밋--한글-커밋-규칙)
-- [6. 🚀 1분 만에 실행해보기 (Quick Start)](#6--1분-만에-실행해보기-quick-start)
+- [6. 🚀 1분 만에 실행해보기 & Gemini API Key 발급 가이드](#6--1분-만에-실행해보기--gemini-api-key-발급-가이드)
 - [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
 - [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
 - [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
@@ -100,19 +100,22 @@ graph TD
 
 ---
 
-## 6. 🚀 1분 만에 실행해보기 (Quick Start)
+## 6. 🚀 1분 만에 실행해보기 & Gemini API Key 발급 가이드
 
-### 1) 클론 및 패키지 설치
+### 1) 프로젝트 실행
 ```bash
 git clone https://github.com/jcm0314/CapStone-SW-.git
 cd CapStone-SW-
 npm install
-```
-
-### 2) 개발 서버 실행
-```bash
 npm run dev
 ```
+
+### 2) 🔑 Google Gemini API Key 무료 발급 받는 방법 (30초)
+1. **[Google AI Studio (aistudio.google.com/app/apikey)](https://aistudio.google.com/app/apikey)** 에 접속하여 구글 계정으로 로그인합니다.
+2. **`Create API key`** 버튼을 클릭하여 무료 API Key를 만듭니다.
+3. 생성된 `AIzaSy...` 형식의 Key를 복사합니다.
+4. 앱 상단 헤더의 ⚙️ **API Key 설정** 버튼을 눌러 붙여넣으면 즉시 실시간 Gemini 2.5/1.5 Flash AI 분석이 작동합니다!
+*(※ Key가 없어도 내장된 4가지 인재 시나리오로 완벽 테스트 가능합니다.)*
 
 ---
 
@@ -133,7 +136,7 @@ hr-coverletter-evaluator/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
-│   └── MILESTONES.md                  # 👈 5대 세분화 마일스톤 및 개발 로드맵
+│   └── MILESTONES.md                  # 5대 마일스톤 및 개발 로드맵
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
@@ -148,6 +151,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: README.md에 구글 Gemini API Key 발급 안내 추가` | 구글 AI 스튜디오 링크 및 30초 발급 가이드 작성 |
 | `docs` | `docs: 마일스톤 및 스프린트 세부 일정표 구체화` | 5대 마일스톤을 스프린트(Sprint) 및 태스크(Task) 단위로 디테일 세분화 |
 | `docs` | `docs: 깃허브 네이티브 마일스톤 생성 및 이슈 연동 반영` | 깃허브 네이티브 마일스톤(5개) 및 이슈(#1~#4) 생성 및 링크 연결 |
 | `docs` | `docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트` | 향후 모든 커밋 메시지를 한글로 작성하는 규칙 명시 및 문서 업데이트 |
@@ -178,16 +182,9 @@ hr-coverletter-evaluator/
 
 ---
 
-## 12. 🎯 디테일 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)
+## 12. 🎯 GitHub Native Milestones & 로드맵 (Milestones & Roadmap)
 
-본 프로젝트는 스프린트(Sprint) 단위로 세분화된 5단계 마일스톤([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))에 따라 개발을 진행합니다:
-
-- 🔗 **GitHub Milestones 실시간 모니터링**: [https://github.com/jcm0314/CapStone-SW-/milestones](https://github.com/jcm0314/CapStone-SW-/milestones)
-- 📍 **Milestone 1 (`v1.0.0`)**: Core Grounding Engine & HR Dashboard [완료 ✓]
-- 📍 **Milestone 2 (`v1.1.0`)**: Web Worker 성능 최적화 & 테스트 구축 (`2026-09-17 ~ 09-25`) (Sprint 2.1~2.3)
-- 📍 **Milestone 3 (`v1.2.0`)**: Fuzzy Matching 엔진 & PII 마스킹 (`2026-09-26 ~ 10-05`) (Sprint 3.1~3.2)
-- 📍 **Milestone 4 (`v1.3.0`)**: PDF/TXT 일괄 업로드 & IndexedDB 캐싱 (`2026-10-06 ~ 10-20`) (Sprint 4.1~4.2)
-- 📍 **Milestone 5 (`v2.0.0`)**: Enterprise Custom Prompt Studio & 표절 매트릭스 (`2026-10-21 ~ 11-10`) (Sprint 5.1~5.2)
+본 프로젝트는 **[GitHub Native Milestones 페이지](https://github.com/jcm0314/CapStone-SW-/milestones)**에서 5단계 마일스톤 및 깃허브 이슈 진행 상황을 실시간으로 추적합니다.
 
 ---
 
