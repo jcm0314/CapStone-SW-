@@ -23,6 +23,7 @@
 - [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
 - [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
 - [11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#11--날짜별-작업-일지-daily-work-log--changelog)
+- [12. 🎯 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#12--프로젝트-마일스톤-및-로드맵-milestones--roadmap)
 
 ---
 
@@ -120,7 +121,7 @@ npm run dev
 ```
 hr-coverletter-evaluator/
 ├── README.md                          # 👈 이 문서 (지속 업데이트)
-├── CHANGELOG.md                       # 👈 날짜별 작업 일지 및 체인지로그
+├── CHANGELOG.md                       # 날짜별 작업 일지 및 체인지로그
 ├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
 ├── package.json                       # 의존성 패키지 관리
 ├── vite.config.js                     # Vite 설정 (Port 3000)
@@ -131,7 +132,8 @@ hr-coverletter-evaluator/
 ├── docs/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
-│   └── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
+│   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
+│   └── MILESTONES.md                  # 👈 5대 마일스톤 및 개발 로드맵
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
@@ -146,6 +148,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: add MILESTONES.md for 5-phase product roadmap & task tracking` | 5단계 마일스톤 및 과제 로드맵 문서 MILESTONES.md 작성 |
 | `docs` | `docs: add CHANGELOG.md for daily work log tracking` | 날짜별 진행 작업, 구현 기능 및 기획/아키텍처 기록 문서 CHANGELOG.md 생성 |
 | `docs` | `docs: add ENTERPRISE_GUIDELINES.md & pull request template` | 대기업/IT 탑티어 표준 7대 엔지니어링 규정 작성 및 PR 템플릿 반영 |
 | `docs` | `docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template` | 성능 병목, AI Grounding 한계, PII 보안 및 Rate Limit 이슈 정의 및 템플릿 작성 |
@@ -168,7 +171,19 @@ hr-coverletter-evaluator/
 
 ## 11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)
 
-날짜별로 수행된 모든 기획, 아키텍처 수립, UI 구현 및 깃허브 푸시 작업 내역은 [CHANGELOG.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/CHANGELOG.md) 파일에서 타임라인별로 확인하실 수 있습니다.
+날짜별로 수행된 모든 작업은 [CHANGELOG.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/CHANGELOG.md) 파일에서 확인하실 수 있습니다.
+
+---
+
+## 12. 🎯 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)
+
+본 프로젝트는 5단계 마일스톤([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))에 따라 체계적으로 발전해 나갑니다:
+
+- 📍 **Milestone 1 (`v1.0.0`)**: Core Grounding Engine & HR Dashboard [완료 ✓]
+- 📍 **Milestone 2 (`v1.1.0`)**: Web Worker 비동기 성능 최적화 & Vitest 단위 테스트 (Issue #1 해소)
+- 📍 **Milestone 3 (`v1.2.0`)**: Fuzzy Matching 매칭 엔진 & Client-side PII 마스킹 (Issue #2, #3 해소)
+- 📍 **Milestone 4 (`v1.3.0`)**: PDF/TXT 일괄 업로드 파이프라인 & IndexedDB 캐싱 (Issue #4 해소)
+- 📍 **Milestone 5 (`v2.0.0`)**: Enterprise Custom Prompt Studio & 자소서 간 표절 매트릭스
 
 ---
 
