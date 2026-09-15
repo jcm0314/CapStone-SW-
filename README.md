@@ -16,7 +16,7 @@
 - [2. 📊 현 채용 시장의 페인포인트 & 해결 수치 (Quantified Impact)](#2--현-채용-시장의-페인포인트--해결-수치-quantified-impact)
 - [3. 🌟 주요 핵심 기능 5가지 (Key Features)](#3--주요-핵심-기능-5가지-key-features)
 - [4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)](#4--한눈에-보는-서비스-흐름-user-flow--architecture)
-- [5. 🛠️ 커밋 및 협업 규칙 (Commit Convention: 1기능 1커밋)](#5--커밋-및-협업-규칙-commit-convention-1기능-1커밋)
+- [5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)](#5--커밋-및-협업-규칙-1기능-1커밋--한글-커밋-규칙)
 - [6. 🚀 1분 만에 실행해보기 (Quick Start)](#6--1분-만에-실행해보기-quick-start)
 - [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
 - [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
@@ -94,9 +94,18 @@ graph TD
 
 ---
 
-## 5. 🛠️ 커밋 및 협업 규칙 (Commit Convention: 1기능 1커밋)
+## 5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)
 
-본 프로젝트는 코드 리뷰 및 가독성을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 원칙을 철저히 준수합니다.
+본 프로젝트는 코드 리뷰 및 명확한 작업 추적을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 및 **"모든 커밋 메시지는 한글로 작성"**하는 원칙을 준수합니다.
+
+### 📌 Commit Message Format (한글 규정)
+```
+<type>: <한글 기능/문서 설명>
+
+- 세부 변경 및 작업 내역 요약 (한글)
+```
+
+- 예시: `docs: 한글 커밋 메시지 규칙 및 엔지니어링 표준 반영`
 
 ---
 
@@ -133,7 +142,7 @@ hr-coverletter-evaluator/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
-│   └── MILESTONES.md                  # 👈 5대 마일스톤 및 개발 로드맵
+│   └── MILESTONES.md                  # 5대 마일스톤 및 개발 로드맵
 └── src/
     ├── main.jsx                       # React 진입점
     ├── App.jsx                        # 메인 대시보드 레이아웃
@@ -148,6 +157,7 @@ hr-coverletter-evaluator/
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트` | 향후 모든 커밋 메시지를 한글로 작성하는 규칙 명시 및 문서 업데이트 |
 | `docs` | `docs: add MILESTONES.md for 5-phase product roadmap & task tracking` | 5단계 마일스톤 및 과제 로드맵 문서 MILESTONES.md 작성 |
 | `docs` | `docs: add CHANGELOG.md for daily work log tracking` | 날짜별 진행 작업, 구현 기능 및 기획/아키텍처 기록 문서 CHANGELOG.md 생성 |
 | `docs` | `docs: add ENTERPRISE_GUIDELINES.md & pull request template` | 대기업/IT 탑티어 표준 7대 엔지니어링 규정 작성 및 PR 템플릿 반영 |
@@ -177,13 +187,7 @@ hr-coverletter-evaluator/
 
 ## 12. 🎯 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)
 
-본 프로젝트는 5단계 마일스톤([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))에 따라 체계적으로 발전해 나갑니다:
-
-- 📍 **Milestone 1 (`v1.0.0`)**: Core Grounding Engine & HR Dashboard [완료 ✓]
-- 📍 **Milestone 2 (`v1.1.0`)**: Web Worker 비동기 성능 최적화 & Vitest 단위 테스트 (Issue #1 해소)
-- 📍 **Milestone 3 (`v1.2.0`)**: Fuzzy Matching 매칭 엔진 & Client-side PII 마스킹 (Issue #2, #3 해소)
-- 📍 **Milestone 4 (`v1.3.0`)**: PDF/TXT 일괄 업로드 파이프라인 & IndexedDB 캐싱 (Issue #4 해소)
-- 📍 **Milestone 5 (`v2.0.0`)**: Enterprise Custom Prompt Studio & 자소서 간 표절 매트릭스
+본 프로젝트는 5단계 마일스톤([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))에 따라 체계적으로 발전해 나갑니다.
 
 ---
 
