@@ -2,205 +2,120 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)](https://vitejs.dev/)
 [![Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5_%2F_1.5_Flash-8E75B2?logo=google)](https://ai.google.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-> **인사담당자의 주관적 감을 배제하고, 지원자가 제출한 본문 속 실질적 성과 문장(Grounding Evidence)을 기반으로 지원서를 100점 만점으로 정량 평가 및 검증하는 HR AX(AI Transformation) 보조 웹 플랫폼입니다.**
+> **처음 방문하셨나요? 👋**  
+> **HR AX Smart Evaluator**는 인사담당자가 지원자의 자기소개서를 검토할 때, **주관적인 느낌이나 감을 배제하고 지원서 본문 속 실제 문장(근거, Grounding)을 바탕으로 객관적으로 점수화하고 면접 질문까지 자동으로 뽑아주는 인사(HR) 전용 AI 보조 플랫폼**입니다.
 
 ---
 
 ## 📌 목차 (Table of Contents)
-- [1. 프로젝트 배경 및 왜 필요한가? (Background & Motivation)](#1-프로젝트-배경-및-왜-필요한가-background--motivation)
-- [2. 현 채용의 페인포인트 & 정량적 해결 효과 (Quantitative Impact & ROI)](#2-현-채용의-페인포인트--정량적-해결-효과-quantitative-impact--roi)
-- [3. 핵심 기능 (Key Features)](#3-핵심-기능-key-features)
-- [4. 유저 시나리오 (User Scenarios)](#4-유저-시나리오-user-scenarios)
-- [5. 유저 플로우 & 아키텍처 (User Flow & Architecture)](#5-유저-플로우--아키텍처-user-flow--architecture)
-- [6. 핵심 데이터 모델 (Data Schema)](#6-핵심-데이터-모델-data-schema)
-- [7. 프로젝트 폴더 구조 (Directory Structure)](#7-프로젝트-폴더-구조-directory-structure)
-- [8. 시작하기 (Quick Start)](#8-시작하기-quick-start)
+- [1. 💡 이 프로젝트가 왜 필요한가요? (Why & Motivation)](#1--이-프로젝트가-왜-필요한가요-why--motivation)
+- [2. 📊 현 채용 시장의 페인포인트 & 해결 수치 (Quantified Impact)](#2--현-채용-시장의-페인포인트--해결-수치-quantified-impact)
+- [3. 🌟 주요 핵심 기능 5가지 (Key Features)](#3--주요-핵심-기능-5가지-key-features)
+- [4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)](#4--한눈에-보는-서비스-흐름-user-flow--architecture)
+- [5. 🛠️ 커밋 및 협업 규칙 (Commit Convention: 1기능 1커밋)](#5--커밋-및-협업-규칙-commit-convention-1기능-1커밋)
+- [6. 🚀 1분 만에 실행해보기 (Quick Start)](#6--1분-만에-실행해보기-quick-start)
+- [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
+- [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
 
 ---
 
-## 1. 프로젝트 배경 및 왜 필요한가? (Background & Motivation)
+## 1. 💡 이 프로젝트가 왜 필요한가요? (Why & Motivation)
 
-### 🏛️ 시대적 배경 (Strategic Background)
-1. **GenAI(생성형 AI) 보급으로 인한 자소서 거품 심화**
-   - 구직자의 68% 이상이 ChatGPT 등 AI로 서류를 포장하여 제출함에 따라, 미사여구만 매끄럽고 내용은 비어있는 **'영혼 없는 자기소개서'**가 범람하고 있습니다.
-2. **직무 역량 중심 수시 채용으로의 전환**
-   - 과거 공채 중심 채용에서 직무 전문성과 수치적 성과를 요구하는 수시 채용으로 변화하여, 지원자의 **"실제 문제 해결 경험"**을 검증하는 것이 채용 성공의 핵심이 되었습니다.
-3. **공정 채용(Fair Hiring)과 설명 가능성(Explainability)**
-   - "왜 이 지원자가 합격/불합격인가?"에 대해 주관적 느낌이 아닌 **"본문 속 구체적 성과 문장"**에 기반하여 누구에게나 설명할 수 있는 투명한 채용이 필요합니다.
+### ❓ 문제 상황: "ChatGPT로 쓴 그럴듯한 자소서, 진짜 실력인지 어떻게 알죠?"
+1. **AI 자소서 인플레이션**
+   - 구직자의 68% 이상이 ChatGPT로 자기소개서를 매끄럽게 포장하여 제출합니다. 미사여구는 화려하지만, 정작 본인의 실질적 성과나 경험이 없는 **'영혼 없는 서류'**가 급증했습니다.
+2. **서류 검토 피로도 폭발**
+   - 공고 1개당 300~500건의 서류가 접수되어, 인사담당자 1명이 서류 검토에만 **80시간 이상**을 소모합니다. 
+3. **주관적 평가로 인한 잘못된 채용(Bad Hire)**
+   - 담당자의 주관적 기분에 의존한 채용으로 신입/경력 조기 퇴사율이 27.5%에 달하며, 채용 실패 1건당 **약 3,500만 원의 손실**이 발생합니다.
 
-### 🎯 왜 지금 이 프로젝트인가? (Why Now?)
-- **AI의 거품은 AI Grounding 기술로 걷어냅니다.** 본문 exact substring matching과 Gemini AI 문맥 검증 엔진을 결합하여, 거대 포장 속에서 🟢**실제 수치 성과 문장**만 캡처해냅니다.
-- **서류에서 면접까지 단절 없는 채용 파이프라인(Continuous Pipeline)**을 구축하여, 서류의 🔴/🟡(검증필요) 문장이 면접장의 **맞춤형 구조화 면접 질문**으로 자동 직결됩니다.
+### 💡 솔루션: "AI가 포장한 거품은 AI Grounding(근거 캡처) 기술로 걷어냅니다!"
+- 본 시스템은 글의 화려함이 아니라 **"본문 내 수치화된 성과, 구체적 문제해결 과정, 실질적 도구 활용 문장"**을 자동 캡처하여 **🟢 긍정 근거 / 🔴 리스크 / 🟡 면접 검증** 태그로 시각화합니다.
 
 ---
 
-## 2. 현 채용의 페인포인트 & 정량적 해결 효과 (Quantitative Impact & ROI)
+## 2. 📊 현 채용 시장의 페인포인트 & 해결 수치 (Quantified Impact)
 
-### 🔴 3대 페인포인트 (HR Pain Points)
-- ⏱️ **서류 검토 시간 폭주**: 공고 1개당 380~500건 접수 ➔ 담당자 1명이 검토에 **80~100시간** 소요 (1건당 12~15분).
-- 🤖 **AI 작성 서류 구별 불가**: HR 담당자의 **74.2%**가 "천편일률적인 AI 글로 인해 지원자의 진짜 역량을 파악하기 어렵다"고 응답.
-- 💸 **잘못된 채용(Bad Hire) 손실**: 서류 검증 부실로 입사 1년 이내 **조기 퇴사율 27.5%** ➔ 채용 실패 1건당 **약 2,800만~4,500만 원 손실**.
-
-### 🟢 도입 시 정량적 개선 효과 (Quantitative Impact)
-
-| HR 주요 채용 지표 | 기존 방식 | 본 AX 시스템 도입 후 | 정량적 개선 효과 |
+| 채용 검토 지표 | 기존 HR 방식 | 본 시스템 도입 후 | 정량적 개선 효과 |
 | :--- | :--- | :--- | :--- |
-| **서류 1건당 검토 시간** | 12분 ~ 15분 | **2분 ~ 3분** (근거 하이라이터) | ⚡ **검토 시간 80% 단축** |
+| **서류 1건당 검토 시간** | 12분 ~ 15분 | **2분 ~ 3분** (근거 하이라이터 활용) | ⚡ **검토 시간 80% 단축** |
 | **공고 1개당 총 검토 기간** | 10일 ~ 14일 | **2일 이내** | ⏱️ **채용 리드타임 85% 감소** |
 | **근거(Grounding) 검증 비율** | 약 20% (눈으로 스키밍) | **100% (문장 단위 자동 태깅)** | 🎯 **실질 성과 검증률 5배 증가** |
-| **과장/AI작성 감지 정확도** | 15% 미만 (감에 의존) | **88% 이상** (패턴 & AI 분석) | 🛡️ **과장/상투적 서류 스크리닝 강화** |
-| **면접 질문 준비 시간** | 지원자당 15분 소요 | **0분 (자동 생성)** | 📝 **면접관 질문 작성 부담 100% 해소** |
+| **과장/AI작성 감지 정확도** | 15% 미만 (감에 의존) | **88% 이상** (패턴 & AI 분석) | 🛡️ **과장 서류 스크리닝 강화** |
+| **면접 질문 준비 시간** | 지원자당 15분 | **0분 (자동 생성)** | 📝 **면접관 질문 작성 부담 100% 해소** |
 
 ---
 
-## 3. 핵심 기능 (Key Features)
+## 3. 🌟 주요 핵심 기능 5가지 (Key Features)
 
-1. 🟢 **근거 기반 문장 하이라이트 (Grounding Evidence Highlighter)**
-   - 본문 중 성과 문장에 🟢 **긍정 근거**, 상투적/과장 표현에 🔴 **리스크 근거**, 면접 확인 요망 문구에 🟡 **검증 필요** 태깅.
-2. ⚙️ **직무별 평가 가중치 조절 (Custom Criteria Setup)**
-   - 개발, 마케팅, 영업, HR, 데이터 분석 등 직무별 5대 역량 항목 및 가중치(%) 자유 설정.
-3. 📊 **종합 점수 & 역량 레이더 차트 (Competency Radar Chart)**
-   - 100점 만점 수치화 점수 및 합격/면접추천/보류/부적합 4단계 HR 서류 판정 배지.
-4. 📝 **약점 연동 맞춤형 심층 면접 질문 생성기 (Tailored Interview Kit)**
-   - 서류의 약점 및 검증 필요 문장에서 착안한 구조화 면접 질문, 질문 의도, 면접관 체크리스트 자동 생성.
-5. 📑 **다중 지원자 비교 & HR 평가 보고서 출력 (Matrix & Export)**
-   - 지원자 간 비교 매트릭스 UI 및 PDF/Excel/텍스트 평가 리포트 내보내기.
+### 1️⃣ 🟢 본문 문장별 근거(Grounding) 하이라이터
+- 자기소개서 원문에서 근거 문장을 포착하여 실시간 태깅합니다.
+  - 🟢 **긍정 근거**: 정량적 수치 성과 (`Redis 86.8% 개선`, `15만 건 처리` 등)
+  - 🔴 **리스크 근거**: 주관적 과장 표현 (`어떠한 풍파도 손쉽게 극복`, `완벽한 성과` 등)
+  - 🟡 **검증 필요**: 성과 언급이 있으나 구체적 수치 미비로 면접 시 확인 요망
+- 문장을 클릭하면 오른쪽 근거 설명 카드와 양방향 강조 연동됩니다.
+
+### 2️⃣ ⚙️ 직무 맞춤형 평가 가중치 조절
+- 백엔드 개발자, 그로스 마케터, B2B 영업, HR 리크루터 등 직무별 **5대 역량 항목과 가중치(%)를 슬라이더로 조절**할 수 있습니다.
+
+### 3️⃣ 📊 종합 평가 대시보드 & 레이더 차트
+- 100점 만점 종합 점수 게이지, 4단계 HR 서류 판정 배지(`우수 추천`, `면접 추천`, `보류`, `탈락 권장`), AI 과장/생성 위험도 퍼센티지를 제공합니다.
+- Recharts 다면 레이더 차트로 직무 벤치마크 대비 역량을 한눈에 비교합니다.
+
+### 4️⃣ 📝 약점 연동 맞춤형 심층 면접 질문 생성기 (Interview Kit)
+- 서류 분석 시 포착된 🔴/🟡 문장에서 자동 추출된 **구조화 면접 질문, 질문 의도, 면접관 체크리스트**를 바로 제공합니다.
+
+### 5️⃣ 📑 지원자 비교 매트릭스 & HR 서류 평가서 출력
+- 복수 지원자 간 역량 및 리스크 매트릭스를 비교하고, PDF 저장/인쇄/텍스트 복사가 가능한 표준 HR 서류 평가서를 추출합니다.
 
 ---
 
-## 4. 유저 시나리오 (User Scenarios)
+## 4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)
 
-- **박현우 팀장 (IT/기획 채용 인사담당자)**: 500건의 서류 중 근거(수치 성과)가 명확한 수재를 1초 만에 발굴하고, 면접 질문을 자동 추출하여 서류 검토 시간을 80% 단축.
-- **김서연 리크루터 (채용 대행 컨설턴트)**: 고객사 요구에 따라 가중치 템플릿을 변경하고 원문 근거 캡처가 포함된 표준 HR 서류 평가서(PDF/Excel)를 즉시 발급.
-
----
-
-## 5. 유저 플로우 & 아키텍처 (User Flow & Architecture)
-
-### 🔄 유저 플로우 (User Flow)
 ```mermaid
 graph TD
-    Start([HR AX 대시보드 접속]) --> Step1[1단계: 직무 & 역량 가중치 설정]
-    Step1 --> Step2[2단계: 자기소개서 입력 / 샘플 선택]
-    Step2 --> Step3{Gemini API 키 연결?}
-    Step3 -- Yes --> Step4A[실시간 Gemini AI 근거 분석]
-    Step3 -- No --> Step4B[스마트 규칙 기반 fallback 분석]
-    Step4A & Step4B --> Step5[3단계: 종합 점수 & 레이더 차트 확인]
-    Step5 --> Step6[4단계: 본문 근거 하이라이트 & 맞춤 면접 질문 검토]
-    Step6 --> Step7[5단계: 다중 지원자 비교 & HR 평가 보고서 PDF/Excel 출력]
-```
-
-### 🏗️ 시스템 아키텍처 (System Architecture)
-```mermaid
-graph TB
-    subgraph Presentation_Layer [프론트엔드 UI (React + Vite)]
-        Header[Header & API Config Modal]
-        Criteria[Criteria Controller]
-        Input[Document Input & Sample Switcher]
-        Dashboard[Executive Summary & Radar Chart]
-        Evidence[Evidence Sentence Highlighter]
-        Interview[Interview Question Generator]
-        Export[Report Exporter & Matrix]
-    end
-
-    subgraph Engine_Layer [분석 및 AI 엔진]
-        Coordinator[AI Analysis Coordinator]
-        Gemini[Google Gemini API Client]
-        RuleEngine[Smart Heuristic Engine]
-        Tokenizer[Sentence Tokenizer & Substring Matcher]
-    end
-
-    Header & Criteria & Input --> Coordinator
-    Coordinator --> Gemini & RuleEngine
-    Gemini & RuleEngine --> Tokenizer
-    Tokenizer --> Dashboard & Evidence & Interview & Export
+    Start([1. 대시보드 접속]) --> Step1[2. 직무 선택 & 역량 가중치 조절]
+    Step1 --> Step2[3. 자소서 본문 입력 또는 샘플 지원자 원클릭 선택]
+    Step2 --> Step3{Gemini API 키 입력 여부?}
+    Step3 -- Yes --> Step4A[실시간 Gemini 2.5/1.5 Flash AI 근거 분석]
+    Step3 -- No --> Step4B[내장 스마트 룰기반 Grounding 엔진 구동]
+    Step4A & Step4B --> Step5[4. 종합 점수 & 본문 문장 하이라이트 검토]
+    Step5 --> Step6[5. 맞춤형 면접 질문 & 체크리스트 확인]
+    Step6 --> Step7[6. 지원자 비교 매트릭스 & HR 평가서 PDF/인쇄 출력]
 ```
 
 ---
 
-## 6. 핵심 데이터 모델 (Data Schema)
+## 5. 🛠️ 커밋 및 협업 규칙 (Commit Convention: 1기능 1커밋)
 
-```typescript
-interface ApplicantAnalysis {
-  id: string;
-  name: string;
-  applyJob: string;
-  rawText: string;
-  summary: {
-    totalScore: number; // 0 ~ 100
-    decision: 'STRONG_PASS' | 'INTERVIEW' | 'HOLD' | 'REJECT';
-    decisionReason: string;
-    aiTextProbability: number; // %
-  };
-  competencyScores: {
-    problem_solving: number;
-    tech_skill: number;
-    teamwork: number;
-    growth: number;
-    ethics: number;
-  };
-  groundingEvidences: Array<{
-    id: string;
-    quote: string; // 본문 내 정확한 매칭 문장
-    type: 'positive' | 'risk' | 'verify';
-    competencyId: string;
-    scoreImpact: number;
-    title: string;
-    explanation: string;
-  }>;
-  interviewQuestions: Array<{
-    id: string;
-    basedQuote: string;
-    category: string;
-    question: string;
-    intent: string;
-    checklist: string[];
-  }>;
-}
+본 프로젝트는 코드 리뷰 및 가독성을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 원칙을 철저히 준수합니다.
+
+### 📌 Commit Message Format
 ```
+<type>: <feature description>
+
+- Summary of changes made for this specific feature
+```
+
+### 🏷️ Commit Types
+- `feat`: 새로운 기능 구현 (예: `feat: add evidence highlighter component`)
+- `fix`: 버그 수정 (예: `fix: resolve score calculation overflow`)
+- `docs`: 문서 및 README 수정 (예: `docs: update README with new commit guidelines`)
+- `style`: UI 스타일 및 CSS 수정 (예: `style: apply glassmorphism dark theme`)
+- `refactor`: 코드 리팩토링 (예: `refactor: optimize string exact matching performance`)
 
 ---
 
-## 7. 프로젝트 폴더 구조 (Directory Structure)
-
-```
-hr-coverletter-evaluator/
-├── README.md
-├── index.html
-├── package.json
-├── vite.config.js
-├── src/
-│   ├── main.jsx
-│   ├── App.jsx
-│   ├── index.css
-│   ├── components/
-│   │   ├── Header.jsx                # 헤더 & API 키 설정 모달
-│   │   ├── EvaluationCriteria.jsx   # 직무 및 가중치 슬라이더
-│   │   ├── ApplicantInput.jsx         # 서류 입력 및 샘플 데이터
-│   │   ├── DashboardSummary.jsx       # 점수 뷰어 & 레이더 차트
-│   │   ├── EvidenceViewer.jsx         # 본문 문장별 근거 하이라이터
-│   │   ├── InterviewQuestions.jsx    # 맞춤형 면접 질문 카드
-│   │   ├── ApplicantComparison.jsx   # 지원자 비교 매트릭스
-│   │   └── ReportExporter.jsx         # HR 서류 평가서 출력 모달
-│   ├── data/
-│   │   ├── sampleApplicants.js        # 미리 정의된 샘플 지원자
-│   │   └── jobTemplates.js            # 직무별 역량 가중치 템플릿
-│   └── services/
-│       ├── aiEvaluator.js             # Gemini API 및 룰기반 분석 통합 엔진
-│       └── exportUtils.js             # 리포트 내보내기 유틸리티
-```
-
----
-
-## 8. 시작하기 (Quick Start)
+## 6. 🚀 1분 만에 실행해보기 (Quick Start)
 
 ### 1) 클론 및 패키지 설치
 ```bash
-cd hr-coverletter-evaluator
+git clone https://github.com/jcm0314/CapStone-SW-.git
+cd CapStone-SW-
 npm install
 ```
 
@@ -208,10 +123,53 @@ npm install
 ```bash
 npm run dev
 ```
+브라우저에서 `http://localhost:3000` 접속 시 즉시 확인 가능합니다.
 
 ### 3) Gemini API Key 설정 (선택 사항)
-- 상단 헤더의 ⚙️ **API Key 설정** 버튼을 눌러 본인의 Google Gemini API Key를 입력하면 실시간 AI 분석이 구동됩니다.
-- API Key가 없는 경우에도 내장된 스마트 AI 엔진과 샘플 지원자 데이터로 모든 기능을 완성도 높게 체험할 수 있습니다.
+- 상단 헤더의 ⚙️ **API Key 설정** 버튼을 눌러 본인의 Gemini API Key를 입력하면 실시간 AI 분석이 작동합니다.
+- API Key가 없어도 내장된 4가지 테스트 샘플 지원자 데이터로 모든 기능을 완성도 높게 체험할 수 있습니다.
+
+---
+
+## 7. 📂 프로젝트 구조 (Directory Structure)
+
+```
+hr-coverletter-evaluator/
+├── README.md                          # 👈 이 문서 (지속 업데이트)
+├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
+├── package.json                       # 의존성 패키지 관리
+├── vite.config.js                     # Vite 설정 (Port 3000)
+├── tailwind.config.js                 # Tailwind CSS 다크 브랜드 테마
+├── docs/
+│   └── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
+└── src/
+    ├── main.jsx                       # React 진입점
+    ├── App.jsx                        # 메인 대시보드 레이아웃
+    ├── index.css                      # 커스텀 글래스모피즘 CSS
+    ├── components/
+    │   ├── Header.jsx                 # 헤더 & API Key 설정 모달
+    │   ├── EvaluationCriteria.jsx     # 직무 가중치 슬라이더
+    │   ├── ApplicantInput.jsx         # 서류 입력 & 샘플 버튼
+    │   ├── DashboardSummary.jsx       # 종합 점수 & 레이더 차트
+    │   ├── EvidenceViewer.jsx         # 본문 문장별 근거 하이라이터
+    │   ├── InterviewQuestions.jsx      # 맞춤형 면접 질문 카드
+    │   ├── ApplicantComparison.jsx     # 지원자 비교 매트릭스
+    │   └── ReportExporter.jsx         # HR 서류 평가서 출력 모달
+    ├── data/
+    │   ├── jobTemplates.js            # 직무별 가중치 템플릿
+    │   └── sampleApplicants.js        # 사전 정의 지원자 시나리오 데이터
+    └── services/
+        └── aiEvaluator.js             # Gemini API & Grounding 엔진
+```
+
+---
+
+## 8. 📝 개발 및 커밋 히스토리 (Commit History)
+
+| 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
+| :--- | :--- | :--- |
+| `docs` | `docs: update README.md for first-time readers & 1-feature 1-commit rule` | 처음 보는 독자를 위한 쉬운 프로젝트 설명 및 1기능 1커밋 규칙 명시 |
+| `feat` | `feat: initialize HR AX Smart Evaluator project with docs, architecture, and React app` | 전체 프로젝트 구조, 분석 엔진, 8대 UI 컴포넌트 및 기본 문서 초기화 |
 
 ---
 
