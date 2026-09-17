@@ -10,11 +10,10 @@ import ReportExporter from './components/ReportExporter';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
-import { analyzeApplicant } from './services/aiEvaluator';
+import { analyzeApplicant } from './services/enterpriseVertexService';
 import confetti from 'canvas-confetti';
 
 export default function App() {
-  const [apiKey, setApiKey] = useState('');
   const [activeTab, setActiveTab] = useState('evaluator');
   const [currentJob, setCurrentJob] = useState(JOB_TEMPLATES[0]);
   const [applicantList, setApplicantList] = useState(SAMPLE_APPLICANTS);
@@ -28,8 +27,7 @@ export default function App() {
       const newResult = await analyzeApplicant({
         name,
         applyJobId: currentJob.id,
-        rawText,
-        apiKey
+        rawText
       });
 
       // Add to list and select
@@ -45,8 +43,8 @@ export default function App() {
         });
       }
     } catch (err) {
-      console.error("Analysis failed:", err);
-      alert("분석 도중 오류가 발생했습니다. 다시 시도해 주세요.");
+      console.error("Enterprise Analysis failed:", err);
+      alert(err.message || "대기업 Vertex AI 프록시 게이트웨이 분석 도중 오류가 발생했습니다.");
     } finally {
       setIsAnalyzing(false);
     }
@@ -56,8 +54,6 @@ export default function App() {
     <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-blue-500 selection:text-white pb-12">
       {/* Top Navigation Bar */}
       <Header
-        apiKey={apiKey}
-        setApiKey={setApiKey}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         applicantCount={applicantList.length}

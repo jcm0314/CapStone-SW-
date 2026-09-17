@@ -64,9 +64,9 @@ graph TB
 ### ④ BigQuery 감사 로그 (Audit Trail) 스키마 수립
 - 인사 서류 평가 결과, 본문 캡처 근거, 평가자 IP 및 직무 가중치를 BigQuery 이력 테이블에 저장하여 설명 가능성(Explainability) 100% 확보.
 
-### ⑤ 듀얼 모드 (Dual-Engine Mode) 지원
-- **Enterprise Vertex AI Mode**: 대기업 GCP 배포 환경 (Proxy Gateway + Service Account + BigQuery).
-- **Standalone Local Test Mode**: 로컬 빠른 검증용 룰기반 fallback 및 Gemini API Mode.
+### ⑤ 순수 엔터프라이즈 Vertex AI 파이프라인 일원화
+- 소비자용 Gemini API Key 직접 입력 방식 및 로컬 fallback 룰기반 모드를 완전 제거.
+- Express API Gateway (`server/proxyServer.js`) ➔ `@google-cloud/vertexai` IAM Bearer Token 전용 통신 파이프라인으로 단일화하여 대기업 데이터 거버넌스 및 보안 스펙 강제.
 
 ---
 

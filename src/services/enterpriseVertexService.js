@@ -1,30 +1,26 @@
-import { analyzeApplicant as analyzeWithStandardEngine } from './aiEvaluator';
-
 /**
- * Enterprise Vertex AI & Dual-Mode Adaptor
- * Supports Enterprise Proxy Gateway (Google Cloud Vertex AI) & Standard Mode
+ * Enterprise Google Cloud Vertex AI Engine Service
+ * Strictly enforces Enterprise Proxy Gateway Architecture (/api/v1/enterprise/vertex-evaluator)
+ * No Consumer API keys, no local fallback engines.
  */
-export async function analyzeEnterpriseApplicant({ name, applyJobId, rawText, apiKey, mode = 'STANDARD' }) {
-  if (mode === 'ENTERPRISE_VERTEX') {
-    try {
-      // Enterprise Proxy Gateway Call (Node.js Server Gateway + Vertex AI + BigQuery Audit)
-      const response = await fetch('/api/v1/enterprise/vertex-evaluator', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Enterprise-Client-Id': 'HR-AX-CORP-CLIENT-01'
-        },
-        body: JSON.stringify({ name, applyJobId, rawText })
-      });
+export async function analyzeApplicant({ name, applyJobId, rawText }) {
+  try {
+    const response = await fetch('/api/v1/enterprise/vertex-evaluator', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Enterprise-Client-Id': 'HR-AX-CORP-CLIENT-01'
+      },
+      body: JSON.stringify({ name, applyJobId, rawText })
+    });
 
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (err) {
-      console.warn("Enterprise Vertex Gateway offline, falling back to standard engine:", err);
+    if (!response.ok) {
+      throw new Error(`Enterprise Proxy Gateway Error: ${response.statusText}`);
     }
-  }
 
-  // Fallback to Standard Engine (Gemini API or Smart Rule Engine)
-  return await analyzeWithStandardEngine({ name, applyJobId, rawText, apiKey });
+    return await response.json();
+  } catch (err) {
+    console.error("Enterprise Vertex AI Service Error:", err);
+    throw new Error("대기업 엔터프라이즈 Vertex AI 프록시 게이트웨이 연결 실패. (Google Cloud Vertex AI & BigQuery Audit 서비스 점검 필요)");
+  }
 }

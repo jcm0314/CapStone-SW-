@@ -4,23 +4,17 @@
 
 ---
 
-## 📌 [2026-09-17] 대기업 환경 동기화를 위한 Google Cloud Vertex AI 아키텍처 및 Enterprise Proxy Gateway 구축
+## 📌 [2026-09-17] 대기업 환경 일원화를 위한 Google Cloud Vertex AI 아키텍처 및 순수 Enterprise Proxy Gateway 구축
 
-### 🏛️ 1. 대기업 (Enterprise) 환경 규격 적용
-- **Google Cloud Vertex AI SDK 통합**: `generativelanguage.googleapis.com` (Consumer API) 대신 대기업 표준인 **Google Cloud Vertex AI (`@google-cloud/vertexai`)** API 아키텍처 지원.
+### 🏛️ 1. 대기업 (Enterprise) 환경 규격 단일화
+- **Google Cloud Vertex AI SDK 전용 통합**: `generativelanguage.googleapis.com` (Consumer API Key) 및 로컬 fallback 모드를 완전 정제하고 대기업 표준인 **Google Cloud Vertex AI (`@google-cloud/vertexai`)** API 아키텍처로 일원화.
 - **Enterprise Service Proxy Gateway (`server/proxyServer.js`)**:
   - 클라이언트 브라우저가 API Key를 노출하지 않도록 Node.js / Express 기반 3-Tier API Gateway 통신 구축.
   - 전화번호(`010-****-****`), 이메일 자동 익명화 PII 마스킹 필터 추가.
   - Google BigQuery 감사 이력(Audit Trail Log) 연동 로깅 시스템 구현.
-- **Enterprise Dual-Engine Mode (`src/services/enterpriseVertexService.js`)**:
-  - `Enterprise Vertex AI Mode` (대기업 GCP Proxy + BigQuery Audit + IAM 인증).
-  - `Standard Mode` (로컬 빠른 검증용 Gemini API / 룰기반 fallback).
-- **[docs/ENTERPRISE_VERTEX_ARCHITECTURE.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_VERTEX_ARCHITECTURE.md) 규격서 수립**.
-
----
-
-### 🔮 2. Google Opal (Vibe-coding AI Workflow Builder) 활용 정의
-- **AI 파이프라인 시각적 프로토타이핑**: `[자소서 입력] ➔ [근거 캡처] ➔ [역량 점수화] ➔ [면접 질문]` 노드 체이닝 및 Visual Proof 데모 정의.
+- **Pure Enterprise Service (`src/services/enterpriseVertexService.js`)**:
+  - 클라이언트 API 키 모달 및 fallback 제거. Enterprise Express Proxy Gateway 엔드포인트 전용 연동.
+- **[docs/ENTERPRISE_VERTEX_ARCHITECTURE.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_VERTEX_ARCHITECTURE.md) 규격서 업데이트**.
 
 ---
 
@@ -34,8 +28,9 @@
 ### 📜 커밋 히스토리 (Recent Commits)
 
 ```bash
-* 5c5c8eb docs: README.md 및 CHANGELOG.md에 Google Opal 활용 방안 섹션 추가
-* 374c95e refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편
+* refactor: Google Opal 및 소비자용 API 모드 제거, 순수 엔터프라이즈 Vertex AI 파이프라인으로 일원화
+* refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편
+* feat: 대기업 환경 구축을 위한 Google Cloud Vertex AI 아키텍처 규격 및 프록시 게이트웨이 추가
 ```
 
 ---
