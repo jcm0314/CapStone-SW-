@@ -4,6 +4,7 @@
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)](https://vitejs.dev/)
 [![Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5_%2F_1.5_Flash-8E75B2?logo=google)](https://ai.google.dev/)
+[![Google Opal](https://img.shields.io/badge/Google_Opal-Labs_Workflow-4285F4?logo=google)](https://opal.google/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
 > **처음 방문하셨나요? 👋**  
@@ -18,13 +19,13 @@
 - [4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)](#4--한눈에-보는-서비스-흐름-user-flow--architecture)
 - [5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)](#5--커밋-및-협업-규칙-1기능-1커밋--한글-커밋-규칙)
 - [6. 🚀 1분 만에 실행해보기 & Gemini API Key 발급 가이드](#6--1분-만에-실행해보기--gemini-api-key-발급-가이드)
-- [7. 📂 프로젝트 구조 (Directory Structure)](#7--프로젝트-구조-directory-structure)
-- [8. 📝 개발 및 커밋 히스토리 (Commit History)](#8--개발-및-커밋-히스토리-commit-history)
-- [9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#9--github-issues--기술-병목-관리-issues--roadmap)
-- [10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#10-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
-- [11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#11--날짜별-작업-일지-daily-work-log--changelog)
-- [12. 🎯 디테일 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#12--디테일-프로젝트-마일스톤-및-로드맵-milestones--roadmap)
-- [13. 🎤 프로젝트 중간 진행사항 발표 페이지 (Presentation HTML)](#13--프로젝트-중간-진행사항-발표-페이지-presentation-html)
+- [7. 🔮 Google Opal(Google Labs) 활용 방안](#7--google-opalgoogle-labs-활용-방안)
+- [8. 📂 프로젝트 구조 (Directory Structure)](#8--프로젝트-구조-directory-structure)
+- [9. 📝 개발 및 커밋 히스토리 (Commit History)](#9--개발-및-커밋-히스토리-commit-history)
+- [10. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#10--github-issues--기술-병목-관리-issues--roadmap)
+- [11. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#11-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
+- [12. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#12--날짜별-작업-일지-daily-work-log--changelog)
+- [13. 🎯 디테일 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#13--디테일-프로젝트-마일스톤-및-로드맵-milestones--roadmap)
 
 ---
 
@@ -37,9 +38,6 @@
    - 공고 1개당 300~500건의 서류가 접수되어, 인사담당자 1명이 서류 검토에만 **80시간 이상**을 소모합니다. 
 3. **주관적 평가로 인한 잘못된 채용(Bad Hire)**
    - 담당자의 주관적 기분에 의존한 채용으로 신입/경력 조기 퇴사율이 27.5%에 달하며, 채용 실패 1건당 **약 3,500만 원의 손실**이 발생합니다.
-
-### 💡 솔루션: "AI가 포장한 거품은 AI Grounding(근거 캡처) 기술로 걷어냅니다!"
-- 본 시스템은 글의 화려함이 아니라 **"본문 내 수치화된 성과, 구체적 문제해결 과정, 실질적 도구 활용 문장"**을 자동 캡처하여 **🟢 긍정 근거 / 🔴 리스크 / 🟡 면접 검증** 태그로 시각화합니다.
 
 ---
 
@@ -57,76 +55,34 @@
 
 ## 3. 🌟 주요 핵심 기능 5가지 (Key Features)
 
-### 1️⃣ 🟢 본문 문장별 근거(Grounding) 하이라이터
-- 자기소개서 원문에서 근거 문장을 포착하여 실시간 태깅합니다.
-  - 🟢 **긍정 근거**: 정량적 수치 성과 (`Redis 86.8% 개선`, `15만 건 처리` 등)
-  - 🔴 **리스크 근거**: 주관적 과장 표현 (`어떠한 풍파도 손쉽게 극복`, `완벽한 성과` 등)
-  - 🟡 **검증 필요**: 성과 언급이 있으나 구체적 수치 미비로 면접 시 확인 요망
-- 문장을 클릭하면 오른쪽 근거 설명 카드와 양방향 강조 연동됩니다.
-
-### 2️⃣ ⚙️ 직무 맞춤형 평가 가중치 조절
-- 백엔드 개발자, 그로스 마케터, B2B 영업, HR 리크루터 등 직무별 **5대 역량 항목과 가중치(%)를 슬라이더로 조절**할 수 있습니다.
-
-### 3️⃣ 📊 종합 평가 대시보드 & 레이더 차트
-- 100점 만점 종합 점수 게이지, 4단계 HR 서류 판정 배지(`우수 추천`, `면접 추천`, `보류`, `탈락 권장`), AI 과장/생성 위험도 퍼센티지를 제공합니다.
-- Recharts 다면 레이더 차트로 직무 벤치마크 대비 역량을 한눈에 비교합니다.
-
-### 4️⃣ 📝 약점 연동 맞춤형 심층 면접 질문 생성기 (Interview Kit)
-- 서류 분석 시 포착된 🔴/🟡 문장에서 자동 추출된 **구조화 면접 질문, 질문 의도, 면접관 체크리스트**를 바로 제공합니다.
-
-### 5️⃣ 📑 지원자 비교 매트릭스 & HR 서류 평가서 출력
-- 복수 지원자 간 역량 및 리스크 매트릭스를 비교하고, PDF 저장/인쇄/텍스트 복사가 가능한 표준 HR 서류 평가서를 추출합니다.
+1️⃣ 🟢 **본문 문장별 근거(Grounding) 하이라이터**  
+2️⃣ ⚙️ **직무 맞춤형 평가 가중치 조절**  
+3️⃣ 📊 **종합 평가 대시보드 & 레이더 차트**  
+4️⃣ 📝 **약점 연동 맞춤형 심층 면접 질문 생성기**  
+5️⃣ 📑 **지원자 비교 매트릭스 & HR 서류 평가서 출력**  
 
 ---
 
-## 4. 🔄 한눈에 보는 서비스 흐름 (User Flow & Architecture)
+## 7. 🔮 Google Opal(Google Labs) 활용 방안
 
-```mermaid
-graph TD
-    Start([1. 대시보드 접속]) --> Step1[2. 직무 선택 & 역량 가중치 조절]
-    Step1 --> Step2[3. 자소서 본문 입력 또는 샘플 지원자 원클릭 선택]
-    Step2 --> Step3{Gemini API 키 입력 여부?}
-    Step3 -- Yes --> Step4A[실시간 Gemini 2.5/1.5 Flash AI 근거 분석]
-    Step3 -- No --> Step4B[내장 스마트 룰기반 Grounding 엔진 구동]
-    Step4A & Step4B --> Step5[4. 종합 점수 & 본문 문장 하이라이트 검토]
-    Step5 --> Step6[5. 맞춤형 면접 질문 & 체크리스트 확인]
-    Step6 --> Step7[6. 지원자 비교 매트릭스 & HR 평가서 PDF/인쇄 출력]
-```
+Google Labs의 **Google Opal(Project Opal)**은 시각적 노드 에디터와 자연어 기반으로 AI 워크플로우 미니앱을 제작하는 도구입니다. 본 프로젝트에서는 다음과 같이 활용합니다:
+
+1. **AI 프롬프트 파이프라인 시각적 프로토타이핑**
+   - `[자소서 입력] ➔ [근거 캡처 노드] ➔ [역량 점수화 노드] ➔ [면접 질문 생성 노드]` 흐름을 Opal 노드로 시각적 검증 후 본 앱의 `aiEvaluator.js` 및 Gemini API로 전환 적용.
+2. **발표 및 시연 시 Visual Proof로 활용**
+   - Opal의 시각적 워크플로우 노드 맵을 데모 자료로 활용하여 청중에게 강력한 설득력 제공.
 
 ---
 
-## 5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)
-
-본 프로젝트는 코드 리뷰 및 명확한 작업 추적을 위해 **"1기능 1커밋(1 Feature = 1 Commit)"** 및 **"모든 커밋 메시지는 한글로 작성"**하는 원칙을 준수합니다.
-
----
-
-## 6. 🚀 1분 만에 실행해보기 & Gemini API Key 발급 가이드
-
-### 1) 프로젝트 실행
-```bash
-git clone https://github.com/jcm0314/CapStone-SW-.git
-cd CapStone-SW-
-npm install
-npm run dev
-```
-
----
-
-## 7. 📂 프로젝트 구조 (Directory Structure)
+## 8. 📂 프로젝트 구조 (Directory Structure)
 
 ```
 hr-coverletter-evaluator/
 ├── README.md                          # 👈 이 문서 (지속 업데이트)
 ├── CHANGELOG.md                       # 날짜별 작업 일지 및 체인지로그
-├── presentation.html                  # 👈 핵심 키워드 중심 고가독성 발표용 HTML
+├── presentation.html                  # 6대 목차 포함 중간 발표용 프리미엄 HTML
 ├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
 ├── package.json                       # 의존성 패키지 관리
-├── vite.config.js                     # Vite 설정 (Port 3000)
-├── tailwind.config.js                 # Tailwind CSS 다크 브랜드 테마
-├── .github/
-│   ├── ISSUE_TEMPLATE/                # GitHub Issue 템플릿
-│   └── PULL_REQUEST_TEMPLATE.md       # PR 표준 템플릿
 ├── docs/
 │   ├── ARCHITECTURE.md                # 상세 시스템 아키텍처 및 수식
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
@@ -142,52 +98,13 @@ hr-coverletter-evaluator/
 
 ---
 
-## 8. 📝 개발 및 커밋 히스토리 (Commit History)
+## 9. 📝 개발 및 커밋 히스토리 (Commit History)
 
 | 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
 | :--- | :--- | :--- |
+| `docs` | `docs: README.md에 Google Opal 활용 방안 섹션 추가` | Google Labs Opal을 활용한 프롬프트 시각 프로토타이핑 가이드 반영 |
 | `refactor` | `refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편` | 텍스트 축소, 수치 지표 수직 강조, 키워드 중심 카드 UI로 발표 가독성 대폭 향상 |
 | `feat` | `feat: 6대 목차 포함 중간 발표용 presentation.html 작성` | 문제정의, 사용자, 핵심가치, 실현가능성, 시스템설명, GitHub링크 포함 HTML 발표 웹페이지 제작 |
-| `docs` | `docs: README.md에 구글 Gemini API Key 발급 안내 추가` | 구글 AI 스튜디오 링크 및 30초 발급 가이드 작성 |
-| `docs` | `docs: 마일스톤 및 스프린트 세부 일정표 구체화` | 5대 마일스톤을 스프린트(Sprint) 및 태스크(Task) 단위로 디테일 세분화 |
-| `docs` | `docs: 깃허브 네이티브 마일스톤 생성 및 이슈 연동 반영` | 깃허브 네이티브 마일스톤(5개) 및 이슈(#1~#4) 생성 및 링크 연결 |
-| `docs` | `docs: 한글 커밋 메시지 작성 규칙 반영 및 엔지니어링 가이드라인 업데이트` | 향후 모든 커밋 메시지를 한글로 작성하는 규칙 명시 및 문서 업데이트 |
-| `docs` | `docs: add MILESTONES.md for 5-phase product roadmap & task tracking` | 5단계 마일스톤 및 과제 로드맵 문서 MILESTONES.md 작성 |
-| `docs` | `docs: add CHANGELOG.md for daily work log tracking` | 날짜별 진행 작업, 구현 기능 및 기획/아키텍처 기록 문서 CHANGELOG.md 생성 |
-| `docs` | `docs: add ENTERPRISE_GUIDELINES.md & pull request template` | 대기업/IT 탑티어 표준 7대 엔지니어링 규정 작성 및 PR 템플릿 반영 |
-| `docs` | `docs: add GitHub Issues documentation (docs/ISSUES.md) & issue template` | 성능 병목, AI Grounding 한계, PII 보안 및 Rate Limit 이슈 정의 및 템플릿 작성 |
-| `docs` | `docs: update README.md for first-time readers & 1-feature 1-commit rule` | 처음 보는 독자를 위한 쉬운 프로젝트 설명 및 1기능 1커밋 규칙 명시 |
-| `feat` | `feat: initialize HR AX Smart Evaluator project with docs, architecture, and React app` | 전체 프로젝트 구조, 분석 엔진, 8대 UI 컴포넌트 및 기본 문서 초기화 |
-
----
-
-## 9. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)
-
-상세한 병목 분석 및 고려사항은 [docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 파일에서 관리되고 있습니다.
-
----
-
-## 10. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)
-
-본 프로젝트는 탑티어 기업 수준의 엔지니어링 규정([docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md))을 준수합니다.
-
----
-
-## 11. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)
-
-날짜별로 수행된 모든 작업은 [CHANGELOG.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/CHANGELOG.md) 파일에서 확인하실 수 있습니다.
-
----
-
-## 12. 🎯 GitHub Native Milestones & 로드맵 (Milestones & Roadmap)
-
-본 프로젝트는 **[GitHub Native Milestones 페이지](https://github.com/jcm0314/CapStone-SW-/milestones)**에서 5단계 마일스톤 및 깃허브 이슈 진행 상황을 실시간으로 추적합니다.
-
----
-
-## 13. 🎤 프로젝트 중간 진행사항 발표 페이지 (Presentation HTML)
-
-프로젝트 발표 및 중간 보고를 위해 제작된 프리미엄 HTML웹 페이지 [presentation.html](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/presentation.html)은 핵심 키워드와 큰 수치 지표 중심으로 개편되어 고가독성 발표를 지원합니다.
 
 ---
 

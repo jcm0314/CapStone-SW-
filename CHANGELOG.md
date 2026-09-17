@@ -4,69 +4,29 @@
 
 ---
 
+## 📌 [2026-09-17] Google Opal(Google Labs) AI 워크플로우 도구 연동 계획 수립
+
+### 🔮 1. Google Opal (Vibe-coding AI Workflow Builder) 활용 정의
+- **개념**: Google Labs에서 제공하는 노코드/로코드 비주얼 AI 워크플로우 빌더로, Gemini LLM 노드를 시각적으로 연결하여 AI 미니앱 파이프라인 구축.
+- **프로젝트 활용 영역**:
+  1. `[자소서 입력] ➔ [근거 캡처 노드] ➔ [역량 점수화 노드] ➔ [면접 질문 생성 노드]` AI 파이프라인의 **시각적 노드 프로토타이핑**.
+  2. Opal 노드 에디터에서 검증된 프롬프트 체인을 본 시스템의 `aiEvaluator.js` 및 Gemini API 연동 코드에 실시간 이식.
+  3. 발표 데모 시 Visual Proof 노드 맵으로 활용하여 시각적 설득력 극대화.
+
+---
+
 ## 📌 [2026-09-16] 프로젝트 기획, 아키텍처 설계, 발표용 HTML 제작 및 깃허브 원격 동기화
 
 ### 🎤 1. 키워드 중심 고가독성 중간 발표용 HTML 개편 (`presentation.html`)
-- **요청 반영**: 발표 시 텍스트 과다로 인한 가독성 저하를 해결하기 위해 긴 문장을 제거하고 **핵심 키워드, 볼드 지표 수치(`380~500건`, `80시간`, `2.5분`, `80% 절감`), 카드형 비주얼 배지** 위주로 전면 리팩토링.
-- **6대 목차 강조 요소**:
-  - `01. 문제 정의`: 80시간 피로도, 68.4% AI 범람, 3,500만 원/건 손실 지표 수치 강조.
-  - `02. 사용자`: 기업 HR 박현우 팀장 (1초 스크리닝 & 0분 질문), 에이전시 김서연 리크루터 (가중치 조절 & PDF 평가서).
-  - `03. 핵심 가치`: 🟢 Grounding (성과 문장 캡처), 🔍 Explainable AI (원문 근거 100%), 🔗 Pipeline (면접 질문 직결).
-  - `04. 실현 가능성`: 2.5분(80% 단축), 2일(85% 감소), 100%(5배 향상), 0분(자동화) 수치 카드.
-  - `05. 시스템 설명`: 5대 구현 기능 및 React + Gemini AI 기술 스택.
-  - `06. GitHub 링크`: 메인 레포지토리, Native Milestones, Native Issues 연결.
+- **6대 목차 키워드화**: 문제 정의, 사용자, 핵심 가치, 실현 가능성 ROI 수치, 시스템 설명, GitHub 링크 포함 발표용 웹페이지 제작.
 
 ---
 
-### 💡 2. 기획 및 필요성 수치화 (Business Rationale & ROI Analysis)
-- **HR 페인포인트 정량 분석**: 공고 1개당 380~500건 접수 ➔ 인사담당자 1명이 검토에 **80~100시간 소요** 문제 정의.
-- **Generative AI 자소서 인플레이션 대책**: 구직자의 68.4%가 ChatGPT 사용 ➔ 겉치레 문구 속 **🟢 수치적 성과 근거(Grounding)** 캡처 필요성 도출.
-- **ROI 목표 수립**: 서류 검토 시간 12분 ➔ **2~3분으로 80% 단축**, 채용 리드타임 85% 감소, 면접 질문 작성 시간 **0분(자동화)** 달성.
-
----
-
-### 🏛️ 3. 유저 시나리오, 플로우 및 시스템 아키텍처 설계
-- **유저 페인포인트 페르소나 정의**: `박현우 팀장`, `김서연 리크루터` 페르소나.
-- **End-to-End 유저 플로우 작성**: 5단계 인터랙티브 흐름 Mermaid 다이어그램 화.
-- **시스템 아키텍처 및 데이터 스키마 수립**: `JobProfile`, `ApplicantAnalysis`, `GroundingEvidence`, `InterviewQuestion` JSON 스키마 표준화.
-
----
-
-### 🎯 4. 세분화 마일스톤 & 스프린트 상세 로드맵 수립 ([docs/MILESTONES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/MILESTONES.md))
-- **[Milestone 1] `v1.0.0`** [완료 ✓]: Core Grounding Engine & HR Dashboard.
-- **[Milestone 2] `v1.1.0`** (2026-09-17 ~ 09-25): Web Worker 비동기 파싱 분리 (Sprint 2.1), react-window 가상 스크롤 (Sprint 2.2), Vitest 단위 테스트 & Husky (Sprint 2.3).
-- **[Milestone 3] `v1.2.0`** (2026-09-26 ~ 10-05): Levenshtein Fuzzy Matching (Sprint 3.1), PII 익명화 마스킹 필터 (Sprint 3.2).
-- **[Milestone 4] `v1.3.0`** (2026-10-06 ~ 10-20): PDF/TXT 파서 (Sprint 4.1), IndexedDB 캐싱 & Throttling Queue (Sprint 4.2).
-- **[Milestone 5] `v2.0.0`** (2026-10-21 ~ 11-10): Custom HR Prompt Studio (Sprint 5.1), 표절 매트릭스 (Sprint 5.2).
-
----
-
-### 🛠️ 5. 기술 스택 및 코어 분석 엔진 구현 (`aiEvaluator.js`)
-- **개발 환경 구축**: React 18 + Vite 6 + Tailwind CSS + Lucide React Icons + Recharts + Canvas Confetti.
-- **Exact Substring Matching Grounding Engine**: 본문 내 정확한 문장 인덱스 위치 탐색 및 동적 `<mark>` 태그 매칭 (🟢/🔴/🟡).
-- **Google Gemini API 실시간 연동**: Gemini 2.5/1.5 Flash 모델 실시간 JSON 바인딩 + 룰기반 fallback 작동.
-
----
-
-### 🎨 6. 프리미엄 HR 다크 대시보드 8대 UI 컴포넌트 개발
-- `Header.jsx`, `EvaluationCriteria.jsx`, `ApplicantInput.jsx`, `DashboardSummary.jsx`, `EvidenceViewer.jsx`, `InterviewQuestions.jsx`, `ApplicantComparison.jsx`, `ReportExporter.jsx` 구현 완료.
-
----
-
-### 📚 7. 깃허브 레포지토리 문서화 & 1기능 1커밋 & 한글 커밋 체계 수립
-- **입문자 친화적 [README.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/README.md) 개편**: 발표용 HTML, GitHub Native Milestones 링크, 프로젝트 필요성, 5대 기능, 수치 ROI, 세분화 마일스톤 반영.
-- **[docs/ISSUES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ISSUES.md) 및 GitHub Native Issues 생성**: 4대 주요 기술 병목 이슈화 및 마일스톤 연결.
-- **[docs/ENTERPRISE_GUIDELINES.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_GUIDELINES.md) 수립**: 탑티어 기업 7대 엔지니어링 표준 수립 및 `.github/PULL_REQUEST_TEMPLATE.md` 등록.
-- **1기능 1커밋 & 한글 커밋 준수 및 깃허브 푸시**: [https://github.com/jcm0314/CapStone-SW-.git](https://github.com/jcm0314/CapStone-SW-.git) 원격 저장소 동기화 완수.
-
----
-
-### 📜 커밋 히스토리 (2026-09-16)
+### 📜 커밋 히스토리 (Recent Commits)
 
 ```bash
+* 374c95e refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편
 * e91ead3 feat: 6대 목차 포함 중간 발표용 presentation.html 작성
-* f4eabd7 docs: README.md에 구글 Gemini API Key 발급 안내 추가
-* 7211eb3 docs: 마일스톤 및 스프린트 세부 일정표 구체화
 ```
 
 ---
