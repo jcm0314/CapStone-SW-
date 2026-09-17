@@ -49,9 +49,14 @@
           <p class="text-[11px] text-gray-400">근거 기반 자기소개서 AI 역량 평가 및 서류 검증 시스템</p>
         </div>
       </div>
-      <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full text-xs font-bold">
-        CapStone SW Presentation
-      </span>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">
+          🏛️ Vertex AI Enterprise Proxy
+        </span>
+        <span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full text-xs font-bold">
+          CapStone SW Presentation
+        </span>
+      </div>
     </div>
   </header>
 
@@ -109,20 +114,43 @@
           <p class="text-xs text-gray-400 leading-snug">주관적 검증 부실 ➔ 조기 퇴사율 <strong class="text-white">27.5%</strong> 초래</p>
         </div>
       </div>
+
+      <!-- 반면교사: 아마존 사례 vs HR AX 해결책 -->
+      <div class="bg-gradient-to-r from-gray-900 via-gray-900/90 to-blue-950/40 p-4 rounded-xl border border-gray-800/80 space-y-2 text-xs">
+        <div class="flex items-center gap-2 font-bold text-amber-300">
+          <span>⚠️ 반면교사: 2014 아마존 AI 채용 실패 사례의 교훈</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300 text-[11px]">
+          <div class="bg-rose-950/30 p-2.5 rounded-lg border border-rose-900/40">
+            <strong class="text-rose-400 block mb-1">❌ 과거 아마존 AI 시스템의 실패</strong>
+            1. 남성 편향 데이터 학습 & 편향 차단 규제 부재<br/>
+            2. <strong>AI가 human-in-the-loop 없이 최종 합/불 독단 결정</strong>
+          </div>
+          <div class="bg-emerald-950/30 p-2.5 rounded-lg border border-emerald-900/40">
+            <strong class="text-emerald-400 block mb-1">✅ HR AX Smart Evaluator의 혁신</strong>
+            1. <strong>PII 마스킹 필터</strong>로 성별/신상 편향 완벽 차단<br/>
+            2. <strong>Human-in-the-Loop</strong>: AI는 원문 근거만 제시, <strong>최종 판단은 100% 인사권자가 수행</strong>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- 02. 사용자 -->
     <section id="sec2" class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
       <div class="flex items-center gap-2 border-b border-gray-800 pb-3">
         <span class="px-2.5 py-0.5 bg-indigo-500/20 text-indigo-400 font-extrabold rounded-lg text-xs">02</span>
-        <h2 class="text-base font-bold text-white">사용자 (User Personas)</h2>
+        <h2 class="text-base font-bold text-white">사용자 (User Personas & Pain Points)</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
+        <!-- 인사담당자 페르소나 -->
+        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2.5">
           <div class="flex justify-between items-center">
-            <span class="text-xs font-extrabold text-blue-400">👤 박현우 팀장 (기업 HR)</span>
+            <span class="text-xs font-extrabold text-blue-400">👤 박현우 팀장 (대기업 HR 채용 담당자)</span>
             <span class="px-2 py-0.5 bg-blue-500/10 text-blue-300 rounded text-[10px] font-bold">인사담당자</span>
+          </div>
+          <div class="bg-blue-950/30 p-2.5 rounded-lg border border-blue-900/40 text-blue-200 text-xs italic">
+            💬 "서류가 너무 많아 다 검토하기 힘드네요... 외부 인력을 써도 평가 기준이 회사와 다르고, 주관적인 느낌 대신 <strong>100% 원문 근거</strong>를 1초 만에 확인하고 싶어요."
           </div>
           <div class="text-xs text-gray-300 space-y-1">
             <div>• <strong class="text-white">핵심 니즈</strong>: 500건 서류 중 성과 근거 수재 <strong class="text-blue-400 font-bold">1초 스크리닝</strong></div>
@@ -130,14 +158,18 @@
           </div>
         </div>
 
-        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
+        <!-- 지원자/취준생 페르소나 -->
+        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2.5">
           <div class="flex justify-between items-center">
-            <span class="text-xs font-extrabold text-purple-400">👤 김서연 리크루터 (에이전시)</span>
-            <span class="px-2 py-0.5 bg-purple-500/10 text-purple-300 rounded text-[10px] font-bold">헤드헌터</span>
+            <span class="text-xs font-extrabold text-purple-400">👤 이지은 지원자 (기업 취업준비생)</span>
+            <span class="px-2 py-0.5 bg-purple-500/10 text-purple-300 rounded text-[10px] font-bold">지원자</span>
+          </div>
+          <div class="bg-purple-950/30 p-2.5 rounded-lg border border-purple-900/40 text-purple-200 text-xs italic">
+            💬 "제 지원서가 블라인드 채용 규정에 맞게 신상 차별 없이 <strong>공정하고 일관된 직무 역량 기준</strong>으로 평가받는지 확신이 들지 않아요."
           </div>
           <div class="text-xs text-gray-300 space-y-1">
-            <div>• <strong class="text-white">핵심 니즈</strong>: 고객사별 <strong class="text-purple-400 font-bold">맞춤 역량 가중치</strong> 적용</div>
-            <div>• <strong class="text-white">해결 가치</strong>: 원문 근거 캡처가 포함된 <strong class="text-purple-400 font-bold">표준 HR 평가서(PDF)</strong> 추출</div>
+            <div>• <strong class="text-white">핵심 니즈</strong>: <strong class="text-purple-400 font-bold">PII 자동 마스킹</strong>으로 공정한 블라인드 평가 보장</div>
+            <div>• <strong class="text-white">해결 가치</strong>: 주관 배제, 오직 서류 속 <strong class="text-purple-400 font-bold">실제 직무 성과 근거</strong>로만 평가</div>
           </div>
         </div>
       </div>
@@ -158,7 +190,7 @@
         </div>
 
         <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-1">
-          <span class="text-xs font-extrabold text-blue-400 block">🔍 Explainable AI</span>
+          <span class="text-xs font-extrabold text-blue-400 block">🔍 Explainable AI (XAI)</span>
           <h3 class="text-xs font-bold text-white">원문 근거 100% 증명</h3>
           <p class="text-[11px] text-gray-400">"왜 85점인가?" ➔ <strong class="text-white">본문 원문 근거</strong> 증명</p>
         </div>
@@ -168,6 +200,13 @@
           <h3 class="text-xs font-bold text-white">서류 ➔ 면접 직결</h3>
           <p class="text-[11px] text-gray-400">서류 약점 ➔ <strong class="text-white">구조화 면접 질문</strong> 연동</p>
         </div>
+      </div>
+
+      <!-- Human-in-the-Loop 헌장 -->
+      <div class="bg-indigo-950/20 p-3.5 rounded-xl border border-indigo-900/40 text-center space-y-1">
+        <p class="text-xs font-extrabold text-indigo-300">
+          💡 "AI는 사람을 대체하는 인사권자가 아니라, 사람의 판단을 돕고 채용을 더 공정하고 효율적으로 발전시키는 100% 근거 보조 솔루션입니다."
+        </p>
       </div>
     </section>
 
@@ -209,7 +248,7 @@
     <section id="sec5" class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
       <div class="flex items-center gap-2 border-b border-gray-800 pb-3">
         <span class="px-2.5 py-0.5 bg-amber-500/20 text-amber-400 font-extrabold rounded-lg text-xs">05</span>
-        <h2 class="text-base font-bold text-white">시스템 설명 (System & Features)</h2>
+        <h2 class="text-base font-bold text-white">시스템 설명 (System Architecture & Features)</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,22 +256,23 @@
         <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
           <h3 class="text-xs font-bold text-amber-400">✨ 5대 핵심 기능</h3>
           <ul class="text-xs text-gray-300 space-y-1 font-medium">
-            <li>1. <strong class="text-emerald-400">본문 근거 하이라이터</strong> (🟢긍정/🔴리스크/🟡검증필요)</li>
-            <li>2. <strong class="text-blue-400">직무별 역량 가중치 슬라이더</strong> (5대 역량 조절)</li>
-            <li>3. <strong class="text-purple-400">종합 평가 대시보드</strong> (100점 게이지 & 레이더 차트)</li>
-            <li>4. <strong class="text-amber-400">맞춤 면접 질문 키트</strong> (질문 의도 & 체크리스트)</li>
-            <li>5. <strong class="text-rose-400">지원자 비교 & 평가서 출력</strong> (PDF/인쇄 지원)</li>
+            <li>1. <strong class="text-emerald-400">본문 근거 하이라이터</strong> (🟢긍정/🔴리스크 1:1 위치 매칭)</li>
+            <li>2. <strong class="text-blue-400">직무별 역량 가중치 슬라이더</strong> (5대 역량 즉시 재정산)</li>
+            <li>3. <strong class="text-purple-400">종합 평가 대시보드</strong> (100점 게이지 & Recharts 레이더 차트)</li>
+            <li>4. <strong class="text-amber-400">맞춤 면접 질문 키트</strong> (약점 기반 질문 의도 추출)</li>
+            <li>5. <strong class="text-rose-400">지원자 비교 & 평가서 출력</strong> (PDF / 1클릭 인쇄)</li>
           </ul>
         </div>
 
-        <!-- 기술 스택 -->
+        <!-- 기술 스택 및 대기업 엔터프라이즈 인프라 -->
         <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
-          <h3 class="text-xs font-bold text-blue-400">🛠️ 기술 스택</h3>
+          <h3 class="text-xs font-bold text-blue-400">🏛️ 엔터프라이즈 기술 스택 (GCP Vertex AI)</h3>
           <div class="text-xs text-gray-300 space-y-1 font-mono">
             <div>• Frontend: <strong class="text-white">React 18 + Vite 6 + Tailwind CSS</strong></div>
-            <div>• Charts: <strong class="text-white">Recharts (Radar Chart)</strong></div>
-            <div>• AI Integration: <strong class="text-white">Google Gemini 2.5/1.5 Flash</strong></div>
-            <div>• Parser Engine: <strong class="text-white">Exact Substring Grounding Parser</strong></div>
+            <div>• Security: <strong class="text-white">Express Proxy Gateway + PII Anonymizer</strong></div>
+            <div>• AI Infrastructure: <strong class="text-white">Google Cloud Vertex AI Enterprise</strong></div>
+            <div>• Audit Trail: <strong class="text-white">Google BigQuery Audit Log Integration</strong></div>
+            <div>• Data Governance: <strong class="text-white">Enterprise Zero Data Retention 준수</strong></div>
           </div>
         </div>
       </div>
@@ -248,26 +288,25 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
         <a href="https://github.com/jcm0314/CapStone-SW-.git" target="_blank" class="bg-gray-900/90 hover:bg-blue-600/20 p-3.5 rounded-xl border border-gray-800 transition-all font-mono text-center">
           <div class="font-bold text-blue-400 mb-0.5">📦 Main Repository</div>
-          <span class="text-[10px] text-gray-400">CapStone-SW-.git ↗</span>
+          <div class="text-[11px] text-gray-400">CapStone-SW- GitHub 원격 저장소</div>
         </a>
 
         <a href="https://github.com/jcm0314/CapStone-SW-/milestones" target="_blank" class="bg-gray-900/90 hover:bg-purple-600/20 p-3.5 rounded-xl border border-gray-800 transition-all font-mono text-center">
-          <div class="font-bold text-purple-400 mb-0.5">🎯 Native Milestones</div>
-          <span class="text-[10px] text-gray-400">5대 마일스톤 ↗</span>
+          <div class="font-bold text-purple-400 mb-0.5">🎯 GitHub Milestones</div>
+          <div class="text-[11px] text-gray-400">5대 마일스톤 & 스프린트 일정표</div>
         </a>
 
-        <a href="https://github.com/jcm0314/CapStone-SW-/issues" target="_blank" class="bg-gray-900/90 hover:bg-amber-600/20 p-3.5 rounded-xl border border-gray-800 transition-all font-mono text-center">
-          <div class="font-bold text-amber-400 mb-0.5">📌 Native Issues</div>
-          <span class="text-[10px] text-gray-400">기술 병목 4종 ↗</span>
+        <a href="https://github.com/jcm0314/CapStone-SW-/issues" target="_blank" class="bg-gray-900/90 hover:bg-emerald-600/20 p-3.5 rounded-xl border border-gray-800 transition-all font-mono text-center">
+          <div class="font-bold text-emerald-400 mb-0.5">📌 GitHub Issues</div>
+          <div class="text-[11px] text-gray-400">기술 병목 및 PII 마스킹 이슈 모음</div>
         </a>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="text-center text-[11px] text-gray-500 pt-8">
-    © 2026 HR AX Smart Evaluator Team. All rights reserved.
+  <footer class="max-w-6xl mx-auto px-6 mt-12 text-center text-xs text-gray-500 border-t border-gray-800/80 pt-6">
+    © 2026 HR AX Smart Evaluator Team. All rights reserved. | Google Cloud Vertex AI Enterprise Architecture
   </footer>
 
 </body>
