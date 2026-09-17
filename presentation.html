@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HR AX Smart Evaluator - 중간 진행사항 발표</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    });
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
@@ -309,36 +315,126 @@
       </div>
     </section>
 
-    <!-- 05. 시스템 설명 -->
-    <section id="sec5" class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
+    <!-- 05. 시스템 설명, 유저 플로우 & 시스템 아키텍처 -->
+    <section id="sec5" class="glass-card rounded-2xl p-6 border border-gray-800 space-y-6">
       <div class="flex items-center gap-2 border-b border-gray-800 pb-3">
         <span class="px-2.5 py-0.5 bg-amber-500/20 text-amber-400 font-extrabold rounded-lg text-xs">05</span>
-        <h2 class="text-base font-bold text-white">시스템 설명 (System Architecture & Features)</h2>
+        <h2 class="text-base font-bold text-white">시스템 설명 (User Flow & System Architecture)</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- 5대 기능 키워드 -->
-        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
-          <h3 class="text-xs font-bold text-amber-400">✨ 5대 핵심 기능</h3>
-          <ul class="text-xs text-gray-300 space-y-1 font-medium">
-            <li>1. <strong class="text-emerald-400">본문 근거 하이라이터</strong> (🟢긍정/🔴리스크 1:1 위치 매칭)</li>
-            <li>2. <strong class="text-blue-400">직무별 역량 가중치 슬라이더</strong> (5대 역량 즉시 재정산)</li>
-            <li>3. <strong class="text-purple-400">종합 평가 대시보드</strong> (100점 게이지 & Recharts 레이더 차트)</li>
-            <li>4. <strong class="text-amber-400">맞춤 면접 질문 키트</strong> (약점 기반 질문 의도 추출)</li>
-            <li>5. <strong class="text-rose-400">지원자 비교 & 평가서 출력</strong> (PDF / 1클릭 인쇄)</li>
-          </ul>
-        </div>
-
-        <!-- 기술 스택 및 대기업 엔터프라이즈 인프라 -->
-        <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-2">
-          <h3 class="text-xs font-bold text-blue-400">🏛️ 엔터프라이즈 기술 스택 (GCP Vertex AI)</h3>
-          <div class="text-xs text-gray-300 space-y-1 font-mono">
-            <div>• Frontend: <strong class="text-white">React 18 + Vite 6 + Tailwind CSS</strong></div>
-            <div>• Security: <strong class="text-white">Express Proxy Gateway + PII Anonymizer</strong></div>
-            <div>• AI Infrastructure: <strong class="text-white">Google Cloud Vertex AI Enterprise</strong></div>
-            <div>• Audit Trail: <strong class="text-white">Google BigQuery Audit Log Integration</strong></div>
-            <div>• Data Governance: <strong class="text-white">Enterprise Zero Data Retention 준수</strong></div>
+      <!-- 1. 유저 플로우 (5-Step User Journey) -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+          <span>🔄 시스템 5단계 유저 플로우 (User Journey Flow)</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+          <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 space-y-1">
+            <span class="text-[10px] font-bold text-blue-400 block">Step 1. 공고 & 가중치 설정</span>
+            <p class="text-[11px] text-gray-300 font-medium">직무별 5대 역량 슬라이더 비중 조절</p>
           </div>
+          <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 space-y-1">
+            <span class="text-[10px] font-bold text-indigo-400 block">Step 2. PII 마스킹 제출</span>
+            <p class="text-[11px] text-gray-300 font-medium">Gateway에서 전화번호/이메일 익명화 선처리</p>
+          </div>
+          <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 space-y-1">
+            <span class="text-[10px] font-bold text-purple-400 block">Step 3. Vertex AI 파이프라인</span>
+            <p class="text-[11px] text-gray-300 font-medium">Gemini 2.5/1.5 Flash 근거 문장 캡처</p>
+          </div>
+          <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 space-y-1">
+            <span class="text-[10px] font-bold text-emerald-400 block">Step 4. XAI 근거 검증</span>
+            <p class="text-[11px] text-gray-300 font-medium">레이더 차트 & 원문 위 🟢/🔴 1:1 하이라이트</p>
+          </div>
+          <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 space-y-1">
+            <span class="text-[10px] font-bold text-rose-400 block">Step 5. 면접 질문 & PDF 출력</span>
+            <p class="text-[11px] text-gray-300 font-medium">서류 약점 기반 면접질문지 & 1클릭 PDF 인쇄</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Mermaid 시스템 아키텍처 다이어그램 -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+          <span>🏗️ 대기업 엔터프라이즈 시스템 아키텍처 (Mermaid Diagram)</span>
+        </h3>
+        <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 overflow-x-auto text-center">
+          <pre class="mermaid">
+graph TB
+    subgraph Client_Layer ["1. Client SPA Layer (React 18 + Vite)"]
+        UI_Dashboard["HR Assessment Dashboard"]
+        UI_Criteria["Dynamic 5-Competency Slider"]
+        UI_Viewer["Exact/Fuzzy Grounding Evidence Viewer"]
+    end
+
+    subgraph Security_Gateway_Layer ["2. Enterprise API Gateway Layer (Node.js Express Proxy)"]
+        Gateway["Express Proxy Server (3001 Port)"]
+        PII_Filter["PII Anonymizer (Regex Masking)"]
+        Auth_Validator["GCP IAM OAuth 2.0 Bearer Validator"]
+    end
+
+    subgraph Worker_Layer ["3. Background Parsing Worker (Web Worker)"]
+        Worker["evaluatorWorker.js (Async Regex & Substring Offsets)"]
+    end
+
+    subgraph GCP_Enterprise_Layer ["4. Google Cloud Enterprise Platform"]
+        VertexAI["Google Cloud Vertex AI (@google-cloud/vertexai)"]
+        BigQuery[("Google BigQuery (Audit Trail Log Storage)")]
+        GCS[("Cloud Storage Document Vault")]
+    end
+
+    UI_Dashboard & UI_Criteria --> Gateway
+    Gateway --> PII_Filter
+    PII_Filter --> Auth_Validator
+    Auth_Validator --> Worker
+    Worker --> VertexAI
+    Auth_Validator --> BigQuery
+    VertexAI --> GCS
+    VertexAI --> UI_Viewer
+          </pre>
+        </div>
+      </div>
+
+      <!-- 3. 기술 스택 및 선정 근거 표 -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+          <span>🛠️ 기술 스택 선정 이유 & 타당성 근거 (Technical Rationale)</span>
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-gray-300 border-collapse">
+            <thead>
+              <tr class="bg-gray-900 border-b border-gray-800 text-gray-400">
+                <th class="p-2.5 font-bold">기술 구성 요소</th>
+                <th class="p-2.5 font-bold">선정 기술 스택</th>
+                <th class="p-2.5 font-bold">기술 선정 및 아키텍처 타당성 근거 (Technical Rationale)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">Frontend SPA</td>
+                <td class="p-2.5 font-mono text-blue-400">React 18 + Vite 6 + Tailwind CSS</td>
+                <td class="p-2.5">컴포넌트 단위 실시간 가중치 슬라이더 UI 렌더링, Vite의 HMR 빌드 생산성, Tailwind 기반 모던 다크모드 대시보드.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">AI Engine</td>
+                <td class="p-2.5 font-mono text-emerald-400">Google Cloud Vertex AI (@google-cloud/vertexai)</td>
+                <td class="p-2.5">대기업 표준 <strong>Zero Data Retention</strong> (고객 데이터 파운데이션 모델 재학습 차단), IAM Bearer 토큰 기반 글로벌 보안 스펙.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">API Gateway</td>
+                <td class="p-2.5 font-mono text-purple-400">Node.js Express Proxy Gateway</td>
+                <td class="p-2.5">브라우저단 API Key 노출 100% 방지(3-Tier 보안), CORS 허용 및 GCP Service Account OAuth2 자동 갱신.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">Security & Audit</td>
+                <td class="p-2.5 font-mono text-amber-400">Regex PII Anonymizer + BigQuery Audit</td>
+                <td class="p-2.5">개인정보보호법 및 블라인드 채용 가이드라인 준수, 평가자 IP 및 근거 캡처 내역의 100% 감사 이력 보존.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">Async Worker</td>
+                <td class="p-2.5 font-mono text-rose-400">Web Worker Thread (evaluatorWorker.js)</td>
+                <td class="p-2.5">대용량 자소서 텍스트 정규식 분할 및 Substring Index 탐색 시 메인 UI 쓰레드 60fps 유지.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
