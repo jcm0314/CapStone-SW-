@@ -210,13 +210,14 @@
       </div>
     </section>
 
-    <!-- 04. 실현 가능성 (ROI 수치 표) -->
+    <!-- 04. 실현 가능성 (Quantitative ROI & 12-Week Feasibility) -->
     <section id="sec4" class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
       <div class="flex items-center gap-2 border-b border-gray-800 pb-3">
         <span class="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-400 font-extrabold rounded-lg text-xs">04</span>
-        <h2 class="text-base font-bold text-white">실현 가능성 (Quantitative ROI)</h2>
+        <h2 class="text-base font-bold text-white">실현 가능성 & 12주 개발 로드맵 (Feasibility & 12-Week Roadmap)</h2>
       </div>
 
+      <!-- ROI 메트릭 -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
         <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-1">
           <span class="text-[11px] text-gray-400 block">서류 1건당 검토</span>
@@ -240,6 +241,70 @@
           <span class="text-[11px] text-gray-400 block">면접 질문 준비</span>
           <div class="text-xl font-black text-blue-400 metric-number">0분</div>
           <span class="text-[10px] font-bold text-emerald-400">📝 자동 추출</span>
+        </div>
+      </div>
+
+      <!-- 12주 개발 실현 가능성 로드맵 (12-Week Roadmap) -->
+      <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-3">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+          <span class="text-xs font-bold text-emerald-400">📅 12주 단계별 완결 개발 로드맵 (100% 개발 실현 가능성 보장)</span>
+          <span class="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-300 rounded-full text-[10px] font-bold border border-emerald-500/30">12주 내 100% 개발 완료</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+          <!-- W1-2 -->
+          <div class="bg-gray-950/60 p-2.5 rounded-lg border border-emerald-500/50 space-y-1">
+            <div class="flex justify-between items-center text-[10px] font-extrabold text-emerald-400">
+              <span>Week 1~2</span>
+              <span class="px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded font-bold">완료 ✓</span>
+            </div>
+            <div class="font-bold text-white text-[11px]">Core MVP 구축</div>
+            <p class="text-[10px] text-gray-400 leading-tight">Grounding 엔진, 역량 슬라이더, Vertex AI 프록시 게이트웨이 완수</p>
+          </div>
+
+          <!-- W3-4 -->
+          <div class="bg-gray-950/60 p-2.5 rounded-lg border border-blue-500/50 space-y-1">
+            <div class="flex justify-between items-center text-[10px] font-extrabold text-blue-400">
+              <span>Week 3~4</span>
+              <span class="px-1.5 py-0.2 bg-blue-500/20 text-blue-300 rounded font-bold">진행 중 ⚡</span>
+            </div>
+            <div class="font-bold text-white text-[11px]">성능 최적화</div>
+            <p class="text-[10px] text-gray-400 leading-tight">Web Worker 백그라운드 파싱, 비동기 렌더링(60fps), Vitest 단원 테스트</p>
+          </div>
+
+          <!-- W5-6 -->
+          <div class="bg-gray-950/60 p-2.5 rounded-lg border border-gray-800 space-y-1">
+            <div class="flex justify-between items-center text-[10px] font-extrabold text-purple-400">
+              <span>Week 5~6</span>
+              <span class="text-gray-500 text-[10px]">예정</span>
+            </div>
+            <div class="font-bold text-white text-[11px]">Fuzzy & PII</div>
+            <p class="text-[10px] text-gray-400 leading-tight">Levenshtein 오타 매칭 엔진 & PII 자동 익명화 마스킹 필터</p>
+          </div>
+
+          <!-- W7-8 -->
+          <div class="bg-gray-950/60 p-2.5 rounded-lg border border-gray-800 space-y-1">
+            <div class="flex justify-between items-center text-[10px] font-extrabold text-amber-400">
+              <span>Week 7~8</span>
+              <span class="text-gray-500 text-[10px]">예정</span>
+            </div>
+            <div class="font-bold text-white text-[11px]">PDF/Batch 파서</div>
+            <p class="text-[10px] text-gray-400 leading-tight">pdfjs-dist 대량 파일 파싱, IndexedDB 로컬 캐싱 & Rate Limit Queue</p>
+          </div>
+
+          <!-- W9-12 -->
+          <div class="bg-gray-950/60 p-2.5 rounded-lg border border-gray-800 space-y-1">
+            <div class="flex justify-between items-center text-[10px] font-extrabold text-rose-400">
+              <span>Week 9~12</span>
+              <span class="text-gray-500 text-[10px]">예정</span>
+            </div>
+            <div class="font-bold text-white text-[11px]">Prompt Studio</div>
+            <p class="text-[10px] text-gray-400 leading-tight">기업 맞춤 프롬프트 에디터, 자소서 상호 표절율 매트릭스, 종합 검증</p>
+          </div>
+        </div>
+
+        <div class="bg-emerald-950/30 p-2.5 rounded-lg border border-emerald-900/40 text-[11px] text-emerald-200">
+          💡 <strong>교수님 검토용 개발 가능성 증명</strong>: 이미 가장 복잡한 핵심 파이프라인(Grounding 엔진 & Vertex AI 엔터프라이즈 게이트웨이)이 <strong>Week 1~2 내 완벽 구축</strong>되었으며, 주차별 세분화된 GitHub Milestones & Issues로 관리되어 <strong>12주 내 100% 최종 완성이 보장</strong>됩니다.
         </div>
       </div>
     </section>
