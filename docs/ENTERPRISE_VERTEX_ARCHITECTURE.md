@@ -26,24 +26,39 @@ graph TB
         UI_Criteria[Job Competency Configurator]
     end
 
-    subgraph Security_Gateway_Layer [2. Enterprise API Gateway (Node.js Proxy)]
-        Auth[OAuth2 / IAM Token Validator]
+    subgraph Backend_Gateway_Layer [2. Enterprise API Gateway & REST Server (Node.js)]
+        Express_Server[Node.js Express Proxy Gateway Server]
         PII_Filter[Enterprise PII Anonymizer Filter]
-        RateLimiter[Exponential Backoff Throttling Queue]
+        Auth_Validator[OAuth2 / IAM Token Validator]
     end
 
-    subgraph GCP_Vertex_Layer [3. Google Cloud Enterprise Platform]
-        VertexAI[Google Cloud Vertex AI (Gemini 2.5 / 1.5 Flash)]
+    subgraph Agent_RAG_Layer [3. AI Multi-Agent & RAG Engine]
+        Agent_Orchestrator[HR Multi-Agent Orchestrator]
+        Vector_DB[(Vector DB: GCP Vector Search / ChromaDB)]
+        Company_Rubric[Company Rubrics & Talent Criteria RAG]
+    end
+
+    subgraph Database_Storage_Layer [4. Enterprise Database & Cloud Storage]
+        Relational_DB[(Cloud SQL / PostgreSQL: Applicants & Jobs DB)]
         BigQuery[(Google BigQuery Audit Log Storage)]
         GCS[(Cloud Storage Document Vault)]
     end
 
-    UI & UI_Criteria --> Auth
-    Auth --> PII_Filter
-    PII_Filter --> RateLimiter
-    RateLimiter --> VertexAI
-    RateLimiter --> BigQuery
+    subgraph GCP_Enterprise_Layer [5. Google Cloud Enterprise Platform]
+        VertexAI[Google Cloud Vertex AI (Gemini 2.5 / 1.5 Flash)]
+    end
+
+    UI & UI_Criteria --> Express_Server
+    Express_Server --> PII_Filter
+    PII_Filter --> Auth_Validator
+    Auth_Validator --> Relational_DB
+    Auth_Validator --> Agent_Orchestrator
+    Agent_Orchestrator --> Vector_DB
+    Company_Rubric --> Vector_DB
+    Agent_Orchestrator --> VertexAI
+    Auth_Validator --> BigQuery
     VertexAI --> GCS
+    VertexAI --> UI
 ```
 
 ---

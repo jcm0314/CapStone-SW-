@@ -365,27 +365,36 @@ graph TB
         UI_Viewer["Exact/Fuzzy Grounding Evidence Viewer"]
     end
 
-    subgraph Security_Gateway_Layer ["2. Enterprise API Gateway Layer (Node.js Express Proxy)"]
-        Gateway["Express Proxy Server (3001 Port)"]
+    subgraph Backend_Gateway_Layer ["2. Enterprise API Gateway & REST Server (Node.js)"]
+        Express_Server["Express Gateway REST Server (3001 Port)"]
         PII_Filter["PII Anonymizer (Regex Masking)"]
         Auth_Validator["GCP IAM OAuth 2.0 Bearer Validator"]
     end
 
-    subgraph Worker_Layer ["3. Background Parsing Worker (Web Worker)"]
-        Worker["evaluatorWorker.js (Async Regex & Substring Offsets)"]
+    subgraph Agent_RAG_Layer ["3. AI Multi-Agent & RAG Engine"]
+        Agent_Orchestrator["HR Multi-Agent Orchestrator Pipeline"]
+        RAG_VectorDB[("Vector DB: GCP Vector Search / ChromaDB")]
+        Company_Rubric["Company Rubrics & Talent Criteria RAG"]
     end
 
-    subgraph GCP_Enterprise_Layer ["4. Google Cloud Enterprise Platform"]
-        VertexAI["Google Cloud Vertex AI (@google-cloud/vertexai)"]
+    subgraph Database_Storage_Layer ["4. Enterprise Database & Cloud Storage"]
+        Relational_DB[("Cloud SQL / PostgreSQL (Applicants & Jobs DB)")]
         BigQuery[("Google BigQuery (Audit Trail Log Storage)")]
-        GCS[("Cloud Storage Document Vault")]
+        GCS[("Cloud Storage (Document Vault)")]
     end
 
-    UI_Dashboard & UI_Criteria --> Gateway
-    Gateway --> PII_Filter
+    subgraph GCP_Enterprise_AI ["5. Google Cloud Enterprise Platform"]
+        VertexAI["Google Cloud Vertex AI (Gemini 2.5 / 1.5 Flash)"]
+    end
+
+    UI_Dashboard & UI_Criteria --> Express_Server
+    Express_Server --> PII_Filter
     PII_Filter --> Auth_Validator
-    Auth_Validator --> Worker
-    Worker --> VertexAI
+    Auth_Validator --> Relational_DB
+    Auth_Validator --> Agent_Orchestrator
+    Agent_Orchestrator --> RAG_VectorDB
+    Company_Rubric --> RAG_VectorDB
+    Agent_Orchestrator --> VertexAI
     Auth_Validator --> BigQuery
     VertexAI --> GCS
     VertexAI --> UI_Viewer
@@ -414,24 +423,29 @@ graph TB
                 <td class="p-2.5">컴포넌트 단위 실시간 가중치 슬라이더 UI 렌더링, Vite의 HMR 빌드 생산성, Tailwind 기반 모던 다크모드 대시보드.</td>
               </tr>
               <tr class="hover:bg-gray-900/40">
-                <td class="p-2.5 font-bold text-white">AI Engine</td>
-                <td class="p-2.5 font-mono text-emerald-400">Google Cloud Vertex AI (@google-cloud/vertexai)</td>
-                <td class="p-2.5">대기업 표준 <strong>Zero Data Retention</strong> (고객 데이터 파운데이션 모델 재학습 차단), IAM Bearer 토큰 기반 글로벌 보안 스펙.</td>
+                <td class="p-2.5 font-bold text-white">Backend Gateway Server</td>
+                <td class="p-2.5 font-mono text-purple-400">Node.js Express Proxy Gateway (server/proxyServer.js)</td>
+                <td class="p-2.5">브라우저단 API Key 노출 100% 방지(3-Tier 보안), REST API 엔드포인트 수립, CORS 허용 및 GCP Service Account OAuth2 자동 갱신.</td>
               </tr>
               <tr class="hover:bg-gray-900/40">
-                <td class="p-2.5 font-bold text-white">API Gateway</td>
-                <td class="p-2.5 font-mono text-purple-400">Node.js Express Proxy Gateway</td>
-                <td class="p-2.5">브라우저단 API Key 노출 100% 방지(3-Tier 보안), CORS 허용 및 GCP Service Account OAuth2 자동 갱신.</td>
+                <td class="p-2.5 font-bold text-white">Relational DB</td>
+                <td class="p-2.5 font-mono text-indigo-400">GCP Cloud SQL / PostgreSQL / IndexedDB</td>
+                <td class="p-2.5">지원자 인적사항, 채용 공고, 세부 역량 점수 트랜잭션의 ACID 영구 보장 및 브라우저 IndexedDB 로컬 빠른 캐싱.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">Vector DB & RAG</td>
+                <td class="p-2.5 font-mono text-amber-400">GCP Vector Search / ChromaDB (Milestone 5)</td>
+                <td class="p-2.5">기업별 맞춤 인재상, 직무별 평가 기준표, 금기어/필수 키워드를 벡터화하여 AI 평가 시 RAG Context로 주입.</td>
+              </tr>
+              <tr class="hover:bg-gray-900/40">
+                <td class="p-2.5 font-bold text-white">AI Engine & Multi-Agent</td>
+                <td class="p-2.5 font-mono text-emerald-400">Google Cloud Vertex AI + HR Multi-Agent Pipeline</td>
+                <td class="p-2.5">대기업 표준 <strong>Zero Data Retention</strong> 준수, PII 익명화 ➔ RAG 검색 ➔ Grounding 문장 캡처 ➔ 면접 질문 생성 연쇄 에이전트.</td>
               </tr>
               <tr class="hover:bg-gray-900/40">
                 <td class="p-2.5 font-bold text-white">Security & Audit</td>
-                <td class="p-2.5 font-mono text-amber-400">Regex PII Anonymizer + BigQuery Audit</td>
-                <td class="p-2.5">개인정보보호법 및 블라인드 채용 가이드라인 준수, 평가자 IP 및 근거 캡처 내역의 100% 감사 이력 보존.</td>
-              </tr>
-              <tr class="hover:bg-gray-900/40">
-                <td class="p-2.5 font-bold text-white">Async Worker</td>
-                <td class="p-2.5 font-mono text-rose-400">Web Worker Thread (evaluatorWorker.js)</td>
-                <td class="p-2.5">대용량 자소서 텍스트 정규식 분할 및 Substring Index 탐색 시 메인 UI 쓰레드 60fps 유지.</td>
+                <td class="p-2.5 font-mono text-rose-400">Regex PII Anonymizer + BigQuery Audit Logs</td>
+                <td class="p-2.5">개인정보보호법 및 블라인드 채용 준수, 평가자 IP 및 원문 근거 캡처 내역의 100% 감사 이력 보존.</td>
               </tr>
             </tbody>
           </table>
