@@ -4,14 +4,23 @@
 
 ---
 
-## 📌 [2026-09-17] Google Opal(Google Labs) AI 워크플로우 도구 연동 계획 수립
+## 📌 [2026-09-17] 대기업 환경 동기화를 위한 Google Cloud Vertex AI 아키텍처 및 Enterprise Proxy Gateway 구축
 
-### 🔮 1. Google Opal (Vibe-coding AI Workflow Builder) 활용 정의
-- **개념**: Google Labs에서 제공하는 노코드/로코드 비주얼 AI 워크플로우 빌더로, Gemini LLM 노드를 시각적으로 연결하여 AI 미니앱 파이프라인 구축.
-- **프로젝트 활용 영역**:
-  1. `[자소서 입력] ➔ [근거 캡처 노드] ➔ [역량 점수화 노드] ➔ [면접 질문 생성 노드]` AI 파이프라인의 **시각적 노드 프로토타이핑**.
-  2. Opal 노드 에디터에서 검증된 프롬프트 체인을 본 시스템의 `aiEvaluator.js` 및 Gemini API 연동 코드에 실시간 이식.
-  3. 발표 데모 시 Visual Proof 노드 맵으로 활용하여 시각적 설득력 극대화.
+### 🏛️ 1. 대기업 (Enterprise) 환경 규격 적용
+- **Google Cloud Vertex AI SDK 통합**: `generativelanguage.googleapis.com` (Consumer API) 대신 대기업 표준인 **Google Cloud Vertex AI (`@google-cloud/vertexai`)** API 아키텍처 지원.
+- **Enterprise Service Proxy Gateway (`server/proxyServer.js`)**:
+  - 클라이언트 브라우저가 API Key를 노출하지 않도록 Node.js / Express 기반 3-Tier API Gateway 통신 구축.
+  - 전화번호(`010-****-****`), 이메일 자동 익명화 PII 마스킹 필터 추가.
+  - Google BigQuery 감사 이력(Audit Trail Log) 연동 로깅 시스템 구현.
+- **Enterprise Dual-Engine Mode (`src/services/enterpriseVertexService.js`)**:
+  - `Enterprise Vertex AI Mode` (대기업 GCP Proxy + BigQuery Audit + IAM 인증).
+  - `Standard Mode` (로컬 빠른 검증용 Gemini API / 룰기반 fallback).
+- **[docs/ENTERPRISE_VERTEX_ARCHITECTURE.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_VERTEX_ARCHITECTURE.md) 규격서 수립**.
+
+---
+
+### 🔮 2. Google Opal (Vibe-coding AI Workflow Builder) 활용 정의
+- **AI 파이프라인 시각적 프로토타이핑**: `[자소서 입력] ➔ [근거 캡처] ➔ [역량 점수화] ➔ [면접 질문]` 노드 체이닝 및 Visual Proof 데모 정의.
 
 ---
 
@@ -25,8 +34,8 @@
 ### 📜 커밋 히스토리 (Recent Commits)
 
 ```bash
+* 5c5c8eb docs: README.md 및 CHANGELOG.md에 Google Opal 활용 방안 섹션 추가
 * 374c95e refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편
-* e91ead3 feat: 6대 목차 포함 중간 발표용 presentation.html 작성
 ```
 
 ---
