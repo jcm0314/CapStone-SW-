@@ -39,11 +39,11 @@
 - **목표**: 프론트엔드 비동기 성능 최적화 및 테스트 커버리지 80% 달성
 - **연동 Issue**: 🔴 [Issue #1] `[Performance] 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목` ([이슈 #1 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/1))
 
-#### 🔹 Sprint 2.1: Web Worker 백그라운드 파싱 모듈화 (2026-09-17 ~ 2026-09-19)
-- [ ] **Task 2.1.1**: `src/workers/evaluatorWorker.js` 작성
+#### 🔹 Sprint 2.1: Web Worker 백그라운드 파싱 모듈화 (2026-09-17 ~ 2026-09-19) [완료 ✓]
+- [x] **Task 2.1.1**: `src/workers/evaluatorWorker.js` 작성
   - 정규식 문장 분할 및 Substring Index 탐색을 백그라운드 Worker 쓰레드로 분리.
-- [ ] **Task 2.1.2**: `src/services/aiEvaluator.js` 비동기 Promise 래퍼 리팩토링.
-- [ ] **Task 2.1.3**: `ApplicantInput.jsx` 실시간 처리 프로그레스바(%) 구현.
+- [x] **Task 2.1.2**: `src/services/aiEvaluator.js` 및 `src/services/workerService.js` 비동기 Promise 래퍼 구현.
+- [x] **Task 2.1.3**: `ApplicantInput.jsx` 실시간 처리 프로그레스바(%) 구현.
 
 #### 🔹 Sprint 2.2: 대량 근거 카드 Virtual Scrolling 최적화 (2026-09-20 ~ 2026-09-22)
 - [ ] **Task 2.2.1**: `react-window` 라이브러리 설치 및 설정.

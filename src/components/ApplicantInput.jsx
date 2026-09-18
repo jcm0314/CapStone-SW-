@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { UserCheck, Sparkles, FileText, Play, RotateCcw } from 'lucide-react';
+import { Sparkles, FileText, Cpu } from 'lucide-react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 
-export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId }) {
+export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, progressState }) {
   const [name, setName] = useState('김민준');
   const [rawText, setRawText] = useState(SAMPLE_APPLICANTS[0].rawText);
   const [selectedSampleId, setSelectedSampleId] = useState(SAMPLE_APPLICANTS[0].id);
@@ -17,6 +17,9 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId })
     if (!rawText.trim()) return;
     onAnalyze({ name, rawText });
   };
+
+  const percent = progressState ? progressState.percent : (isAnalyzing ? 50 : 0);
+  const statusMsg = progressState ? progressState.status : 'AI 근거 문장 매칭 및 백그라운드 파싱 중...';
 
   return (
     <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-4">
@@ -76,6 +79,24 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId })
         />
       </div>
 
+      {/* Real-time Web Worker Progress Bar */}
+      {isAnalyzing && (
+        <div className="bg-gray-950/80 border border-blue-900/50 p-3 rounded-xl space-y-2 animate-pulse">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-blue-300 font-semibold flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-blue-400 animate-spin" /> Web Worker 쓰레드 분석 중: {statusMsg}
+            </span>
+            <span className="text-blue-400 font-mono font-bold">{percent}%</span>
+          </div>
+          <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-800">
+            <div
+              className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Submit Button */}
       <button
         onClick={handleRun}
@@ -85,7 +106,7 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId })
         {isAnalyzing ? (
           <>
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            AI 근거 문장 매칭 및 역량 분석 중...
+            Web Worker 백그라운드 분석 연산 중 ({percent}%)
           </>
         ) : (
           <>

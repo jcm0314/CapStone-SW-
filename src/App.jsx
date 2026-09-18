@@ -10,7 +10,8 @@ import ReportExporter from './components/ReportExporter';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
-import { analyzeApplicant } from './services/enterpriseVertexService';
+import { analyzeApplicant as analyzeEnterpriseApplicant } from './services/enterpriseVertexService';
+import { analyzeApplicant as analyzeLocalWorkerApplicant } from './services/aiEvaluator';
 import confetti from 'canvas-confetti';
 
 export default function App() {
@@ -19,16 +20,32 @@ export default function App() {
   const [applicantList, setApplicantList] = useState(SAMPLE_APPLICANTS);
   const [selectedApplicant, setSelectedApplicant] = useState(SAMPLE_APPLICANTS[0]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progressState, setProgressState] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
   const handleAnalyze = async ({ name, rawText }) => {
     setIsAnalyzing(true);
+    setProgressState({ percent: 10, status: '분석 프로세스 초기화 중...' });
+
     try {
-      const newResult = await analyzeApplicant({
-        name,
-        applyJobId: currentJob.id,
-        rawText
-      });
+      let newResult;
+      try {
+        // Try Enterprise Proxy Gateway first
+        newResult = await analyzeEnterpriseApplicant({
+          name,
+          applyJobId: currentJob.id,
+          rawText
+        });
+      } catch (proxyErr) {
+        console.warn("Enterprise Gateway connection fallback to Web Worker:", proxyErr.message);
+        // Fallback to Web Worker background parser
+        newResult = await analyzeLocalWorkerApplicant({
+          name,
+          applyJobId: currentJob.id,
+          rawText,
+          onProgress: (p) => setProgressState(p)
+        });
+      }
 
       // Add to list and select
       setApplicantList(prev => [newResult, ...prev.filter(a => a.id !== newResult.id)]);
@@ -43,10 +60,11 @@ export default function App() {
         });
       }
     } catch (err) {
-      console.error("Enterprise Analysis failed:", err);
-      alert(err.message || "대기업 Vertex AI 프록시 게이트웨이 분석 도중 오류가 발생했습니다.");
+      console.error("Analysis failed:", err);
+      alert(err.message || "서류 분석 도중 오류가 발생했습니다.");
     } finally {
       setIsAnalyzing(false);
+      setProgressState(null);
     }
   };
 
@@ -76,6 +94,7 @@ export default function App() {
                 <ApplicantInput
                   onAnalyze={handleAnalyze}
                   isAnalyzing={isAnalyzing}
+                  progressState={progressState}
                   currentJobId={currentJob.id}
                 />
               </div>

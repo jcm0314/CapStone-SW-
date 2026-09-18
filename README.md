@@ -56,7 +56,8 @@ hr-coverletter-evaluator/
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
 │   └── MILESTONES.md                  # 5대 세분화 마일스톤 및 개발 로드맵
 └── src/
-    ├── services/                      # 👈 enterpriseVertexService.js (순수 Vertex AI 프록시 서비스)
+    ├── workers/                       # 👈 evaluatorWorker.js (Web Worker 백그라운드 멀티쓰레드 파서)
+    ├── services/                      # 👈 enterpriseVertexService.js, workerService.js, aiEvaluator.js
     └── components/                    # 8대 UI 컴포넌트 모음
 ```
 
