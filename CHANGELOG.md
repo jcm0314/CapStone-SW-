@@ -10,7 +10,7 @@
 - **UI 렌더링 병목 해소**: 대용량 자기소개서 정규식 문장 분할 및 Substring char index 탐색을 메인 UI 쓰레드에서 Web Worker 백그라운드 쓰레드로 완전 이관 (60fps 디스플레이 유지).
 - **비동기 Worker 서비스 래퍼 (`src/services/workerService.js`)**: Web Worker 생명주기 관리 및 Promise 기반 진행률(`PROGRESS`) 이벤트 캡처 모듈 구축.
 - **실시간 실소요 프로그레스바 (`src/components/ApplicantInput.jsx`)**: 서류 분석 실행 시 0% ~ 100% 실시간 프로그레스 바 및 단계별 상태 텍스트 시각화.
-- **발표 자료 보강 (`presentation.html` & `presentation.pdf`)**: 엔터프라이즈 비정형 데이터 검증 엔진의 3대 확장성(범용성·활용성·확장성) 섹션 구체화 및 PDF 재생성.
+- **발표 자료 보강 (`presentation.html` & `presentation.pdf`)**: 엔터프라이즈 비정형 데이터 검증 엔진의 3대 확장성(범용성·활용성·확장성) 및 **종적(Vertical) AX 의사결정 파이프라인(실무자 ➔ 면접관 ➔ 경영진)** 3단계 카드 추가 및 고화질 PDF 재생성.
 
 ---
 
