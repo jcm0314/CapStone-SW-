@@ -51,10 +51,10 @@ hr-coverletter-evaluator/
 │   └── proxyServer.js                 # 👈 대기업 API Gateway & BigQuery Audit 게이트웨이
 ├── docs/
 │   ├── ARCHITECTURE.md                # 시스템 기본 아키텍처
-│   ├── ENTERPRISE_VERTEX_ARCHITECTURE.md # 👈 대기업 Vertex AI 아키텍처 규격서
+│   ├── ENTERPRISE_VERTEX_ARCHITECTURE.md # 👈 대기업 Vertex AI 사내 아키텍처 규격서
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
-│   ├── WBS_ENTERPRISE.md              # 👈 대기업 외주 WBS 및 사업 관리 규정
-│   ├── WEEKLY_STATUS_REPORT.md        # 👈 대기업 PMO 주간/검수 보고서
+│   ├── ENTERPRISE_AX_INTERNAL_PLAN.md # 👈 사내 AX 추진단 내재화 과제 수행계획서
+│   ├── ENTERPRISE_AX_WEEKLY_REPORT.md # 👈 사내 AX 추진단 C-Level & HR본부 보고서
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
 │   └── MILESTONES.md                  # 5대 세분화 마일스톤 및 개발 로드맵
 └── src/

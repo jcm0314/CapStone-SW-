@@ -4,12 +4,12 @@
 
 ---
 
-## 📌 [2026-09-20] 대기업 외주 SI 수행 프로젝트 PMO 거버넌스 및 WBS 체계 확립
+## 📌 [2026-09-20] 대기업 사내 AX 추진단 - 전사 HR AX 내재화 거버넌스 및 과제 수행계획 수립
 
-### 🏛️ 1. 대기업 SI 외주 계약 수행 체계 수립 (`docs/WBS_ENTERPRISE.md`)
-- **발주사-수행사 거버넌스**: 대기업 HR AX 추진단(발주사 PM: 유저)과 전문 SI Solution Architecture Team(수행사: Antigravity) 간의 공식 체계 구성.
-- **WBS 공정표 수립**: 12주차 5개 마일스톤별 세부 과제, 공정률(%), 산출물 관리 체계 수립.
-- **주간 & Stage-Gate 검수 보고서 (`docs/WEEKLY_STATUS_REPORT.md`)**: 각 Sprint 완성 시 발주사 서면 검수 승인 절차 규정.
+### 🏛️ 1. 대기업 사내 AX 팀 ➔ 사내 HR본부 내재화 과제 체계 수립 (`docs/ENTERPRISE_AX_INTERNAL_PLAN.md`)
+- **사내 거버넌스 파트너십**: 사내 AX 추진단 / AI 혁신 센터 (TF 리더: 유저)와 사내 Lead AI Software Architect (Antigravity) 간의 내재화 통합 체계 구축.
+- **사내 내재화 WBS**: 12주차 5개 마일스톤별 사내 HR 시스템 이식 공정률 및 산출물 정의.
+- **사내 C-Level & 인사본부 보고서 (`docs/ENTERPRISE_AX_WEEKLY_REPORT.md`)**: C-Level(CEO/CHO) 보고용 주간 및 Stage-Gate 승인 체계 규정.
 
 ---
 
