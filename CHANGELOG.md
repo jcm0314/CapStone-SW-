@@ -4,16 +4,13 @@
 
 ---
 
-## 📌 [2026-09-20] 대기업 사내 AX 추진단 - 전사 HR AX 내재화 거버넌스 및 실무 보완 5대 규정 수립
+## 📌 [2026-09-20] 대기업 사내 AX 추진단 - LG CSO AX팀 멘토 보고 브리핑 핸드북 및 EXAONE 3.0 하이브리드 수립
 
-### 🏛️ 1. 대기업 AX 실무 보완 가이드 수립 (`docs/ENTERPRISE_AX_COMPLIANCE_GAP.md`)
-- **5대 실무 보완 규정 수립**:
-  1. PII/블라인드 채용 가명화 및 데이터 파기 주기(Data Retention Policy) 강제
-  2. 사내 Legacy HRIS/ATS (Workday, SAP) REST Webhook 연동 & SSO (Azure AD/Okta) 통합 규격
-  3. AI 편향성(Fairness Index) 모니터링 & 이의제기 설명가능성(XAI) 소명 보고서
-  4. 0% 환각 방지 Threshold (Exact/Fuzzy Similarity < 0.85 시 무효화)
-  5. Change Management & 면접관 최종 책임 전자서명 (Human-in-the-Loop Sign-off) UI
-- **사내 AX 추진단 내재화 과제 수행계획서 (`docs/ENTERPRISE_AX_INTERNAL_PLAN.md`) 갱신**.
+### 🏆 1. LG CSO AX 멘토 발표 미팅 전용 전략 핸드북 작성 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)
+- **LG CSO AX 핵심 4대 전략 축**: EXAONE 3.0 하이브리드 연동, LG 계열사 ROI 정량화, 3D 확장성, Human-in-the-Loop 수용성.
+- **예상 Q&A Top 5 스크립트 작성**: 수평적 AI 요약과의 차별점, 사내 보안/PII 유출 방지, EXAONE 3.0 스위칭, 0% 환각 방지 Protocol, 현업 면접관 설득.
+- **3분 오프닝 피치 스크립트 수립**.
+- **발표 자료 (`presentation.html` & `presentation.pdf`) 아키텍처 다이어그램 내 LG EXAONE 3.0 하이브리드 라우터 명시**.
 
 ---
 

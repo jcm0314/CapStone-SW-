@@ -444,8 +444,9 @@ graph TB
         GCS[("Cloud Storage (Document Vault)")]
     end
 
-    subgraph GCP_Enterprise_AI ["5. Google Cloud Enterprise Platform"]
+    subgraph GCP_Enterprise_AI ["5. Hybrid AI Enterprise Platform"]
         VertexAI["Google Cloud Vertex AI (Gemini 2.5 / 1.5 Flash)"]
+        ExaoneAI["LG EXAONE 3.0 Enterprise Model (Hybrid Router)"]
     end
 
     UI_Dashboard & UI_Criteria --> Express_Server
@@ -455,10 +456,10 @@ graph TB
     Auth_Validator --> Agent_Orchestrator
     Agent_Orchestrator --> RAG_VectorDB
     Company_Rubric --> RAG_VectorDB
-    Agent_Orchestrator --> VertexAI
+    Agent_Orchestrator --> VertexAI & ExaoneAI
     Auth_Validator --> BigQuery
-    VertexAI --> GCS
-    VertexAI --> UI_Viewer
+    VertexAI & ExaoneAI --> GCS
+    VertexAI & ExaoneAI --> UI_Viewer
           </pre>
         </div>
       </div>
