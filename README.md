@@ -55,6 +55,7 @@ hr-coverletter-evaluator/
 │   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
 │   ├── ENTERPRISE_AX_INTERNAL_PLAN.md # 👈 사내 AX 추진단 내재화 과제 수행계획서
 │   ├── ENTERPRISE_AX_WEEKLY_REPORT.md # 👈 사내 AX 추진단 C-Level & HR본부 보고서
+│   ├── ENTERPRISE_AX_COMPLIANCE_GAP.md# 👈 대기업 사내 AX 추진단 실무 보완 및 거버넌스 가이드
 │   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
 │   └── MILESTONES.md                  # 5대 세분화 마일스톤 및 개발 로드맵
 └── src/

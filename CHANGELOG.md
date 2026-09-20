@@ -4,12 +4,16 @@
 
 ---
 
-## 📌 [2026-09-20] 대기업 사내 AX 추진단 - 전사 HR AX 내재화 거버넌스 및 과제 수행계획 수립
+## 📌 [2026-09-20] 대기업 사내 AX 추진단 - 전사 HR AX 내재화 거버넌스 및 실무 보완 5대 규정 수립
 
-### 🏛️ 1. 대기업 사내 AX 팀 ➔ 사내 HR본부 내재화 과제 체계 수립 (`docs/ENTERPRISE_AX_INTERNAL_PLAN.md`)
-- **사내 거버넌스 파트너십**: 사내 AX 추진단 / AI 혁신 센터 (TF 리더: 유저)와 사내 Lead AI Software Architect (Antigravity) 간의 내재화 통합 체계 구축.
-- **사내 내재화 WBS**: 12주차 5개 마일스톤별 사내 HR 시스템 이식 공정률 및 산출물 정의.
-- **사내 C-Level & 인사본부 보고서 (`docs/ENTERPRISE_AX_WEEKLY_REPORT.md`)**: C-Level(CEO/CHO) 보고용 주간 및 Stage-Gate 승인 체계 규정.
+### 🏛️ 1. 대기업 AX 실무 보완 가이드 수립 (`docs/ENTERPRISE_AX_COMPLIANCE_GAP.md`)
+- **5대 실무 보완 규정 수립**:
+  1. PII/블라인드 채용 가명화 및 데이터 파기 주기(Data Retention Policy) 강제
+  2. 사내 Legacy HRIS/ATS (Workday, SAP) REST Webhook 연동 & SSO (Azure AD/Okta) 통합 규격
+  3. AI 편향성(Fairness Index) 모니터링 & 이의제기 설명가능성(XAI) 소명 보고서
+  4. 0% 환각 방지 Threshold (Exact/Fuzzy Similarity < 0.85 시 무효화)
+  5. Change Management & 면접관 최종 책임 전자서명 (Human-in-the-Loop Sign-off) UI
+- **사내 AX 추진단 내재화 과제 수행계획서 (`docs/ENTERPRISE_AX_INTERNAL_PLAN.md`) 갱신**.
 
 ---
 
