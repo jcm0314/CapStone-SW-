@@ -30,7 +30,7 @@
   - `Task 1.3`: 100점 만점 게이지 & Recharts 레이더 차트 (`DashboardSummary.jsx`) 완료
   - `Task 1.4`: 서류 약점 기반 맞춤형 심층 면접 질문 생성기 (`InterviewQuestions.jsx`) 완료
   - `Task 1.5`: 지원자 매트릭스 비교 & 1클릭 서류 평가서 모달 (`ReportExporter.jsx`) 완료
-  - `Task 1.6`: Gemini 2.5/1.5 Flash API 실시간 연동 & 룰기반 fallback 서비스 (`aiEvaluator.js`) 완료
+  - `Task 1.6`: Gemini 2.5/1.5 Flash API 실시간 연동 & HR Multi-Agent 4대 에이전트 (Supervisor, Grounding, Critic, Interviewer) 오케스트레이션 파이프라인 수립 완료
 
 ---
 

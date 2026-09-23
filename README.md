@@ -33,9 +33,10 @@
 
 1. **Google Cloud Vertex AI (`@google-cloud/vertexai`)**: IAM Service Account 및 OAuth 2.0 Bearer Token 기반 엔터프라이즈 인증.
 2. **Enterprise Service Proxy Gateway (`server/proxyServer.js`)**: 브라우저 ➔ API Gateway ➔ Vertex AI 3-Tier 안전 프록시 통신 및 PII 마스킹.
-3. **BigQuery Audit Trail & Cloud Storage (GCS)**: 채용 서류 평가 이력 및 원문 근거의 100% 감사 이력 보관.
-4. **Enterprise Zero Data Retention**: 고객 데이터가 파운데이션 모델 재학습에 일절 사용되지 않는 데이터 거버넌스 준수.
-5. **순수 엔터프라이즈 단일 파이프라인**: 소비자용 API 키 입력창 및 fallback 모드를 완전 제거하여 대기업 표준 보안 규정을 엄격하게 강제.
+3. **HR Multi-Agent 4대 에이전트 앙상블 시스템**: 단일 LLM 환각 방지를 위해 Supervisor(총괄결재), Grounding(원문인덱싱), Critic(2차검증), Interviewer(약점질문) 4대 전문 에이전트 오케스트레이션 파이프라인 탑재.
+4. **BigQuery Audit Trail & Cloud Storage (GCS)**: 채용 서류 평가 이력 및 원문 근거의 100% 감사 이력 보관.
+5. **Enterprise Zero Data Retention**: 고객 데이터가 파운데이션 모델 재학습에 일절 사용되지 않는 데이터 거버넌스 준수.
+6. **순수 엔터프라이즈 단일 파이프라인**: 소비자용 API 키 입력창 및 fallback 모드를 완전 제거하여 대기업 표준 보안 규정을 엄격하게 강제.
 
 ---
 
