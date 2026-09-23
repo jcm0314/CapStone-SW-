@@ -274,6 +274,18 @@
             </p>
           </div>
         </div>
+
+        <!-- 📸 Visual Slide Preview Card 1 & 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-blue-300">📸 [화면 1] 100% Grounding 캡처 & Web Worker 프로그레스 대시보드 UI</span>
+            <img src="public/images/dashboard_ui.jpg" alt="Grounding Dashboard UI" class="rounded-xl border border-gray-800 shadow-xl w-full object-cover max-h-56" />
+          </div>
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-purple-300">📸 [인포그래픽 2] 3단계 종적 AX 의사결정 파이프라인 & 3D 전사 확장성</span>
+            <img src="public/images/vertical_pipeline.jpg" alt="Vertical AX Pipeline Infographic" class="rounded-xl border border-gray-800 shadow-xl w-full object-cover max-h-56" />
+          </div>
+        </div>
       </div>
     </section>
 
@@ -412,13 +424,15 @@
         </div>
       </div>
 
-      <!-- 2. Mermaid 시스템 아키텍처 다이어그램 -->
+      <!-- 2. Mermaid 시스템 아키텍처 다이어그램 & 비주얼 슬라이드 -->
       <div class="space-y-3">
         <h3 class="text-xs font-bold text-blue-400 flex items-center gap-1.5">
-          <span>🏗️ 대기업 엔터프라이즈 시스템 아키텍처 (Mermaid Diagram)</span>
+          <span>🏗️ 대기업 엔터프라이즈 시스템 아키텍처 & LG EXAONE 3.0 하이브리드 연동</span>
         </h3>
-        <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 overflow-x-auto text-center">
-          <pre class="mermaid">
+        <div class="bg-gray-950 p-3 rounded-xl border border-gray-800">
+          <img src="public/images/architecture.jpg" alt="Enterprise AI Architecture" class="rounded-lg w-full object-cover max-h-80 shadow-2xl mb-3 border border-gray-800" />
+          <div class="overflow-x-auto text-center">
+            <pre class="mermaid">
 graph TB
     subgraph Client_Layer ["1. Client SPA Layer (React 18 + Vite)"]
         UI_Dashboard["HR Assessment Dashboard"]
