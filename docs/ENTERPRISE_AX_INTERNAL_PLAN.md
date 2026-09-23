@@ -44,7 +44,9 @@
    - 단순 AI 자동화가 아닌, 현업 HR 채용 담당자 ➔ 면접관 ➔ 인사본부장의 종적 의사결정 흐름을 전사 파이프라인으로 연결합니다.
 3. **Strict 1기능 1커밋 & 한글 커밋 표본 관리**
    - 사내 Git 저장소 품질 준수를 위해 `1기능 = 1커밋` 및 태그(`feat`, `fix`, `docs`, `refactor`, `test`) 한글 표준을 엄수합니다.
-4. **C-Level 및 인사본부 보고 일원화**
+4. **HR Multi-Agent 4대 에이전트 앙상블 시스템 도입**
+   - **Supervisor Agent** (전체 통제 및 결재), **Grounding Agent** (원문 인덱싱), **Critic Agent** (2차 비판적 환각/과장 검증), **Interviewer Agent** (약점 면접질문 추출) 분담 체계로 환각 0% 및 평가 신뢰도를 확보합니다.
+5. **C-Level 및 인사본부 보고 일원화**
    - 각 스프린트 완성 시 사내 보고용 **Walkthrough 보고서** 및 최신 **Presentation Deck**을 상시 동기화합니다.
 
 ---

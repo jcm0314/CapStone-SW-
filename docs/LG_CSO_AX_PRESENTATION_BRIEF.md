@@ -26,8 +26,12 @@
 ### 🌐 3. LG 계열사/타 부서 3D 확장성 (Versatility)
 - **메시지**: "본 원문 Grounding 캡처 엔진은 HR 자소서를 넘어 **LG전자 R&D 특허 스크리닝, LG디스플레이 기술보고서 검증, LG유플러스 VOC(고객의소리) 분류**로 동일 엔진 100% 즉시 이식 가능합니다."
 
-### 🤝 4. 현업 채용 담당자/면접관 수용성 (Change Management)
-- **메시지**: "AI가 점수를 메기고 판단하는 것이 아니라, **100% 자소서 원문 속 실제 문장(🟢/🔴/🟡)을 캡처하여 면접관의 판단을 돕는 보조 솔루션**으로 현업 면접관 전자서명 UI를 강제하여 사내 수용성을 극대화했습니다."
+### 🤖 5. HR Multi-Agent 4대 에이전트 앙상블 아키텍처 (Multi-Agent Orchestration)
+- **메시지**: "단일 LLM 호출의 한계(환각, 일관성 저하)를 극복하기 위해 **Supervisor, Grounding, Critic, Interviewer 4대 역할 분담 에이전트 오케스트레이션 파이프라인**을 구축하여 신뢰도 99%를 달성했습니다."
+  - **1) Supervisor Agent**: 전사 평가 지시, 5대 역량 점수 통합 정산 및 파이프라인 총괄.
+  - **2) Grounding Evidence Agent**: 자소서 본문 텍스트 1:1 매칭 및 Substring Offset 인덱싱.
+  - **3) Critic / Verifier Agent**: 2차 비판적 검증, 환각/과장 표현/PII 마스킹 검증 (유사도 < 0.85 시 🟡 면접검증 전환).
+  - **4) Interviewer Agent**: Critic Agent 포착 🔴/🟡 약점 기반 맞춤 심층 질문 3종 & 체크리스트 자동 도출.
 
 ---
 

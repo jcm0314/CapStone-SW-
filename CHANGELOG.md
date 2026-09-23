@@ -4,14 +4,16 @@
 
 ---
 
-## 📌 [2026-09-23] LG CSO AX 멘토 발표 미팅 대비 비주얼 슬라이드 개편 및 EXAONE 3.0 연동 팩트 체크
+## 📌 [2026-09-23] LG CSO AX 멘토 발표 미팅 대비 비주얼 슬라이드 개편 & Multi-Agent 앙상블 아키텍처 구축
 
-### 🏆 1. LG EXAONE 3.0 연동 팩트 체크 및 Q&A 추가 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)
-- **EXAONE 3.0 오픈소스 공개 팩트 준수**: LG AI연구원의 Hugging Face 공개 모델(`LG-AI-EXAONE/EXAONE-3.0-7.8B-Instruct`)을 활용한 로컬/외부 테스트 환경 연동.
-- **사내망 이식 스위칭 프로토콜**: 백엔드 API Gateway (`server/proxyServer.js`)의 환경변수 스위칭(`AI_MODEL_PROVIDER=EXAONE_INHOUSE`)으로 사내 EXAONE 3.0 Enterprise 인프라 1초 전환 라우팅 명시.
-- **정제 비주얼 슬라이드 2종 적용 (`presentation.html` & `presentation.pdf`)**:
-  1. 핵심 UI 레이아웃 구조 (가중치 슬라이더, 본문, Grounding 캡처 🟢🔴🟡, 면접질문)
-  2. 수평적 AX 한계 vs 종적(Vertical) 3단계 AX 의사결정 파이프라인 비교 다이어그램
+### 🏆 1. HR Multi-Agent 4대 에이전트 앙상블 체계 수립 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)
+- **4대 역할 분담 Multi-Agent Orchestration**:
+  1. **Supervisor Agent**: 전사 평가 지시, 5대 역량 점수 통합 정산 및 파이프라인 총괄 결재.
+  2. **Grounding Agent**: 자소서 본문 텍스트 1:1 매칭 및 Substring Offset 인덱싱.
+  3. **Critic / Verifier Agent**: 2차 비판적 검증, 환각/과장 표현/PII 검증 (유사도 < 0.85 시 🟡 면접검증 전환).
+  4. **Interviewer Agent**: Critic Agent 포착 🔴/🟡 약점 기반 맞춤 심층 질문 3종 & 체크리스트 자동 도출.
+- **EXAONE 3.0 오픈소스 가용성 & 1초 라우팅 스위칭 Q&A 추가**.
+- **정제 비주얼 슬라이드 2종 적용 (`presentation.html` & `presentation.pdf`)**.
 
 ---
 
