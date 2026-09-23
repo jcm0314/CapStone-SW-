@@ -4,13 +4,14 @@
 
 ---
 
-## 📌 [2026-09-20] 대기업 사내 AX 추진단 - LG CSO AX팀 멘토 보고 브리핑 핸드북 및 EXAONE 3.0 하이브리드 수립
+## 📌 [2026-09-23] LG CSO AX 멘토 발표 미팅 대비 비주얼 슬라이드 개편 및 EXAONE 3.0 연동 팩트 체크
 
-### 🏆 1. LG CSO AX 멘토 발표 미팅 전용 전략 핸드북 작성 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)
-- **LG CSO AX 핵심 4대 전략 축**: EXAONE 3.0 하이브리드 연동, LG 계열사 ROI 정량화, 3D 확장성, Human-in-the-Loop 수용성.
-- **예상 Q&A Top 5 스크립트 작성**: 수평적 AI 요약과의 차별점, 사내 보안/PII 유출 방지, EXAONE 3.0 스위칭, 0% 환각 방지 Protocol, 현업 면접관 설득.
-- **3분 오프닝 피치 스크립트 수립**.
-- **발표 자료 (`presentation.html` & `presentation.pdf`) 아키텍처 다이어그램 내 LG EXAONE 3.0 하이브리드 라우터 명시**.
+### 🏆 1. LG EXAONE 3.0 연동 팩트 체크 및 Q&A 추가 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)
+- **EXAONE 3.0 오픈소스 공개 팩트 준수**: LG AI연구원의 Hugging Face 공개 모델(`LG-AI-EXAONE/EXAONE-3.0-7.8B-Instruct`)을 활용한 로컬/외부 테스트 환경 연동.
+- **사내망 이식 스위칭 프로토콜**: 백엔드 API Gateway (`server/proxyServer.js`)의 환경변수 스위칭(`AI_MODEL_PROVIDER=EXAONE_INHOUSE`)으로 사내 EXAONE 3.0 Enterprise 인프라 1초 전환 라우팅 명시.
+- **정제 비주얼 슬라이드 2종 적용 (`presentation.html` & `presentation.pdf`)**:
+  1. 핵심 UI 레이아웃 구조 (가중치 슬라이더, 본문, Grounding 캡처 🟢🔴🟡, 면접질문)
+  2. 수평적 AX 한계 vs 종적(Vertical) 3단계 AX 의사결정 파이프라인 비교 다이어그램
 
 ---
 

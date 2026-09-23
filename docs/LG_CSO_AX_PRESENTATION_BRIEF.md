@@ -65,6 +65,13 @@
 
 ---
 
+### Q6. "LG EXAONE 3.0은 사내망 전용이 아닌가요? 대외 개발 환경에서 어떻게 테스트 및 연동하나요?"
+> **[답변 스크립트]**  
+> "LG AI연구원(LG AI Research)에서 **EXAONE 3.0 7.8B Instruct 모델을 Hugging Face에 오픈소스로 공개**하였기 때문에, 개발/테스트 단계에서는 Hugging Face API / vLLM / Ollama를 통해 일반 개발 환경에서도 EXAONE 3.0 모델을 직접 구동하고 연동 검증을 진행할 수 있습니다.  
+> 또한 저희 게이트웨이(`server/proxyServer.js`)는 **Multi-Model Proxy Router 아키텍처**로 구현되어 있어, 대외 개발 단계에서는 Hugging Face / GCP Vertex AI로 테스트하고, **사내 망 이식 시 환경변수(`AI_MODEL_PROVIDER=EXAONE_INHOUSE`) 하나만 변경하면 사내 전용 EXAONE 3.0 Enterprise 엔드포인트로 1초 만에 전환**되도록 아키텍처가 수립되어 있습니다."
+
+---
+
 ## 🎤 3. 멘토 미팅 발표 3분 픽치 스크립트 (3-Min Pitch Script)
 
 > "멘토님, 안녕하십니까! 저희 프로젝트 **HR AX Smart Evaluator** 발표를 시작하겠습니다.  
