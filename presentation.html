@@ -347,9 +347,39 @@
         </div>
 
         <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 space-y-1">
-          <span class="text-[11px] text-gray-400 block">면접 질문 준비</span>
-          <div class="text-xl font-black text-blue-400 metric-number">0분</div>
-          <span class="text-[10px] font-bold text-emerald-400">📝 자동 추출</span>
+          <span class="text-[11px] text-gray-400 block">개발 공정 달성률</span>
+          <div class="text-xl font-black text-emerald-400 metric-number">33.3%</div>
+          <span class="text-[10px] font-bold text-emerald-400">📈 Week 1~4 완료</span>
+        </div>
+      </div>
+
+      <!-- 🎯 멘토링 피드백 반영: 현재 진척도(달성률 33.3%) & 3대 예상 리스크 대응 전략 -->
+      <div class="bg-gradient-to-r from-gray-900 via-emerald-950/30 to-gray-900 p-4 rounded-xl border border-emerald-800/60 space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-emerald-800/40 pb-2">
+          <span class="font-bold text-emerald-300 flex items-center gap-1.5">
+            <span>🎯 멘토링 반영: 3대 핵심 리스크(할루시네이션/비용/보안) 대응 전략</span>
+          </span>
+          <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold">2026-09-23 장용국 멘토님 피드백</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
+          <div class="bg-gray-950/80 p-3 rounded-lg border border-gray-800 space-y-1">
+            <strong class="text-rose-400 block text-xs">🚨 1. 할루시네이션/오류율 리스크</strong>
+            <p class="text-gray-300 leading-snug">
+              Critic Agent의 2차 비판 검증(유사도 &lt; 85% 시 🟡 강제전환) 및 Levenshtein Fuzzy Match(Sprint 3.1)로 <strong>환각 0% 차단</strong>
+            </p>
+          </div>
+          <div class="bg-gray-950/80 p-3 rounded-lg border border-gray-800 space-y-1">
+            <strong class="text-amber-400 block text-xs">💰 2. 인프라 비용 & 유지보수 리스크</strong>
+            <p class="text-gray-300 leading-snug">
+              Web Worker 클라이언트 1차 파싱 + IndexedDB 캐싱(Sprint 4.2) + <strong>LG EXAONE 3.0 하이브리드 라우터</strong>로 토큰 비용 최적화
+            </p>
+          </div>
+          <div class="bg-gray-950/80 p-3 rounded-lg border border-gray-800 space-y-1">
+            <strong class="text-blue-400 block text-xs">🔒 3. 보안/법적 규제 & 지속가능성</strong>
+            <p class="text-gray-300 leading-snug">
+              PII 자동 마스킹 + BigQuery 180일 감사 트레일 & Data Retention 스크러빙 + <strong>Human-in-the-Loop 면접관 서명 UI</strong>
+            </p>
+          </div>
         </div>
       </div>
 
