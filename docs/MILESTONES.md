@@ -34,9 +34,10 @@
 
 ---
 
-### 📍 [Milestone 2] `v1.1.0 - Web Worker 성능 최적화 & 테스트 구축` [차기 진행]
-- **기간**: 2026-09-17 ~ 2026-09-25 (약 9일간)
-- **목표**: 프론트엔드 비동기 성능 최적화 및 테스트 커버리지 80% 달성
+### 📍 [Milestone 2] `v1.1.0 - Web Worker 성능 최적화 & 테스트 구축` [완료 ✓]
+- **기간**: 2026-09-17 ~ 2026-09-25
+- **상태**: Closed / Completed (100%)
+- **목표**: 프론트엔드 비동기 성능 최적화 및 테스트 커버리지 구축
 - **연동 Issue**: 🔴 [Issue #1] `[Performance] 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목` ([이슈 #1 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/1))
 
 #### 🔹 Sprint 2.1: Web Worker 백그라운드 파싱 모듈화 (2026-09-17 ~ 2026-09-19) [완료 ✓]
@@ -50,10 +51,10 @@
 - [x] **Task 2.2.2**: `EvidenceViewer.jsx` 근거 카드 100개 이상 렌더링 시 Virtualized List 적용 (60fps 유지).
 - [x] **Task 2.2.3**: 원문 서브스트링 클릭 시 가상 스크롤 내 해당 근거 카드로 자동 이동 (`scrollToItem`) 연동.
 
-#### 🔹 Sprint 2.3: Vitest 단위 테스트 & Husky 커밋 훅 (2026-09-23 ~ 2026-09-25)
-- [ ] **Task 2.3.1**: `Vitest` 및 `React Testing Library` 통합 환경 구축.
-- [ ] **Task 2.3.2**: `src/services/aiEvaluator.test.js` 작성 (성과 파싱 & 가중치 점수 검증).
-- [ ] **Task 2.3.3**: `Husky` + `lint-staged` 적용으로 Git 커밋 시 자동 ESLint & Prettier 검사.
+#### 🔹 Sprint 2.3: Vitest 단위 테스트 & Husky 커밋 훅 (2026-09-23 ~ 2026-09-25) [완료 ✓]
+- [x] **Task 2.3.1**: `Vitest` 및 `@testing-library/react` 통합 환경 구축 (`vite.config.js`).
+- [x] **Task 2.3.2**: `src/services/aiEvaluator.test.js` 작성 (Worker Fallback & Substring 근거 캡처 검증).
+- [x] **Task 2.3.3**: `Husky` + `lint-staged` pre-commit 훅 적용으로 Git 커밋 시 자동 단위 테스트 실행.
 
 ---
 
