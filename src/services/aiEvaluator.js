@@ -1,5 +1,6 @@
 import { JOB_TEMPLATES } from '../data/jobTemplates';
 import { runWorkerEvaluation } from './workerService';
+import { anonymizePII } from '../utils/piiAnonymizer';
 
 /**
  * AI Grounding Evaluation Coordinator
@@ -8,20 +9,36 @@ import { runWorkerEvaluation } from './workerService';
 export async function analyzeApplicant({ name, applyJobId, rawText, apiKey, onProgress }) {
   const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
 
+  // Step 1: Client-Side PII Security & Blind Recruitment Anonymization
+  const piiResult = anonymizePII(rawText, name);
+  const cleanText = piiResult.anonymizedText;
+
+  if (onProgress && piiResult.piiCount > 0) {
+    onProgress({
+      percent: 15,
+      status: `🔒 개인식별정보(PII) 익명화 선처리 완료 (${piiResult.maskedCategories.join(', ')} 마스킹 적용)...`
+    });
+  }
+
   if (apiKey && apiKey.trim().length > 10) {
     try {
-      if (onProgress) onProgress({ percent: 20, status: 'Google Cloud Gemini API 통신 연결 중...' });
-      const result = await analyzeWithGeminiAPI({ name, jobTemplate, rawText, apiKey });
+      if (onProgress) onProgress({ percent: 25, status: 'Google Cloud Gemini API 통신 연결 중...' });
+      const result = await analyzeWithGeminiAPI({ name, jobTemplate, rawText: cleanText, apiKey });
       if (onProgress) onProgress({ percent: 100, status: 'Gemini API 분석 완료' });
+      result.piiMeta = piiResult;
       return result;
     } catch (err) {
       console.warn("Gemini API call failed, falling back to Web Worker engine:", err);
-      return await runWorkerEvaluation({ name, jobTemplate, rawText, onProgress });
+      const res = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
+      res.piiMeta = piiResult;
+      return res;
     }
   }
 
   // Fallback to Web Worker Background Parsing Engine
-  return await runWorkerEvaluation({ name, jobTemplate, rawText, onProgress });
+  const result = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
+  result.piiMeta = piiResult;
+  return result;
 }
 
 /**

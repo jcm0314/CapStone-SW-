@@ -4,13 +4,18 @@
 
 ---
 
-## 📌 [2026-10-03] Sprint 3.1: Levenshtein Distance 기반 Fuzzy Matching 엔진 구현 & 오타/줄바꿈 완충 하이라이팅 연동
+## 📌 [2026-10-03] Sprint 3.1 & 3.2: Levenshtein Fuzzy Matching 엔진 & Client-side PII 보안 익명화 필터 구현
 
-### 🔍 1. Fuzzy Matching 엔진 개발 (`src/utils/fuzzyMatcher.js`)
+### 🔒 1. Client-side PII 보안 익명화 필터 개발 (Sprint 3.2)
+- **개인식별정보(PII) & 블라인드 채용 정규식 필터 (`src/utils/piiAnonymizer.js`)**: 성명, 전화번호, 이메일, 주민번호, 생년월일, 출신 학교명(대학교/고교/중학), 거주 지역 자동 마스킹.
+- **AI 평가 통신 파이프라인 통합 (`src/services/aiEvaluator.js`)**: Gemini API 및 Web Worker 파싱 전 PII 자동 익명화 선처리 적용.
+- **`EvidenceViewer.jsx` PII 보안 뱃지 표시**: `ShieldCheck: PII Masked (Blind Recruitment)` 뱃지 추가.
+- **`piiAnonymizer.test.js` 단위 테스트 6종 구축**: 6개 테스트 항목 100% 통과 (전체 단위 테스트 14종 100% 그린).
+
+### 🔍 2. Fuzzy Matching 엔진 개발 (Sprint 3.1)
 - **Levenshtein Distance & Jaccard 유사도 알고리즘**: 문장 간 편집 거리 및 0.0~1.0 정규화 유사도 산출 모듈 구현.
 - **슬라이딩 윈도우 텍스트 탐색 (`findFuzzyMatch`)**: Exact Match 실패 시 원문 내 줄바꿈(`\n`), 다중 공백, 오타가 섞여 있어도 85% 이상 유사한 문장을 99% 정확도로 자동 매칭.
 - **`EvidenceViewer.jsx` 하이라이팅 연동**: 근거 캡처 검증 뷰어 헤더에 `Fuzzy Matcher (Levenshtein 85%+)` 뱃지 표기 및 슬라이딩 윈도우 오프셋 렌더링.
-- **`fuzzyMatcher.test.js` 단위 테스트 5종 구축**: 편집 거리, 유사도 정규화, 줄바꿈 허용, 미세 오타 탐지 테스트 100% 통과.
 
 ---
 - **Vitest & React Testing Library 환경 통합**: `vite.config.js` 내 jsdom 테스트 환경 구성 및 `"test": "vitest run"` 스크립트 추가.

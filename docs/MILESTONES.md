@@ -58,8 +58,9 @@
 
 ---
 
-### 📍 [Milestone 3] `v1.2.0 - Fuzzy Matching 엔진 & PII 마스킹` [진행 중]
+### 📍 [Milestone 3] `v1.2.0 - Fuzzy Matching 엔진 & PII 마스킹` [완료 ✓]
 - **기간**: 2026-09-26 ~ 2026-10-05
+- **상태**: Closed / Completed (100%)
 - **목표**: 하이라이팅 매칭 정확도 99% 달성 및 PII 보안 익명화 처리
 - **연동 Issues**:
   - 🔴 [Issue #2] `[AI Grounding] Exact Substring Matching의 줄바꿈/오타 미스매치 한계` ([이슈 #2 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/2))
@@ -70,9 +71,10 @@
 - [x] **Task 3.1.2**: 원문 줄바꿈(`\n`)이나 오타가 있어도 95% 이상 유사한 문장 완충 하이라이트 (`findFuzzyMatch`).
 - [x] **Task 3.1.3**: `fuzzyMatcher.test.js` 단위 테스트 5종 100% 통과.
 
-#### 🔹 Sprint 3.2: Client-side PII Anonymizer Filter (2026-10-01 ~ 2026-10-05)
-- [ ] **Task 3.2.1**: `src/utils/piiAnonymizer.js` 모듈 작성 (성명, 전화번호, 이메일 마스킹 정규식).
-- [ ] **Task 3.2.2**: Gemini API 전송 전 자동 개인정보 익명화 선처리 파이프라인 구축.
+#### 🔹 Sprint 3.2: Client-side PII Anonymizer Filter (2026-10-01 ~ 2026-10-05) [완료 ✓]
+- [x] **Task 3.2.1**: `src/utils/piiAnonymizer.js` 작성 (성명, 전화번호, 이메일, 주민번호, 생년월일, 출신학교 정규식 마스킹).
+- [x] **Task 3.2.2**: AI API & Web Worker 전송 전 개인정보 자동 익명화 선처리 파이프라인 통합 (`aiEvaluator.js`).
+- [x] **Task 3.2.3**: `piiAnonymizer.test.js` 단위 테스트 6종 100% 통과.
 
 ---
 

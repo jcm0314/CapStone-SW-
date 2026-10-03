@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles } from 'lucide-react';
+import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
 import * as ReactWindow from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
@@ -169,8 +169,8 @@ export default function EvidenceViewer({ result }) {
             <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
               <Zap className="w-3 h-3 text-blue-400" /> Virtualized
             </span>
-            <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-emerald-400" /> Fuzzy Matcher (Levenshtein 85%+)
+            <span className="px-2 py-0.5 bg-purple-500/10 text-purple-300 border border-purple-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-purple-400" /> PII Masked (Blind Recruitment)
             </span>
           </div>
           <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 가상 스크롤 목록이 해당 위치로 자동 이동합니다.</p>
