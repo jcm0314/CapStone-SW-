@@ -4,9 +4,15 @@
 
 ---
 
-## 📌 [2026-10-03] Sprint 3.1 & 3.2: Levenshtein Fuzzy Matching 엔진 & Client-side PII 보안 익명화 필터 구현
+## 📌 [2026-10-04] Sprint 4.1: PDF/TXT/DOCX 파일 파서 & Drag-and-Drop 일괄 업로드 뷰어 구현
 
-### 🔒 1. Client-side PII 보안 익명화 필터 개발 (Sprint 3.2)
+### 📁 1. 서류 파일 파서 및 드래그 앤 드롭 업로드 뷰어 구현 (Sprint 4.1)
+- **클라이언트 단 파일 파서 유틸리티 (`src/utils/fileParser.js`)**: `.txt`, `.pdf`, `.docx` 서류 파일의 텍스트 추출 및 바이너리 텍스트 파싱 처리.
+- **Drag-and-Drop 파일 업로드 컴포넌트 (`src/components/FileUploadZone.jsx`)**: 파일 드래그 앤 드롭 존 및 다중 업로드 서류 목록 미리보기/선택 인터페이스 구현.
+- **`ApplicantInput.jsx` 탭 스위처 연동**: `[✍️ 텍스트 직접 입력]`과 `[📁 PDF/TXT 파일 업로드]` 모드 간 1클릭 전환 지원.
+- **`fileParser.test.js` 단위 테스트 3종 구축**: TXT 파싱, 바이너리 텍스트 추출, 빈 파일 대처 테스트 100% 통과 (전체 단위 테스트 17종 100% 그린).
+
+---
 - **개인식별정보(PII) & 블라인드 채용 정규식 필터 (`src/utils/piiAnonymizer.js`)**: 성명, 전화번호, 이메일, 주민번호, 생년월일, 출신 학교명(대학교/고교/중학), 거주 지역 자동 마스킹.
 - **AI 평가 통신 파이프라인 통합 (`src/services/aiEvaluator.js`)**: Gemini API 및 Web Worker 파싱 전 PII 자동 익명화 선처리 적용.
 - **`EvidenceViewer.jsx` PII 보안 뱃지 표시**: `ShieldCheck: PII Masked (Blind Recruitment)` 뱃지 추가.

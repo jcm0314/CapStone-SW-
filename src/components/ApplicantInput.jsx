@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Sparkles, FileText, Cpu } from 'lucide-react';
+import { Sparkles, FileText, Cpu, UploadCloud, Edit3 } from 'lucide-react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+import FileUploadZone from './FileUploadZone';
 
 export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, progressState }) {
+  const [inputTab, setInputTab] = useState('TEXT'); // 'TEXT' | 'FILE'
   const [name, setName] = useState('김민준');
   const [rawText, setRawText] = useState(SAMPLE_APPLICANTS[0].rawText);
   const [selectedSampleId, setSelectedSampleId] = useState(SAMPLE_APPLICANTS[0].id);
@@ -11,6 +13,19 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
     setName(sample.name);
     setRawText(sample.rawText);
     setSelectedSampleId(sample.id);
+  };
+
+  const handleOnFileSelected = (extractedText, filename) => {
+    if (extractedText) {
+      setRawText(extractedText);
+      setSelectedSampleId('');
+      if (filename) {
+        const cleanName = filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '');
+        if (cleanName && cleanName.length >= 2) {
+          setName(cleanName.slice(0, 4));
+        }
+      }
+    }
   };
 
   const handleRun = () => {
@@ -36,9 +51,12 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
           {SAMPLE_APPLICANTS.map((sample) => (
             <button
               key={sample.id}
-              onClick={() => handleSelectSample(sample)}
+              onClick={() => {
+                setInputTab('TEXT');
+                handleSelectSample(sample);
+              }}
               className={`px-2.5 py-1 text-[11px] rounded-lg border transition-all ${
-                selectedSampleId === sample.id
+                selectedSampleId === sample.id && inputTab === 'TEXT'
                   ? 'bg-blue-600/20 text-blue-300 border-blue-500/50 font-semibold'
                   : 'bg-gray-900/60 text-gray-400 border-gray-800 hover:text-white hover:bg-gray-800'
               }`}
@@ -47,6 +65,32 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Input Method Mode Tabs: Text vs File Drop */}
+      <div className="flex items-center gap-2 bg-gray-900/90 p-1 rounded-xl border border-gray-800 text-xs">
+        <button
+          type="button"
+          onClick={() => setInputTab('TEXT')}
+          className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-all font-semibold ${
+            inputTab === 'TEXT'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <Edit3 className="w-3.5 h-3.5" /> 텍스트 직접 입력
+        </button>
+        <button
+          type="button"
+          onClick={() => setInputTab('FILE')}
+          className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-all font-semibold ${
+            inputTab === 'FILE'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <UploadCloud className="w-3.5 h-3.5" /> PDF / TXT 파일 업로드 (Drag & Drop)
+        </button>
       </div>
 
       {/* Candidate Name Input */}
@@ -61,23 +105,27 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
         />
       </div>
 
-      {/* Text Area */}
-      <div className="space-y-1.5">
-        <div className="flex justify-between items-center">
-          <label className="text-xs font-medium text-gray-300">자기소개서 본문 텍스트</label>
-          <span className="text-[10px] text-gray-400 font-mono">{rawText.length}자</span>
+      {/* Tab 1: Text Area vs Tab 2: File Upload Zone */}
+      {inputTab === 'FILE' ? (
+        <FileUploadZone onFileSelected={handleOnFileSelected} />
+      ) : (
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center">
+            <label className="text-xs font-medium text-gray-300">자기소개서 본문 텍스트</label>
+            <span className="text-[10px] text-gray-400 font-mono">{rawText.length}자</span>
+          </div>
+          <textarea
+            rows={9}
+            value={rawText}
+            onChange={(e) => {
+              setRawText(e.target.value);
+              setSelectedSampleId('');
+            }}
+            placeholder="자기소개서 및 경력기술서 본문을 붙여넣으세요..."
+            className="w-full bg-gray-900/90 border border-gray-700/80 rounded-xl p-3.5 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-blue-500 font-mono resize-none"
+          />
         </div>
-        <textarea
-          rows={9}
-          value={rawText}
-          onChange={(e) => {
-            setRawText(e.target.value);
-            setSelectedSampleId('');
-          }}
-          placeholder="자기소개서 및 경력기술서 본문을 붙여넣으세요..."
-          className="w-full bg-gray-900/90 border border-gray-700/80 rounded-xl p-3.5 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-blue-500 font-mono resize-none"
-        />
-      </div>
+      )}
 
       {/* Real-time Web Worker Progress Bar */}
       {isAnalyzing && (

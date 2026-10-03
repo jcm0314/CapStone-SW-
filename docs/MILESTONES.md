@@ -78,14 +78,15 @@
 
 ---
 
-### 📍 [Milestone 4] `v1.3.0 - PDF/TXT 일괄 업로드 & IndexedDB 캐싱`
-- **기간**: 2026-10-06 ~ 2026-10-20 (약 15일간)
+### 📍 [Milestone 4] `v1.3.0 - PDF/TXT 일괄 업로드 & IndexedDB 캐싱` [진행 중]
+- **기간**: 2026-10-06 ~ 2026-10-20
 - **목표**: 대량 서류 파이프라인 처리 및 로컬 캐싱
 - **연동 Issue**: 🟡 [Issue #4] `[Scalability] Gemini API Rate Limit (HTTP 429) 대처 및 Caching 레이어` ([이슈 #4 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/4))
 
-#### 🔹 Sprint 4.1: PDF / TXT / DOCX 파일 파서 & 일괄 업로드 (2026-10-06 ~ 2026-10-12)
-- [ ] **Task 4.1.1**: `pdfjs-dist` 텍스트 추출 엔진 통합 (`src/utils/fileParser.js`).
-- [ ] **Task 4.1.2**: 드래그 앤 드롭 파일 업로드 뷰어 (`FileUploadZone.jsx`) 구현.
+#### 🔹 Sprint 4.1: PDF / TXT / DOCX 파일 파서 & 일괄 업로드 (2026-10-06 ~ 2026-10-12) [완료 ✓]
+- [x] **Task 4.1.1**: `src/utils/fileParser.js` 텍스트 추출 유틸리티 작성 (.txt, .pdf, .docx 파싱).
+- [x] **Task 4.1.2**: 드래그 앤 드롭 파일 업로드 뷰어 (`FileUploadZone.jsx`) 및 탭 스위처 (`ApplicantInput.jsx`) 구현.
+- [x] **Task 4.1.3**: `fileParser.test.js` 단위 테스트 3종 100% 통과.
 
 #### 🔹 Sprint 4.2: IndexedDB 캐싱 & API Rate Limit Queue (2026-10-13 ~ 2026-10-20)
 - [ ] **Task 4.2.1**: `IndexedDB` 로컬 분석 결과 캐싱 서비스 작성.
