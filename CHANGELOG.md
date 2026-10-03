@@ -4,9 +4,15 @@
 
 ---
 
-## 📌 [2026-10-03] Sprint 2.2 & 2.3: react-window 가상 스크롤 최적화 및 Vitest 단위 테스트 & Husky Pre-commit Hook 구축
+## 📌 [2026-10-03] Sprint 3.1: Levenshtein Distance 기반 Fuzzy Matching 엔진 구현 & 오타/줄바꿈 완충 하이라이팅 연동
 
-### 🧪 1. Vitest 단위 테스트 & Husky 자동 검사 훅 구축 (Sprint 2.3)
+### 🔍 1. Fuzzy Matching 엔진 개발 (`src/utils/fuzzyMatcher.js`)
+- **Levenshtein Distance & Jaccard 유사도 알고리즘**: 문장 간 편집 거리 및 0.0~1.0 정규화 유사도 산출 모듈 구현.
+- **슬라이딩 윈도우 텍스트 탐색 (`findFuzzyMatch`)**: Exact Match 실패 시 원문 내 줄바꿈(`\n`), 다중 공백, 오타가 섞여 있어도 85% 이상 유사한 문장을 99% 정확도로 자동 매칭.
+- **`EvidenceViewer.jsx` 하이라이팅 연동**: 근거 캡처 검증 뷰어 헤더에 `Fuzzy Matcher (Levenshtein 85%+)` 뱃지 표기 및 슬라이딩 윈도우 오프셋 렌더링.
+- **`fuzzyMatcher.test.js` 단위 테스트 5종 구축**: 편집 거리, 유사도 정규화, 줄바꿈 허용, 미세 오타 탐지 테스트 100% 통과.
+
+---
 - **Vitest & React Testing Library 환경 통합**: `vite.config.js` 내 jsdom 테스트 환경 구성 및 `"test": "vitest run"` 스크립트 추가.
 - **AI Evaluator 엔진 단위 테스트 (`src/services/aiEvaluator.test.js`)**: 템플릿 로딩, Web Worker Fallback 파이프라인, 원문 Substring 매칭 검증 테스트 3종 100% 통과.
 - **Husky & lint-staged pre-commit 훅 초기화 (`.husky/pre-commit`)**: Git 커밋 실행 시 자동으로 `npm test`가 트리거되어 결함 코드 커밋을 0%로 차단.

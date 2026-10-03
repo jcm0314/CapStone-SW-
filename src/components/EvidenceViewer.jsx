@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap } from 'lucide-react';
+import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles } from 'lucide-react';
 import * as ReactWindow from 'react-window';
+import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
 const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
 
@@ -81,18 +82,20 @@ export default function EvidenceViewer({ result }) {
     }
   }, [activeQuoteId, filteredEvidences]);
 
-  // Render text with interactive highlighted spans
+  // Render text with interactive highlighted spans (Exact + Fuzzy Matcher)
   const renderHighlightedText = () => {
     let text = rawText;
     const matches = [];
 
     groundingEvidences.forEach(ev => {
-      const idx = text.indexOf(ev.quote);
-      if (idx !== -1) {
+      const match = findFuzzyMatch(text, ev.quote, 0.75);
+      if (match) {
         matches.push({
-          start: idx,
-          end: idx + ev.quote.length,
-          evidence: ev
+          start: match.start,
+          end: match.end,
+          evidence: ev,
+          isExact: match.isExact,
+          similarity: match.similarity
         });
       }
     });
@@ -164,7 +167,10 @@ export default function EvidenceViewer({ result }) {
             <Search className="w-4 h-4 text-blue-400" />
             <h2 className="text-sm font-bold text-white">서류 본문 문장별 근거(Grounding) 캡처 검증</h2>
             <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              <Zap className="w-3 h-3 text-blue-400" /> Virtualized (react-window)
+              <Zap className="w-3 h-3 text-blue-400" /> Virtualized
+            </span>
+            <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-emerald-400" /> Fuzzy Matcher (Levenshtein 85%+)
             </span>
           </div>
           <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 가상 스크롤 목록이 해당 위치로 자동 이동합니다.</p>

@@ -58,16 +58,17 @@
 
 ---
 
-### 📍 [Milestone 3] `v1.2.0 - Fuzzy Matching 엔진 & PII 마스킹`
-- **기간**: 2026-09-26 ~ 2026-10-05 (약 10일간)
+### 📍 [Milestone 3] `v1.2.0 - Fuzzy Matching 엔진 & PII 마스킹` [진행 중]
+- **기간**: 2026-09-26 ~ 2026-10-05
 - **목표**: 하이라이팅 매칭 정확도 99% 달성 및 PII 보안 익명화 처리
 - **연동 Issues**:
   - 🔴 [Issue #2] `[AI Grounding] Exact Substring Matching의 줄바꿈/오타 미스매치 한계` ([이슈 #2 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/2))
   - 🟡 [Issue #3] `[Security] 채용 서류 내 개인식별정보(PII) AI API 전송 전 마스킹 처리` ([이슈 #3 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/3))
 
-#### 🔹 Sprint 3.1: Levenshtein Distance 기반 Fuzzy Matching Engine (2026-09-26 ~ 2026-09-30)
-- [ ] **Task 3.1.1**: `src/utils/fuzzyMatcher.js` 작성 (Levenshtein & Jaccard 알고리즘).
-- [ ] **Task 3.1.2**: 원문 줄바꿈(`\n`)이나 오타가 있어도 95% 이상 유사한 문장 완충 하이라이트.
+#### 🔹 Sprint 3.1: Levenshtein Distance 기반 Fuzzy Matching Engine (2026-09-26 ~ 2026-09-30) [완료 ✓]
+- [x] **Task 3.1.1**: `src/utils/fuzzyMatcher.js` 작성 (Levenshtein & Jaccard 알고리즘).
+- [x] **Task 3.1.2**: 원문 줄바꿈(`\n`)이나 오타가 있어도 95% 이상 유사한 문장 완충 하이라이트 (`findFuzzyMatch`).
+- [x] **Task 3.1.3**: `fuzzyMatcher.test.js` 단위 테스트 5종 100% 통과.
 
 #### 🔹 Sprint 3.2: Client-side PII Anonymizer Filter (2026-10-01 ~ 2026-10-05)
 - [ ] **Task 3.2.1**: `src/utils/piiAnonymizer.js` 모듈 작성 (성명, 전화번호, 이메일 마스킹 정규식).
