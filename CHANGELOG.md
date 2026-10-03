@@ -4,6 +4,15 @@
 
 ---
 
+## 📌 [2026-10-03] Sprint 2.2: react-window 가상 스크롤 (Virtual Scrolling) 최적화 & 인터랙티브 scrollToItem 연동
+
+### ⚡ 1. 대용량 근거 카드 렌더링 성능 최적화 (`src/components/EvidenceViewer.jsx`)
+- **`react-window` FixedSizeList 적용**: 대용량 근거 카드가 100개 이상 렌더링될 때 DOM 노드 폭증으로 인한 UI 블로킹을 방지하기 위해 가상 스크롤(Virtual Scrolling) 도입 (60fps 디스플레이 유지).
+- **인터랙티브 `scrollToItem` 자동 연동**: 서류 본문 좌측 텍스트에서 🟢/🔴/🟡 하이라이팅 태그 클릭 시 가상 스크롤 목록에서 해당 근거 카드의 위치로 자동으로 스크롤(`listRef.current.scrollToItem(idx, 'smart')`)되는 UX 개선.
+- **Vite CJS/ESM 호환 모듈 임포트 구성**: Rollup 빌드 시 CJS/ESM interop 경고 방지용 `react-window` 안전 임포트 처리.
+
+---
+
 ## 📌 [2026-09-23] LG CSO AX 멘토 발표 미팅 대비 비주얼 슬라이드 개편 & Multi-Agent 앙상블 아키텍처 구축
 
 ### 🏆 1. HR Multi-Agent 4대 에이전트 앙상블 체계 수립 (`docs/LG_CSO_AX_PRESENTATION_BRIEF.md`)

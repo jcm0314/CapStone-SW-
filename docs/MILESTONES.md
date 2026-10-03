@@ -45,9 +45,10 @@
 - [x] **Task 2.1.2**: `src/services/aiEvaluator.js` 및 `src/services/workerService.js` 비동기 Promise 래퍼 구현.
 - [x] **Task 2.1.3**: `ApplicantInput.jsx` 실시간 처리 프로그레스바(%) 구현.
 
-#### 🔹 Sprint 2.2: 대량 근거 카드 Virtual Scrolling 최적화 (2026-09-20 ~ 2026-09-22)
-- [ ] **Task 2.2.1**: `react-window` 라이브러리 설치 및 설정.
-- [ ] **Task 2.2.2**: `EvidenceViewer.jsx` 근거 카드 100개 이상 렌더링 시 Virtualized List 적용 (60fps 유지).
+#### 🔹 Sprint 2.2: 대량 근거 카드 Virtual Scrolling 최적화 (2026-09-20 ~ 2026-09-22) [완료 ✓]
+- [x] **Task 2.2.1**: `react-window` 라이브러리 설치 및 설정.
+- [x] **Task 2.2.2**: `EvidenceViewer.jsx` 근거 카드 100개 이상 렌더링 시 Virtualized List 적용 (60fps 유지).
+- [x] **Task 2.2.3**: 원문 서브스트링 클릭 시 가상 스크롤 내 해당 근거 카드로 자동 이동 (`scrollToItem`) 연동.
 
 #### 🔹 Sprint 2.3: Vitest 단위 테스트 & Husky 커밋 훅 (2026-09-23 ~ 2026-09-25)
 - [ ] **Task 2.3.1**: `Vitest` 및 `React Testing Library` 통합 환경 구축.

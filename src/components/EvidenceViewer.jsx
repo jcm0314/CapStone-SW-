@@ -1,5 +1,60 @@
-import React, { useState } from 'react';
-import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap } from 'lucide-react';
+import * as ReactWindow from 'react-window';
+
+const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
+
+const EvidenceCardRow = ({ index, style, data }) => {
+  const { filteredEvidences, activeQuoteId, setActiveQuoteId } = data;
+  const ev = filteredEvidences[index];
+  if (!ev) return null;
+
+  const isSelected = activeQuoteId === ev.id;
+  let borderClass = 'border-gray-800';
+  let badgeColor = '';
+  let icon = null;
+
+  if (ev.type === 'positive') {
+    borderClass = isSelected ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-500/10' : 'hover:border-emerald-500/50 bg-gray-900/60';
+    badgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+    icon = <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />;
+  } else if (ev.type === 'risk') {
+    borderClass = isSelected ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-500/10' : 'hover:border-rose-500/50 bg-gray-900/60';
+    badgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+    icon = <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />;
+  } else {
+    borderClass = isSelected ? 'border-amber-400 ring-1 ring-amber-400 bg-amber-500/10' : 'hover:border-amber-500/50 bg-gray-900/60';
+    badgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+    icon = <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />;
+  }
+
+  return (
+    <div style={{ ...style, paddingBottom: '10px' }}>
+      <div
+        onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
+        onMouseEnter={() => setActiveQuoteId(ev.id)}
+        className={`p-3 rounded-xl border transition-all cursor-pointer space-y-2 h-[135px] flex flex-col justify-between ${borderClass}`}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 overflow-hidden">
+            {icon}
+            <h4 className="text-xs font-bold text-white truncate">{ev.title}</h4>
+          </div>
+          <span className={`px-2 py-0.5 rounded text-[10px] font-bold border shrink-0 ${badgeColor}`}>
+            {ev.type === 'positive' ? `+${ev.scoreImpact}점 (긍정)` : ev.type === 'risk' ? `${ev.scoreImpact}점 (리스크)` : '면접 검증'}
+          </span>
+        </div>
+
+        <div className="bg-black/40 rounded-lg p-2 border border-gray-800 text-[11px] text-gray-300 italic font-mono flex gap-2 overflow-hidden">
+          <Quote className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
+          <span className="line-clamp-2">"{ev.quote}"</span>
+        </div>
+
+        <p className="text-[11px] text-gray-400 leading-snug line-clamp-1">{ev.explanation}</p>
+      </div>
+    </div>
+  );
+};
 
 export default function EvidenceViewer({ result }) {
   if (!result || !result.analysis) return null;
@@ -8,12 +63,23 @@ export default function EvidenceViewer({ result }) {
   const { groundingEvidences } = result.analysis;
   const [activeQuoteId, setActiveQuoteId] = useState(null);
   const [filterType, setFilterType] = useState('ALL');
+  const listRef = useRef(null);
 
   // Filtered evidences
   const filteredEvidences = groundingEvidences.filter(ev => {
     if (filterType === 'ALL') return true;
     return ev.type === filterType.toLowerCase();
   });
+
+  // Auto scroll to active quote when selected
+  useEffect(() => {
+    if (activeQuoteId && listRef.current) {
+      const idx = filteredEvidences.findIndex(ev => ev.id === activeQuoteId);
+      if (idx !== -1) {
+        listRef.current.scrollToItem(idx, 'smart');
+      }
+    }
+  }, [activeQuoteId, filteredEvidences]);
 
   // Render text with interactive highlighted spans
   const renderHighlightedText = () => {
@@ -36,7 +102,7 @@ export default function EvidenceViewer({ result }) {
     const elements = [];
     let lastIndex = 0;
 
-    matches.forEach((m, i) => {
+    matches.forEach((m) => {
       // Text before match
       if (m.start > lastIndex) {
         elements.push(
@@ -97,8 +163,11 @@ export default function EvidenceViewer({ result }) {
           <div className="flex items-center gap-2">
             <Search className="w-4 h-4 text-blue-400" />
             <h2 className="text-sm font-bold text-white">서류 본문 문장별 근거(Grounding) 캡처 검증</h2>
+            <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+              <Zap className="w-3 h-3 text-blue-400" /> Virtualized (react-window)
+            </span>
           </div>
-          <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 오른쪽 근거 분석 카드와 상호 연동됩니다.</p>
+          <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 가상 스크롤 목록이 해당 위치로 자동 이동합니다.</p>
         </div>
 
         {/* Filter Buttons */}
@@ -132,63 +201,27 @@ export default function EvidenceViewer({ result }) {
           </div>
         </div>
 
-        {/* Right: Evidence Cards List */}
-        <div className="lg:col-span-5 space-y-3 max-h-[460px] overflow-y-auto pr-1">
+        {/* Right: Virtualized Evidence Cards List */}
+        <div className="lg:col-span-5 h-[460px]">
           {filteredEvidences.length === 0 ? (
             <div className="bg-gray-900/40 rounded-xl p-6 text-center text-xs text-gray-500 border border-gray-800">
               해당 유형의 근거 문장이 탐지되지 않았습니다.
             </div>
           ) : (
-            filteredEvidences.map(ev => {
-              const isSelected = activeQuoteId === ev.id;
-              let borderClass = 'border-gray-800';
-              let badgeColor = '';
-              let icon = null;
-
-              if (ev.type === 'positive') {
-                borderClass = isSelected ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-500/10' : 'hover:border-emerald-500/50 bg-gray-900/60';
-                badgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-                icon = <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />;
-              } else if (ev.type === 'risk') {
-                borderClass = isSelected ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-500/10' : 'hover:border-rose-500/50 bg-gray-900/60';
-                badgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
-                icon = <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />;
-              } else {
-                borderClass = isSelected ? 'border-amber-400 ring-1 ring-amber-400 bg-amber-500/10' : 'hover:border-amber-500/50 bg-gray-900/60';
-                badgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-                icon = <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />;
-              }
-
-              return (
-                <div
-                  key={ev.id}
-                  onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
-                  onMouseEnter={() => setActiveQuoteId(ev.id)}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer space-y-2 ${borderClass}`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      {icon}
-                      <h4 className="text-xs font-bold text-white">{ev.title}</h4>
-                    </div>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}`}>
-                      {ev.type === 'positive' ? `+${ev.scoreImpact}점 (긍정)` : ev.type === 'risk' ? `${ev.scoreImpact}점 (리스크)` : '면접 검증'}
-                    </span>
-                  </div>
-
-                  {/* Quote text */}
-                  <div className="bg-black/40 rounded-lg p-2.5 border border-gray-800 text-[11px] text-gray-300 italic font-mono flex gap-2">
-                    <Quote className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
-                    <span>"{ev.quote}"</span>
-                  </div>
-
-                  <p className="text-[11px] text-gray-400 leading-snug">{ev.explanation}</p>
-                </div>
-              );
-            })
+            <List
+              ref={listRef}
+              height={460}
+              itemCount={filteredEvidences.length}
+              itemSize={145}
+              width="100%"
+              itemData={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
+            >
+              {EvidenceCardRow}
+            </List>
           )}
         </div>
       </div>
     </div>
   );
 }
+
