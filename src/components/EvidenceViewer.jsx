@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
-import { FixedSizeList as List } from 'react-window';
+import * as ReactWindow from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
+
+// Robust List resolver to prevent runtime unmounting on production bundles
+const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
 
 const EvidenceCardRow = ({ index, style, data }) => {
   const { filteredEvidences, activeQuoteId, setActiveQuoteId } = data;
@@ -72,7 +75,7 @@ export default function EvidenceViewer({ result }) {
 
   // Auto scroll to active quote when selected
   useEffect(() => {
-    if (activeQuoteId && listRef.current) {
+    if (activeQuoteId && listRef.current && typeof listRef.current.scrollToItem === 'function') {
       const idx = filteredEvidences.findIndex(ev => ev.id === activeQuoteId);
       if (idx !== -1) {
         listRef.current.scrollToItem(idx, 'smart');
@@ -211,7 +214,7 @@ export default function EvidenceViewer({ result }) {
             <div className="bg-gray-900/40 rounded-xl p-6 text-center text-xs text-gray-500 border border-gray-800">
               해당 유형의 근거 문장이 탐지되지 않았습니다.
             </div>
-          ) : (
+          ) : List ? (
             <List
               ref={listRef}
               height={460}
@@ -222,6 +225,12 @@ export default function EvidenceViewer({ result }) {
             >
               {EvidenceCardRow}
             </List>
+          ) : (
+            <div className="space-y-2 overflow-y-auto max-h-[460px]">
+              {filteredEvidences.map((ev, idx) => (
+                <EvidenceCardRow key={ev.id || idx} index={idx} style={{}} data={{ filteredEvidences, activeQuoteId, setActiveQuoteId }} />
+              ))}
+            </div>
           )}
         </div>
       </div>
