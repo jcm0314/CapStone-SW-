@@ -1,0 +1,61 @@
+name: HR AX Evaluator Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Job 1: Automated Unit Testing & Quality Verification
+  unit-tests:
+    name: 🧪 Automated Vitest Unit Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment (v20)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: npm ci
+
+      - name: Execute Vitest Automated Test Suite (28 Tests)
+        run: npm test
+
+      - name: Verify Production Vite Build Artifacts
+        run: npm run build
+
+  # Job 2: Multi-Stage Docker Container Build Verification
+  docker-build:
+    name: 🐳 Production Docker Build & Health Check
+    needs: unit-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx Engine
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Frontend Production Nginx Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: false
+          tags: hr-evaluator-frontend:test-latest
+
+      - name: Build Express API Gateway Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: server/Dockerfile
+          push: false
+          tags: hr-evaluator-api-gateway:test-latest
