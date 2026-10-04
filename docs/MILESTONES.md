@@ -14,9 +14,9 @@
 ## 📅 세분화 마일스톤 & 스프린트 상세 일정표
 
 ```
- [Milestone 1] (완료) ──► [Milestone 2] ──► [Milestone 3] ──► [Milestone 4] ──► [Milestone 5]
- Core MVP (v1.0.0)      Web Worker & Test     Fuzzy & PII        Batch & Cache     Enterprise Studio
-                         [2026-09-17~09-25]  [2026-09-26~10-05] [2026-10-06~10-20] [2026-10-21~11-10]
+ [Milestone 1] (완료✓) ──► [Milestone 2] (완료✓) ──► [Milestone 3] (완료✓) ──► [Milestone 4] (완료✓) ──► [Milestone 5] (완료✓)
+  Core MVP (v1.0.0)       Web Worker & Test       Fuzzy & PII         Batch & Cache      Enterprise Studio & Plagiarism
+                          (100% Closed)           (100% Closed)       (100% Closed)      (v2.0 Final Release 🏆)
 ```
 
 ---
@@ -97,8 +97,9 @@
 
 ---
 
-### 📍 [Milestone 5] `v2.0.0 - Custom Prompt Studio & 표절 매트릭스` [진행 중]
+### 📍 [Milestone 5] `v2.0.0 - Custom Prompt Studio & 표절 매트릭스` [완료 ✓]
 - **기간**: 2026-10-21 ~ 2026-11-10
+- **상태**: Closed / Completed (100% - v2.0 Final Release)
 - **목표**: 엔터프라이즈 맞춤형 프롬프트 에디터 및 자소서 상호 표절 탐지
 
 #### 🔹 Sprint 5.1: Custom HR Prompt Studio (2026-10-21 ~ 2026-10-31) [완료 ✓]
@@ -106,9 +107,10 @@
 - [x] **Task 5.1.2**: Custom HR Prompt Studio 에디터 모달 UI (`PromptStudioModal.jsx`) & 상단 헤더 연동.
 - [x] **Task 5.1.3**: `promptStudioService.test.js` 단위 테스트 3종 100% 통과.
 
-#### 🔹 Sprint 5.2: 지원자 간 상호 표절율 및 유사도 매트릭스 (2026-11-01 ~ 2026-11-10)
-- [ ] **Task 5.2.1**: n-gram 기반 텍스트 상호 표절 탐지 알고리즘 개발.
-- [ ] **Task 5.2.2**: 지원자 표절율 시각화 매트릭스 UI 구현 및 최종 v2.0 릴리즈.
+#### 🔹 Sprint 5.2: 지원자 간 상호 표절율 및 유사도 매트릭스 (2026-11-01 ~ 2026-11-10) [완료 ✓]
+- [x] **Task 5.2.1**: N-Gram Jaccard 기반 자소서 상호 표절 탐지 알고리즘 개발 (`plagiarismEngine.js`).
+- [x] **Task 5.2.2**: 지원자 간 상호 표절율 히트맵 매트릭스 UI (`ApplicantComparison.jsx`) 릴리스.
+- [x] **Task 5.2.3**: `plagiarismEngine.test.js` 단위 테스트 4종 100% 통과 (전체 단위 테스트 27종 100% 완결).
 
 ---
 

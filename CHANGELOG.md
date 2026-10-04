@@ -4,9 +4,15 @@
 
 ---
 
-## 📌 [2026-10-04] Sprint 5.1: Custom HR Prompt Studio (기업별 인재상 & 금기어 에디터) 구현
+## 📌 [2026-10-04] Sprint 5.2: 지원자 간 자소서 상호 표절 탐지 엔진 구현 & v2.0 엔터프라이즈 최종 릴리스 🏆
 
-### 🎨 1. Custom HR Prompt Studio 서비스 및 에디터 모달 구현 (Sprint 5.1)
+### 🕵️ 1. N-Gram Jaccard 자소서 상호 표절 탐지 엔진 구현 (`src/utils/plagiarismEngine.js`)
+- **N-Gram Jaccard 유사도 알고리즘**: 지원자 간 자소서 문장의 N-gram(tri-gram) 중복 비율을 계산하여 상호 표절율(0%~100%)을 정밀 산출.
+- **지원자 간 상호 표절 히트맵 매트릭스 UI (`src/components/ApplicantComparison.jsx`)**: 비교 탭에서 전체 지원자 간의 표절율을 한눈에 파악하는 히트맵 매트릭스 테이블 제공 (40% 이상 유사 시 🔴 표절 의심 경고 뱃지 자동 부여).
+- **`plagiarismEngine.test.js` 단위 테스트 4종 구축**: 동일 자소서(100%), 상이 자소서(<15%), 일부 복사-붙여넣기(>=40%), 대각선 대칭 매트릭스 테스트 100% 통과 (**전체 단위 테스트 27종 100% 완결**).
+- **🏆 v2.0 Enterprise Release**: Milestone 1~5 (총 12개 스프린트) 전체 공정 100% 달성 및 프로덕션 릴리스 완료.
+
+---
 - **프롬프트 커스텀 서비스 (`src/services/promptStudioService.js`)**: 기업명, 핵심 인재상, 서류 금기어(감점 키워드), HR AI 커스텀 평가 지시사항 관리 및 사내 프리셋 3종(LG그룹, IT스타트업, 금융대기업) 지원.
 - **Custom HR Prompt Studio 모달 UI (`src/components/PromptStudioModal.jsx`)**: 1클릭 프리셋 선택, 인재상/금기어 태그 관리 및 상단 헤더 연동.
 - **`promptStudioService.test.js` 단위 테스트 3종 구축**: 전체 단위 테스트 23종 100% 통과.
