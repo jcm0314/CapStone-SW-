@@ -5,8 +5,8 @@ WORKDIR /app
 # Copy package manifests
 COPY package.json package-lock.json ./
 
-# Install production dependencies only
-RUN npm ci --only=production
+# Install production dependencies only without executing dev prepare scripts (husky)
+RUN npm ci --only=production --ignore-scripts
 
 # Copy server code
 COPY server/ ./server/
