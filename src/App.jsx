@@ -7,6 +7,7 @@ import EvidenceViewer from './components/EvidenceViewer';
 import InterviewQuestions from './components/InterviewQuestions';
 import ApplicantComparison from './components/ApplicantComparison';
 import ReportExporter from './components/ReportExporter';
+import PromptStudioModal from './components/PromptStudioModal';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
@@ -22,6 +23,7 @@ export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressState, setProgressState] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showPromptStudio, setShowPromptStudio] = useState(false);
 
   const handleAnalyze = async ({ name, rawText }) => {
     setIsAnalyzing(true);
@@ -75,6 +77,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         applicantCount={applicantList.length}
+        onOpenPromptStudio={() => setShowPromptStudio(true)}
       />
 
       {/* Main Content Area */}
@@ -150,6 +153,14 @@ export default function App() {
           result={selectedApplicant}
           currentJob={currentJob}
           onClose={() => setShowExportModal(false)}
+        />
+      )}
+
+      {/* Custom HR Prompt Studio Modal */}
+      {showPromptStudio && (
+        <PromptStudioModal
+          onClose={() => setShowPromptStudio(false)}
+          onSaved={() => setShowPromptStudio(false)}
         />
       )}
     </div>

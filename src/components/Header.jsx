@@ -1,7 +1,7 @@
 import React from 'react';
-import { Cpu, ShieldCheck, Layers, FileText, Database } from 'lucide-react';
+import { Cpu, ShieldCheck, Layers, FileText, Database, Sliders } from 'lucide-react';
 
-export default function Header({ activeTab, setActiveTab, applicantCount }) {
+export default function Header({ activeTab, setActiveTab, applicantCount, onOpenPromptStudio }) {
   return (
     <header className="sticky top-0 z-40 bg-[#0B0F19]/90 backdrop-blur-md border-b border-gray-800/80 px-4 lg:px-8 py-3.5">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -25,9 +25,17 @@ export default function Header({ activeTab, setActiveTab, applicantCount }) {
           </div>
         </div>
 
-        {/* Navigation Tabs & Enterprise Status */}
-        <div className="flex items-center gap-3">
-          <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
+          {/* Navigation Tabs & Enterprise Status */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onOpenPromptStudio}
+              className="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+            >
+              <Sliders className="w-3.5 h-3.5 text-purple-400" /> Custom HR Prompt Studio
+            </button>
+
+            <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
             <button
               onClick={() => setActiveTab('evaluator')}
               className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${

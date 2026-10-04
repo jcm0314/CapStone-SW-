@@ -97,12 +97,14 @@
 
 ---
 
-### 📍 [Milestone 5] `v2.0.0 - Custom Prompt Studio & 표절 매트릭스`
-- **기간**: 2026-10-21 ~ 2026-11-10 (약 21일간)
+### 📍 [Milestone 5] `v2.0.0 - Custom Prompt Studio & 표절 매트릭스` [진행 중]
+- **기간**: 2026-10-21 ~ 2026-11-10
 - **목표**: 엔터프라이즈 맞춤형 프롬프트 에디터 및 자소서 상호 표절 탐지
 
-#### 🔹 Sprint 5.1: Custom HR Prompt Studio (2026-10-21 ~ 2026-10-31)
-- [ ] **Task 5.1.1**: 기업별 인재상, 핵심 가치, 금기어 설정 에디터 UI 구축.
+#### 🔹 Sprint 5.1: Custom HR Prompt Studio (2026-10-21 ~ 2026-10-31) [완료 ✓]
+- [x] **Task 5.1.1**: `src/services/promptStudioService.js` 작성 (사내 인재상, 핵심 가치, 서류 금기어 설정 및 프리셋 3종 지원).
+- [x] **Task 5.1.2**: Custom HR Prompt Studio 에디터 모달 UI (`PromptStudioModal.jsx`) & 상단 헤더 연동.
+- [x] **Task 5.1.3**: `promptStudioService.test.js` 단위 테스트 3종 100% 통과.
 
 #### 🔹 Sprint 5.2: 지원자 간 상호 표절율 및 유사도 매트릭스 (2026-11-01 ~ 2026-11-10)
 - [ ] **Task 5.2.1**: n-gram 기반 텍스트 상호 표절 탐지 알고리즘 개발.

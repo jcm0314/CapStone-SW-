@@ -4,9 +4,14 @@
 
 ---
 
-## 📌 [2026-10-04] Sprint 4.1 & 4.2: PDF/TXT 파일 업로드 및 IndexedDB 캐싱 & CSV 다운로드 구현
+## 📌 [2026-10-04] Sprint 5.1: Custom HR Prompt Studio (기업별 인재상 & 금기어 에디터) 구현
 
-### ⚡ 1. IndexedDB 캐싱 & Excel/CSV 다운로드 구현 (Sprint 4.2)
+### 🎨 1. Custom HR Prompt Studio 서비스 및 에디터 모달 구현 (Sprint 5.1)
+- **프롬프트 커스텀 서비스 (`src/services/promptStudioService.js`)**: 기업명, 핵심 인재상, 서류 금기어(감점 키워드), HR AI 커스텀 평가 지시사항 관리 및 사내 프리셋 3종(LG그룹, IT스타트업, 금융대기업) 지원.
+- **Custom HR Prompt Studio 모달 UI (`src/components/PromptStudioModal.jsx`)**: 1클릭 프리셋 선택, 인재상/금기어 태그 관리 및 상단 헤더 연동.
+- **`promptStudioService.test.js` 단위 테스트 3종 구축**: 전체 단위 테스트 23종 100% 통과.
+
+---
 - **IndexedDB 로컬 캐싱 서비스 (`src/services/cacheService.js`)**: 평가 텍스트 해시 기반 고유 키 생성 및 동일 지원서 재심사 시 ⚡ 로컬 캐시에서 즉시 반환 (API 토큰 비용 0원, 0초 조회).
 - **UTF-8 BOM CSV / Excel 일괄 다운로드 (`src/utils/csvExporter.js`)**: 지원자 성명, 직무, 종합점수, 5대 역량 점수, 긍정/리스크 근거 수, 판정사유 엑셀 호환 다운로드 지원.
 - **`ReportExporter.jsx` CSV 다운로드 버튼 통합**: 1클릭 Excel/CSV 다운로드 기능 연동.
