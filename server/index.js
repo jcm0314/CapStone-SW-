@@ -74,9 +74,9 @@ app.post('/api/v1/evaluate', async (req, res) => {
     }
 
     // Secure upstream API call to Gemini API without exposing credentials to browser
-    const upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    let upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
-    const response = await fetch(upstreamUrl, {
+    let response = await fetch(upstreamUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -84,6 +84,18 @@ app.post('/api/v1/evaluate', async (req, res) => {
         generationConfig: { responseMimeType: 'application/json' }
       })
     });
+
+    if (!response.ok) {
+      upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      response = await fetch(upstreamUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Evaluate candidate ${name} for job ${applyJobId}: ${rawText}` }] }],
+          generationConfig: { responseMimeType: 'application/json' }
+        })
+      });
+    }
 
     if (!response.ok) {
       throw new Error(`Upstream API call failed with status ${response.status}`);
