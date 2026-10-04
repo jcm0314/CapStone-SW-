@@ -31,6 +31,20 @@ const apiLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 
+// Root Service Information Endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'HR AX Evaluator Enterprise API Gateway',
+    version: 'v2.1.0',
+    status: 'ONLINE',
+    endpoints: {
+      health: '/health',
+      evaluate: '/api/v1/evaluate (POST)'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Liveness & Readiness Healthcheck Endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
