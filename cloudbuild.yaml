@@ -1,0 +1,44 @@
+steps:
+  # Step 1: Build Frontend Production Nginx Container Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/hr-evaluator-frontend:latest', '-f', 'Dockerfile', '.']
+
+  # Step 2: Build Express API Gateway Backend Container Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/hr-evaluator-api-gateway:latest', '-f', 'server/Dockerfile', '.']
+
+  # Step 3: Push Frontend Image to Google Container Registry (GCR)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/hr-evaluator-frontend:latest']
+
+  # Step 4: Push Gateway Image to Google Container Registry (GCR)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/hr-evaluator-api-gateway:latest']
+
+  # Step 5: Deploy Frontend Service to GCP Cloud Run (Seoul Region asia-northeast3)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'hr-evaluator-frontend'
+      - '--image=gcr.io/$PROJECT_ID/hr-evaluator-frontend:latest'
+      - '--region=asia-northeast3'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+
+  # Step 6: Deploy Express Gateway Service to GCP Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'hr-evaluator-api-gateway'
+      - '--image=gcr.io/$PROJECT_ID/hr-evaluator-api-gateway:latest'
+      - '--region=asia-northeast3'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'gcr.io/$PROJECT_ID/hr-evaluator-frontend:latest'
+  - 'gcr.io/$PROJECT_ID/hr-evaluator-api-gateway:latest'
