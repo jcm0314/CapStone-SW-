@@ -133,33 +133,52 @@ Return ONLY a valid JSON object matching this exact structure:
 }
 `;
 
-    let upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
-    let response = await fetch(upstreamUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: 'application/json' }
-      })
-    });
+    const candidateModels = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+    const project = process.env.GCP_PROJECT || 'ai-review-510606';
+    let data = null;
+    let successfulModel = '';
+    let lastError = '';
 
-    if (!response.ok) {
-      upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
-      response = await fetch(upstreamUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        })
-      });
+    for (const modelName of candidateModels) {
+      // Endpoint candidate 1: Google AI Studio REST API
+      // Endpoint candidate 2: Vertex AI us-central1 REST API
+      // Endpoint candidate 3: Vertex AI asia-northeast3 REST API
+      const endpoints = [
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+        `https://us-central1-aiplatform.googleapis.com/v1/projects/${project}/locations/us-central1/publishers/google/models/${modelName}:generateContent?key=${apiKey}`,
+        `https://asia-northeast3-aiplatform.googleapis.com/v1/projects/${project}/locations/asia-northeast3/publishers/google/models/${modelName}:generateContent?key=${apiKey}`
+      ];
+
+      for (const url of endpoints) {
+        try {
+          const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { responseMimeType: 'application/json' }
+            })
+          });
+
+          if (resp.ok) {
+            data = await resp.json();
+            successfulModel = modelName;
+            break;
+          } else {
+            const errText = await resp.text();
+            lastError = `[${modelName}] (${resp.status}): ${errText.slice(0, 100)}`;
+          }
+        } catch (err) {
+          lastError = err.message;
+        }
+      }
+      if (data) break;
     }
 
-    if (!response.ok) {
-      throw new Error(`Upstream API call failed with status ${response.status}`);
+    if (!data) {
+      throw new Error(`Google Cloud Vertex AI & Gemini API Upstream Error: ${lastError}`);
     }
 
-    const data = await response.json();
     const rawTextResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
     const parsedAnalysis = JSON.parse(rawTextResp);
 
