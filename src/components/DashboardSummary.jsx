@@ -122,19 +122,21 @@ export default function DashboardSummary({ result, currentJob }) {
         {/* Right: Competency Radar Chart */}
         <div className="md:col-span-7 bg-gray-900/60 rounded-xl p-3 border border-gray-800 h-56 flex flex-col items-center justify-center">
           <span className="text-xs font-semibold text-gray-300 self-start px-2">5대 역량 항목별 시각화 (vs 벤치마크)</span>
-          <ResponsiveContainer width="100%" height="90%">
-            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-              <PolarGrid stroke="#374151" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: '#9CA3AF', fontSize: 11 }} />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#4B5563" tick={false} />
-              <Radar name="지원자 역량" dataKey="score" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.4} />
-              <Radar name="직무 벤치마크" dataKey="benchmark" stroke="#6B7280" fill="#6B7280" fillOpacity={0.15} strokeDasharray="3 3" />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', fontSize: '11px' }}
-                itemStyle={{ color: '#F3F4F6' }}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+          <div className="w-full h-44">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                <PolarGrid stroke="#374151" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#9CA3AF', fontSize: 11 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#4B5563" tick={false} />
+                <Radar name="지원자 역량" dataKey="score" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.4} />
+                <Radar name="직무 벤치마크" dataKey="benchmark" stroke="#6B7280" fill="#6B7280" fillOpacity={0.15} strokeDasharray="3 3" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', fontSize: '11px' }}
+                  itemStyle={{ color: '#F3F4F6' }}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>

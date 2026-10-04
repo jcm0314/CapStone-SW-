@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
-import * as ReactWindow from 'react-window';
+import { FixedSizeList as List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
-
-const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
 
 const EvidenceCardRow = ({ index, style, data }) => {
   const { filteredEvidences, activeQuoteId, setActiveQuoteId } = data;
@@ -230,4 +228,3 @@ export default function EvidenceViewer({ result }) {
     </div>
   );
 }
-
