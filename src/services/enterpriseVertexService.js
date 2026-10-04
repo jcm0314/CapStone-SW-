@@ -5,7 +5,8 @@
  */
 export async function analyzeApplicant({ name, applyJobId, rawText }) {
   try {
-    const response = await fetch('/api/v1/enterprise/vertex-evaluator', {
+    const gatewayUrl = import.meta.env.VITE_API_GATEWAY_URL || 'https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app';
+    const response = await fetch(`${gatewayUrl}/api/v1/enterprise/vertex-evaluator`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
