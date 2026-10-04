@@ -1,0 +1,20 @@
+# Production Dockerfile for Enterprise HR API Gateway (Node.js Express Server)
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package manifests
+COPY package.json package-lock.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy server code
+COPY server ./server
+
+# Cloud Run uses PORT environment variable (defaults to 8080)
+ENV PORT=8080
+EXPOSE 8080
+
+# Start Express API Gateway
+CMD ["node", "server/index.js"]
