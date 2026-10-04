@@ -4,13 +4,18 @@
 
 ---
 
-## 📌 [2026-10-04] Sprint 4.1: PDF/TXT/DOCX 파일 파서 & Drag-and-Drop 일괄 업로드 뷰어 구현
+## 📌 [2026-10-04] Sprint 4.1 & 4.2: PDF/TXT 파일 업로드 및 IndexedDB 캐싱 & CSV 다운로드 구현
 
-### 📁 1. 서류 파일 파서 및 드래그 앤 드롭 업로드 뷰어 구현 (Sprint 4.1)
+### ⚡ 1. IndexedDB 캐싱 & Excel/CSV 다운로드 구현 (Sprint 4.2)
+- **IndexedDB 로컬 캐싱 서비스 (`src/services/cacheService.js`)**: 평가 텍스트 해시 기반 고유 키 생성 및 동일 지원서 재심사 시 ⚡ 로컬 캐시에서 즉시 반환 (API 토큰 비용 0원, 0초 조회).
+- **UTF-8 BOM CSV / Excel 일괄 다운로드 (`src/utils/csvExporter.js`)**: 지원자 성명, 직무, 종합점수, 5대 역량 점수, 긍정/리스크 근거 수, 판정사유 엑셀 호환 다운로드 지원.
+- **`ReportExporter.jsx` CSV 다운로드 버튼 통합**: 1클릭 Excel/CSV 다운로드 기능 연동.
+- **`cacheService.test.js` & `csvExporter.test.js` 단위 테스트 3종 구축**: 전체 단위 테스트 20종 100% 통과.
+
+### 📁 2. 서류 파일 파서 및 드래그 앤 드롭 업로드 뷰어 구현 (Sprint 4.1)
 - **클라이언트 단 파일 파서 유틸리티 (`src/utils/fileParser.js`)**: `.txt`, `.pdf`, `.docx` 서류 파일의 텍스트 추출 및 바이너리 텍스트 파싱 처리.
 - **Drag-and-Drop 파일 업로드 컴포넌트 (`src/components/FileUploadZone.jsx`)**: 파일 드래그 앤 드롭 존 및 다중 업로드 서류 목록 미리보기/선택 인터페이스 구현.
 - **`ApplicantInput.jsx` 탭 스위처 연동**: `[✍️ 텍스트 직접 입력]`과 `[📁 PDF/TXT 파일 업로드]` 모드 간 1클릭 전환 지원.
-- **`fileParser.test.js` 단위 테스트 3종 구축**: TXT 파싱, 바이너리 텍스트 추출, 빈 파일 대처 테스트 100% 통과 (전체 단위 테스트 17종 100% 그린).
 
 ---
 - **개인식별정보(PII) & 블라인드 채용 정규식 필터 (`src/utils/piiAnonymizer.js`)**: 성명, 전화번호, 이메일, 주민번호, 생년월일, 출신 학교명(대학교/고교/중학), 거주 지역 자동 마스킹.

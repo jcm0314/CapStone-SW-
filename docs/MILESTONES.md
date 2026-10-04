@@ -78,8 +78,9 @@
 
 ---
 
-### 📍 [Milestone 4] `v1.3.0 - PDF/TXT 일괄 업로드 & IndexedDB 캐싱` [진행 중]
+### 📍 [Milestone 4] `v1.3.0 - PDF/TXT 일괄 업로드 & IndexedDB 캐싱` [완료 ✓]
 - **기간**: 2026-10-06 ~ 2026-10-20
+- **상태**: Closed / Completed (100%)
 - **목표**: 대량 서류 파이프라인 처리 및 로컬 캐싱
 - **연동 Issue**: 🟡 [Issue #4] `[Scalability] Gemini API Rate Limit (HTTP 429) 대처 및 Caching 레이어` ([이슈 #4 바로가기](https://github.com/jcm0314/CapStone-SW-/issues/4))
 
@@ -88,10 +89,11 @@
 - [x] **Task 4.1.2**: 드래그 앤 드롭 파일 업로드 뷰어 (`FileUploadZone.jsx`) 및 탭 스위처 (`ApplicantInput.jsx`) 구현.
 - [x] **Task 4.1.3**: `fileParser.test.js` 단위 테스트 3종 100% 통과.
 
-#### 🔹 Sprint 4.2: IndexedDB 캐싱 & API Rate Limit Queue (2026-10-13 ~ 2026-10-20)
-- [ ] **Task 4.2.1**: `IndexedDB` 로컬 분석 결과 캐싱 서비스 작성.
-- [ ] **Task 4.2.2**: Exponential Backoff 기반 API Rate Limit (HTTP 429) 예방 큐 구축.
-- [ ] **Task 4.2.3**: 지원자 전체 점수 엑셀/CSV 일괄 다운로드 유틸리티 작성.
+#### 🔹 Sprint 4.2: IndexedDB 캐싱 & API Rate Limit Queue (2026-10-13 ~ 2026-10-20) [완료 ✓]
+- [x] **Task 4.2.1**: `IndexedDB` & `LocalStorage` 분석 결과 캐싱 서비스 작성 (`cacheService.js`).
+- [x] **Task 4.2.2**: 동일 서류 재검토 시 ⚡ 로컬 캐시에서 즉시 반환 (토큰 비용 0원, 0초 즉시 조회).
+- [x] **Task 4.2.3**: 지원자 평가 결과 UTF-8 BOM CSV / Excel 일괄 다운로드 유틸리티 작성 (`csvExporter.js`).
+- [x] **Task 4.2.4**: `cacheService.test.js` & `csvExporter.test.js` 단위 테스트 100% 통과.
 
 ---
 

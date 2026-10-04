@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Printer, Copy, Check, X, FileText, Award } from 'lucide-react';
+import { Printer, Copy, Check, X, FileText, Download } from 'lucide-react';
+import { downloadApplicantsCSV } from '../utils/csvExporter';
 
 export default function ReportExporter({ result, currentJob, onClose }) {
   const [copied, setCopied] = useState(false);
@@ -11,6 +12,10 @@ export default function ReportExporter({ result, currentJob, onClose }) {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadCSV = () => {
+    downloadApplicantsCSV([result], `HR_AX_${name}_Evaluation_Report.csv`);
   };
 
   const handleCopyText = () => {
@@ -54,6 +59,12 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? '복사됨!' : '텍스트 복사'}
+            </button>
+            <button
+              onClick={handleDownloadCSV}
+              className="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-400" /> Excel / CSV 다운로드
             </button>
             <button
               onClick={handlePrint}

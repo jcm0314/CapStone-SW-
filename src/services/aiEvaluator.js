@@ -1,6 +1,7 @@
 import { JOB_TEMPLATES } from '../data/jobTemplates';
 import { runWorkerEvaluation } from './workerService';
 import { anonymizePII } from '../utils/piiAnonymizer';
+import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 
 /**
  * AI Grounding Evaluation Coordinator
@@ -9,7 +10,19 @@ import { anonymizePII } from '../utils/piiAnonymizer';
 export async function analyzeApplicant({ name, applyJobId, rawText, apiKey, onProgress }) {
   const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
 
-  // Step 1: Client-Side PII Security & Blind Recruitment Anonymization
+  // Step 1: IndexedDB Local Cache Lookup
+  const cachedResult = await getCachedAnalysis(rawText, jobTemplate.id);
+  if (cachedResult) {
+    if (onProgress) {
+      onProgress({
+        percent: 100,
+        status: '⚡ IndexedDB 로컬 캐시에서 즉시 조회 완료 (토큰 비용 0원)'
+      });
+    }
+    return cachedResult;
+  }
+
+  // Step 2: Client-Side PII Security & Blind Recruitment Anonymization
   const piiResult = anonymizePII(rawText, name);
   const cleanText = piiResult.anonymizedText;
 
@@ -20,25 +33,28 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey, onPr
     });
   }
 
+  let finalResult = null;
+
   if (apiKey && apiKey.trim().length > 10) {
     try {
       if (onProgress) onProgress({ percent: 25, status: 'Google Cloud Gemini API 통신 연결 중...' });
-      const result = await analyzeWithGeminiAPI({ name, jobTemplate, rawText: cleanText, apiKey });
+      finalResult = await analyzeWithGeminiAPI({ name, jobTemplate, rawText: cleanText, apiKey });
       if (onProgress) onProgress({ percent: 100, status: 'Gemini API 분석 완료' });
-      result.piiMeta = piiResult;
-      return result;
     } catch (err) {
       console.warn("Gemini API call failed, falling back to Web Worker engine:", err);
-      const res = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
-      res.piiMeta = piiResult;
-      return res;
+      finalResult = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
     }
+  } else {
+    // Fallback to Web Worker Background Parsing Engine
+    finalResult = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
   }
 
-  // Fallback to Web Worker Background Parsing Engine
-  const result = await runWorkerEvaluation({ name, jobTemplate, rawText: cleanText, onProgress });
-  result.piiMeta = piiResult;
-  return result;
+  if (finalResult) {
+    finalResult.piiMeta = piiResult;
+    await saveAnalysisToCache(rawText, jobTemplate.id, finalResult);
+  }
+
+  return finalResult;
 }
 
 /**
