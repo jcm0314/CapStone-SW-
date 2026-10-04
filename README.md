@@ -3,77 +3,152 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)](https://vitejs.dev/)
-[![Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5_%2F_1.5_Flash-8E75B2?logo=google)](https://ai.google.dev/)
-[![Vertex AI](https://img.shields.io/badge/Google_Cloud-Vertex_AI_Enterprise-4285F4?logo=google-cloud)](https://cloud.google.com/vertex-ai)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![GCP Cloud Run](https://img.shields.io/badge/GCP_Cloud_Run-Production_Live-4285F4?logo=google-cloud)](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
+[![Docker](https://img.shields.io/badge/Docker-Multi--Stage-2496ED?logo=docker)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-IaC_Ready-326CE5?logo=kubernetes)](https://kubernetes.io/)
 
 > **처음 방문하셨나요? 👋**  
-> **HR AX Smart Evaluator**는 인사담당자가 지원자의 자기소개서를 검토할 때, **주관적인 느낌이나 감을 배제하고 지원서 본문 속 실제 문장(근거, Grounding)을 바탕으로 객관적으로 점수화하고 면접 질문까지 자동으로 뽑아주는 인사(HR) 전용 AI 보조 플랫폼**입니다.
+> **HR AX Smart Evaluator**는 인사담당자가 지원자의 자기소개서를 검토할 때 **주관적인 감이나 편향을 배제하고, 자소서 본문 속 실제 문장(Grounding)을 바탕으로 정량적 점수 산출, PII 익명화, 표절 매트릭스 탐지 및 맞춤형 면접 질문을 자동 도출해 주는 엔터프라이즈 HR 전용 AI 보조 플랫폼**입니다.
 
 ---
 
-## 📌 목차 (Table of Contents)
-- [1. 💡 이 프로젝트가 왜 필요한가요? (Why & Motivation)](#1--이-프로젝트가-왜-필요한가요-why--motivation)
-- [2. 📊 현 채용 시장의 페인포인트 & 해결 수치 (Quantified Impact)](#2--현-채용-시장의-페인포인트--해결-수치-quantified-impact)
-- [3. 🌟 주요 핵심 기능 5가지 (Key Features)](#3--주요-핵심-기능-5가지-key-features)
-- [4. 🏛️ 대기업 Vertex AI 엔터프라이즈 아키텍처](#4-🏛️-대기업-vertex-ai-엔터프라이즈-아키텍처)
-- [5. 🛠️ 커밋 및 협업 규칙 (1기능 1커밋 & 한글 커밋 규칙)](#5--커밋-및-협업-규칙-1기능-1커밋--한글-커밋-규칙)
-- [6. 📂 프로젝트 구조 (Directory Structure)](#6--프로젝트-구조-directory-structure)
-- [7. 📝 개발 및 커밋 히스토리 (Commit History)](#7--개발-및-커밋-히스토리-commit-history)
-- [8. 📌 GitHub Issues & 기술 병목 관리 (Issues & Roadmap)](#8--github-issues--기술-병목-관리-issues--roadmap)
-- [9. 🏛️ 대기업 표준 엔지니어링 규정 (Enterprise Guidelines)](#9-🏛️-대기업-표준-엔지니어링-규정-enterprise-guidelines)
-- [10. 📅 날짜별 작업 일지 (Daily Work Log & Changelog)](#10--날짜별-작업-일지-daily-work-log--changelog)
-- [11. 🎯 디테일 프로젝트 마일스톤 및 로드맵 (Milestones & Roadmap)](#11--디테일-프로젝트-마일스톤-및-로드맵-milestones--roadmap)
+## 🌐 GCP Cloud Run 라이브 프로덕션 서비스 URL
+
+- 🚀 **프론트엔드 웹 서비스**: [https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
+- ⚙️ **Express 백엔드 API 게이트웨이**: [https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app](https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app)
+- 🏥 **게이트웨이 헬스체크**: [https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app/health](https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app/health)
 
 ---
 
-## 4. 🏛️ 대기업 Vertex AI 엔터프라이즈 아키텍처
+## 📸 1. 시스템 프로토타입 대시보드 스크린샷 (Prototype Previews)
 
-대기업(Google, Samsung, Naver, Kakao 등)에서 HR AX 시스템을 도입할 때는 소비자용 API 키 대신 **Google Cloud Vertex AI Enterprise** 및 **Enterprise Service Proxy Gateway** 아키텍처([docs/ENTERPRISE_VERTEX_ARCHITECTURE.md](file:///C:/Users/jcm0314/.gemini/antigravity/scratch/hr-coverletter-evaluator/docs/ENTERPRISE_VERTEX_ARCHITECTURE.md))로 단일화하여 적용합니다:
-
-1. **Google Cloud Vertex AI (`@google-cloud/vertexai`)**: IAM Service Account 및 OAuth 2.0 Bearer Token 기반 엔터프라이즈 인증.
-2. **Enterprise Service Proxy Gateway (`server/proxyServer.js`)**: 브라우저 ➔ API Gateway ➔ Vertex AI 3-Tier 안전 프록시 통신 및 PII 마스킹.
-3. **HR Multi-Agent 4대 에이전트 앙상블 시스템**: 단일 LLM 환각 방지를 위해 Supervisor(총괄결재), Grounding(원문인덱싱), Critic(2차검증), Interviewer(약점질문) 4대 전문 에이전트 오케스트레이션 파이프라인 탑재.
-4. **BigQuery Audit Trail & Cloud Storage (GCS)**: 채용 서류 평가 이력 및 원문 근거의 100% 감사 이력 보관.
-5. **Enterprise Zero Data Retention**: 고객 데이터가 파운데이션 모델 재학습에 일절 사용되지 않는 데이터 거버넌스 준수.
-6. **순수 엔터프라이즈 단일 파이프라인**: 소비자용 API 키 입력창 및 fallback 모드를 완전 제거하여 대기업 표준 보안 규정을 엄격하게 강제.
-
----
-
-## 6. 📂 프로젝트 구조 (Directory Structure)
+### 📊 ① 메인 HR 서류 평가 대시보드 & 5대 역량 시각화 (Evaluator Dashboard)
+- **100점 만점 수치 게이지** 및 **5대 역량 레이더 차트 (Recharts)** 시각화
+- **Exact & Fuzzy Matcher (Levenshtein 85%+)**: AI 점수 산출의 근거가 된 자기소개서 실제 문장을 본문에서 1:1 하이라이팅 및 자동 스크롤 추적
+- **맞춤형 심층 면접 질문 생성기**: 서류 상의 약점 및 검증 필요 문장 기반 면접 가이드 제시
 
 ```
-hr-coverletter-evaluator/
-├── README.md                          # 👈 이 문서 (지속 업데이트)
-├── CHANGELOG.md                       # 날짜별 작업 일지 및 체인지로그
-├── presentation.html                  # 6대 목차 포함 중간 발표용 프리미엄 HTML
-├── index.html                         # 메인 HTML (Inter/Pretendard 폰트)
-├── server/
-│   └── proxyServer.js                 # 👈 대기업 API Gateway & BigQuery Audit 게이트웨이
-├── docs/
-│   ├── ARCHITECTURE.md                # 시스템 기본 아키텍처
-│   ├── ENTERPRISE_VERTEX_ARCHITECTURE.md # 👈 대기업 Vertex AI 사내 아키텍처 규격서
-│   ├── ENTERPRISE_GUIDELINES.md       # 대기업 엔지니어링 표준 규정
-│   ├── ENTERPRISE_AX_INTERNAL_PLAN.md # 👈 사내 AX 추진단 내재화 과제 수행계획서
-│   ├── ENTERPRISE_AX_WEEKLY_REPORT.md # 👈 사내 AX 추진단 C-Level & HR본부 보고서
-│   ├── ENTERPRISE_AX_COMPLIANCE_GAP.md# 👈 대기업 사내 AX 추진단 실무 보완 및 거버넌스 가이드
-│   ├── ISSUES.md                      # 기술 병목 및 고려사항 이슈 모음
-│   └── MILESTONES.md                  # 5대 세분화 마일스톤 및 개발 로드맵
-└── src/
-    ├── workers/                       # 👈 evaluatorWorker.js (Web Worker 백그라운드 멀티쓰레드 파서)
-    ├── services/                      # 👈 enterpriseVertexService.js, workerService.js, aiEvaluator.js
-    └── components/                    # 8대 UI 컴포넌트 모음
++---------------------------------------------------------------------------------------------+
+| 🎯 HR AX Smart Evaluator - 지원서 서류 평가 대시보드                                        |
++------------------------------------+--------------------------------------------------------+
+| 📌 평가 직무 선택                  | ✍️ 지원자 서류 입력 & 샘플 선택                         |
+|  • [백엔드 엔지니어]               |  • 김민준 (🟢 우수) | 이서연 (🔴 과장) | 박지훈 (🟡 보류)  |
+|  • [데이터 분석가]                 |  • 텍스트 직접 입력 OR PDF/TXT 파일 업로드             |
+|  • [AI 연구원]                     |  • 🔒 PII 마스킹 (전화번호, 이메일, 출신교 블라인드)   |
++------------------------------------+--------------------------------------------------------+
+| 📊 김민준 지원자 서류 종합 평가 SCORE                                                        |
+|  • [ 92 / 100점 ] 🟢 서류 통과 추천 | 5대 역량 레이더 차트 (문제해결 95 / 기술 94 / 협업 88) |
+|  • ⚠️ AI 생성/과장 확률: 12%       |                                                        |
++------------------------------------+--------------------------------------------------------+
+| 🔍 서류 본문 문장별 근거(Grounding) 캡처 검증 & Virtual Scrolling                              |
+|  🟢 "Redis 인메모리 캐싱 기법을 도입하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다."    |
+|  🔴 "어떠한 거친 풍파가 밀려와도 손쉽게 극복할 수 있는 최고의 열정을 가진 인재입니다."        |
++---------------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 7. 📝 개발 및 커밋 히스토리 (Commit History)
+### 🕵️ ② 지원자 간 N-Gram 자소서 상호 표절 탐지 매트릭스 (Plagiarism Matrix)
+- 지원자 간 문장의 **Character Tri-Gram N-Gram Jaccard 유사도**를 실시간 연산하여 히트맵 매트릭스로 표출
+- **40% 이상 유사 시 🚨 [표절 의심 경고 플래그]** 자동 부여
 
-| 커밋 태그 | 커밋 메시지 (Commit Message) | 구현 및 업데이트 내용 |
-| :--- | :--- | :--- |
-| `feat` | `feat: 대기업 환경 구축을 위한 Google Cloud Vertex AI 아키텍처 규격 및 프록시 게이트웨이 추가` | Vertex AI 규격서(ENTERPRISE_VERTEX_ARCHITECTURE.md), Express API Gateway 및 게이트웨이 통신 수립 |
-| `refactor` | `refactor: presentation.html 발표용 웹페이지를 핵심 키워드 중심 고가독성 디자인으로 개편` | 텍스트 축소, 수치 지표 수직 강조, 키워드 중심 카드 UI로 발표 가독성 대폭 향상 |
-| `refactor` | `refactor: Google Opal 및 소비자용 API 모드 제거, 순수 엔터프라이즈 Vertex AI 파이프라인으로 일원화` | Opal 및 클라이언트 API Key 모드 완전 배제, 대기업 프록시 아키텍처로 일원화 |
+```
++---------------------------------------------------------------------------------------------+
+| 🕵️ 지원자 간 자소서 상호 표절 탐지 매트릭스 (N-Gram Jaccard 알고리즘)                          |
++-------------------+-------------------+-------------------+-------------------+-------------+
+| 지원자 성명       | 김민준            | 이서연            | 박지훈            | 최유진      |
++-------------------+-------------------+-------------------+-------------------+-------------+
+| 김민준            | -                 | 12.4%             | 14.8%             | 8.2%        |
+| 이서연            | 12.4%             | -                 | 44.5% 🚨 (표절)   | 11.1%       |
+| 박지훈            | 14.8%             | 44.5% 🚨 (표절)   | -                 | 9.6%        |
++-------------------+-------------------+-------------------+-------------------+-------------+
+```
+
+---
+
+### ⚙️ ③ Custom HR Prompt Studio 에디터 (Prompt Studio)
+- 기업별 **핵심 인재상 키워드**, 감점 항목 **서류 금기어**, 직무 가중치 설정 모달
+- 사내 전용 프리셋 3종 지원 (**LG그룹 인재상, IT 스타트업, 금융 대기업**)
+
+---
+
+## 🏛️ 2. 클라우드 인프라 & DevOps 아키텍처 (Infrastructure & DevOps)
+
+```mermaid
+flowchart TD
+    subgraph Client ["Client Browser (React 18 SPA)"]
+        UI["React 18 + Tailwind UI"]
+        WW["evaluatorWorker.js (Web Worker)"]
+        DB["IndexedDB (0s / 0 Token Cache)"]
+        PII["PII Anonymizer Engine"]
+    end
+
+    subgraph Infrastructure ["Enterprise Cloud Infrastructure"]
+        NGINX["Frontend Web Server (Nginx Docker Container)"]
+        GW["Express API Proxy Gateway (Node.js Container)"]
+        REDIS["Distributed Cache (Redis 7 Container)"]
+        GCP["GCP Cloud Run (Seoul Region asia-northeast3)"]
+        AI["GCP Vertex AI & LG EXAONE 3.0 Hybrid Engine"]
+    end
+
+    subgraph DevOps ["DevOps & CI/CD Pipeline"]
+        GH["GitHub Remote Repo (main)"]
+        GA["GitHub Actions (Vitest 28 Passed + Build Check)"]
+        K8S["Kubernetes IaC (Deployment, Service, Ingress)"]
+    end
+
+    UI <--> WW
+    UI <--> DB
+    UI --> PII
+    UI -- HTTPS --> NGINX
+    NGINX -- Reverse Proxy --> GW
+    GW <--> REDIS
+    GW -- Secure API Call --> AI
+    GH --> GA
+    GA --> GCP
+    DevOps --> K8S
+```
+
+### 📌 인프라 주요 구성 요소
+1. **Multi-Stage Docker**: Node 20 빌드 후경량 Nginx Alpine 전송 (이미지 용량 90%+ 절감)
+2. **Express API Proxy Gateway**: 브라우저 API Key 노출 차단, Rate Limiting(100 req/15m), CORS 제어
+3. **Docker Compose 3-Tier**: Nginx + Express + Redis 3개 컨테이너 원클릭 연동
+4. **GitHub Actions CI/CD**: Push/PR 시 Vitest 28개 단체 테스트 및 무결성 빌드 검증 자동화
+5. **Kubernetes (K8s) IaC**: `deployment.yaml`, `service-ingress.yaml`, `configmap.yaml` 작성 완료
+
+---
+
+## 🏆 3. 마일스톤 완료 현황 (v1.0 ~ v2.1)
+
+| 마일스톤 | 핵심 구현 기능 | 상태 |
+| :--- | :--- | :---: |
+| **v1.0 Core MVP** | LG EXAONE 3.0 & GCP Vertex AI 하이브리드 라우터, Grounding 뷰어 | ✅ **완료** |
+| **v1.1 Web Worker** | 비동기 파싱 쓰레드, `react-window` 가상 스크롤, Vitest & Husky | ✅ **완료** |
+| **v1.2 Fuzzy & PII** | Levenshtein/Jaccard 오타 완충 매처, 7종 PII 자동 마스킹 | ✅ **완료** |
+| **v1.3 Batch & Cache** | PDF/DOCX/TXT 파서, IndexedDB 0원/0초 캐시, UTF-8 BOM CSV Export | ✅ **완료** |
+| **v2.0 Enterprise** | Custom HR Prompt Studio 에디터, N-Gram 자소서 상호 표절 매트릭스 | ✅ **완료** |
+| **v2.1 Infrastructure** | Docker, Nginx, Express Gateway, Redis, GitHub Actions, K8s, GCP Cloud Run 배포 | ✅ **완료** |
+
+---
+
+## 🛠️ 4. 로컬 구동 및 테스트 방법
+
+### 1) 로컬 개발 서버 구동
+```bash
+npm install
+npm run dev
+```
+브라우저에서 `http://localhost:5173` 접속.
+
+### 2) 전체 단위 테스트 실행 (Vitest 28개 테스트)
+```bash
+npm test
+```
+
+### 3) Docker Compose 다중 컨테이너 연동 구동
+```bash
+docker compose up --build
+```
 
 ---
 
