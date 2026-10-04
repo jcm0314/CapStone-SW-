@@ -133,7 +133,7 @@ Return ONLY a valid JSON object matching this exact structure:
 }
 `;
 
-    let upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    let upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
     let response = await fetch(upstreamUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -144,7 +144,7 @@ Return ONLY a valid JSON object matching this exact structure:
     });
 
     if (!response.ok) {
-      upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      upstreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
       response = await fetch(upstreamUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

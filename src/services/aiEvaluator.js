@@ -121,7 +121,7 @@ Return ONLY a valid JSON object matching this exact structure:
 }
 `;
 
-  let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+  let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -131,8 +131,8 @@ Return ONLY a valid JSON object matching this exact structure:
   });
 
   if (!response.ok) {
-    // Fallback to gemini-2.0-flash if 2.5 is initializing
-    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+    // Fallback to gemini-2.0-flash-lite if 2.5 is initializing
+    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
