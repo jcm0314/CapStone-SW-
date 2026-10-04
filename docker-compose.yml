@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # 1. Frontend Web Server (Nginx + React SPA)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hr-evaluator-frontend
+    ports:
+      - "80:80"
+    restart: always
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - hr-evaluator-net
+
+  # 2. Secure Express API Gateway Proxy
+  api-gateway:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: hr-evaluator-api-gateway
+    ports:
+      - "3001:3001"
+    restart: always
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+      - CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80
+    networks:
+      - hr-evaluator-net
+
+  # 3. Enterprise Distributed In-Memory Cache (Redis)
+  redis-cache:
+    image: redis:7-alpine
+    container_name: hr-evaluator-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    command: redis-server --save 60 1 --loglevel notice
+    volumes:
+      - redis_data:/data
+    networks:
+      - hr-evaluator-net
+
+networks:
+  hr-evaluator-net:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
