@@ -156,6 +156,7 @@ Return ONLY a valid JSON object matching this exact structure:
     applyJobId: jobTemplate.id,
     applyJobTitle: jobTemplate.title,
     rawText,
+    mode: 'GEMINI_25_FLASH_LITE',
     analysis: parsed
   };
 }

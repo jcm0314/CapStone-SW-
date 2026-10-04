@@ -54,9 +54,18 @@ export default function DashboardSummary({ result, currentJob }) {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
             <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
+            {result.mode === 'LOCAL_FALLBACK' ? (
+              <span className="px-2 py-0.5 bg-slate-800 text-slate-300 border border-slate-700 rounded text-[10px] font-bold flex items-center gap-1">
+                💻 Engine: Web Worker Local Fallback
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+                ⚡ Engine: Gemini 2.5 Flash-Lite (Vertex AI)
+              </span>
+            )}
           </div>
           <p className="text-xs text-gray-400 mt-0.5">{decisionReason}</p>
         </div>
