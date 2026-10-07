@@ -127,12 +127,12 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
         </div>
       )}
 
-      {/* Real-time Web Worker Progress Bar */}
+      {/* Real-time Gemini API Progress Bar */}
       {isAnalyzing && (
         <div className="bg-gray-950/80 border border-blue-900/50 p-3 rounded-xl space-y-2 animate-pulse">
           <div className="flex justify-between items-center text-[11px]">
             <span className="text-blue-300 font-semibold flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-blue-400 animate-spin" /> Web Worker 쓰레드 분석 중: {statusMsg}
+              <Cpu className="w-3.5 h-3.5 text-blue-400 animate-spin" /> {statusMsg}
             </span>
             <span className="text-blue-400 font-mono font-bold">{percent}%</span>
           </div>
@@ -154,11 +154,11 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
         {isAnalyzing ? (
           <>
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Web Worker 백그라운드 분석 연산 중 ({percent}%)
+            Google Gemini API 실시간 평가 분석 중 ({percent}%)
           </>
         ) : (
           <>
-            <Sparkles className="w-4 h-4" /> AI 근거 기반 서류 분석 실행
+            <Sparkles className="w-4 h-4" /> Google Gemini 실시간 역량 분석 실행
           </>
         )}
       </button>
