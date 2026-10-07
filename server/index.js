@@ -133,20 +133,16 @@ Return ONLY a valid JSON object matching this exact structure:
 }
 `;
 
-    const candidateModels = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+    const candidateModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest'];
     const project = process.env.GCP_PROJECT || 'ai-review-510606';
     let data = null;
     let successfulModel = '';
     let lastError = '';
 
     for (const modelName of candidateModels) {
-      // Endpoint candidate 1: Google AI Studio REST API
-      // Endpoint candidate 2: Vertex AI us-central1 REST API
-      // Endpoint candidate 3: Vertex AI asia-northeast3 REST API
       const endpoints = [
         `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
-        `https://us-central1-aiplatform.googleapis.com/v1/projects/${project}/locations/us-central1/publishers/google/models/${modelName}:generateContent?key=${apiKey}`,
-        `https://asia-northeast3-aiplatform.googleapis.com/v1/projects/${project}/locations/asia-northeast3/publishers/google/models/${modelName}:generateContent?key=${apiKey}`
+        `https://us-central1-aiplatform.googleapis.com/v1/projects/${project}/locations/us-central1/publishers/google/models/${modelName}:generateContent?key=${apiKey}`
       ];
 
       for (const url of endpoints) {
@@ -176,7 +172,11 @@ Return ONLY a valid JSON object matching this exact structure:
     }
 
     if (!data) {
-      throw new Error(`Google Cloud Vertex AI & Gemini API Upstream Error: ${lastError}`);
+      console.warn(`Upstream API fallback triggered: ${lastError}`);
+      return res.status(200).json({
+        mode: 'LOCAL_FALLBACK',
+        message: `Upstream API Key Quota/Model Deprecation (${lastError}). Handed off to Web Worker Local Engine.`
+      });
     }
 
     const rawTextResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -193,7 +193,10 @@ Return ONLY a valid JSON object matching this exact structure:
     });
   } catch (error) {
     console.error('API Gateway Error:', error.message);
-    return res.status(500).json({ error: 'Internal Server Error during AI evaluation proxying.' });
+    return res.status(200).json({
+      mode: 'LOCAL_FALLBACK',
+      message: 'Internal Gateway Error fallback to Web Worker.'
+    });
   }
 };
 
