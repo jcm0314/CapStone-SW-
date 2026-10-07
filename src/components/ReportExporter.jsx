@@ -84,8 +84,17 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
           <div className="border-b border-gray-800 pb-4 space-y-1">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-xl font-bold text-white print:text-black">{name} 지원자 서류 역량 평가서</h1>
-                <p className="text-xs text-gray-400 print:text-gray-600">직무: {applyJobTitle} | 평가 시스템: HR AX Smart Evaluator 2.5</p>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold text-white print:text-black">{name} 지원자 서류 역량 평가서</h1>
+                  {result.isHumanVerified && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 print:bg-amber-100 print:text-amber-800">
+                      🧑‍💼 HITL 검토/보정 완료
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 print:text-gray-600">
+                  직무: {applyJobTitle} | 평가 엔진: Google Gemini API | 검토 상태: {result.isHumanVerified ? '인간 검토관(HITL) 최종 확정' : 'AI 자동 분석 초안'}
+                </p>
               </div>
               <div className="text-right">
                 <span className="text-2xl font-black text-blue-400 font-mono print:text-blue-800">{summary.totalScore}점</span>
@@ -95,12 +104,17 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
           </div>
 
           {/* Decision Box */}
-          <div className="bg-gray-900/80 p-4 rounded-xl border border-gray-800 space-y-1 print:bg-gray-100 print:border-gray-300">
+          <div className="bg-gray-900/80 p-4 rounded-xl border border-gray-800 space-y-1.5 print:bg-gray-100 print:border-gray-300">
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="text-gray-300 print:text-black">서류 종합 판정:</span>
               <span className="text-blue-400 print:text-blue-700">{summary.decision}</span>
             </div>
-            <p className="text-xs text-gray-300 print:text-gray-800">{summary.decisionReason}</p>
+            <p className="text-xs text-gray-300 print:text-gray-800 leading-relaxed">{summary.decisionReason}</p>
+            {result.reviewerNote && (
+              <div className="mt-2 pt-2 border-t border-gray-800 text-[11px] text-amber-300 print:text-amber-900">
+                <span className="font-semibold">🧑‍💼 인사담당자 HITL 보정 사유:</span> {result.reviewerNote}
+              </div>
+            )}
           </div>
 
           {/* Competency Scores Table */}

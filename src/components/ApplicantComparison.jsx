@@ -63,7 +63,12 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                       <span className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 font-mono flex items-center justify-center text-xs">
                         {app.name[0]}
                       </span>
-                      {app.name}
+                      <span>{app.name}</span>
+                      {app.isHumanVerified && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="인간 검토관 HITL 보정 완료">
+                          🧑‍💼 HITL
+                        </span>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-gray-400 font-medium">{app.applyJobTitle}</td>
                     <td className="py-3.5 px-4 font-mono font-bold text-base">

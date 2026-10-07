@@ -1,8 +1,8 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle } from 'lucide-react';
+import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck } from 'lucide-react';
 
-export default function DashboardSummary({ result, currentJob }) {
+export default function DashboardSummary({ result, currentJob, onOpenHITLEditor }) {
   if (!result || !result.analysis) return null;
 
   const { summary, competencyScores } = result.analysis;
@@ -48,32 +48,65 @@ export default function DashboardSummary({ result, currentJob }) {
   };
 
   const badge = getDecisionBadge();
+  const isHumanVerified = Boolean(result.isHumanVerified);
+  const originalScore = result.originalAnalysis?.summary?.totalScore;
 
   return (
     <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-5">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
-        <div>
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-gray-800">
+        <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
             <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
-            {result.mode === 'LOCAL_FALLBACK' ? (
-              <span className="px-2 py-0.5 bg-slate-800 text-slate-300 border border-slate-700 rounded text-[10px] font-bold flex items-center gap-1">
-                💻 Engine: Web Worker Local Fallback
+
+            {/* Engine Badge */}
+            <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+              ⚡ Gemini API Engine
+            </span>
+
+            {/* HITL Verification Badge */}
+            {isHumanVerified ? (
+              <span className="px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                <UserCheck className="w-3 h-3 text-amber-400" />
+                Human-Verified (HITL 보정 완료)
               </span>
             ) : (
-              <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-                ⚡ Engine: Gemini 2.5 Flash-Lite (Vertex AI)
+              <span className="px-2.5 py-0.5 bg-gray-800 text-gray-400 border border-gray-700 rounded-full text-[10px] font-medium flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-gray-400" />
+                AI Generated (검토 대기)
+              </span>
+            )}
+
+            {/* Score Calibration Differential Pill */}
+            {isHumanVerified && originalScore !== undefined && originalScore !== totalScore && (
+              <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-mono font-semibold">
+                AI 초안 {originalScore}점 ➔ HR 보정 {totalScore}점
               </span>
             )}
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">{decisionReason}</p>
+          <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">{decisionReason}</p>
         </div>
 
-        {/* HR Decision Badge */}
-        <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-md ${badge.bgColor}`}>
-          {badge.icon}
-          {badge.label}
+        {/* Right Action & Decision Badge */}
+        <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0">
+          {/* HITL Calibration Button */}
+          {onOpenHITLEditor && (
+            <button
+              type="button"
+              onClick={onOpenHITLEditor}
+              className="px-3.5 py-2 bg-gradient-to-r from-amber-600/30 to-amber-500/20 hover:from-amber-600/40 hover:to-amber-500/30 text-amber-200 border border-amber-500/50 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-950/40 transition-all hover:scale-105"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+              <span>🛠️ HITL 환각 교정 & 보정</span>
+            </button>
+          )}
+
+          {/* HR Decision Badge */}
+          <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-md ${badge.bgColor}`}>
+            {badge.icon}
+            {badge.label}
+          </div>
         </div>
       </div>
 

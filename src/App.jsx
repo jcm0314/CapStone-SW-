@@ -8,11 +8,13 @@ import InterviewQuestions from './components/InterviewQuestions';
 import ApplicantComparison from './components/ApplicantComparison';
 import ReportExporter from './components/ReportExporter';
 import PromptStudioModal from './components/PromptStudioModal';
+import ApiKeyModal from './components/ApiKeyModal';
+import HITLEditorModal from './components/HITLEditorModal';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
-import { analyzeApplicant as analyzeEnterpriseApplicant } from './services/enterpriseVertexService';
-import { analyzeApplicant as analyzeLocalWorkerApplicant } from './services/aiEvaluator';
+import { analyzeApplicant } from './services/aiEvaluator';
+import { saveAnalysisToCache } from './services/cacheService';
 import confetti from 'canvas-confetti';
 
 export default function App() {
@@ -24,37 +26,40 @@ export default function App() {
   const [progressState, setProgressState] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPromptStudio, setShowPromptStudio] = useState(false);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [showHITLEditor, setShowHITLEditor] = useState(false);
 
+  // Analysis via Google Gemini API Only (No Local Fallbacks)
   const handleAnalyze = async ({ name, rawText }) => {
+    const currentApiKey = (
+      (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') ||
+      import.meta.env.VITE_GEMINI_API_KEY ||
+      ''
+    ).trim();
+
+    if (!currentApiKey || currentApiKey.length < 5) {
+      setShowApiKeyModal(true);
+      return;
+    }
+
     setIsAnalyzing(true);
-    setProgressState({ percent: 10, status: '분석 프로세스 초기화 중...' });
+    setProgressState({ percent: 10, status: 'Google Gemini AI 분석 파이프라인 가동 중...' });
 
     try {
-      let newResult;
-      try {
-        // Try Enterprise Proxy Gateway first
-        newResult = await analyzeEnterpriseApplicant({
-          name,
-          applyJobId: currentJob.id,
-          rawText
-        });
-      } catch (proxyErr) {
-        console.warn("Enterprise Gateway connection fallback to Web Worker:", proxyErr.message);
-        // Fallback to Web Worker background parser
-        newResult = await analyzeLocalWorkerApplicant({
-          name,
-          applyJobId: currentJob.id,
-          rawText,
-          onProgress: (p) => setProgressState(p)
-        });
-      }
+      const newResult = await analyzeApplicant({
+        name,
+        applyJobId: currentJob.id,
+        rawText,
+        apiKey: currentApiKey,
+        onProgress: (p) => setProgressState(p)
+      });
 
-      // Add to list and select
+      // Add to list and select as current
       setApplicantList(prev => [newResult, ...prev.filter(a => a.id !== newResult.id)]);
       setSelectedApplicant(newResult);
 
-      // Trigger confetti if high score
-      if (newResult.analysis.summary.totalScore >= 88) {
+      // Trigger celebration confetti if high score
+      if (newResult.analysis?.summary?.totalScore >= 88) {
         confetti({
           particleCount: 60,
           spread: 70,
@@ -62,11 +67,66 @@ export default function App() {
         });
       }
     } catch (err) {
-      console.error("Analysis failed:", err);
-      alert(err.message || "서류 분석 도중 오류가 발생했습니다.");
+      console.error("Gemini AI Analysis failed:", err);
+      alert(`[Gemini 평가 실패] ${err.message || '서류 분석 도중 오류가 발생했습니다.'}`);
+      if (err.message && (err.message.includes('API 키') || err.message.includes('API_KEY'))) {
+        setShowApiKeyModal(true);
+      }
     } finally {
       setIsAnalyzing(false);
       setProgressState(null);
+    }
+  };
+
+  // Human-in-the-Loop (HITL) Score & Evidence Calibration Save Handler
+  const handleSaveHITL = async ({ updatedAnalysis, reviewerNote }) => {
+    if (!selectedApplicant) return;
+
+    const originalDraft = selectedApplicant.originalAnalysis || selectedApplicant.analysis;
+
+    const calibratedApplicant = {
+      ...selectedApplicant,
+      originalAnalysis: originalDraft, // Preserve AI original draft for rollback
+      analysis: updatedAnalysis,
+      isHumanVerified: true,
+      lastEditedAt: new Date().toISOString(),
+      reviewerNote: reviewerNote || selectedApplicant.reviewerNote || '인사담당자 HITL 보정 완료'
+    };
+
+    // Update in memory state
+    setSelectedApplicant(calibratedApplicant);
+    setApplicantList(prev =>
+      prev.map(app => (app.id === calibratedApplicant.id ? calibratedApplicant : app))
+    );
+
+    // Persist calibrated data to IndexedDB cache
+    try {
+      await saveAnalysisToCache(calibratedApplicant.rawText, calibratedApplicant.applyJobId, calibratedApplicant);
+    } catch (cacheErr) {
+      console.warn("Failed to persist HITL changes to cache:", cacheErr);
+    }
+  };
+
+  // Rollback to original AI draft
+  const handleRevertHITL = async () => {
+    if (!selectedApplicant || !selectedApplicant.originalAnalysis) return;
+
+    const revertedApplicant = {
+      ...selectedApplicant,
+      analysis: selectedApplicant.originalAnalysis,
+      isHumanVerified: false,
+      reviewerNote: ''
+    };
+
+    setSelectedApplicant(revertedApplicant);
+    setApplicantList(prev =>
+      prev.map(app => (app.id === revertedApplicant.id ? revertedApplicant : app))
+    );
+
+    try {
+      await saveAnalysisToCache(revertedApplicant.rawText, revertedApplicant.applyJobId, revertedApplicant);
+    } catch (cacheErr) {
+      console.warn("Failed to revert cache:", cacheErr);
     }
   };
 
@@ -78,6 +138,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         applicantCount={applicantList.length}
         onOpenPromptStudio={() => setShowPromptStudio(true)}
+        onOpenApiKeyModal={() => setShowApiKeyModal(true)}
       />
 
       {/* Main Content Area */}
@@ -108,6 +169,7 @@ export default function App() {
               <DashboardSummary
                 result={selectedApplicant}
                 currentJob={currentJob}
+                onOpenHITLEditor={() => setShowHITLEditor(true)}
               />
             )}
 
@@ -161,6 +223,24 @@ export default function App() {
         <PromptStudioModal
           onClose={() => setShowPromptStudio(false)}
           onSaved={() => setShowPromptStudio(false)}
+        />
+      )}
+
+      {/* Google Gemini API Key Setup Modal */}
+      <ApiKeyModal
+        isOpen={showApiKeyModal}
+        onClose={() => setShowApiKeyModal(false)}
+      />
+
+      {/* Human-in-the-Loop (HITL) Calibration Modal */}
+      {showHITLEditor && selectedApplicant && (
+        <HITLEditorModal
+          isOpen={showHITLEditor}
+          onClose={() => setShowHITLEditor(false)}
+          result={selectedApplicant}
+          currentJob={currentJob}
+          onSave={handleSaveHITL}
+          onRevert={handleRevertHITL}
         />
       )}
     </div>

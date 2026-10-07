@@ -1,7 +1,25 @@
-import React from 'react';
-import { Cpu, ShieldCheck, Layers, FileText, Database, Sliders } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Cpu, Layers, FileText, Sliders, Key, ShieldCheck, Sparkles } from 'lucide-react';
 
-export default function Header({ activeTab, setActiveTab, applicantCount, onOpenPromptStudio }) {
+export default function Header({
+  activeTab,
+  setActiveTab,
+  applicantCount,
+  onOpenPromptStudio,
+  onOpenApiKeyModal
+}) {
+  const [hasApiKey, setHasApiKey] = useState(false);
+
+  useEffect(() => {
+    const checkKey = () => {
+      const k = (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
+      setHasApiKey(Boolean(k && k.trim().length > 5));
+    };
+    checkKey();
+    window.addEventListener('storage', checkKey);
+    return () => window.removeEventListener('storage', checkKey);
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 bg-[#0B0F19]/90 backdrop-blur-md border-b border-gray-800/80 px-4 lg:px-8 py-3.5">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -18,24 +36,44 @@ export default function Header({ activeTab, setActiveTab, applicantCount, onOpen
                 HR AX Smart Evaluator
               </h1>
               <span className="px-2 py-0.5 text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full flex items-center gap-1">
-                🏛️ Vertex AI Enterprise
+                ⚡ Gemini API Dedicated
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full flex items-center gap-1">
+                🧑‍💼 HITL Ready
               </span>
             </div>
-            <p className="text-xs text-gray-400">대기업 환경 전용: Google Cloud Vertex AI & BigQuery Audit 기반 근거 검증 시스템</p>
+            <p className="text-xs text-gray-400">Google Gemini AI 기반 실시간 역량 분석 & Human-in-the-Loop 환각 보정 시스템</p>
           </div>
         </div>
 
-          {/* Navigation Tabs & Enterprise Status */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onOpenPromptStudio}
-              className="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
-            >
-              <Sliders className="w-3.5 h-3.5 text-purple-400" /> Custom HR Prompt Studio
-            </button>
+        {/* Navigation Tabs & Action Buttons */}
+        <div className="flex items-center gap-2.5 flex-wrap justify-end">
+          {/* Gemini API Key Setting Button */}
+          <button
+            type="button"
+            onClick={onOpenApiKeyModal}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+              hasApiKey
+                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
+                : 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20 animate-pulse'
+            }`}
+          >
+            <Key className="w-3.5 h-3.5" />
+            <span>Gemini API Key</span>
+            <span className={`w-2 h-2 rounded-full ${hasApiKey ? 'bg-emerald-400' : 'bg-rose-500'}`} />
+          </button>
 
-            <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
+          {/* Prompt Studio */}
+          <button
+            type="button"
+            onClick={onOpenPromptStudio}
+            className="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+          >
+            <Sliders className="w-3.5 h-3.5 text-purple-400" /> Prompt Studio
+          </button>
+
+          {/* View Nav Tabs */}
+          <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
             <button
               onClick={() => setActiveTab('evaluator')}
               className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
@@ -62,12 +100,6 @@ export default function Header({ activeTab, setActiveTab, applicantCount, onOpen
               )}
             </button>
           </nav>
-
-          {/* Permanent Enterprise Status Badge */}
-          <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-medium flex items-center gap-1.5">
-            <Database className="w-3.5 h-3.5" />
-            <span>BigQuery Audit 연동</span>
-          </div>
         </div>
       </div>
     </header>
