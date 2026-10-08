@@ -2,6 +2,7 @@ import { JOB_TEMPLATES } from '../data/jobTemplates';
 import { anonymizePII } from '../utils/piiAnonymizer';
 import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
+import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
 
 /**
  * AI Grounding Evaluation Coordinator (Gemini API Only)
@@ -50,15 +51,31 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
     onProgress({ percent: 35, status: 'Google Cloud Gemini API 통신 연결 및 심층 분석 중...' });
   }
 
-  // Step 4: Call Gemini API directly (No Local Fallback)
-  const finalResult = await analyzeWithGeminiAPI({
-    name,
-    jobTemplate,
-    rawText: cleanText,
-    originalRawText: rawText,
-    apiKey,
-    onProgress
-  });
+  // Step 4: Run 4-Stage HR Multi-Agent Pipeline (Grounding -> Critic -> Supervisor -> Interviewer)
+  let finalResult = null;
+  try {
+    finalResult = await executeMultiAgentEvaluation({
+      name,
+      jobTemplate,
+      cleanText,
+      originalRawText: rawText,
+      apiKey,
+      onProgress
+    });
+  } catch (multiAgentErr) {
+    console.warn("Multi-Agent pipeline encountered an issue, falling back to Single Prompt Engine:", multiAgentErr);
+    if (onProgress) {
+      onProgress({ percent: 40, status: '단일 프롬프트 백업 엔진으로 전환하여 지속 분석 중...' });
+    }
+    finalResult = await analyzeWithGeminiAPI({
+      name,
+      jobTemplate,
+      rawText: cleanText,
+      originalRawText: rawText,
+      apiKey,
+      onProgress
+    });
+  }
 
   if (finalResult) {
     finalResult.piiMeta = piiResult;

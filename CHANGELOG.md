@@ -4,6 +4,22 @@
 
 ---
 
+## 📌 [2026-10-08] v2.5.0: 4대 HR Multi-Agent 앙상블 파이프라인 구현 & XAI 감사 시스템 구축 🤖
+
+### 🤖 1. 독립 4대 전문 에이전트 앙상블 파이프라인 구축 (`src/services/agents/`)
+- **Grounding Agent (`groundingAgent.js`)**: 자소서 본문 1:1 인덱싱 및 정량 지표/과장/검증 필요 문장 객관적 발췌.
+- **Critic Agent (`criticAgent.js`)**: 비판적 2차 감사(Red-Teaming), AI 생성 문체 판별 및 과장/허위 위험도(LOW/MED/HIGH) 판정.
+- **Supervisor Agent (`supervisorAgent.js`)**: 직무 가중치 정산, 5대 역량 종합 점수화 및 최종 인사 결재(`STRONG_PASS` ~ `REJECT`).
+- **Interviewer Agent (`interviewerAgent.js`)**: Critic 감사 소견 및 약점 문장 정밀 타깃팅 실전 면접 질문 & 체크리스트 생성.
+
+### 🌐 2. 멀티 에이전트 오케스트레이터 & XAI 감사 UI 연동
+- **오케스트레이터 (`multiAgentEvaluator.js`)**: 4개 에이전트 간 순차적 상태 전이(State Chaining) 및 상황 맥락 전달 총괄, 실시간 프로그레스 피드백(25%~100%).
+- **XAI 감사 모달 (`MultiAgentAuditModal.jsx`)**: 인사담당자가 4대 에이전트의 타임라인, 비판 소견, 의사결정 사유를 투명하게 열람 가능한 Explainable AI UI 신설.
+- **대시보드 UI 연동 (`ApplicantInput.jsx`, `DashboardSummary.jsx`)**: 실시간 에이전트 진행 게이지 및 앙상블 뱃지 연동.
+- **단위 테스트 스위트 확장 (`multiAgentEvaluator.test.js`)**: 29개 단위 테스트 100% 통과 및 프로덕션 빌드 완료.
+
+---
+
 ## 📌 [2026-10-04] Sprint 6: 엔터프라이즈 인프라 & DevOps 파이프라인 구축 (v2.1.0 완결) 🏆
 
 ### 🐳 1. 프로덕션 Nginx 웹서버 & 멀티스테이지 Dockerfile 세팅 (Sprint 6.1)

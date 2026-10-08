@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck } from 'lucide-react';
+import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot } from 'lucide-react';
+import MultiAgentAuditModal from './MultiAgentAuditModal';
 
 export default function DashboardSummary({ result, currentJob, onOpenHITLEditor }) {
+  const [showAuditModal, setShowAuditModal] = useState(false);
+
   if (!result || !result.analysis) return null;
 
   const { summary, competencyScores } = result.analysis;
   const { totalScore, decision, decisionReason, aiTextProbability } = summary;
+  const isMultiAgent = result.mode === 'MULTI_AGENT_ENSEMBLE' || Boolean(result.agentMetadata);
 
   // Radar chart dataset
   const radarData = currentJob.competencies.map(c => ({
@@ -52,63 +56,89 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor 
   const originalScore = result.originalAnalysis?.summary?.totalScore;
 
   return (
-    <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-5">
-      {/* Top Header */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-gray-800">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
-            <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
+    <>
+      <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-5">
+        {/* Top Header */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-gray-800">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
+              <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
 
-            {/* Engine Badge */}
-            <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              ⚡ Gemini API Engine
-            </span>
+              {/* Engine Badge & Audit Log Button */}
+              {isMultiAgent ? (
+                <button
+                  type="button"
+                  onClick={() => setShowAuditModal(true)}
+                  className="px-2.5 py-1 bg-gradient-to-r from-blue-600/30 to-purple-600/30 hover:from-blue-600/40 hover:to-purple-600/40 text-blue-200 border border-blue-500/40 rounded-lg text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
+                  title="4대 멀티 에이전트 상세 감사 로그 열기"
+                >
+                  <Bot className="w-3.5 h-3.5 text-blue-400" />
+                  <span>🤖 4-Stage Multi-Agent 앙상블</span>
+                  <span className="text-[10px] text-blue-300 underline font-normal ml-0.5">감사로그 ↗</span>
+                </button>
+              ) : (
+                <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+                  ⚡ Gemini API Engine
+                </span>
+              )}
 
-            {/* HITL Verification Badge */}
-            {isHumanVerified ? (
-              <span className="px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
-                <UserCheck className="w-3 h-3 text-amber-400" />
-                Human-Verified (HITL 보정 완료)
-              </span>
-            ) : (
-              <span className="px-2.5 py-0.5 bg-gray-800 text-gray-400 border border-gray-700 rounded-full text-[10px] font-medium flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-gray-400" />
-                AI Generated (검토 대기)
-              </span>
+              {/* HITL Verification Badge */}
+              {isHumanVerified ? (
+                <span className="px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                  <UserCheck className="w-3 h-3 text-amber-400" />
+                  Human-Verified (HITL 보정 완료)
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 bg-gray-800 text-gray-400 border border-gray-700 rounded-full text-[10px] font-medium flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-gray-400" />
+                  AI Generated (검토 대기)
+                </span>
+              )}
+
+              {/* Score Calibration Differential Pill */}
+              {isHumanVerified && originalScore !== undefined && originalScore !== totalScore && (
+                <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-mono font-semibold">
+                  AI 초안 {originalScore}점 ➔ HR 보정 {totalScore}점
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">{decisionReason}</p>
+          </div>
+
+          {/* Right Action & Decision Badge */}
+          <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0">
+            {/* Multi-Agent Audit Button (if available) */}
+            {isMultiAgent && (
+              <button
+                type="button"
+                onClick={() => setShowAuditModal(true)}
+                className="px-3 py-2 bg-gray-900/90 hover:bg-gray-800 text-gray-200 border border-gray-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+              >
+                <Bot className="w-3.5 h-3.5 text-purple-400" />
+                <span>에이전트 감사 보고서</span>
+              </button>
             )}
 
-            {/* Score Calibration Differential Pill */}
-            {isHumanVerified && originalScore !== undefined && originalScore !== totalScore && (
-              <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-mono font-semibold">
-                AI 초안 {originalScore}점 ➔ HR 보정 {totalScore}점
-              </span>
+            {/* HITL Calibration Button */}
+            {onOpenHITLEditor && (
+              <button
+                type="button"
+                onClick={onOpenHITLEditor}
+                className="px-3.5 py-2 bg-gradient-to-r from-amber-600/30 to-amber-500/20 hover:from-amber-600/40 hover:to-amber-500/30 text-amber-200 border border-amber-500/50 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-950/40 transition-all hover:scale-105"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+                <span>🛠️ HITL 환각 교정 & 보정</span>
+              </button>
             )}
-          </div>
-          <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">{decisionReason}</p>
-        </div>
 
-        {/* Right Action & Decision Badge */}
-        <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0">
-          {/* HITL Calibration Button */}
-          {onOpenHITLEditor && (
-            <button
-              type="button"
-              onClick={onOpenHITLEditor}
-              className="px-3.5 py-2 bg-gradient-to-r from-amber-600/30 to-amber-500/20 hover:from-amber-600/40 hover:to-amber-500/30 text-amber-200 border border-amber-500/50 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-950/40 transition-all hover:scale-105"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
-              <span>🛠️ HITL 환각 교정 & 보정</span>
-            </button>
-          )}
-
-          {/* HR Decision Badge */}
-          <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-md ${badge.bgColor}`}>
-            {badge.icon}
-            {badge.label}
+            {/* HR Decision Badge */}
+            <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-md ${badge.bgColor}`}>
+              {badge.icon}
+              {badge.label}
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Main Grid: Gauge & Radar Chart */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
@@ -181,6 +211,14 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor 
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {/* Multi-Agent Collaboration Audit Modal */}
+      <MultiAgentAuditModal
+        result={result}
+        isOpen={showAuditModal}
+        onClose={() => setShowAuditModal(false)}
+      />
+    </>
   );
 }

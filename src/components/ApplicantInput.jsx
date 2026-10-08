@@ -127,18 +127,40 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
         </div>
       )}
 
-      {/* Real-time Gemini API Progress Bar */}
+      {/* Real-time Multi-Agent Pipeline Progress Bar */}
       {isAnalyzing && (
-        <div className="bg-gray-950/80 border border-blue-900/50 p-3 rounded-xl space-y-2 animate-pulse">
+        <div className="bg-gray-950/90 border border-blue-900/60 p-3.5 rounded-xl space-y-2.5 shadow-lg">
           <div className="flex justify-between items-center text-[11px]">
             <span className="text-blue-300 font-semibold flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-blue-400 animate-spin" /> {statusMsg}
             </span>
-            <span className="text-blue-400 font-mono font-bold">{percent}%</span>
+            <span className="text-blue-400 font-mono font-bold text-xs">{percent}%</span>
           </div>
+
+          {/* 4-Stage Step Indicators */}
+          <div className="grid grid-cols-4 gap-1.5 pt-1">
+            {[
+              { id: 1, name: 'Grounding', threshold: 25 },
+              { id: 2, name: 'Critic', threshold: 50 },
+              { id: 3, name: 'Supervisor', threshold: 75 },
+              { id: 4, name: 'Interviewer', threshold: 90 }
+            ].map(step => (
+              <div
+                key={step.id}
+                className={`py-1 text-center rounded text-[10px] font-bold transition-all border ${
+                  percent >= step.threshold
+                    ? 'bg-blue-600/30 text-blue-300 border-blue-500/50 shadow-sm'
+                    : 'bg-gray-900 text-gray-500 border-gray-800'
+                }`}
+              >
+                {step.id}. {step.name}
+              </div>
+            ))}
+          </div>
+
           <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-800">
             <div
-              className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
+              className="bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
               style={{ width: `${percent}%` }}
             />
           </div>
@@ -154,11 +176,11 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
         {isAnalyzing ? (
           <>
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Google Gemini API 실시간 평가 분석 중 ({percent}%)
+            4대 HR Multi-Agent 앙상블 분석 파이프라인 가동 중 ({percent}%)
           </>
         ) : (
           <>
-            <Sparkles className="w-4 h-4" /> Google Gemini 실시간 역량 분석 실행
+            <Sparkles className="w-4 h-4" /> 🤖 4대 HR Multi-Agent 역량 정밀 평가 실행
           </>
         )}
       </button>
