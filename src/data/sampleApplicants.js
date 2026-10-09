@@ -12,6 +12,28 @@ export const SAMPLE_APPLICANTS = [
 
 [성장 및 도전]
 기술적 성장에 안주하지 않고 매주 팀 내부에서 아키텍처 스터디를 주도하였으며, 신규 동료 2명의 온보딩을 위한 기술 가이드를 작성하여 팀 생산성 향상에 기여했습니다.`,
+    mode: "MULTI_AGENT_ENSEMBLE",
+    modelsUsed: {
+      grounding: "gemini-2.5-flash",
+      critic: "gemini-2.0-flash",
+      supervisor: "gemini-2.5-flash",
+      interviewer: "gemini-1.5-flash"
+    },
+    agentMetadata: {
+      pipeline: "HR-Multi-Agent-v2.5",
+      executedAgents: [
+        { name: "Grounding Agent", status: "SUCCESS", summary: "정량 지표(86.8%, 15만건) 중심 3건의 긍정 근거 발췌 완료" },
+        { name: "Critic Agent", status: "SUCCESS", critique: "Redis 도입 및 분산락 성과의 구체성과 신뢰성이 매우 높으며 AI 환각/과장 징후 없음", aiProb: 12, risk: "LOW" },
+        { name: "Supervisor Agent", status: "SUCCESS", comments: "백엔드 핵심 직무 역량 만점 수준으로 서류 통과(우수) 최종 결재" },
+        { name: "Interviewer Agent", status: "SUCCESS", questionsCount: 2 }
+      ],
+      criticReport: {
+        aiTextProbability: 12,
+        exaggerationRisk: "LOW",
+        critiqueNotes: "Redis 캐싱 및 서킷 브레이커 도입 성과의 정량적 근거가 명확하며 주관적 미사여구 없음.",
+        flaggedQuotes: []
+      }
+    },
     analysis: {
       summary: {
         totalScore: 92,
@@ -183,7 +205,11 @@ export const SAMPLE_APPLICANTS = [
     name: "박지훈",
     applyJobId: "tech_backend",
     applyJobTitle: "백엔드 소프트웨어 엔지니어",
-    rawText: `[직무 전환 계기]
+    rawText: `[인적사항 (블라인드 채용 PII 마스킹 적용)]
+안녕하십니까, [성명 익명화] 지원자입니다.
+[학교명 익명화] 컴퓨터공학과를 졸업하였으며, 연락처는 [전화번호 익명화], 이메일은 [이메일 익명화]입니다.
+
+[직무 전환 계기]
 지난 2년간 B2B 영업 담당자로 근무하며 고객의 요구사항을 수집하던 중, 시스템의 비효율을 직접 코드로 해결하고 싶다는 열망으로 개발자로 전직을 결심했습니다. 6개월간의 부트캠프를 수료하며 Node.js와 PostgreSQL 기반의 동네 소모임 커뮤니티 서비스를 팀 프로젝트로 구축했습니다.
 
 [주요 프로젝트 및 기술 구현]

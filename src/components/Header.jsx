@@ -33,16 +33,16 @@ export default function Header({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-blue-300">
-                HR AX Smart Evaluator
+                Check-Mate (체크메이트)
               </h1>
               <span className="px-2 py-0.5 text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full flex items-center gap-1">
-                ⚡ Gemini API Dedicated
+                ⚡ 4-Stage Multi-Agent
               </span>
-              <span className="px-2 py-0.5 text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full flex items-center gap-1">
-                🧑‍💼 HITL Ready
+              <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
+                🏢 2,000명 크레딧 통제
               </span>
             </div>
-            <p className="text-xs text-gray-400">Google Gemini AI 기반 실시간 역량 분석 & Human-in-the-Loop 환각 보정 시스템</p>
+            <p className="text-xs text-gray-400">4대 멀티 에이전트 기반 자기소개서 AI 심사관 & 전사 비용 거버넌스 플랫폼</p>
           </div>
         </div>
 
@@ -76,28 +76,38 @@ export default function Header({
           <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
             <button
               onClick={() => setActiveTab('evaluator')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                 activeTab === 'evaluator'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <FileText className="w-3.5 h-3.5" /> 서류 평가 & 근거 검증
+              <FileText className="w-3.5 h-3.5" /> 서류 평가 & 검증
             </button>
             <button
               onClick={() => setActiveTab('comparison')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                 activeTab === 'comparison'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" /> 지원자 비교 매트릭스
+              <Layers className="w-3.5 h-3.5" /> 지원자 비교
               {applicantCount > 0 && (
                 <span className="w-4 h-4 rounded-full bg-blue-400/20 text-blue-300 text-[10px] flex items-center justify-center font-bold">
                   {applicantCount}
                 </span>
               )}
+            </button>
+            <button
+              onClick={() => setActiveTab('credits')}
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                activeTab === 'credits'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold'
+                  : 'text-indigo-400/80 hover:text-white'
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-indigo-300" /> AI 크레딧 거버넌스
             </button>
           </nav>
         </div>

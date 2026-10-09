@@ -10,6 +10,7 @@ import ReportExporter from './components/ReportExporter';
 import PromptStudioModal from './components/PromptStudioModal';
 import ApiKeyModal from './components/ApiKeyModal';
 import HITLEditorModal from './components/HITLEditorModal';
+import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
@@ -143,7 +144,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 pt-6 w-full flex-1 space-y-6">
-        {activeTab === 'evaluator' ? (
+        {activeTab === 'evaluator' && (
           <div className="space-y-6">
             {/* Top Row: Criteria Setup & Applicant Input Form */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -181,7 +182,9 @@ export default function App() {
               </div>
             )}
           </div>
-        ) : (
+        )}
+
+        {activeTab === 'comparison' && (
           /* Comparison Matrix View */
           <ApplicantComparison
             applicants={applicantList}
@@ -194,6 +197,11 @@ export default function App() {
               setShowExportModal(true);
             }}
           />
+        )}
+
+        {activeTab === 'credits' && (
+          /* Enterprise 2,000 Users & Department Credit Quota Dashboard */
+          <DepartmentCreditDashboard />
         )}
       </main>
 
