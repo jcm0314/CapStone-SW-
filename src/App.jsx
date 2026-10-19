@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import EvaluationCriteria from './components/EvaluationCriteria';
 import ApplicantInput from './components/ApplicantInput';
@@ -13,16 +13,21 @@ import HITLEditorModal from './components/HITLEditorModal';
 import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
-import { SAMPLE_APPLICANTS } from './data/sampleApplicants';
 import { analyzeApplicant } from './services/aiEvaluator';
 import { saveAnalysisToCache } from './services/cacheService';
+import { useTenant } from './contexts/TenantContext';
+import { useAuth } from './contexts/AuthContext';
 import confetti from 'canvas-confetti';
+import { Lock, ShieldAlert } from 'lucide-react';
 
 export default function App() {
+  const { currentTenant, getTenantApplicants, saveTenantApplicants } = useTenant();
+  const { currentUser, hasPermission } = useAuth();
+
   const [activeTab, setActiveTab] = useState('evaluator');
   const [currentJob, setCurrentJob] = useState(JOB_TEMPLATES[0]);
-  const [applicantList, setApplicantList] = useState(SAMPLE_APPLICANTS);
-  const [selectedApplicant, setSelectedApplicant] = useState(SAMPLE_APPLICANTS[0]);
+  const [applicantList, setApplicantList] = useState(() => getTenantApplicants());
+  const [selectedApplicant, setSelectedApplicant] = useState(() => getTenantApplicants()[0] || null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressState, setProgressState] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -30,8 +35,20 @@ export default function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [showHITLEditor, setShowHITLEditor] = useState(false);
 
+  // Sync state when Tenant switches (Multi-Tenancy Isolation)
+  useEffect(() => {
+    const tenantApps = getTenantApplicants();
+    setApplicantList(tenantApps);
+    setSelectedApplicant(tenantApps[0] || null);
+  }, [currentTenant.id]);
+
   // Analysis via Google Gemini API Only (No Local Fallbacks)
   const handleAnalyze = async ({ name, rawText }) => {
+    if (!hasPermission('RUN_EVALUATION')) {
+      alert(`[권한 제한] 현재 계정(${currentUser.roleTitle})은 면접관(Interviewer) 권한으로, 서류 업로드 및 AI 평가 가동 권한이 없습니다. 상단 프로필에서 Recruiter 또는 Admin으로 전환해주세요.`);
+      return;
+    }
+
     const currentApiKey = (
       (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') ||
       import.meta.env.VITE_GEMINI_API_KEY ||
@@ -55,12 +72,20 @@ export default function App() {
         onProgress: (p) => setProgressState(p)
       });
 
+      // Attach tenant ID for RLS
+      const tenantBoundResult = {
+        ...newResult,
+        orgId: currentTenant.id
+      };
+
       // Add to list and select as current
-      setApplicantList(prev => [newResult, ...prev.filter(a => a.id !== newResult.id)]);
-      setSelectedApplicant(newResult);
+      const updatedList = [tenantBoundResult, ...applicantList.filter(a => a.id !== tenantBoundResult.id)];
+      setApplicantList(updatedList);
+      setSelectedApplicant(tenantBoundResult);
+      saveTenantApplicants(updatedList);
 
       // Trigger celebration confetti if high score
-      if (newResult.analysis?.summary?.totalScore >= 88) {
+      if (tenantBoundResult.analysis?.summary?.totalScore >= 88) {
         confetti({
           particleCount: 60,
           spread: 70,
@@ -87,18 +112,19 @@ export default function App() {
 
     const calibratedApplicant = {
       ...selectedApplicant,
+      orgId: currentTenant.id,
       originalAnalysis: originalDraft, // Preserve AI original draft for rollback
       analysis: updatedAnalysis,
       isHumanVerified: true,
       lastEditedAt: new Date().toISOString(),
-      reviewerNote: reviewerNote || selectedApplicant.reviewerNote || '인사담당자 HITL 보정 완료'
+      reviewerNote: reviewerNote || selectedApplicant.reviewerNote || `${currentUser.name} (${currentUser.roleTitle}) 보정 완료`
     };
 
     // Update in memory state
     setSelectedApplicant(calibratedApplicant);
-    setApplicantList(prev =>
-      prev.map(app => (app.id === calibratedApplicant.id ? calibratedApplicant : app))
-    );
+    const updatedList = applicantList.map(app => (app.id === calibratedApplicant.id ? calibratedApplicant : app));
+    setApplicantList(updatedList);
+    saveTenantApplicants(updatedList);
 
     // Persist calibrated data to IndexedDB cache
     try {
@@ -156,6 +182,22 @@ export default function App() {
                 />
               </div>
               <div className="lg:col-span-7">
+                {currentUser.role === 'INTERVIEWER' && (
+                  <div className="mb-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-base">🎯</span>
+                      <div>
+                        <p className="font-bold text-white">면접관(Interviewer) 전용 집중 모드 활성화</p>
+                        <p className="text-[11px] text-emerald-400/80">
+                          서류 업로드 및 AI 평가 가동 권한은 제한되며, 지원자 1:1 형광펜 원문 검토 및 압박 면접 질문 확인 전용으로 동작합니다.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[10px] font-semibold shrink-0">
+                      조회 전용
+                    </span>
+                  </div>
+                )}
                 <ApplicantInput
                   onAnalyze={handleAnalyze}
                   isAnalyzing={isAnalyzing}
