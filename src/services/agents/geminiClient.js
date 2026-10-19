@@ -3,9 +3,9 @@
  * Uses the standard 'gemini-1.5-flash' model with clear, diagnostic error reporting.
  */
 
-// Primary model: fast, cost-efficient, 1M context window
-const PRIMARY_MODEL = 'gemini-1.5-flash';
-const FALLBACK_MODEL = 'gemini-1.5-pro';
+// Primary model: Google Gemini 3.8 Flash (Official 2026 Recommended)
+const PRIMARY_MODEL = 'gemini-3.8-flash';
+const FALLBACK_MODEL = 'gemini-3.5-flash-lite';
 
 /**
  * Diagnostic helper to format Google API errors into user-friendly explanations
@@ -13,6 +13,9 @@ const FALLBACK_MODEL = 'gemini-1.5-pro';
 function parseGoogleApiError(status, errorJson, defaultMsg) {
   const rawMsg = errorJson?.error?.message || defaultMsg || '';
 
+  if (status === 402 || rawMsg.includes('prepayment credits are depleted') || rawMsg.includes('RESOURCE_EXHAUSTED')) {
+    return '💳 [결제/크레딧 소진] 구글 계정의 API 선불 크레딧이 모두 소진되었습니다. (ai.studio/projects 에서 크레딧 충전 또는 aistudio.google.com/apikey 에서 새 무료 API Key를 발급받아 등록해주세요)';
+  }
   if (status === 400 && rawMsg.includes('API_KEY_INVALID')) {
     return '유효하지 않은 Gemini API Key입니다. aistudio.google.com/apikey 에서 키를 다시 발급받아 확인해주세요.';
   }
@@ -20,7 +23,7 @@ function parseGoogleApiError(status, errorJson, defaultMsg) {
     return '해당 GCP 프로젝트에 "Generative Language API"가 활성화되어 있지 않습니다. Google Cloud Console(또는 AI Studio)에서 API를 [사용 설정] 해주세요.';
   }
   if (status === 404) {
-    return `[HTTP 404] 구글 API에서 모델(${PRIMARY_MODEL})을 찾을 수 없습니다. Google Cloud 일반 API 키 대신 반드시 aistudio.google.com/apikey 에서 발급한 키를 사용해주세요. (상세: ${rawMsg})`;
+    return `[HTTP 404] 모델(${PRIMARY_MODEL})을 찾을 수 없습니다. (상세: ${rawMsg})`;
   }
   if (status === 429) {
     return 'Google Gemini API 무료 요청 한도(15 RPM)를 초과했습니다. 잠시 후(약 30초 뒤) 다시 시도해주세요.';

@@ -14,7 +14,7 @@ describe('geminiClient', () => {
   it('returns primary models', async () => {
     const models = await getAvailableGeminiModels();
     expect(models).toBeInstanceOf(Array);
-    expect(models).toContain('gemini-1.5-flash');
+    expect(models).toContain('gemini-3.8-flash');
   });
 
   it('parses valid JSON response from Gemini', async () => {
@@ -33,6 +33,6 @@ describe('geminiClient', () => {
 
     const result = await callGeminiJson({ prompt: 'hello', apiKey: 'valid-api-key-12345' });
     expect(result.data).toEqual({ status: 'ok' });
-    expect(result.modelUsed).toBe('gemini-1.5-flash');
+    expect(result.modelUsed).toBe('gemini-3.8-flash');
   });
 });

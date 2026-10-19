@@ -179,6 +179,9 @@ ${rawText}
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
         const rawMsg = errorJson?.error?.message || response.statusText;
+        if (response.status === 402 || rawMsg.includes('prepayment credits are depleted') || rawMsg.includes('RESOURCE_EXHAUSTED')) {
+          throw new Error('💳 [결제/크레딧 소진] 구글 계정의 API 선불 크레딧이 모두 소진되었습니다. ai.studio/projects 에서 크레딧을 충전하시거나 aistudio.google.com/apikey 에서 새 무료 API Key를 발급받아 등록해주세요.');
+        }
         if (response.status === 400 && rawMsg.includes('API_KEY_INVALID')) {
           throw new Error('유효하지 않은 Gemini API Key입니다. aistudio.google.com/apikey 에서 키를 다시 발급받아 확인해주세요.');
         }
@@ -186,7 +189,7 @@ ${rawText}
           throw new Error(`[GCP 권한 오류] 해당 API Key에 Generative Language API가 활성화되어 있지 않습니다. (${rawMsg})`);
         }
         if (response.status === 404) {
-          throw new Error(`[HTTP 404] 모델(${model})을 찾을 수 없습니다. Google Cloud Console 일반 키가 아닌 aistudio.google.com/apikey 에서 발급한 공식 Gemini 키인지 확인해주세요.`);
+          throw new Error(`[HTTP 404] 모델(${model})을 찾을 수 없습니다. (상세: ${rawMsg})`);
         }
         throw new Error(`[${model}] HTTP ${response.status}: ${rawMsg}`);
       }
