@@ -178,8 +178,17 @@ ${rawText}
 
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
-        const errMsg = errorJson.error?.message || response.statusText;
-        throw new Error(`[${model}] HTTP ${response.status}: ${errMsg}`);
+        const rawMsg = errorJson?.error?.message || response.statusText;
+        if (response.status === 400 && rawMsg.includes('API_KEY_INVALID')) {
+          throw new Error('유효하지 않은 Gemini API Key입니다. aistudio.google.com/apikey 에서 키를 다시 발급받아 확인해주세요.');
+        }
+        if (response.status === 403) {
+          throw new Error(`[GCP 권한 오류] 해당 API Key에 Generative Language API가 활성화되어 있지 않습니다. (${rawMsg})`);
+        }
+        if (response.status === 404) {
+          throw new Error(`[HTTP 404] 모델(${model})을 찾을 수 없습니다. Google Cloud Console 일반 키가 아닌 aistudio.google.com/apikey 에서 발급한 공식 Gemini 키인지 확인해주세요.`);
+        }
+        throw new Error(`[${model}] HTTP ${response.status}: ${rawMsg}`);
       }
 
       const data = await response.json();

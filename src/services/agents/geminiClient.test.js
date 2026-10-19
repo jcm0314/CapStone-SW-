@@ -11,28 +11,28 @@ describe('geminiClient', () => {
     await expect(callGeminiJson({ prompt: 'test', apiKey: 'abc' })).rejects.toThrow('Google Gemini API 키가 유효하지 않습니다.');
   });
 
-  it('returns candidate models even if ListModels network call fails', async () => {
-    globalThis.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
-    const models = await getAvailableGeminiModels('fake-api-key-12345');
+  it('returns primary models', async () => {
+    const models = await getAvailableGeminiModels();
     expect(models).toBeInstanceOf(Array);
-    expect(models.length).toBeGreaterThan(0);
     expect(models).toContain('gemini-1.5-flash');
   });
 
-  it('discovers live models when ListModels responds with valid list', async () => {
+  it('parses valid JSON response from Gemini', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
-        models: [
-          { name: 'models/gemini-1.5-flash-latest', supportedGenerationMethods: ['generateContent'] },
-          { name: 'models/gemini-1.5-pro-latest', supportedGenerationMethods: ['generateContent'] },
-          { name: 'models/embedding-001', supportedGenerationMethods: ['embedContent'] }
+        candidates: [
+          {
+            content: {
+              parts: [{ text: '```json\n{"status": "ok"}\n```' }]
+            }
+          }
         ]
       })
     });
 
-    const models = await getAvailableGeminiModels('unique-key-' + Date.now());
-    expect(models).toBeInstanceOf(Array);
-    expect(models[0]).toContain('flash');
+    const result = await callGeminiJson({ prompt: 'hello', apiKey: 'valid-api-key-12345' });
+    expect(result.data).toEqual({ status: 'ok' });
+    expect(result.modelUsed).toBe('gemini-1.5-flash');
   });
 });

@@ -1,65 +1,31 @@
 /**
  * Shared Gemini API Client for Multi-Agent Pipeline
- * Supports Auto-Discovery via ModelService.ListModels for 100% model availability
+ * Uses the standard 'gemini-1.5-flash' model with clear, diagnostic error reporting.
  */
 
-const DEFAULT_CANDIDATE_MODELS = [
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-latest',
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-exp',
-  'gemini-1.5-pro',
-  'gemini-1.5-pro-latest',
-  'gemini-1.5-flash-8b',
-  'gemini-pro'
-];
-
-// In-memory cache for discovered/working models for the active session
-let cachedWorkingModel = null;
-let discoveredModelsCache = null;
+// Primary model: fast, cost-efficient, 1M context window
+const PRIMARY_MODEL = 'gemini-1.5-flash';
+const FALLBACK_MODEL = 'gemini-1.5-pro';
 
 /**
- * Discovers available models for the given API key using ModelService.ListModels
- * @param {string} apiKey
- * @returns {Promise<string[]>}
+ * Diagnostic helper to format Google API errors into user-friendly explanations
  */
-export async function getAvailableGeminiModels(apiKey) {
-  if (discoveredModelsCache && discoveredModelsCache.length > 0) {
-    return discoveredModelsCache;
+function parseGoogleApiError(status, errorJson, defaultMsg) {
+  const rawMsg = errorJson?.error?.message || defaultMsg || '';
+
+  if (status === 400 && rawMsg.includes('API_KEY_INVALID')) {
+    return '유효하지 않은 Gemini API Key입니다. aistudio.google.com/apikey 에서 키를 다시 발급받아 확인해주세요.';
   }
-
-  const key = apiKey.trim();
-  const models = [...DEFAULT_CANDIDATE_MODELS];
-
-  try {
-    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-    if (listRes.ok) {
-      const listData = await listRes.json();
-      if (Array.isArray(listData.models)) {
-        const liveModels = listData.models
-          .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
-          .map(m => m.name.replace(/^models\//, ''));
-
-        if (liveModels.length > 0) {
-          // Sort: flash models first (fast & cost-efficient), then pro, then others
-          liveModels.sort((a, b) => {
-            const aFlash = a.includes('flash') ? -1 : 1;
-            const bFlash = b.includes('flash') ? -1 : 1;
-            return aFlash - bFlash;
-          });
-
-          // Prepend discovered live models to the candidate list (deduped)
-          const merged = Array.from(new Set([...liveModels, ...models]));
-          discoveredModelsCache = merged;
-          return merged;
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('[Gemini Client] Failed to list live models, falling back to static list:', err.message);
+  if (status === 403 && (rawMsg.includes('disabled') || rawMsg.includes('not been used in project'))) {
+    return '해당 GCP 프로젝트에 "Generative Language API"가 활성화되어 있지 않습니다. Google Cloud Console(또는 AI Studio)에서 API를 [사용 설정] 해주세요.';
   }
-
-  return models;
+  if (status === 404) {
+    return `[HTTP 404] 구글 API에서 모델(${PRIMARY_MODEL})을 찾을 수 없습니다. Google Cloud 일반 API 키 대신 반드시 aistudio.google.com/apikey 에서 발급한 키를 사용해주세요. (상세: ${rawMsg})`;
+  }
+  if (status === 429) {
+    return 'Google Gemini API 무료 요청 한도(15 RPM)를 초과했습니다. 잠시 후(약 30초 뒤) 다시 시도해주세요.';
+  }
+  return `[HTTP ${status}] ${rawMsg}`;
 }
 
 /**
@@ -72,20 +38,14 @@ export async function getAvailableGeminiModels(apiKey) {
  */
 export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
   if (!apiKey || apiKey.trim().length < 5) {
-    throw new Error('Google Gemini API 키가 유효하지 않습니다.');
+    throw new Error('Google Gemini API 키가 유효하지 않습니다. 상단 헤더의 [API Key 설정]에서 키를 등록해주세요.');
   }
 
   const cleanKey = apiKey.trim();
-
-  // If we already found a working model in this session, try it first!
-  const candidateModels = await getAvailableGeminiModels(cleanKey);
-  const prioritizedModels = cachedWorkingModel 
-    ? [cachedWorkingModel, ...candidateModels.filter(m => m !== cachedWorkingModel)]
-    : candidateModels;
-
+  const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
   let lastError = null;
 
-  for (const model of prioritizedModels) {
+  for (const model of modelsToTry) {
     try {
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`,
@@ -104,8 +64,8 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
 
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
-        const errMsg = errorJson.error?.message || response.statusText;
-        throw new Error(`[${model}] HTTP ${response.status}: ${errMsg}`);
+        const formattedErr = parseGoogleApiError(response.status, errorJson, response.statusText);
+        throw new Error(formattedErr);
       }
 
       const resData = await response.json();
@@ -122,17 +82,23 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
       }
 
       const parsed = JSON.parse(cleanJson);
-      cachedWorkingModel = model; // Cache working model for lightning-fast next calls
       return { data: parsed, modelUsed: model };
     } catch (err) {
-      console.warn(`[Multi-Agent Gemini Client] Model [${model}] failed:`, err.message);
+      console.warn(`[Gemini Client] Model [${model}] failed:`, err.message);
       lastError = err;
-      if (err.message.includes('API_KEY_INVALID') || err.message.includes('403')) {
-        break; // Stop immediately if API key itself is wrong
+      // Stop immediately on critical credential errors (no need to retry other models)
+      if (err.message.includes('API_KEY_INVALID') || err.message.includes('403') || err.message.includes('Generative Language API')) {
+        break;
       }
     }
   }
 
-  throw new Error(`Gemini API 통신 실패: ${lastError?.message || '모든 모델 응답 실패'}`);
+  throw new Error(`Gemini API 통신 실패: ${lastError?.message || '알 수 없는 오류'}`);
 }
+
+// Backward compatibility export
+export async function getAvailableGeminiModels() {
+  return [PRIMARY_MODEL, FALLBACK_MODEL];
+}
+
 
