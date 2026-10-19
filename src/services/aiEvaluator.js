@@ -3,6 +3,7 @@ import { anonymizePII } from '../utils/piiAnonymizer';
 import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
+import { getAvailableGeminiModels } from './agents/geminiClient';
 
 /**
  * AI Grounding Evaluation Coordinator (Gemini API Only)
@@ -150,13 +151,8 @@ ${rawText}
 }
 `;
 
-  // Candidate models to try in priority order
-  const candidateModels = [
-    'gemini-1.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.5-flash',
-    'gemini-1.5-pro'
-  ];
+  // Candidate models dynamically discovered via ModelService.ListModels or static fallbacks
+  const candidateModels = await getAvailableGeminiModels(apiKey);
 
   let lastError = null;
   let parsed = null;
