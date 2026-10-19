@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>4-Stage HR Multi-Agent Pipeline Flowchart</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #0B0F19;
+      font-family: 'Pretendard', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    .card {
+      background: #111827;
+      border: 1.5px solid #1F2937;
+      border-radius: 20px;
+      padding: 28px 36px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+      width: 980px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #1F2937;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #F9FAFB;
+      letter-spacing: -0.3px;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #9CA3AF;
+      margin: 0;
+    }
+    #diagram {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .mermaid {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="capture-target">
+    <div class="header">
+      <h1 class="title">🎯 4-Stage HR Multi-Agent 앙상블 평가 워크플로우</h1>
+      <p class="subtitle">단일 프롬프트 한계 극복 ➔ 독립 4대 전문 에이전트 순차 체이닝 & 상호 비판적 검증 (Red-Teaming)</p>
+    </div>
+    <div id="diagram">
+      <pre class="mermaid">
+flowchart TD
+    %% Node Styling Definitions
+    classDef inputStyle fill:#1E293B,stroke:#3B82F6,stroke-width:1.5px,color:#F8FAFC,font-weight:bold,rx:8px
+    classDef piiStyle fill:#064E3B,stroke:#10B981,stroke-width:1.5px,color:#ECFDF5,font-weight:bold,rx:8px
+    classDef a1Style fill:#14532D,stroke:#22C55E,stroke-width:1.5px,color:#F0FDF4,font-weight:bold,rx:8px
+    classDef a2Style fill:#7F1D1D,stroke:#EF4444,stroke-width:1.5px,color:#FEF2F2,font-weight:bold,rx:8px
+    classDef a3Style fill:#1E3A8A,stroke:#3B82F6,stroke-width:1.5px,color:#EFF6FF,font-weight:bold,rx:8px
+    classDef a4Style fill:#581C87,stroke:#A855F7,stroke-width:1.5px,color:#FAF5FF,font-weight:bold,rx:8px
+    classDef outStyle fill:#312E81,stroke:#6366F1,stroke-width:1.5px,color:#EEF2FF,font-weight:bold,rx:8px
+
+    IN["📄 지원서 파일 업로드 (PDF / TXT / DOCX)"]:::inputStyle
+    PII["🔒 클라이언트 PII 익명화 선처리 (7종 개인정보 자동 마스킹)"]:::piiStyle
+
+    subgraph Pipeline ["🤖 4대 HR Multi-Agent 앙상블 파이프라인 (Sequential State Chaining)"]
+        direction TB
+        A1["🔍 Agent 1: Grounding Agent<br/>• 자소서 본문 1:1 원문 인덱싱 & 문장 발췌<br/>• 긍정(+15), 과장(-12), 검증 문장 분류 및 5대 역량 매핑"]:::a1Style
+        A2["🕵️ Agent 2: Critic Agent (Red-Teaming 감사)<br/>• 2차 비판적 팩트체크 & 실현 불가능한 수치/과장 의심 적발<br/>• 전형적 LLM 생성 문체 판별 (AI 생성 의심 확률 % 도출)"]:::a2Style
+        A3["⚖️ Agent 3: Supervisor Agent (최종 결재)<br/>• 5대 직무 역량 가중치 정산 & Critic 감점 소견 반영<br/>• 종합 점수 확정 및 채용 판정 (STRONG_PASS ~ REJECT)"]:::a3Style
+        A4["🎙️ Agent 4: Interviewer Agent (심층 면접관)<br/>• Critic 적발 약점/의심 문장 정밀 타깃팅<br/>• 실무 면접관용 압박 질문 2~4개 및 사실 검증 체크리스트 생성"]:::a4Style
+
+        A1 -->|발췌 근거 전달| A2
+        A2 -->|비판적 감사 리포트 전달| A3
+        A3 -->|검증 타깃 포인트 전달| A4
+    end
+
+    OUT["📊 인터랙티브 HR 대시보드 & XAI 감사 로그<br/>(원문 형광펜 1:1 하이라이트 + 4대 에이전트 교차 감사 모달 + 맞춤형 면접 가이드)"]:::outStyle
+
+    IN --> PII
+    PII --> A1
+    A4 --> OUT
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#111827',
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#F9FAFB',
+        primaryBorderColor: '#3B82F6',
+        lineColor: '#60A5FA',
+        secondaryColor: '#1F2937',
+        tertiaryColor: '#111827',
+        fontSize: '12px',
+        fontFamily: 'Pretendard, sans-serif'
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Enterprise System Architecture Diagram (Light)</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #F8FAFC;
+      font-family: 'Pretendard', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 28px 36px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      width: 980px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid #E2E8F0;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.3px;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #64748B;
+      margin: 0;
+    }
+    #diagram {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .mermaid {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="capture-target">
+    <div class="header">
+      <h1 class="title">🏛️ HR AX Smart Evaluator 클라우드 인프라 & 엔터프라이즈 아키텍처</h1>
+      <p class="subtitle">Client Browser ➔ Nginx Proxy ➔ Express Gateway ➔ GCP Cloud Run & Multi-Agent 앙상블</p>
+    </div>
+    <div id="diagram">
+      <pre class="mermaid">
+flowchart TD
+    %% Styling Definitions (Clean Light Mode)
+    classDef clientStyle fill:#F0F9FF,stroke:#0284C7,stroke-width:1.5px,color:#0F172A,font-weight:bold,rx:8px
+    classDef gateStyle fill:#EEF2FF,stroke:#4F46E5,stroke-width:1.5px,color:#1E1B4B,font-weight:bold,rx:8px
+    classDef cloudStyle fill:#ECFDF5,stroke:#059669,stroke-width:1.5px,color:#064E3B,font-weight:bold,rx:8px
+    classDef devopsStyle fill:#FFF7ED,stroke:#EA580C,stroke-width:1.5px,color:#431407,font-weight:bold,rx:8px
+
+    subgraph L1 ["💻 1. Client Browser (React 18 SPA)"]
+        direction LR
+        UI["🖥️ React 18 UI<br/>(Recharts 레이더 + 가상스크롤)"]
+        WW["⚡ Web Worker<br/>(비동기 파싱 엔진)"]
+        CACHE["💾 IndexedDB<br/>(0원 / 0초 로컬 캐시)"]
+        PII["🔒 PII Anonymizer<br/>(7종 개인정보 마스킹)"]
+    end
+
+    subgraph L2 ["🛡️ 2. Web Server & Gateway Layer (Docker Multi-Stage)"]
+        direction LR
+        NGINX["🌐 Nginx Alpine Web Server<br/>(정적 파일 서빙 & Reverse Proxy)"]
+        GW["🛡️ Express API Proxy Gateway<br/>(Rate Limit 100req/15m & CORS)"]
+        REDIS["⚡ Redis 7 분산 캐시<br/>(Docker Compose 3-Tier 연동)"]
+    end
+
+    subgraph L3 ["☁️ 3. Cloud Run & Multi-Agent Engine (GCP Seoul Region)"]
+        direction LR
+        CR["🚀 GCP Cloud Run 무중단 호스팅<br/>(asia-northeast3 서울 리전)"]
+        MA["🤖 4-Stage Multi-Agent 앙상블<br/>(Grounding ➔ Critic ➔ Supervisor ➔ Interviewer)"]
+        AI["🧠 Google Cloud Vertex AI & Gemini 2.5<br/>(구조화 JSON 추론 & 환각 0% 검증)"]
+    end
+
+    subgraph L4 ["⚙️ 4. DevOps & Production CI/CD Pipeline"]
+        direction LR
+        GH["🐙 GitHub Remote Repo<br/>(main 브랜치 형상관리)"]
+        GA["🚀 GitHub Actions CI/CD<br/>(Vitest 29개 테스트 + Docker 빌드 검증)"]
+        K8S["☸️ Kubernetes Production IaC<br/>(Deployment, Ingress, ConfigMap)"]
+    end
+
+    %% Inter-layer connections
+    UI --> PII
+    PII -->|HTTPS / SSL| NGINX
+    NGINX --> GW
+    GW <--> REDIS
+    GW -->|안전한 API 릴레이| CR
+    CR --> MA
+    MA --> AI
+    GH --> GA
+    GA --> CR
+    GA --> K8S
+
+    class UI,WW,CACHE,PII clientStyle
+    class NGINX,GW,REDIS gateStyle
+    class CR,MA,AI cloudStyle
+    class GH,GA,K8S devopsStyle
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      themeVariables: {
+        background: '#FFFFFF',
+        primaryColor: '#EFF6FF',
+        primaryTextColor: '#0F172A',
+        primaryBorderColor: '#2563EB',
+        lineColor: '#2563EB',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        fontSize: '12px',
+        fontFamily: 'Pretendard, sans-serif'
+      }
+    });
+  </script>
+</body>
+</html>

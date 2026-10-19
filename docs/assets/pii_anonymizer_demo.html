@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>PII Anonymization Before & After Comparison</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #F8FAFC;
+      font-family: 'Pretendard', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 28px 32px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      width: 980px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1.5px solid #E2E8F0;
+      margin-bottom: 20px;
+    }
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #ECFDF5;
+      color: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 1px solid #A7F3D0;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 2px;
+    }
+    .categories {
+      display: flex;
+      gap: 6px;
+    }
+    .cat-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #EFF6FF;
+      color: #2563EB;
+      border: 1px solid #BFDBFE;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .box {
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+    .box-before {
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+    }
+    .box-after {
+      background: #F0FDF4;
+      border: 1.5px solid #BBF7D0;
+    }
+    .box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .box-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .box-before .box-title { color: #DC2626; }
+    .box-after .box-title { color: #16A34A; }
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .tag-danger {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FCA5A5;
+    }
+    .tag-success {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+    }
+    .text-content {
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #334155;
+      white-space: pre-line;
+      flex: 1;
+    }
+    .highlight-pii {
+      background: #FED7AA;
+      color: #9A3412;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 4px;
+      border: 1px dashed #F97316;
+    }
+    .highlight-masked {
+      background: #BBF7D0;
+      color: #166534;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid #4ADE80;
+    }
+    .footer {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1.5px solid #E2E8F0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #475569;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #059669;
+    }
+    .footer-right {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="capture-target">
+    <div class="header">
+      <div class="title-group">
+        <div class="icon-badge">🔒</div>
+        <div>
+          <h2 class="title">개인식별정보(PII) 실시간 블라인드 마스킹 엔진 (Blind Recruitment Filter)</h2>
+          <div class="subtitle">서류 텍스트 외부 AI 전송 전 클라이언트 단에서 7종 개인정보 자동 사전 익명화 처리</div>
+        </div>
+      </div>
+      <div class="categories">
+        <span class="cat-badge">#성명</span>
+        <span class="cat-badge">#이메일</span>
+        <span class="cat-badge">#전화번호</span>
+        <span class="cat-badge">#출신학교</span>
+        <span class="cat-badge">#생년월일</span>
+        <span class="cat-badge">#거주지역</span>
+      </div>
+    </div>
+
+    <div class="comparison-grid">
+      <!-- BEFORE -->
+      <div class="box box-before">
+        <div class="box-header">
+          <span class="box-title">🚨 원본 서류 텍스트 (Before: 개인정보 노출)</span>
+          <span class="tag tag-danger">편향 유발 위험 (학벌/성별/나이)</span>
+        </div>
+        <div class="text-content">
+안녕하십니까. <span class="highlight-pii">김단국</span> 지원자입니다.
+<span class="highlight-pii">단국대학교</span> 컴퓨터공학과를 전공하였으며, <span class="highlight-pii">1999년 03월 14일</span> 출생하였습니다.
+문의사항은 <span class="highlight-pii">jcm03141@gmail.com</span> 혹은 <span class="highlight-pii">010-7399-4118</span>로 연락 바랍니다.
+
+지난 3년간 분산 결제 시스템 백엔드를 개발하며, Redis 캐싱 기법을 적용하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다.
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="box box-after">
+        <div class="box-header">
+          <span class="box-title">🛡️ 클라이언트 마스킹 텍스트 (After: AI 전송 본문)</span>
+          <span class="tag tag-success">100% 블라인드 공정 평가 준수</span>
+        </div>
+        <div class="text-content">
+안녕하십니까. <span class="highlight-masked">[성명 익명화]</span> 지원자입니다.
+<span class="highlight-masked">[학교명 익명화]</span> 컴퓨터공학과를 전공하였으며, <span class="highlight-masked">[생년월일 익명화]</span> 출생하였습니다.
+문의사항은 <span class="highlight-masked">[이메일 익명화]</span> 혹은 <span class="highlight-masked">[전화번호 익명화]</span>로 연락 바랍니다.
+
+지난 3년간 분산 결제 시스템 백엔드를 개발하며, Redis 캐싱 기법을 적용하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">
+        <span>✓ 7종 개인정보 100% 필터링 완료 (외부 AI 서버로 개인식별정보 전송 원천 차단)</span>
+      </div>
+      <div class="footer-right">
+        Engine: regex-pii-anonymizer.js (0-Latency Local Execution)
+      </div>
+    </div>
+  </div>
+</body>
+</html>

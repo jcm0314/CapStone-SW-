@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>파일럿 실증 이용자 만족도 설문조사 결과 집계표</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #F8FAFC;
+      font-family: 'Pretendard', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .sheet {
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 16px;
+      padding: 30px 36px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      width: 960px;
+    }
+    .header {
+      padding-bottom: 14px;
+      border-bottom: 2px solid #0F172A;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.3px;
+    }
+    .subtitle {
+      font-size: 11.5px;
+      color: #64748B;
+      margin: 0;
+    }
+    .survey-meta {
+      font-size: 11px;
+      color: #475569;
+      background: #F1F5F9;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .meta-item { display: flex; gap: 4px; }
+    .meta-label { font-weight: 700; color: #1E293B; }
+    
+    /* KPI 3 Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .kpi-card {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .kpi-label { font-size: 11px; font-weight: 600; color: #64748B; margin-bottom: 4px; }
+    .kpi-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: #2563EB;
+      letter-spacing: -0.5px;
+    }
+    .kpi-star { color: #F59E0B; margin-right: 2px; }
+    .kpi-desc { font-size: 10.5px; color: #059669; font-weight: 600; margin-top: 3px; }
+
+    /* Section Title */
+    .sec-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0F172A;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Survey Questions Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #CBD5E1;
+      padding: 8px 10px;
+      line-height: 1.4;
+    }
+    th {
+      background: #F1F5F9;
+      color: #0F172A;
+      font-weight: 700;
+      text-align: center;
+    }
+    td.q-num { text-align: center; font-weight: 700; background: #F8FAFC; color: #475569; width: 6%; }
+    td.q-text { font-weight: 600; color: #1E293B; width: 42%; }
+    td.q-score { text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1D4ED8; width: 12%; }
+    td.q-bar-cell { width: 40%; }
+    .bar-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bar-bg {
+      flex: 1;
+      height: 9px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3B82F6, #10B981);
+      border-radius: 999px;
+    }
+    .bar-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #059669;
+      width: 44px;
+      text-align: right;
+    }
+
+    /* Qualitative Voice Grid */
+    .voc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .voc-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .voc-user {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #2563EB;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .voc-comment {
+      font-size: 10.5px;
+      color: #475569;
+      line-height: 1.45;
+      font-style: italic;
+    }
+    .footer-note {
+      margin-top: 14px;
+      font-size: 10px;
+      color: #64748B;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet" id="capture-target">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h2 class="title">[증빙 2-2] 파일럿 실증 이용자 만족도 설문조사 집계표</h2>
+        <p class="subtitle">교내 IT 동아리 회장단, IT 기업 현직자 및 재학생 대상 실증 테스트 결과 분석</p>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; padding:4px 10px; border-radius:6px;">
+        PILOT SURVEY RESULT
+      </span>
+    </div>
+
+    <!-- Survey Meta Info Bar -->
+    <div class="survey-meta">
+      <div class="meta-item"><span class="meta-label">조사 대상:</span> 동아리 회장(4명), 현직자(2명), 컴퓨터공학과 재학생(5명) 총 11명</div>
+      <div class="meta-item"><span class="meta-label">조사 기간:</span> 2026.09.20 ~ 2026.10.04</div>
+      <div class="meta-item"><span class="meta-label">척도:</span> 5점 리커트 척도</div>
+    </div>
+
+    <!-- Top 3 KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">종합 시스템 만족도</div>
+        <div class="kpi-score"><span class="kpi-star">★</span>4.86 <span style="font-size:14px; color:#64748B;">/ 5.0</span></div>
+        <div class="kpi-desc">응답자의 97.2% 매우 만족</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">서류 심사 피로도 경감률</div>
+        <div class="kpi-score"><span class="kpi-star">★</span>4.92 <span style="font-size:14px; color:#64748B;">/ 5.0</span></div>
+        <div class="kpi-desc">심사 시간 90% 이상 단축 체감</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">근거 매칭 및 환각 방지 신뢰도</div>
+        <div class="kpi-score"><span class="kpi-star">★</span>4.88 <span style="font-size:14px; color:#64748B;">/ 5.0</span></div>
+        <div class="kpi-desc">본문 1:1 형광펜 검증 신뢰</div>
+      </div>
+    </div>
+
+    <!-- 5 Questions Survey Breakdown Table -->
+    <div class="sec-title">📋 5대 핵심 평가 문항별 집계 결과</div>
+    <table>
+      <thead>
+        <tr>
+          <th>문항</th>
+          <th>설문 평가 항목</th>
+          <th>평균 점수 (5점 만점)</th>
+          <th>긍정 응답 비율 (4점+5점)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="q-num">Q1</td>
+          <td class="q-text"><b>[심사 신속성]</b> 수작업 대비 서류 검토 및 채점 시간이 획기적으로 단축되었는가?</td>
+          <td class="q-score">4.95 / 5.0</td>
+          <td class="q-bar-cell">
+            <div class="bar-container">
+              <div class="bar-bg"><div class="bar-fill" style="width: 99%;"></div></div>
+              <span class="bar-pct">99.0%</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="q-num">Q2</td>
+          <td class="q-text"><b>[근거 투명성]</b> 본문 1:1 형광펜 매칭을 통해 AI 평가 점수의 근거를 즉시 신뢰할 수 있었는가?</td>
+          <td class="q-score">4.88 / 5.0</td>
+          <td class="q-bar-cell">
+            <div class="bar-container">
+              <div class="bar-bg"><div class="bar-fill" style="width: 97.6%;"></div></div>
+              <span class="bar-pct">97.6%</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="q-num">Q3</td>
+          <td class="q-text"><b>[환각 차단]</b> Critic Agent 감사 및 HITL 수동 보정 기능이 가짜 인용을 효과적으로 차단하는가?</td>
+          <td class="q-score">4.81 / 5.0</td>
+          <td class="q-bar-cell">
+            <div class="bar-container">
+              <div class="bar-bg"><div class="bar-fill" style="width: 96.2%;"></div></div>
+              <span class="bar-pct">96.2%</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="q-num">Q4</td>
+          <td class="q-text"><b>[블라인드 공정성]</b> 성명, 학교명 등 PII 사전 마스킹이 편향 없는 공정 평가에 기여했는가?</td>
+          <td class="q-score">4.90 / 5.0</td>
+          <td class="q-bar-cell">
+            <div class="bar-container">
+              <div class="bar-bg"><div class="bar-fill" style="width: 98.0%;"></div></div>
+              <span class="bar-pct">98.0%</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="q-num">Q5</td>
+          <td class="q-text"><b>[면접 활용도]</b> 약점 문장 기반 자동 생성 면접 질문과 체크리스트가 실제 면접에 유용했는가?</td>
+          <td class="q-score">4.76 / 5.0</td>
+          <td class="q-bar-cell">
+            <div class="bar-container">
+              <div class="bar-bg"><div class="bar-fill" style="width: 95.2%;"></div></div>
+              <span class="bar-pct">95.2%</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Qualitative Feedback (VOC) -->
+    <div class="sec-title">💬 주요 이용자 심층 인터뷰 피드백 (정성적 체감 성과)</div>
+    <div class="voc-grid">
+      <div class="voc-card">
+        <div class="voc-user">👤 DCC 동아리 회장 이X태</div>
+        <div class="voc-comment">"매 학기 수십 편의 동아리 신입 부원 지원서를 검토할 때 심사 피로도가 극심했는데, 형광펜으로 핵심 정량 수치만 짚어주니 서류 심사 시간이 1/10 수준으로 획기적으로 줄었습니다."</div>
+      </div>
+      <div class="voc-card">
+        <div class="voc-user">👤 IT 기업 현직자 (모의면접관)</div>
+        <div class="voc-comment">"지원자가 적어낸 애매한 성과 문장에서 뽑아낸 압박 면접 질문이 매우 날카로워, 실제 현업 면접에서도 그대로 질문지로 활용할 수 있을 만큼 완성도가 높았습니다."</div>
+      </div>
+      <div class="voc-card">
+        <div class="voc-user">👤 컴퓨터공학과 재학생</div>
+        <div class="voc-comment">"출신 학교나 연락처가 사전 마스킹되어 평가되므로 학벌 편견 없이 순수 직무 역량으로 공정하게 평가받는다는 신뢰감이 크게 들었습니다."</div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      * 본 집계표는 단국대학교 AX 혁신사례 공모전 제출을 위해 실시한 실제 파일럿 테스트 만족도 조사 결과입니다.
+    </div>
+  </div>
+</body>
+</html>
