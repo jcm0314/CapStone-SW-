@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot } from 'lucide-react';
+import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot, Share2 } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
 
-export default function DashboardSummary({ result, currentJob, onOpenHITLEditor }) {
+export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal }) {
   const [showAuditModal, setShowAuditModal] = useState(false);
 
   if (!result || !result.analysis) return null;
@@ -107,7 +107,20 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor 
           </div>
 
           {/* Right Action & Decision Badge */}
-          <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0">
+          <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0 flex-wrap">
+            {/* Share Link Button */}
+            {onOpenShareModal && (
+              <button
+                type="button"
+                onClick={onOpenShareModal}
+                className="px-3 py-2 bg-gradient-to-r from-indigo-600/30 to-purple-600/30 hover:from-indigo-600/40 hover:to-purple-600/40 text-indigo-200 border border-indigo-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
+                title="면접관 원클릭 공유 링크 생성"
+              >
+                <Share2 className="w-3.5 h-3.5 text-indigo-400" />
+                <span>면접관 공유</span>
+              </button>
+            )}
+
             {/* Multi-Agent Audit Button (if available) */}
             {isMultiAgent && (
               <button

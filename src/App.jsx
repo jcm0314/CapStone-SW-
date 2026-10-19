@@ -11,17 +11,20 @@ import PromptStudioModal from './components/PromptStudioModal';
 import ApiKeyModal from './components/ApiKeyModal';
 import HITLEditorModal from './components/HITLEditorModal';
 import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
+import ShareModal from './components/ShareModal';
+import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { analyzeApplicant } from './services/aiEvaluator';
 import { saveAnalysisToCache } from './services/cacheService';
+import { getSharedEvaluation } from './services/shareService';
 import { useTenant } from './contexts/TenantContext';
 import { useAuth } from './contexts/AuthContext';
 import confetti from 'canvas-confetti';
-import { Lock, ShieldAlert } from 'lucide-react';
+import { Lock, ShieldAlert, Share2, Link2 } from 'lucide-react';
 
 export default function App() {
-  const { currentTenant, getTenantApplicants, saveTenantApplicants } = useTenant();
+  const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant } = useTenant();
   const { currentUser, hasPermission } = useAuth();
 
   const [activeTab, setActiveTab] = useState('evaluator');
@@ -34,12 +37,45 @@ export default function App() {
   const [showPromptStudio, setShowPromptStudio] = useState(false);
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [showHITLEditor, setShowHITLEditor] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [activeShareId, setActiveShareId] = useState(null);
+  const [sharedBannerInfo, setSharedBannerInfo] = useState(null);
+
+  // Restore shared evaluation from URL query parameter (?share=eval_xxxx)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareParam = urlParams.get('share');
+    if (shareParam) {
+      setActiveShareId(shareParam);
+      getSharedEvaluation(shareParam)
+        .then((payload) => {
+          if (payload && payload.applicantSnapshot) {
+            setSelectedApplicant(payload.applicantSnapshot);
+            if (payload.tenantId && payload.tenantId !== currentTenant.id) {
+              switchTenant(payload.tenantId);
+            }
+            setSharedBannerInfo({
+              shareId: shareParam,
+              createdBy: payload.createdBy?.name || '채용담당자',
+              tenantId: payload.tenantId
+            });
+            setActiveTab('evaluator');
+          }
+        })
+        .catch((err) => {
+          console.warn('Failed to load shared eval:', err);
+        });
+    }
+  }, []);
 
   // Sync state when Tenant switches (Multi-Tenancy Isolation)
   useEffect(() => {
     const tenantApps = getTenantApplicants();
     setApplicantList(tenantApps);
-    setSelectedApplicant(tenantApps[0] || null);
+    if (!activeShareId) {
+      setSelectedApplicant(tenantApps[0] || null);
+    }
   }, [currentTenant.id]);
 
   // Analysis via Google Gemini API Only (No Local Fallbacks)
@@ -170,6 +206,36 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 pt-6 w-full flex-1 space-y-6">
+        {/* Shared Evaluation Alert Banner (if accessed via ?share=...) */}
+        {sharedBannerInfo && (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/60 via-indigo-950/40 to-slate-900 border border-purple-500/40 flex items-center justify-between text-xs text-purple-200 shadow-lg shadow-purple-950/30">
+            <div className="flex items-center gap-2.5">
+              <span className="text-lg">🔗</span>
+              <div>
+                <p className="font-bold text-white flex items-center gap-2">
+                  <span>실시간 동기화된 면접관 평가서 열람 중</span>
+                  <span className="px-2 py-0.2 bg-purple-500/20 text-purple-300 rounded font-mono text-[10px]">
+                    {sharedBannerInfo.shareId}
+                  </span>
+                </p>
+                <p className="text-[11px] text-purple-300/80 mt-0.5">
+                  생성자: <strong>{sharedBannerInfo.createdBy}</strong> • 1:1 형광펜 원문 및 맞춤 면접 질문이 실시간 동기화되었습니다.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setSharedBannerInfo(null);
+                setActiveShareId(null);
+                window.history.replaceState({}, '', window.location.pathname);
+              }}
+              className="px-3 py-1.5 bg-purple-900/50 hover:bg-purple-800 text-purple-200 border border-purple-500/30 rounded-xl text-xs font-semibold transition-colors shrink-0"
+            >
+              일반 목록으로 돌아가기
+            </button>
+          </div>
+        )}
+
         {activeTab === 'evaluator' && (
           <div className="space-y-6">
             {/* Top Row: Criteria Setup & Applicant Input Form */}
@@ -213,14 +279,19 @@ export default function App() {
                 result={selectedApplicant}
                 currentJob={currentJob}
                 onOpenHITLEditor={() => setShowHITLEditor(true)}
+                onOpenShareModal={() => setShowShareModal(true)}
               />
             )}
 
-            {/* Bottom Row: Interactive Sentence Evidence Viewer & Interview Questions */}
+            {/* Bottom Row: Interactive Sentence Evidence Viewer, Interview Questions & Collaboration Panel */}
             {selectedApplicant && (
               <div className="space-y-6">
                 <EvidenceViewer result={selectedApplicant} />
                 <InterviewQuestions result={selectedApplicant} />
+                <InterviewerCollaborationPanel
+                  applicant={selectedApplicant}
+                  shareId={activeShareId}
+                />
               </div>
             )}
           </div>
@@ -293,6 +364,13 @@ export default function App() {
           onRevert={handleRevertHITL}
         />
       )}
+
+      {/* Multi-Interviewer Real-time Share Modal */}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        applicant={selectedApplicant}
+      />
     </div>
   );
 }
