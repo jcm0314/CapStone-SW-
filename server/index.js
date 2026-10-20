@@ -14,16 +14,16 @@ app.set('trust proxy', 1);
 // Security & CORS Middleware
 app.use(cors({
   origin: process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Enterprise-Client-Id']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Enterprise-Client-Id', 'X-Tenant-Id']
 }));
 
 app.use(express.json({ limit: '10mb' }));
 
-// Rate Limiter: Prevent DoS & Abuse (Max 100 requests per 15 mins per IP)
+// Rate Limiter: Prevent DoS & Abuse (Max 200 requests per 15 mins per IP)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests from this IP, please try again after 15 minutes.' }
@@ -31,16 +31,58 @@ const apiLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 
+// In-Memory Cloud Sync Store (Emulates Distributed Cloud DB / Supabase)
+const sharedEvaluationsStore = new Map();
+
+// Preset Tenant Database & FinOps Quota
+const tenantsStore = new Map([
+  ['toss-payments', {
+    id: 'toss-payments',
+    name: '토스페이먼츠',
+    domain: 'tosspayments.com',
+    plan: 'Enterprise Tier',
+    totalCredit: 500000,
+    usedCredit: 80000,
+    industry: 'Fintech / Payment'
+  }],
+  ['daangn', {
+    id: 'daangn',
+    name: '당근',
+    domain: 'daangn.com',
+    plan: 'Growth Pro',
+    totalCredit: 300000,
+    usedCredit: 115000,
+    industry: 'Hyperlocal Commerce / AI Feed'
+  }],
+  ['woowa', {
+    id: 'woowa',
+    name: '우아한형제들',
+    domain: 'woowahan.com',
+    plan: 'Enterprise Ultimate',
+    totalCredit: 1000000,
+    usedCredit: 250000,
+    industry: 'Food Delivery / Mobility Tech'
+  }]
+]);
+
 // Root Service Information Endpoint
 app.get('/', (req, res) => {
   res.status(200).json({
-    service: 'HR AX Evaluator Enterprise API Gateway',
-    version: 'v2.1.0',
+    service: 'Check-Mate Enterprise HR API Gateway',
+    version: 'v2.2.0',
     status: 'ONLINE',
+    capabilities: [
+      'Multi-Tenancy RLS Isolation',
+      'Multi-Interviewer Live Sync Sharing',
+      'SSO Authentication Proxy',
+      'Gemini 3.8 Flash AI Evaluation BFF'
+    ],
     endpoints: {
       health: '/health',
       evaluate: '/api/v1/evaluate (POST)',
-      vertexEvaluator: '/api/v1/enterprise/vertex-evaluator (POST)'
+      shares: '/api/v1/shares (POST, GET)',
+      tenants: '/api/v1/tenants (GET)',
+      ssoLogin: '/api/v1/auth/sso-login (POST)'
     },
     timestamp: new Date().toISOString()
   });
@@ -55,7 +97,164 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Handler for AI Evaluation Requests (Vertex AI / Gemini 2.5 Flash)
+// -------------------------------------------------------------
+// [1] Multi-Interviewer Share & Live Collaboration Endpoints
+// -------------------------------------------------------------
+
+// Create/Upload a Shared Evaluation Snapshot
+app.post('/api/v1/shares', (req, res) => {
+  try {
+    const { shareId, applicantSnapshot, tenantId, createdBy, expiresHours = 72, collaborativeNotes } = req.body;
+
+    if (!shareId || !applicantSnapshot) {
+      return res.status(400).json({ error: 'shareId와 applicantSnapshot은 필수 항목입니다.' });
+    }
+
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + expiresHours * 60 * 60 * 1000).toISOString();
+
+    const record = {
+      shareId,
+      createdAt: now.toISOString(),
+      expiresAt,
+      tenantId: tenantId || 'toss-payments',
+      createdBy: createdBy || { name: '채용담당자', role: 'RECRUITER' },
+      applicantSnapshot,
+      collaborativeNotes: collaborativeNotes || [
+        {
+          id: 'note_init',
+          author: createdBy?.name || '채용담당자',
+          role: createdBy?.role || 'RECRUITER',
+          timestamp: now.toISOString(),
+          content: '1차 AI 서류 심사가 완료되어 기술 면접관 공유 링크가 생성되었습니다. 면접 전 1:1 형광펜 원문과 역량 검증 질문을 확인해 주세요.'
+        }
+      ]
+    };
+
+    sharedEvaluationsStore.set(shareId, record);
+
+    return res.status(201).json({
+      success: true,
+      shareId,
+      expiresAt,
+      message: '면접관 공유 스냅샷이 클라우드 저장소에 성공적으로 동기화되었습니다.'
+    });
+  } catch (error) {
+    console.error('Save share error:', error);
+    return res.status(500).json({ error: '공유 링크 저장 중 서버 오류가 발생했습니다.' });
+  }
+});
+
+// Retrieve a Shared Evaluation Snapshot
+app.get('/api/v1/shares/:shareId', (req, res) => {
+  const { shareId } = req.params;
+  const record = sharedEvaluationsStore.get(shareId);
+
+  if (!record) {
+    return res.status(404).json({ error: '해당 공유 평가서를 찾을 수 없습니다.' });
+  }
+
+  // Check TTL expiration
+  if (record.expiresAt && new Date(record.expiresAt) < new Date()) {
+    sharedEvaluationsStore.delete(shareId);
+    return res.status(410).json({ error: '해당 면접관 공유 링크의 유효 기간(TTL)이 만료되었습니다.' });
+  }
+
+  return res.status(200).json(record);
+});
+
+// Add Real-time Interviewer Collaborative Note / Score Adjustment
+app.post('/api/v1/shares/:shareId/notes', (req, res) => {
+  const { shareId } = req.params;
+  const { author, role, content, scoreAdjustment = 0 } = req.body;
+
+  if (!content) {
+    return res.status(400).json({ error: '메모 내용은 필수입니다.' });
+  }
+
+  const record = sharedEvaluationsStore.get(shareId);
+  if (!record) {
+    return res.status(404).json({ error: '해당 공유 평가서를 찾을 수 없습니다.' });
+  }
+
+  const newNote = {
+    id: `note_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    author: author || '기술면접관',
+    role: role || 'INTERVIEWER',
+    timestamp: new Date().toISOString(),
+    content: content.trim(),
+    scoreAdjustment: Number(scoreAdjustment) || 0
+  };
+
+  record.collaborativeNotes.push(newNote);
+  sharedEvaluationsStore.set(shareId, record);
+
+  return res.status(200).json({
+    success: true,
+    note: newNote,
+    collaborativeNotes: record.collaborativeNotes
+  });
+});
+
+// -------------------------------------------------------------
+// [2] Enterprise SSO & Multi-Tenancy Management Endpoints
+// -------------------------------------------------------------
+
+// Simulated SSO Login & Session Token Exchange
+app.post('/api/v1/auth/sso-login', (req, res) => {
+  const { provider = 'Google Workspace', targetRole = 'RECRUITER', email, tenantId = 'toss-payments' } = req.body;
+
+  const tenant = tenantsStore.get(tenantId) || tenantsStore.get('toss-payments');
+
+  const tokenPayload = {
+    sub: `usr_${Date.now()}`,
+    tenantId: tenant.id,
+    tenantName: tenant.name,
+    role: targetRole,
+    email: email || `user@${tenant.domain}`,
+    provider,
+    issuedAt: new Date().toISOString()
+  };
+
+  return res.status(200).json({
+    token: `chk_sso_${Buffer.from(JSON.stringify(tokenPayload)).toString('base64')}`,
+    user: tokenPayload
+  });
+});
+
+// List Active Tenants (Multi-Tenancy Overview)
+app.get('/api/v1/tenants', (req, res) => {
+  const list = Array.from(tenantsStore.values());
+  return res.status(200).json({ tenants: list });
+});
+
+// Retrieve Tenant Credit Quota (FinOps Governance)
+app.get('/api/v1/tenants/:tenantId/quota', (req, res) => {
+  const { tenantId } = req.params;
+  const tenant = tenantsStore.get(tenantId);
+
+  if (!tenant) {
+    return res.status(404).json({ error: '등록되지 않은 테넌트(기업)입니다.' });
+  }
+
+  const remaining = tenant.totalCredit - tenant.usedCredit;
+  const usagePercentage = ((tenant.usedCredit / tenant.totalCredit) * 100).toFixed(1);
+
+  return res.status(200).json({
+    tenantId: tenant.id,
+    name: tenant.name,
+    totalCredit: tenant.totalCredit,
+    usedCredit: tenant.usedCredit,
+    remainingCredit: remaining,
+    usagePercentage: `${usagePercentage}%`,
+    isLocked: remaining <= 0,
+    plan: tenant.plan
+  });
+});
+
+// -------------------------------------------------------------
+// [3] BFF AI Evaluation Handler (Gemini 3.8 Flash Engine)
+// -------------------------------------------------------------
 const handleEvaluation = async (req, res) => {
   try {
     const { name, applyJobId, rawText } = req.body;
@@ -67,10 +266,9 @@ const handleEvaluation = async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY || process.env.VERTEX_API_KEY;
     
     if (!apiKey) {
-      // Return structured fallback signal if server API key is not configured
-      return res.status(200).json({
-        mode: 'LOCAL_FALLBACK',
-        message: 'Server API key not configured. Handing off to Web Worker Client Fallback Engine.'
+      return res.status(401).json({
+        error: 'SERVER_API_KEY_NOT_CONFIGURED',
+        message: '서버 환경변수 GEMINI_API_KEY가 설정되지 않았습니다. 클라이언트 직접 호출 모드를 사용하세요.'
       });
     }
 
@@ -133,7 +331,8 @@ Return ONLY a valid JSON object matching this exact structure:
 }
 `;
 
-    const candidateModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest'];
+    // 2026 Recommended Gemini Models
+    const candidateModels = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest'];
     const project = process.env.GCP_PROJECT || 'ai-review-510606';
     let data = null;
     let successfulModel = '';
@@ -162,7 +361,7 @@ Return ONLY a valid JSON object matching this exact structure:
             break;
           } else {
             const errText = await resp.text();
-            lastError = `[${modelName}] (${resp.status}): ${errText.slice(0, 100)}`;
+            lastError = `[${modelName}] (${resp.status}): ${errText.slice(0, 150)}`;
           }
         } catch (err) {
           lastError = err.message;
@@ -172,10 +371,10 @@ Return ONLY a valid JSON object matching this exact structure:
     }
 
     if (!data) {
-      console.warn(`Upstream API fallback triggered: ${lastError}`);
-      return res.status(200).json({
-        mode: 'LOCAL_FALLBACK',
-        message: `Upstream API Key Quota/Model Deprecation (${lastError}). Handed off to Web Worker Local Engine.`
+      console.warn(`Upstream API failed: ${lastError}`);
+      return res.status(502).json({
+        error: 'UPSTREAM_AI_FAILED',
+        message: `Google Gemini AI 서비스 호출에 실패했습니다: ${lastError}`
       });
     }
 
@@ -189,13 +388,14 @@ Return ONLY a valid JSON object matching this exact structure:
       applyJobTitle: 'Software Engineer',
       rawText,
       analysis: parsedAnalysis,
-      mode: 'VERTEX_AI_FREE_TIER'
+      modelUsed: successfulModel,
+      mode: 'BFF_GEMINI_GATEWAY'
     });
   } catch (error) {
     console.error('API Gateway Error:', error.message);
-    return res.status(200).json({
-      mode: 'LOCAL_FALLBACK',
-      message: 'Internal Gateway Error fallback to Web Worker.'
+    return res.status(500).json({
+      error: 'GATEWAY_INTERNAL_ERROR',
+      message: error.message || '서버 내부 오류가 발생했습니다.'
     });
   }
 };

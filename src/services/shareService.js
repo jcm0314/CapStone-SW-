@@ -1,10 +1,23 @@
 /**
  * Multi-Interviewer Collaboration & Cloud Sync Share Service
- * Supports offline-first IndexedDB caching + cloud share serialization
+ * Hybrid Offline-First + Cloud Centralized Gateway Sync
  */
 
 const STORAGE_PREFIX = 'checkmate_shared_eval_';
 const SHARED_INDEX_KEY = 'checkmate_shared_index';
+
+// Resolve Backend API Base URL
+function getApiBaseUrl() {
+  if (typeof window !== 'undefined') {
+    if (import.meta.env?.VITE_API_GATEWAY_URL) {
+      return import.meta.env.VITE_API_GATEWAY_URL;
+    }
+    if (window.location && window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('about:')) {
+      return window.location.origin;
+    }
+  }
+  return 'http://127.0.0.1:3001';
+}
 
 // Generate unique Share ID (e.g., eval_8f9a2b1c)
 export function generateShareId() {
@@ -13,10 +26,10 @@ export function generateShareId() {
 }
 
 /**
- * Creates and saves a shared evaluation snapshot
+ * Creates and saves a shared evaluation snapshot to both Cloud Gateway & LocalStorage
  * @param {Object} applicant - Target applicant object with analysis
  * @param {Object} options - { expiresHours, creatorName, creatorRole, tenantId }
- * @returns {Promise<{ shareId: string, shareUrl: string, expiresAt: string }>}
+ * @returns {Promise<{ shareId: string, shareUrl: string, expiresAt: string, sharePayload: Object }>}
  */
 export async function createSharedEvaluation(applicant, options = {}) {
   if (!applicant || !applicant.analysis) {
@@ -40,14 +53,13 @@ export async function createSharedEvaluation(applicant, options = {}) {
     applicantSnapshot: {
       id: applicant.id,
       name: applicant.name,
-      orgId: applicant.orgId,
-      applyJobId: applicant.applyJobId,
+      orgId: applicant.orgId || options.tenantId,
+      applyJobId: applicant.applyJobId || 'dev',
       rawText: applicant.rawText,
       analysis: applicant.analysis,
       isHumanVerified: applicant.isHumanVerified || false,
       reviewerNote: applicant.reviewerNote || ''
     },
-    // Multi-Interviewer Real-time Comments & Consensus
     collaborativeNotes: [
       {
         id: 'note_init',
@@ -59,11 +71,10 @@ export async function createSharedEvaluation(applicant, options = {}) {
     ]
   };
 
-  // Persist to Local/Cloud Storage
+  // 1. Persist to LocalStorage (Instant UI responsiveness)
   if (typeof window !== 'undefined') {
     localStorage.setItem(`${STORAGE_PREFIX}${shareId}`, JSON.stringify(sharePayload));
 
-    // Maintain an index of shared links
     try {
       const existingIndex = JSON.parse(localStorage.getItem(SHARED_INDEX_KEY) || '[]');
       const newIndex = [{ shareId, applicantName: applicant.name, expiresAt, createdAt: now.toISOString() }, ...existingIndex.slice(0, 49)];
@@ -71,6 +82,28 @@ export async function createSharedEvaluation(applicant, options = {}) {
     } catch {
       // ignore
     }
+  }
+
+  // 2. Synchronize to Central Cloud Gateway (BFF Sync)
+  try {
+    const apiBase = getApiBaseUrl();
+    await fetch(`${apiBase}/api/v1/shares`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Tenant-Id': sharePayload.tenantId
+      },
+      body: JSON.stringify({
+        shareId,
+        applicantSnapshot: sharePayload.applicantSnapshot,
+        tenantId: sharePayload.tenantId,
+        createdBy: sharePayload.createdBy,
+        expiresHours,
+        collaborativeNotes: sharePayload.collaborativeNotes
+      })
+    });
+  } catch (cloudErr) {
+    console.warn('[Cloud Sync Notice] Gateway sync deferred, saved in offline-first mode:', cloudErr.message);
   }
 
   const shareUrl = typeof window !== 'undefined'
@@ -86,20 +119,38 @@ export async function createSharedEvaluation(applicant, options = {}) {
 }
 
 /**
- * Loads a shared evaluation by shareId
+ * Loads a shared evaluation by shareId (Cloud-first with LocalStorage fallback)
  * @param {string} shareId 
  * @returns {Promise<Object>} The shared evaluation payload
  */
 export async function getSharedEvaluation(shareId) {
   if (!shareId) return null;
 
+  // 1. Attempt Cloud Gateway Fetch
+  try {
+    const apiBase = getApiBaseUrl();
+    const resp = await fetch(`${apiBase}/api/v1/shares/${shareId}`);
+    if (resp.status === 410) {
+      throw new Error('해당 공유 링크의 유효 기간(TTL)이 만료되었습니다.');
+    }
+    if (resp.ok) {
+      const cloudPayload = await resp.json();
+      // Cache latest to LocalStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`${STORAGE_PREFIX}${shareId}`, JSON.stringify(cloudPayload));
+      }
+      return cloudPayload;
+    }
+  } catch (cloudErr) {
+    if (cloudErr.message.includes('만료')) throw cloudErr;
+    console.warn('[Cloud Fetch Notice] Fallback to local offline cache:', cloudErr.message);
+  }
+
+  // 2. Offline Fallback: LocalStorage
   if (typeof window === 'undefined') return null;
 
   const raw = localStorage.getItem(`${STORAGE_PREFIX}${shareId}`);
-  if (!raw) {
-    // If not in localStorage, return null (in future: fetch from Cloud DB / Supabase)
-    return null;
-  }
+  if (!raw) return null;
 
   try {
     const payload = JSON.parse(raw);
@@ -118,24 +169,50 @@ export async function getSharedEvaluation(shareId) {
 }
 
 /**
- * Adds an interviewer comment/note to a shared evaluation
+ * Adds an interviewer comment/note to a shared evaluation (Sync to Cloud + Local)
  * @param {string} shareId 
  * @param {Object} note - { author, role, content, scoreAdjustment }
  */
 export async function addCollaborativeNote(shareId, note) {
   if (!shareId || !note || !note.content) return null;
 
-  const payload = await getSharedEvaluation(shareId);
-  if (!payload) throw new Error('공유 평가서를 찾을 수 없습니다.');
-
   const newNote = {
     id: `note_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
     author: note.author || '면접관',
     role: note.role || 'INTERVIEWER',
     timestamp: new Date().toISOString(),
-    content: note.content,
+    content: note.content.trim(),
     scoreAdjustment: note.scoreAdjustment || 0
   };
+
+  // 1. Sync to Cloud Gateway
+  try {
+    const apiBase = getApiBaseUrl();
+    const resp = await fetch(`${apiBase}/api/v1/shares/${shareId}/notes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newNote)
+    });
+    if (resp.ok) {
+      const result = await resp.json();
+      const updatedNotes = result.collaborativeNotes;
+      
+      // Update local storage
+      const raw = localStorage.getItem(`${STORAGE_PREFIX}${shareId}`);
+      if (raw) {
+        const payload = JSON.parse(raw);
+        payload.collaborativeNotes = updatedNotes;
+        localStorage.setItem(`${STORAGE_PREFIX}${shareId}`, JSON.stringify(payload));
+        return payload;
+      }
+    }
+  } catch (cloudErr) {
+    console.warn('[Cloud Note Sync Notice] Fallback to local storage update:', cloudErr.message);
+  }
+
+  // 2. Local Fallback Update
+  const payload = await getSharedEvaluation(shareId);
+  if (!payload) throw new Error('공유 평가서를 찾을 수 없습니다.');
 
   payload.collaborativeNotes = [...(payload.collaborativeNotes || []), newNote];
 
