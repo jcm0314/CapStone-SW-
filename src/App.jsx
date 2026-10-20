@@ -91,10 +91,9 @@ export default function App() {
       ''
     ).trim();
 
-    if (!currentApiKey || currentApiKey.length < 5) {
-      setShowApiKeyModal(true);
-      return;
-    }
+    // B2B 일괄 결제 모드: 커스텀 키(BYOK)가 없으면 백엔드 게이트웨이가 기업 공용 토큰으로 일괄 결제/평가
+    const isB2BManagedMode = !currentApiKey || currentApiKey.length < 5;
+    const effectiveApiKey = isB2BManagedMode ? '' : currentApiKey;
 
     setIsAnalyzing(true);
     setProgressState({ percent: 10, status: 'Google Gemini AI 분석 파이프라인 가동 중...' });
@@ -104,7 +103,7 @@ export default function App() {
         name,
         applyJobId: currentJob.id,
         rawText,
-        apiKey: currentApiKey,
+        apiKey: effectiveApiKey,
         onProgress: (p) => setProgressState(p)
       });
 

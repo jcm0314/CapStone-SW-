@@ -21,9 +21,8 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
     ''
   ).trim();
 
-  if (!apiKey || apiKey.length < 5) {
-    throw new Error('Google Gemini API 키가 설정되지 않았습니다. 상단 헤더의 [API Key 설정] 버튼을 눌러 유효한 API Key를 등록해주세요.');
-  }
+  // If no client API key is provided, route directly to Enterprise B2B Managed Gateway
+  const isB2BManagedMode = !apiKey || apiKey.length < 5;
 
   // Step 2: IndexedDB Local Cache Lookup (Strictly cached Gemini results)
   const cachedResult = await getCachedAnalysis(rawText, jobTemplate.id);
@@ -40,6 +39,33 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
   // Step 3: Client-Side PII Security & Blind Recruitment Anonymization
   const piiResult = anonymizePII(rawText, name);
   const cleanText = piiResult.anonymizedText;
+
+  if (onProgress && piiResult.piiCount > 0) {
+    onProgress({
+      percent: 15,
+      status: `🔒 개인식별정보(PII) 익명화 선처리 완료 (${piiResult.maskedCategories.join(', ')} 마스킹 적용)...`
+    });
+  }
+
+  // If running in Enterprise B2B Managed Mode, delegate to backend API Gateway
+  if (isB2BManagedMode) {
+    if (onProgress) {
+      onProgress({
+        percent: 40,
+        status: '🏢 기업 B2B 전용 일괄 결제 게이트웨이(Cloud Run)를 통해 보안 평가 가동 중...'
+      });
+    }
+    const gatewayResult = await analyzeWithBffGateway({
+      name,
+      applyJobId: jobTemplate.id,
+      jobTemplate,
+      cleanText,
+      rawText,
+      piiResult,
+      onProgress
+    });
+    return gatewayResult;
+  }
 
   if (onProgress && piiResult.piiCount > 0) {
     onProgress({
@@ -304,3 +330,69 @@ ${rawText}
     }
   };
 }
+
+function getApiBaseUrl() {
+  if (typeof window !== 'undefined') {
+    if (import.meta.env?.VITE_API_GATEWAY_URL) {
+      return import.meta.env.VITE_API_GATEWAY_URL;
+    }
+    if (window.location && window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('about:')) {
+      return window.location.origin;
+    }
+  }
+  return 'http://127.0.0.1:3001';
+}
+
+/**
+ * Analyzes candidate via Central Enterprise B2B Gateway (Managed Token Mode)
+ * Server holds the enterprise Gemini API Key, eliminating the need for client API keys.
+ */
+async function analyzeWithBffGateway({ name, applyJobId, jobTemplate, cleanText, rawText, piiResult, onProgress }) {
+  const apiBase = getApiBaseUrl();
+
+  try {
+    if (onProgress) {
+      onProgress({ percent: 60, status: '🏢 Enterprise B2B 게이트웨이에서 4대 에이전트 파이프라인 가동 중...' });
+    }
+
+    const resp = await fetch(`${apiBase}/api/v1/evaluate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Enterprise-Client-Id': 'checkmate-b2b-managed'
+      },
+      body: JSON.stringify({
+        name,
+        applyJobId,
+        rawText: cleanText
+      })
+    });
+
+    if (!resp.ok) {
+      const errJson = await resp.json().catch(() => ({}));
+      throw new Error(errJson.message || `게이트웨이 응답 오류 (${resp.status})`);
+    }
+
+    const gatewayResult = await resp.json();
+
+    if (gatewayResult.error) {
+      throw new Error(gatewayResult.message || gatewayResult.error);
+    }
+
+    // Attach local metadata
+    gatewayResult.rawText = rawText;
+    gatewayResult.piiMeta = piiResult;
+    gatewayResult.mode = 'B2B_MANAGED_TOKEN';
+
+    if (onProgress) {
+      onProgress({ percent: 100, status: '🏢 B2B 일괄 결제 엔진 평가 완료 (토큰 비용: 전사 통합 결제)' });
+    }
+
+    await saveAnalysisToCache(rawText, jobTemplate.id, gatewayResult);
+    return gatewayResult;
+  } catch (err) {
+    console.error('B2B Gateway evaluation error:', err);
+    throw new Error(`[B2B 게이트웨이 평가 실패] ${err.message || '서버 통신 실패'}. 커스텀 API Key를 등록하여 직접 평가하려면 상단 [B2B 토큰 설정]을 클릭하세요.`);
+  }
+}
+
