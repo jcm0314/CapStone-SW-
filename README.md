@@ -1,155 +1,155 @@
-# 🎯 HR AX Smart Evaluator (근거 기반 자기소개서 AI 역량 평가 시스템)
+# ♟️ Check-Mate (HR AX Smart Evaluator)
+### 근거 기반 자기소개서 AI 다각도 심사 & B2B 멀티테넌시 채용 협업 플랫폼
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)](https://vitejs.dev/)
 [![GCP Cloud Run](https://img.shields.io/badge/GCP_Cloud_Run-Production_Live-4285F4?logo=google-cloud)](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
-[![Docker](https://img.shields.io/badge/Docker-Multi--Stage-2496ED?logo=docker)](https://www.docker.com/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-IaC_Ready-326CE5?logo=kubernetes)](https://kubernetes.io/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?logo=supabase)](https://supabase.com)
+[![Gemini 3.8](https://img.shields.io/badge/Google_Gemini-3.8_Flash_Multi--Agent-8E75C7?logo=google-gemini)](https://ai.google.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-51_Tests_100%25_Passed-22C55E?logo=vitest)](package.json)
 
-> **처음 방문하셨나요? 👋**  
-> **HR AX Smart Evaluator**는 인사담당자가 지원자의 자기소개서를 검토할 때 **주관적인 감이나 편향을 배제하고, 자소서 본문 속 실제 문장(Grounding)을 바탕으로 정량적 점수 산출, PII 익명화, 표절 매트릭스 탐지 및 맞춤형 면접 질문을 자동 도출해 주는 엔터프라이즈 HR 전용 AI 보조 플랫폼**입니다.
+> **"화면은 정상인데 숫자가 가짜면, 그건 거짓 평가서입니다."**  
+> Check-Mate는 감이나 편향에 의존하던 전통적 서류 심사를 혁신하여, **자소서 본문 속 실제 문장(Grounding) 1:1 형광펜 검증**, **4대 멀티에이전트 병렬 분업**, **B2B 무설정 일괄 결제(건당 4원)** 및 **Supabase Multi-Tenancy RLS 기반 다인 면접관 실시간 협업**을 제공하는 엔터프라이즈 B2B HR SaaS 솔루션입니다.
 
 ---
 
-## 🌐 GCP Cloud Run 라이브 프로덕션 서비스 URL
+## 🌐 프로덕션 서비스 링크
 
-- 🚀 **프론트엔드 웹 서비스**: [https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
-- ⚙️ **Express 백엔드 API 게이트웨이**: [https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app](https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app)
+- 🚀 **프론트엔드 웹 앱**: [https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
+- ⚙️ **B2B API 게이트웨이**: [https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app](https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app)
 - 🏥 **게이트웨이 헬스체크**: [https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app/health](https://hr-evaluator-api-gateway-779722422570.asia-northeast3.run.app/health)
+- 🗄️ **Supabase Cloud DB**: `https://armqdmxzhnimjpnvoqin.supabase.co` (ap-northeast-1 / RLS Active)
 
 ---
 
-## 📸 1. 시스템 프로토타입 대시보드 스크린샷 (Prototype Previews)
+## 💡 기존 솔루션(무하유 프리즘, 마이다스 역검) 대비 4대 차별화 필살기
 
-### 📊 ① 메인 HR 서류 평가 대시보드 & 5대 역량 시각화 (Evaluator Dashboard)
-- **100점 만점 수치 게이지** 및 **5대 역량 레이더 차트 (Recharts)** 시각화
-- **Exact & Fuzzy Matcher (Levenshtein 85%+)**: AI 점수 산출의 근거가 된 자기소개서 실제 문장을 본문에서 1:1 하이라이팅 및 자동 스크롤 추적
-- **맞춤형 심층 면접 질문 생성기**: 서류 상의 약점 및 검증 필요 문장 기반 면접 가이드 제시
+```mermaid
+graph TD
+    A["Check-Mate 4대 핵심 가치"]
+    A --> B["1. Evidence Grounding<br>문장 클릭 시 원문 1:1 형광펜 추적"]
+    A --> C["2. 맞춤 압박 면접 키트<br>과장 의심 문장 기반 팩트체크 질문"]
+    A --> D["3. B2B 무설정 일괄 결제<br>건당 4원 초저비용 / 98.7% SaaS 마진"]
+    A --> E["4. 다인 면접관 실시간 협업<br>Supabase RLS & 1-Click 암호화 공유"]
+```
 
-```
-+---------------------------------------------------------------------------------------------+
-| 🎯 HR AX Smart Evaluator - 지원서 서류 평가 대시보드                                        |
-+------------------------------------+--------------------------------------------------------+
-| 📌 평가 직무 선택                  | ✍️ 지원자 서류 입력 & 샘플 선택                         |
-|  • [백엔드 엔지니어]               |  • 김민준 (🟢 우수) | 이서연 (🔴 과장) | 박지훈 (🟡 보류)  |
-|  • [데이터 분석가]                 |  • 텍스트 직접 입력 OR PDF/TXT 파일 업로드             |
-|  • [AI 연구원]                     |  • 🔒 PII 마스킹 (전화번호, 이메일, 출신교 블라인드)   |
-+------------------------------------+--------------------------------------------------------+
-| 📊 김민준 지원자 서류 종합 평가 SCORE                                                        |
-|  • [ 92 / 100점 ] 🟢 서류 통과 추천 | 5대 역량 레이더 차트 (문제해결 95 / 기술 94 / 협업 88) |
-|  • ⚠️ AI 생성/과장 확률: 12%       |                                                        |
-+------------------------------------+--------------------------------------------------------+
-| 🔍 서류 본문 문장별 근거(Grounding) 캡처 검증 & Virtual Scrolling                              |
-|  🟢 "Redis 인메모리 캐싱 기법을 도입하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다."    |
-|  🔴 "어떠한 거친 풍파가 밀려와도 손쉽게 극복할 수 있는 최고의 열정을 가진 인재입니다."        |
-+---------------------------------------------------------------------------------------------+
-```
+| 비교 항목 | 기존 AI 채용 솔루션 (무하유, 마이다스 등) | **Check-Mate (본 프로젝트)** |
+| :--- | :--- | :--- |
+| **평가 투명성** | ❌ **블랙박스 점수** ("적합도 82점"만 주어 사람이 다시 읽음) | ✅ **1:1 Evidence Grounding** (모든 점수의 본문 문장 하이라이트 매핑) |
+| **서류-면접 연계** | ❌ 단순 서류 통과 여부 필터링에 그침 | ✅ **서류 기반 맞춤 압박 질문 3종 자동 생성** (면접 질문지 즉시 출력) |
+| **도입 온보딩** | ❌ 수천만 원 SI 구축비 또는 복잡한 API 키 발급 | ✅ **0초 무설정 B2B 일괄 결제** (서버가 토큰 대행 결제 / 월 구독료 청구) |
+| **비용 효율성** | ⚠️ 무거운 단일 거대 모델로 건당 수십 원 소요 | ✅ **Gemini 3.8 Flash 4대 분업으로 건당 4.0원 ($0.003, 98% 마진)** |
+| **데이터 보안** | ⚠️ 단일 DB 내 테넌트 혼선 위험 | ✅ **Supabase PostgreSQL RLS** (데이터베이스 엔진 레벨 기업별 격리) |
+| **면접장 협업** | ❌ 종이 PDF 출력 후 수기 채점 | ✅ **1-Click Share ID 암호화 만료 링크 & 실시간 코멘트 Live 동기화** |
 
 ---
 
-### 🕵️ ② 지원자 간 N-Gram 자소서 상호 표절 탐지 매트릭스 (Plagiarism Matrix)
-- 지원자 간 문장의 **Character Tri-Gram N-Gram Jaccard 유사도**를 실시간 연산하여 히트맵 매트릭스로 표출
-- **40% 이상 유사 시 🚨 [표절 의심 경고 플래그]** 자동 부여
-
-```
-+---------------------------------------------------------------------------------------------+
-| 🕵️ 지원자 간 자소서 상호 표절 탐지 매트릭스 (N-Gram Jaccard 알고리즘)                          |
-+-------------------+-------------------+-------------------+-------------------+-------------+
-| 지원자 성명       | 김민준            | 이서연            | 박지훈            | 최유진      |
-+-------------------+-------------------+-------------------+-------------------+-------------+
-| 김민준            | -                 | 12.4%             | 14.8%             | 8.2%        |
-| 이서연            | 12.4%             | -                 | 44.5% 🚨 (표절)   | 11.1%       |
-| 박지훈            | 14.8%             | 44.5% 🚨 (표절)   | -                 | 9.6%        |
-+-------------------+-------------------+-------------------+-------------------+-------------+
-```
-
----
-
-### ⚙️ ③ Custom HR Prompt Studio 에디터 (Prompt Studio)
-- 기업별 **핵심 인재상 키워드**, 감점 항목 **서류 금기어**, 직무 가중치 설정 모달
-- 사내 전용 프리셋 3종 지원 (**LG그룹 인재상, IT 스타트업, 금융 대기업**)
-
----
-
-## 🏛️ 2. 클라우드 인프라 & DevOps 아키텍처 (Infrastructure & DevOps)
+## 🏛️ 시스템 아키텍처 (System Architecture)
 
 ```mermaid
 flowchart TD
     subgraph Client ["Client Browser (React 18 SPA)"]
         UI["React 18 + Tailwind UI"]
-        WW["evaluatorWorker.js (Web Worker)"]
-        DB["IndexedDB (0s / 0 Token Cache)"]
-        PII["PII Anonymizer Engine"]
+        GW_CLIENT["BFF API Client / Supabase Client"]
+        PII["7종 PII 실시간 마스킹 (블라인드 채용)"]
+        VIRTUAL["react-window 가상 윈도잉 (0.05초 렌더링)"]
     end
 
-    subgraph Infrastructure ["Enterprise Cloud Infrastructure"]
-        NGINX["Frontend Web Server (Nginx Docker Container)"]
-        GW["Express API Proxy Gateway (Node.js Container)"]
-        REDIS["Distributed Cache (Redis 7 Container)"]
-        GCP["GCP Cloud Run (Seoul Region asia-northeast3)"]
-        AI["GCP Vertex AI & LG EXAONE 3.0 Hybrid Engine"]
+    subgraph BackendGateway ["Cloud Run B2B API Gateway (Node.js)"]
+        EXPRESS["Express Gateway (Rate Limit 100/15m)"]
+        B2B_TOKEN["Enterprise Managed Token Manager"]
+        CACHE["SHA-256 In-Memory / Redis Cache"]
     end
 
-    subgraph DevOps ["DevOps & CI/CD Pipeline"]
-        GH["GitHub Remote Repo (main)"]
-        GA["GitHub Actions (Vitest 28 Passed + Build Check)"]
-        K8S["Kubernetes IaC (Deployment, Service, Ingress)"]
+    subgraph MultiAgentEngine ["Google Gemini 3.8 Flash 4대 멀티에이전트 파이프라인"]
+        A1["1. 역량 적합성 에이전트<br>(5대 직무 가중치 정량 평가)"]
+        A2["2. 논리성 & 구체성 에이전트<br>(STAR 인과관계 / 수치 신뢰도)"]
+        A3["3. AI 표절 및 생성 탐지 에이전트<br>(N-Gram Jaccard + 생성형 AI 탐지)"]
+        A4["4. 심층 압박 면접 질문 에이전트<br>(약점 타깃 팩트체크 질문 도출)"]
     end
 
-    UI <--> WW
-    UI <--> DB
+    subgraph CloudDatabase ["Supabase Cloud PostgreSQL (Tokyo ap-northeast-1)"]
+        TENANTS["tenants (토스, 당근, 배민)"]
+        USERS["users (RBAC: Admin, Recruiter, Interviewer)"]
+        EVALS["applicants / evaluations (심사 원문 & 감사 로그)"]
+        SHARE["share_links / interview_collaborations (실시간 협업)"]
+        RLS["Row-Level Security (RLS 100% 강제 격리)"]
+    end
+
     UI --> PII
-    UI -- HTTPS --> NGINX
-    NGINX -- Reverse Proxy --> GW
-    GW <--> REDIS
-    GW -- Secure API Call --> AI
-    GH --> GA
-    GA --> GCP
-    DevOps --> K8S
+    PII --> VIRTUAL
+    VIRTUAL --> GW_CLIENT
+    GW_CLIENT -- B2B Managed API Call --> EXPRESS
+    EXPRESS <--> B2B_TOKEN
+    B2B_TOKEN --> MultiAgentEngine
+    A1 & A2 & A3 & A4 --> B2B_TOKEN
+    EXPRESS <--> CloudDatabase
+    GW_CLIENT -- Realtime Sync (Share ID) --> CloudDatabase
 ```
 
-### 📌 인프라 주요 구성 요소
-1. **Multi-Stage Docker**: Node 20 빌드 후경량 Nginx Alpine 전송 (이미지 용량 90%+ 절감)
-2. **Express API Proxy Gateway**: 브라우저 API Key 노출 차단, Rate Limiting(100 req/15m), CORS 제어
-3. **Docker Compose 3-Tier**: Nginx + Express + Redis 3개 컨테이너 원클릭 연동
-4. **GitHub Actions CI/CD**: Push/PR 시 Vitest 28개 단체 테스트 및 무결성 빌드 검증 자동화
-5. **Kubernetes (K8s) IaC**: `deployment.yaml`, `service-ingress.yaml`, `configmap.yaml` 작성 완료
+---
+
+## 📸 주요 기능 및 대시보드 화면
+
+### 📊 ① 메인 HR 서류 평가 대시보드 & 5대 역량 시각화
+- **100점 만점 수치 게이지** 및 **5대 역량 레이더 차트 (Recharts)** 시각화
+- **Exact & Fuzzy Matcher (Levenshtein 85%+)**: AI 점수 산출의 근거가 된 자기소개서 실제 문장을 본문에서 1:1 하이라이팅 및 자동 스크롤 추적
+- **맞춤형 심층 면접 질문 생성기**: 서류 상의 약점 및 검증 필요 문장 기반 면접 가이드 제시
+
+### 🕵️ ② 지원자 간 N-Gram 자소서 상호 표절 탐지 매트릭스
+- 지원자 간 문장의 **Character Tri-Gram N-Gram Jaccard 유사도**를 실시간 연산하여 히트맵 매트릭스로 표출
+- **40% 이상 유사 시 🚨 [표절 의심 경고 플래그]** 자동 부여
+
+### 🏢 ③ B2B 멀티테넌시 RLS & 원클릭 테넌트 스위처
+- 상단 헤더의 테넌트/역할 스위처를 통해 **토스페이먼츠(핀테크), 당근(커뮤니티), 우아한형제들(모빌리티)** 간의 데이터가 완전히 격리되어 조회되는 엔터프라이즈 RLS 시연 지원
+- **RBAC 역할 제어**: `ADMIN`(총괄 관리), `RECRUITER`(서류 평가 가동), `INTERVIEWER`(조회 및 면접 전용 집중 모드)
+
+### 🔗 ④ 다인 면접관 1-Click 실시간 협업 공유 링크 (Share ID)
+- 면접관 공유 버튼 클릭 시 암호화된 `eval_xxxx` 고유 링크 생성 (TTL 만료 정책 적용)
+- 다른 면접관이 태블릿/노트북으로 접속 시 **1:1 형광펜 원문과 실시간 코멘트/점수 보정 내역이 Supabase DB를 통해 양방향 Live 동기화**
 
 ---
 
-## 🏆 3. 마일스톤 완료 현황 (v1.0 ~ v2.1)
+## 🏆 GitHub Milestones 진척 현황 (100% 완료)
 
-| 마일스톤 | 핵심 구현 기능 | 상태 |
-| :--- | :--- | :---: |
-| **v1.0 Core MVP** | LG EXAONE 3.0 & GCP Vertex AI 하이브리드 라우터, Grounding 뷰어 | ✅ **완료** |
-| **v1.1 Web Worker** | 비동기 파싱 쓰레드, `react-window` 가상 스크롤, Vitest & Husky | ✅ **완료** |
-| **v1.2 Fuzzy & PII** | Levenshtein/Jaccard 오타 완충 매처, 7종 PII 자동 마스킹 | ✅ **완료** |
-| **v1.3 Batch & Cache** | PDF/DOCX/TXT 파서, IndexedDB 0원/0초 캐시, UTF-8 BOM CSV Export | ✅ **완료** |
-| **v2.0 Enterprise** | Custom HR Prompt Studio 에디터, N-Gram 자소서 상호 표절 매트릭스 | ✅ **완료** |
-| **v2.1 Infrastructure** | Docker, Nginx, Express Gateway, Redis, GitHub Actions, K8s, GCP Cloud Run 배포 | ✅ **완료** |
+| 마일스톤 | 핵심 구현 기능 및 아키텍처 성과 | 이슈 링크 | 상태 |
+| :--- | :--- | :---: | :---: |
+| **v1.0 Core Engine** | 4대 멀티에이전트 분업 파이프라인, Evidence Grounding 뷰어 | [#1](https://github.com/jcm0314/CapStone-SW-/issues/1) | ✅ **완료** |
+| **v1.1 Performance** | Web Worker 비동기 파싱 쓰레드, `react-window` 가상 스크롤, Vitest | [#2](https://github.com/jcm0314/CapStone-SW-/issues/2) | ✅ **완료** |
+| **v1.2 Fuzzy & PII** | Levenshtein/Jaccard 오타 완충 매처, 7종 PII 자동 마스킹 (블라인드 채용) | [#3](https://github.com/jcm0314/CapStone-SW-/issues/3) | ✅ **완료** |
+| **v1.5 FinOps & B2B** | Gemini 3.8 Flash 연동, HTTP 402 결제 진단, 부서별 Auto-Quota Lock | [#7](https://github.com/jcm0314/CapStone-SW-/issues/7) | ✅ **완료** |
+| **v2.0 CapStone Final** | **B2B 일괄 결제 모드, Supabase Cloud Multi-Tenancy RLS, 다인 실시간 협업** | [#13](https://github.com/jcm0314/CapStone-SW-/issues/13) | ✅ **완료** |
 
 ---
 
-## 🛠️ 4. 로컬 구동 및 테스트 방법
+## 📋 핵심 아키텍처 의사결정 기록 (ADR)
+- **ADR-01**: [B2B 토큰 일괄 결제(건당 4원) 전환으로 98.7% SaaS 마진 실현](https://github.com/jcm0314/CapStone-SW-/issues/13)
+- **ADR-02**: [단일 DB + Supabase PostgreSQL RLS로 인프라 비용 $0에 테넌트 완벽 격리](https://github.com/jcm0314/CapStone-SW-/issues/10)
+- **ADR-03**: [Zero-Trust 로컬 가상 스크롤(0.05초)과 클라우드 실시간 협업의 듀얼 스토리지 채택](https://github.com/jcm0314/CapStone-SW-/issues/9)
+- **ADR-04**: [다인 면접관 1-Click 암호화 만료 공유 링크(Share ID) 아키텍처](https://github.com/jcm0314/CapStone-SW-/issues/11)
 
-### 1) 로컬 개발 서버 구동
+---
+
+## 🛠️ 로컬 개발 및 검증 방법
+
+### 1) 로컬 개발 서버 실행
 ```bash
 npm install
 npm run dev
 ```
 브라우저에서 `http://localhost:5173` 접속.
 
-### 2) 전체 단위 테스트 실행 (Vitest 28개 테스트)
+### 2) 전체 단위 테스트 실행 (Vitest 14개 스위트, 51개 테스트)
 ```bash
 npm test
 ```
 
-### 3) Docker Compose 다중 컨테이너 연동 구동
+### 3) 프로덕션 빌드 번들링 검증
 ```bash
-docker compose up --build
+npm run build
 ```
 
 ---
 
-© 2026 HR AX Smart Evaluator Team. All rights reserved.
+© 2026 Check-Mate Team. Software Capstone Design Project. All rights reserved.
