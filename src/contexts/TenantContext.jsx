@@ -53,6 +53,13 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
             decisionReason: '실시간 스트리밍 인프라 및 정량적 비즈니스 임팩트(CTR 14.8% 상승)가 검증된 탁월한 엔지니어링 역량.',
             aiTextProbability: 5
           },
+          competencyScores: {
+            problem_solving: 95,
+            tech_skill: 94,
+            logic_structure: 90,
+            growth_potential: 88,
+            communication: 91
+          },
           competencies: [
             { id: 'problemSolving', name: '문제 해결력', score: 95, reason: 'CDC 도입을 통한 장애 복구 시간 85% 단축 등 실질적 문제 해결 증명.' },
             { id: 'techDepth', name: '기술적 깊이', score: 94, reason: 'Kafka 및 실시간 Feature Store 18ms 지연시간 최적화 역량 보유.' },
@@ -110,6 +117,13 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
             decision: 'STRONG_PASS',
             decisionReason: 'Geo-Hashing과 CQRS를 활용한 대규모 피크 트래픽 튜닝 및 배달 시간 3.2분 단축 성과.',
             aiTextProbability: 3
+          },
+          competencyScores: {
+            problem_solving: 96,
+            tech_skill: 95,
+            logic_structure: 93,
+            growth_potential: 90,
+            communication: 92
           },
           competencies: [
             { id: 'problemSolving', name: '문제 해결력', score: 96, reason: 'DB 락 경합을 CQRS와 Geo-Hashing으로 해결.' },

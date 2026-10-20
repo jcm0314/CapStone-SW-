@@ -8,7 +8,18 @@ export default function ReportExporter({ result, currentJob, onClose }) {
   if (!result || !result.analysis) return null;
 
   const { name, applyJobTitle, analysis } = result;
-  const { summary, competencyScores, groundingEvidences, interviewQuestions } = analysis;
+  const summary = analysis?.summary || {};
+  const rawCompScores = analysis?.competencyScores;
+  const competencyScores = rawCompScores || (
+    Array.isArray(analysis?.competencies)
+      ? Object.fromEntries(analysis.competencies.map(c => [
+          c.id === 'problemSolving' ? 'problem_solving' : c.id === 'techDepth' ? 'tech_skill' : c.id,
+          c.score
+        ]))
+      : {}
+  ) || {};
+  const groundingEvidences = analysis?.groundingEvidences || [];
+  const interviewQuestions = analysis?.interviewQuestions || [];
 
   const handlePrint = () => {
     window.print();
@@ -29,7 +40,7 @@ export default function ReportExporter({ result, currentJob, onClose }) {
 AI 생성/과장 위험도: ${summary.aiTextProbability}%
 --------------------------------------------------
 [역량 항목별 점수]
-${currentJob.competencies.map(c => `- ${c.name}: ${competencyScores[c.id] || 70}점`).join('\n')}
+${currentJob.competencies.map(c => `- ${c.name}: ${competencyScores?.[c.id] ?? 70}점`).join('\n')}
 
 [주요 본문 근거(Grounding Evidences)]
 ${groundingEvidences.map(e => `[${e.type.toUpperCase()}] ${e.title}\n - 원문: "${e.quote}"\n - 이유: ${e.explanation}`).join('\n\n')}
@@ -124,7 +135,7 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
               {currentJob.competencies.map(c => (
                 <div key={c.id} className="bg-gray-900/60 p-2.5 rounded-lg border border-gray-800 text-center space-y-0.5 print:bg-gray-50 print:border-gray-300">
                   <span className="text-[10px] text-gray-400 block truncate print:text-gray-600">{c.name}</span>
-                  <span className="font-mono font-bold text-blue-400 text-sm print:text-blue-800">{competencyScores[c.id] || 70}점</span>
+                  <span className="font-mono font-bold text-blue-400 text-sm print:text-blue-800">{competencyScores?.[c.id] ?? 70}점</span>
                 </div>
               ))}
             </div>

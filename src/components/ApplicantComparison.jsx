@@ -53,9 +53,11 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
             </thead>
             <tbody className="divide-y divide-gray-800/60">
               {applicants.map((app) => {
-                const { totalScore, decision, aiTextProbability } = app.analysis.summary;
-                const positiveCount = app.analysis.groundingEvidences.filter(e => e.type === 'positive').length;
-                const riskCount = app.analysis.groundingEvidences.filter(e => e.type === 'risk').length;
+                const totalScore = app.analysis?.summary?.totalScore ?? 0;
+                const decision = app.analysis?.summary?.decision ?? 'HOLD';
+                const aiTextProbability = app.analysis?.summary?.aiTextProbability ?? 0;
+                const positiveCount = (app.analysis?.groundingEvidences || []).filter(e => e.type === 'positive').length;
+                const riskCount = (app.analysis?.groundingEvidences || []).filter(e => e.type === 'risk').length;
 
                 return (
                   <tr key={app.id} className="hover:bg-blue-600/5 transition-colors">

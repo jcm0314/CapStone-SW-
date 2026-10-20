@@ -8,14 +8,26 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
 
   if (!result || !result.analysis) return null;
 
-  const { summary, competencyScores } = result.analysis;
-  const { totalScore, decision, decisionReason, aiTextProbability } = summary;
+  const summary = result.analysis?.summary || {};
+  const rawCompScores = result.analysis?.competencyScores;
+  
+  // Normalize competencyScores from either object or competencies array
+  const competencyScores = rawCompScores || (
+    Array.isArray(result.analysis?.competencies)
+      ? Object.fromEntries(result.analysis.competencies.map(c => [
+          c.id === 'problemSolving' ? 'problem_solving' : c.id === 'techDepth' ? 'tech_skill' : c.id,
+          c.score
+        ]))
+      : {}
+  ) || {};
+
+  const { totalScore = 75, decision = 'INTERVIEW', decisionReason = '', aiTextProbability = 0 } = summary;
   const isMultiAgent = result.mode === 'MULTI_AGENT_ENSEMBLE' || Boolean(result.agentMetadata);
 
   // Radar chart dataset
-  const radarData = currentJob.competencies.map(c => ({
-    subject: c.name.split(' ')[0], // Short name
-    score: competencyScores[c.id] || 70,
+  const radarData = (currentJob?.competencies || []).map(c => ({
+    subject: c.name?.split(' ')[0] || c.id, // Short name
+    score: competencyScores?.[c.id] ?? 70,
     benchmark: 75,
     fullMark: 100
   }));

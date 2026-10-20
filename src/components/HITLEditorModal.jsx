@@ -25,7 +25,7 @@ export default function HITLEditorModal({
   });
 
   const [competencyScores, setCompetencyScores] = useState({
-    ...result.analysis.competencyScores
+    ...(result.analysis?.competencyScores || {})
   });
 
   const [groundingEvidences, setGroundingEvidences] = useState(
@@ -274,7 +274,7 @@ export default function HITLEditorModal({
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {currentJob.competencies.map((comp) => {
-                    const currentScore = competencyScores[comp.id] ?? 70;
+                    const currentScore = competencyScores?.[comp.id] ?? 70;
                     return (
                       <div key={comp.id} className="bg-gray-900/60 p-3 rounded-xl border border-gray-800 space-y-1.5">
                         <div className="flex justify-between items-center text-xs">
