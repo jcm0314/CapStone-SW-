@@ -139,6 +139,76 @@ export default function App() {
     }
   };
 
+  // Batch evaluation handler for multiple uploaded files
+  const handleBatchAnalyze = async (candidates) => {
+    if (!hasPermission('RUN_EVALUATION')) {
+      alert(`[권한 제한] 현재 계정(${currentUser.roleTitle})은 서류 업로드 및 AI 평가 가동 권한이 없습니다.`);
+      return;
+    }
+
+    const currentApiKey = (
+      (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') ||
+      import.meta.env.VITE_GEMINI_API_KEY ||
+      ''
+    ).trim();
+
+    const isB2BManagedMode = !currentApiKey || currentApiKey.length < 5;
+    const effectiveApiKey = isB2BManagedMode ? '' : currentApiKey;
+
+    setIsAnalyzing(true);
+    const newEvaluatedApplicants = [];
+
+    try {
+      for (let i = 0; i < candidates.length; i++) {
+        const c = candidates[i];
+        setProgressState({
+          percent: Math.round(((i + 0.3) / candidates.length) * 100),
+          status: `[대량 일괄 심사 ${i + 1}/${candidates.length}] ${c.name} 지원서 4대 에이전트 평가 중...`
+        });
+
+        const result = await analyzeApplicant({
+          name: c.name,
+          applyJobId: currentJob.id,
+          rawText: c.rawText,
+          apiKey: effectiveApiKey
+        });
+
+        const tenantBound = {
+          ...result,
+          orgId: currentTenant.id
+        };
+        newEvaluatedApplicants.push(tenantBound);
+      }
+
+      // Merge and sort by total score descending (Top Ranking)
+      const updatedList = [
+        ...newEvaluatedApplicants,
+        ...applicantList.filter(a => !newEvaluatedApplicants.some(na => na.id === a.id))
+      ].sort((a, b) => (b.analysis?.summary?.totalScore || 0) - (a.analysis?.summary?.totalScore || 0));
+
+      setApplicantList(updatedList);
+      if (newEvaluatedApplicants.length > 0) {
+        setSelectedApplicant(newEvaluatedApplicants[0]);
+      }
+      saveTenantApplicants(updatedList);
+
+      // Auto switch to comparison tab for ranking review
+      setActiveTab('comparison');
+
+      confetti({
+        particleCount: 80,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    } catch (err) {
+      console.error("Batch Analysis failed:", err);
+      alert(`[일괄 평가 실패] ${err.message || '대량 서류 분석 도중 오류가 발생했습니다.'}`);
+    } finally {
+      setIsAnalyzing(false);
+      setProgressState(null);
+    }
+  };
+
   // Human-in-the-Loop (HITL) Score & Evidence Calibration Save Handler
   const handleSaveHITL = async ({ updatedAnalysis, reviewerNote }) => {
     if (!selectedApplicant) return;
@@ -265,6 +335,7 @@ export default function App() {
                 )}
                 <ApplicantInput
                   onAnalyze={handleAnalyze}
+                  onBatchAnalyze={handleBatchAnalyze}
                   isAnalyzing={isAnalyzing}
                   progressState={progressState}
                   currentJobId={currentJob.id}

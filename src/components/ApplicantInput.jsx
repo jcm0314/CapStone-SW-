@@ -3,7 +3,7 @@ import { Sparkles, FileText, Cpu, UploadCloud, Edit3 } from 'lucide-react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import FileUploadZone from './FileUploadZone';
 
-export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, progressState }) {
+export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing, currentJobId, progressState }) {
   const [inputTab, setInputTab] = useState('TEXT'); // 'TEXT' | 'FILE'
   const [name, setName] = useState('김민준');
   const [rawText, setRawText] = useState(SAMPLE_APPLICANTS[0].rawText);
@@ -107,7 +107,11 @@ export default function ApplicantInput({ onAnalyze, isAnalyzing, currentJobId, p
 
       {/* Tab 1: Text Area vs Tab 2: File Upload Zone */}
       {inputTab === 'FILE' ? (
-        <FileUploadZone onFileSelected={handleOnFileSelected} />
+        <FileUploadZone 
+          onFileSelected={handleOnFileSelected} 
+          onBatchAnalyze={onBatchAnalyze} 
+          isAnalyzing={isAnalyzing} 
+        />
       ) : (
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">

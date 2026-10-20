@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { UploadCloud, FileText, CheckCircle2, Trash2, FileCheck, FileCode } from 'lucide-react';
 import { parseCandidateFilesBatch } from '../utils/fileParser';
 
-export default function FileUploadZone({ onFileSelected }) {
+export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnalyzing }) {
   const [isDragging, setIsDragging] = useState(false);
   const [parsedFiles, setParsedFiles] = useState([]);
   const [activeFileIndex, setActiveFileIndex] = useState(null);
@@ -119,10 +119,25 @@ export default function FileUploadZone({ onFileSelected }) {
 
       {/* Uploaded File List Preview */}
       {parsedFiles.length > 0 && (
-        <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
-          <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 px-1">
+        <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 text-[11px] font-bold text-gray-400 px-1">
             <span>업로드된 서류 목록 ({parsedFiles.length}건)</span>
-            <span>선택된 서류가 평가 본문으로 자동 설정됩니다</span>
+            {parsedFiles.length > 1 && onBatchAnalyze && (
+              <button
+                type="button"
+                disabled={isAnalyzing}
+                onClick={() => {
+                  const candidateBatch = parsedFiles.map(f => {
+                    const cleanName = f.filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '').slice(0, 4) || '지원자';
+                    return { name: cleanName, rawText: f.extractedText, filename: f.filename };
+                  });
+                  onBatchAnalyze(candidateBatch);
+                }}
+                className="px-2.5 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg text-xs font-bold shadow-md shadow-blue-600/30 flex items-center gap-1.5 transition-all disabled:opacity-50"
+              >
+                <span>🚀 전체 {parsedFiles.length}건 일괄 AI 심사 가동</span>
+              </button>
+            )}
           </div>
 
           {parsedFiles.map((file, idx) => {
