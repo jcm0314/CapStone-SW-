@@ -152,4 +152,4 @@ npm run build
 
 ---
 
-© 2026 Check-Mate Team. Software Capstone Design Project. All rights reserved.
+© 2026 단국대학교 컴퓨터공학과 소프트웨어 캡스톤 디자인 (Check_Mate 팀). All rights reserved.

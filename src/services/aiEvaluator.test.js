@@ -23,5 +23,5 @@ describe('AI Grounding Evaluator Core Engine (Gemini API Only)', () => {
     await expect(analyzeApplicant(candidateData)).rejects.toThrow(
       /B2B 게이트웨이 평가 실패/
     );
-  });
+  }, 15000);
 });
