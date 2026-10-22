@@ -1,6 +1,6 @@
-# 📋 [Check-Mate] 상윤 님 & Claude 전용 개발 기획서 (COLLABORATION_SPEC)
+# 📋 [Check-Mate] 팀 협업 및 기능 개발 기획서 (COLLABORATION_SPEC)
 
-상윤 님과 상윤 님의 Claude AI 어시스턴트가 프로젝트의 맥락을 즉시 파악하고, 곧바로 코드 구현에 착수할 수 있도록 정리한 실전 기능 명세서입니다.
+팀원(상윤 님)과 AI 어시스턴트(Claude)가 프로젝트의 맥락을 즉시 파악하고, 전체 구조 파악 후 상호 협업할 수 있도록 정리한 실전 기능 명세서입니다.
 
 ---
 
@@ -16,9 +16,10 @@
 
 ---
 
-## 2. 상윤 님이 주도할 스프린트 과제 상세 스펙 (Sprint Backlog)
+## 2. 향후 협업 스프린트 과제 상세 스펙 (Sprint Backlog - 역할 분담: 논의 후 확정 예정)
 
-> **관련 GitHub 이슈**: [Issue #15 (Feature Proposal & Scale-Up Roadmap)](https://github.com/jcm0314/CapStone-SW-/issues/15)
+> **관련 GitHub 이슈**: [Issue #15 (Feature Proposal & Scale-Up Roadmap)](https://github.com/jcm0314/CapStone-SW-/issues/15)  
+> *※ 아래 과제들은 전체 코드베이스를 파악한 후, 상호 협의하여 역할을 구체적으로 나눈 뒤 순차적으로 진행합니다.*
 
 ### 🎯 Task 1. 대량 지원서 랭킹 Top-N 컷오프 슬라이더 (UI)
 - **대상 컴포넌트**: `src/components/ApplicantComparison.jsx` 및 `src/components/DashboardSummary.jsx`
@@ -55,27 +56,24 @@
 
 ---
 
-## 3. 상윤 님이 본인의 Claude에게 전달할 프롬프트 템플릿
+## 3. 상윤 님이 본인의 Claude에게 전달할 온보딩 프롬프트 템플릿
 
-상윤 님께서 본인의 Claude에게 아래 프롬프트를 복사하여 보내시면 바로 작업에 착수할 수 있습니다:
+상윤 님께서 본인의 Claude에게 아래 프롬프트를 전달하시면, 프로젝트 구조 파악 및 논의를 바로 시작할 수 있습니다:
 
 ```text
-안녕 Claude! 나는 캡스톤 디자인 프로젝트 'Check-Mate'의 프론트엔드 협업자야.
+안녕 Claude! 나는 캡스톤 디자인 프로젝트 'Check-Mate'의 협업 팀원이야.
 우리 프로젝트는 50~300인 IT 스타트업을 위한 '1:1 형광펜 AI 서류 평가 및 면접 연계 플랫폼'이야.
 
 저장소: https://github.com/jcm0314/CapStone-SW-
-CONTRIBUTING.md와 docs/COLLABORATION_SPEC.md 문서를 참고해서 작업을 진행하려고 해.
+CONTRIBUTING.md와 docs/COLLABORATION_SPEC.md 문서를 참고해서 전체 프로젝트 구조를 먼저 파악하려고 해.
 
-오늘 내가 진행할 첫 번째 작업은:
-[Task 1 & Task 2] 대량 지원서 랭킹 테이블에 'Top-N 컷오프 슬라이더'를 추가하고,
-하위 탈락자와 합격자에게 결과를 안내할 수 있는 '1-Click 일괄 합불 통보 모달 UI'를 만드는 거야.
+현재 상태:
+1. React 18 + Vite + Tailwind CSS 프론트엔드
+2. Gemini 3.8 Flash 4대 멀티에이전트 파이프라인 (src/services/agents/)
+3. Supabase Realtime & RLS 실시간 협업 시스템
+4. 51개 단위 테스트(npm test)가 100% 통과된 상태
 
-규칙:
-1. main 브랜치에서 feat/17-batch-cutoff 브랜치를 따서 작업할 거야.
-2. 기존 51개 단위 테스트(npm test)가 깨지지 않도록 유지해야 해.
-3. 임의의 가짜 난수 데이터 대신, 깔끔하고 완성도 높은 React 18 + Tailwind UI로 작성해줘.
-
-먼저 src/components/ApplicantComparison.jsx와 DashboardSummary.jsx의 구조를 파악하고 구현 계획을 세워줘!
+먼저 프로젝트의 전체 아키텍처와 주요 컴포넌트(src/components/), 서비스 흐름을 분석하고 내가 어떤 영역부터 파악하면 좋을지 가이드해줘!
 ```
 
 ---
