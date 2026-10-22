@@ -39,15 +39,20 @@ git checkout -b feat/17-top50-cutoff
 
 ---
 
-## 3. 커밋 메시지 규칙 (Conventional Commits)
+## 3. 커밋 및 PR 메시지 규칙 (직관적인 한글 표기 권장)
 
-커밋 메시지는 명확한 접두사를 붙여 작성합니다. 커밋 끝에 `(#이슈번호)`를 명시하면 GitHub 타임라인에 자동 연결됩니다.
+누가 무엇을 했는지 1초 만에 알 수 있도록 **직관적인 한글 메시지** 작성을 권장합니다.  
+커밋 끝에 `(#이슈번호)`를 적어주면 GitHub 이슈 타임라인에 자동 연결됩니다.
 
-- `feat:` 새로운 기능 추가 (`feat: add top-50 cutoff slider in applicant table (#17)`)
-- `fix:` 버그 수정 (`fix: correct modal close on backdrop click (#17)`)
-- `refactor:` 코드 구조 개선 (`refactor: extract cutoff calculation helper`)
-- `docs:` 문서 수정 (`docs: update onboarding spec guide`)
-- `test:` 테스트 코드 추가 및 수정 (`test: add unit test for cutoff filter`)
+- `기능(feat):` 새로운 기능 추가 (`feat: 지원자 테이블 상단에 Top-50 컷오프 슬라이더 추가 (#17)`)
+- `수정(fix):` 버그 수정 (`fix: 컷오프 모달 닫기 시 잔여 상태 초기화 오류 해결 (#17)`)
+- `개선(refactor):` 코드 구조 개선 (`refactor: 컷오프 점수 계산 함수 분리 및 가독성 개선`)
+- `문서(docs):` 문서 및 발표자료 수정 (`docs: 팀 협업 온보딩 가이드 최신화`)
+- `테스트(test):` 테스트 코드 추가 및 수정 (`test: 컷오프 필터링 로직 단위 테스트 추가`)
+
+> 💡 **PR 제목 예시 (직관적인 한글로 작성)**:  
+> `[기능] 대량 지원서 Top-N 컷오프 슬라이더 및 1-Click 알림 모달 구현 (#17)`  
+> `[문서] 팀 온보딩 가이드 및 기능 기획서 추가 (#18)`
 
 ---
 
