@@ -1,0 +1,92 @@
+# 🤝 Check-Mate 팀 협업 가이드 (CONTRIBUTING.md)
+
+환영합니다! Check-Mate 프로젝트의 2인 협업(천명, 상윤) 그라운드 룰입니다.  
+충돌(Conflict)을 방지하고 빠르고 즐겁게 개발할 수 있도록 아래 규칙을 함께 준수합니다.
+
+---
+
+## 1. 역할 분담 가이드 (Domain Ownership)
+
+서로 같은 파일을 동시에 수정하여 발생하는 충돌을 방지하기 위해 주력 도메인을 나눕니다.
+
+- **장천명**: 
+  - AI 멀티에이전트 파이프라인 (`src/services/agents/`, `src/services/multiAgentEvaluator.js`)
+  - 백엔드 게이트웨이 및 API 연동 (`server/`, `src/services/aiEvaluator.js`)
+  - 발표 자료 및 아키텍처 문서 (`presentation.html`, `docs/`)
+- **이상윤**: 
+  - 프론트엔드 컴포넌트 및 UI/UX (`src/components/`, `src/pages/`)
+  - 대량 지원자 랭킹 테이블, 컷오프 슬라이더, 알림 모달 인터랙션
+  - 서류 ↔ 면접 2-Track 뷰 및 태그형 가중치 제어 UI
+
+---
+
+## 2. 브랜치 전략 (GitHub-Flow)
+
+`main` 브랜치는 항상 프로덕션 배포가 가능한 안정적인 상태로 유지합니다. **`main`에 직접 푸시(push)하지 않습니다.**
+
+### 브랜치 명명 규칙
+- **신규 기능**: `feat/<이슈번호>-<기능명>` (예: `feat/17-top50-cutoff`)
+- **버그 수정**: `fix/<이슈번호>-<버그명>` (예: `fix/18-modal-overflow`)
+- **문서 및 발표**: `docs/<작업명>` (예: `docs/collab-guide`)
+- **리팩토링**: `refactor/<대상명>` (예: `refactor/applicant-comparison`)
+
+### 작업 시작 루틴
+```bash
+# 1. main 브랜치 최신화
+git checkout main
+git pull origin main
+
+# 2. 내 작업 브랜치 생성 및 이동
+git checkout -b feat/17-top50-cutoff
+```
+
+---
+
+## 3. 커밋 메시지 규칙 (Conventional Commits)
+
+커밋 메시지는 명확한 접두사를 붙여 작성합니다. 커밋 끝에 `(#이슈번호)`를 명시하면 GitHub 타임라인에 자동 연결됩니다.
+
+- `feat:` 새로운 기능 추가 (`feat: add top-50 cutoff slider in applicant table (#17)`)
+- `fix:` 버그 수정 (`fix: correct modal close on backdrop click (#17)`)
+- `refactor:` 코드 구조 개선 (`refactor: extract cutoff calculation helper`)
+- `docs:` 문서 수정 (`docs: update onboarding spec guide`)
+- `test:` 테스트 코드 추가 및 수정 (`test: add unit test for cutoff filter`)
+
+---
+
+## 4. PR 및 머지(Merge) 규칙
+
+1. 작업 완료 후 본인 브랜치에서 `main` 브랜치로 **Pull Request(PR)**를 생성합니다.
+2. PR 생성 시 미리 마련된 템플릿의 항목(작업 내용, 의사결정 근거, 테스트 결과)을 채웁니다.
+3. PR 본문에 `Closes #17`과 같이 적으면, PR이 머지될 때 해당 이슈가 자동으로 닫힙니다.
+4. 상대방의 코드 리뷰 후 **`Approve`**를 받습니다.
+5. 머지 방식은 반드시 **`Squash and merge`**를 선택하여 커밋 이력을 1개로 깔끔하게 정리합니다.
+
+---
+
+## 5. 핵심 엔지니어링 원칙 (Definition of Done)
+
+- **가짜 Fallback 금지**: 
+  - API 키 누락이나 에러 발생 시 임의의 가짜 점수로 채우는 코드는 금지하며, 정직한 에러를 표출해야 합니다.
+- **테스트 무결성 필수**: 
+  - 커밋이나 PR 생성 전 반드시 로컬에서 `npm test`를 실행하여 기존 51개 단위 테스트가 100% 통과하는지 확인합니다.
+- **자소서 본문 RAG 청킹 금지**: 
+  - 자소서는 문맥 보존을 위해 Full-Context(1M 토큰 윈도우)로 다루며, 청킹하지 않습니다.
+
+---
+
+## 6. 개발 및 검증 명령어
+
+```bash
+# 의존성 설치
+npm install
+
+# 로컬 개발 서버 실행 (http://localhost:5173)
+npm run dev
+
+# 전체 단위 테스트 실행 (Vitest 51개 테스트)
+npm test
+
+# 프로덕션 빌드 번들 검증
+npm run build
+```
