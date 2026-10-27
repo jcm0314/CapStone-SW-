@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1180px] bg-white rounded-3xl p-7 shadow-xl border border-slate-200">
+    
+    <!-- Main E2E Flow (4-Step Pipeline Horizontal Grid) -->
+    <div class="grid grid-cols-4 gap-4 items-stretch">
+      
+      <!-- STEP 1: INPUT & SECURITY -->
+      <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200 flex flex-col justify-between space-y-3.5">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-200">
+            <span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 text-[10px] font-black tracking-wide">STEP 01</span>
+            <span class="text-[10px] text-slate-400 font-mono">INPUT &amp; SECURITY</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+            <span class="text-blue-600">📥</span> 입력 및 보안 마스킹
+          </h3>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            지원서 원문 업로드 즉시 브라우저 단에서 7대 민감정보 영구 비식별화
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-1">
+            <div class="text-[11px] font-bold text-slate-800 flex items-center justify-between">
+              <span>📄 대용량 지원서 파싱</span>
+              <span class="text-[9.5px] text-blue-600 font-mono">PDF / TXT</span>
+            </div>
+            <div class="text-[10px] text-slate-500">대량 서류 일괄 업로드 파서</div>
+          </div>
+
+          <div class="p-2.5 bg-blue-50/80 rounded-xl border border-blue-200 space-y-1">
+            <div class="text-[11px] font-bold text-blue-900 flex items-center justify-between">
+              <span>🛡️ 클라이언트 7종 PII</span>
+              <span class="text-[9.5px] font-bold text-emerald-600">비식별화 99.8%</span>
+            </div>
+            <div class="text-[10px] text-blue-700">성명, 학번, 주민번호, 연락처 가상 토큰화</div>
+          </div>
+
+          <div class="p-2 bg-slate-100 rounded-lg text-[10px] text-slate-600 font-medium text-center">
+            서버 전송 전 로컬 처리 ➔ <strong>외부 유출 0%</strong>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-200">
+          Client Browser Web Worker
+        </div>
+      </div>
+
+      <!-- STEP 2: MULTI-AGENT PIPELINE -->
+      <div class="bg-gradient-to-b from-slate-900 to-blue-950 rounded-2xl p-4 border-2 border-blue-500 text-white flex flex-col justify-between space-y-3.5 shadow-xl relative">
+        <span class="absolute -top-2.5 right-3 bg-blue-500 text-white text-[9px] font-black px-2 py-0.5 rounded shadow">
+          핵심 특허 엔진
+        </span>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white text-[10px] font-black tracking-wide">STEP 02</span>
+            <span class="text-[10px] text-blue-300 font-mono">4-AGENT AUDIT</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white flex items-center gap-1.5">
+            <span class="text-blue-400">🤖</span> 4대 에이전트 교차 감사
+          </h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Gemini 3.8 Flash 4대 모델이 병렬 분업하여 환각 0% 상호 감사
+          </p>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="p-2 bg-slate-800/90 rounded-lg border border-slate-700 text-[10.5px] flex items-center justify-between">
+            <span class="font-bold text-emerald-400">1. Grounding Agent</span>
+            <span class="text-[9.5px] text-slate-300">원문 사실 바인딩</span>
+          </div>
+          <div class="p-2 bg-slate-800/90 rounded-lg border border-slate-700 text-[10.5px] flex items-center justify-between">
+            <span class="font-bold text-rose-400">2. Critic Agent</span>
+            <span class="text-[9.5px] text-slate-300">과장·허위 감사</span>
+          </div>
+          <div class="p-2 bg-slate-800/90 rounded-lg border border-slate-700 text-[10.5px] flex items-center justify-between">
+            <span class="font-bold text-blue-400">3. Supervisor Agent</span>
+            <span class="text-[9.5px] text-slate-300">5대 역량 정량화</span>
+          </div>
+          <div class="p-2 bg-slate-800/90 rounded-lg border border-slate-700 text-[10.5px] flex items-center justify-between">
+            <span class="font-bold text-amber-400">4. Interviewer Agent</span>
+            <span class="text-[9.5px] text-slate-300">압박 질문 도출</span>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-[10px] text-blue-300 border-t border-slate-800 flex items-center justify-between px-1">
+          <span>건당 원가 4.0원 (90.4%↓)</span>
+          <span class="font-mono font-bold text-emerald-400">1.2초 완결</span>
+        </div>
+      </div>
+
+      <!-- STEP 3: HUMAN-IN-THE-LOOP -->
+      <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200 flex flex-col justify-between space-y-3.5">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-200">
+            <span class="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800 text-[10px] font-black tracking-wide">STEP 03</span>
+            <span class="text-[10px] text-slate-400 font-mono">HUMAN-IN-THE-LOOP</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+            <span class="text-indigo-600">🛠️</span> 인간 개입 미세 보정
+          </h3>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            AI 오판 시 면접관이 인용 삭제 및 점수 재조정 가능 (감사로그 기록)
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-1">
+            <div class="text-[11px] font-bold text-slate-800 flex items-center justify-between">
+              <span>🎚️ 실시간 가중치 슬라이더</span>
+              <span class="text-[9.5px] text-indigo-600 font-bold">즉시 재계산</span>
+            </div>
+            <div class="text-[10px] text-slate-500">직무 적합도 5대 축 커스텀 조율</div>
+          </div>
+
+          <div class="p-2.5 bg-indigo-50/80 rounded-xl border border-indigo-200 space-y-1">
+            <div class="text-[11px] font-bold text-indigo-900 flex items-center justify-between">
+              <span>📝 심사관 인용 검증 모달</span>
+              <span class="text-[9.5px] text-indigo-700 font-mono">HITL Editor</span>
+            </div>
+            <div class="text-[10px] text-indigo-700">AI 판정에 대한 인간 피드백 즉시 수렴</div>
+          </div>
+
+          <div class="p-2 bg-slate-100 rounded-lg text-[10px] text-slate-600 font-medium text-center">
+            모든 보정 내역 <strong>Supabase 불변 감사로그</strong> 보관
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-200">
+          Responsible AI &amp; Governance
+        </div>
+      </div>
+
+      <!-- STEP 4: OUTPUT & REALTIME COLLAB -->
+      <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200 flex flex-col justify-between space-y-3.5">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-200">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black tracking-wide">STEP 04</span>
+            <span class="text-[10px] text-slate-400 font-mono">OUTPUT &amp; COLLAB</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+            <span class="text-emerald-600">📊</span> 1:1 형광펜 &amp; 협업 출력
+          </h3>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            원문 1:1 바인딩 뷰어 및 무설치 링크로 다인 면접관 실시간 동기화
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-1">
+            <div class="text-[11px] font-bold text-slate-800 flex items-center justify-between">
+              <span>🖍️ 1:1 형광펜 매핑</span>
+              <span class="text-[9.5px] text-emerald-600 font-bold">정합률 92.4%</span>
+            </div>
+            <div class="text-[10px] text-slate-500">초록(실적) / 빨강(의심) 원문 대조</div>
+          </div>
+
+          <div class="p-2.5 bg-emerald-50/80 rounded-xl border border-emerald-200 space-y-1">
+            <div class="text-[11px] font-bold text-emerald-900 flex items-center justify-between">
+              <span>🎤 맞춤 면접 질문 3종</span>
+              <span class="text-[9.5px] text-emerald-700 font-bold">모범 답변 포함</span>
+            </div>
+            <div class="text-[10px] text-emerald-700">지원서 약점 검증 질문 자동 배포</div>
+          </div>
+
+          <div class="p-2 bg-emerald-100/70 rounded-lg text-[10px] text-emerald-900 font-bold text-center">
+            🔗 1-Click Share ID 무설치 실시간 협업 (&lt;50ms)
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-200">
+          Supabase Realtime &amp; Virtual DOM
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

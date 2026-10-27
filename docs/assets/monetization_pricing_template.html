@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1150px] bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+    
+    <!-- 3-Tier Pricing Plan Cards (Core Pricing Architecture) -->
+    <div class="grid grid-cols-3 gap-6 items-stretch">
+      
+      <!-- Plan 1: Starter -->
+      <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="px-2.5 py-0.5 rounded-md bg-slate-200 text-slate-700 font-bold text-[11px]">초기 스타트업용</span>
+            <span class="text-xs text-slate-400 font-medium">50인 미만</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900">Starter Plan</h3>
+            <p class="text-xs text-slate-500">기본적인 AI 서류 검증과 블라인드 채용</p>
+          </div>
+          <div class="pt-1">
+            <span class="text-3xl font-black text-slate-900">29만 원</span>
+            <span class="text-xs text-slate-500 font-normal"> / 월</span>
+          </div>
+        </div>
+
+        <ul class="text-xs text-slate-600 space-y-2.5 pt-3 border-t border-slate-200">
+          <li class="flex items-center gap-2">
+            <span class="text-blue-600 font-bold">✓</span>
+            <span><strong>월 150건</strong> 자소서 1:1 팩트체크</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-blue-600 font-bold">✓</span>
+            <span>클라이언트 <strong>7종 PII 자동 마스킹</strong></span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-blue-600 font-bold">✓</span>
+            <span>1-Click 협업 링크 (동시 평가 3명)</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-blue-600 font-bold">✓</span>
+            <span>표준 직무 평가 가중치 템플릿</span>
+          </li>
+        </ul>
+
+        <div class="p-2.5 rounded-xl bg-white border border-slate-200 text-center text-xs text-slate-500 font-medium">
+          토큰 원가 월 600원 ➔ <strong class="text-slate-800">마진율 99.8%</strong>
+        </div>
+      </div>
+
+      <!-- Plan 2: Pro Growth (Featured) -->
+      <div class="bg-gradient-to-b from-slate-900 to-blue-950 rounded-2xl p-6 border-2 border-blue-500 text-white flex flex-col justify-between space-y-4 shadow-xl relative">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <span class="px-2.5 py-0.5 rounded-md bg-blue-600 text-white font-bold text-[11px]">성장기 IT 스타트업</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500 text-slate-900 font-black text-[10px]">인기 플랜</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">Pro Growth Plan</h3>
+            <p class="text-xs text-blue-200">실시간 다인 협업과 ATS 채용 시스템 연동</p>
+          </div>
+          <div class="pt-1">
+            <span class="text-3xl font-black text-white">79만 원</span>
+            <span class="text-xs text-slate-300 font-normal"> / 월</span>
+          </div>
+        </div>
+
+        <ul class="text-xs text-slate-200 space-y-2.5 pt-3 border-t border-slate-800">
+          <li class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span><strong>월 500건</strong> 자소서 1:1 팩트체크</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span><strong>무제한 다인 협업</strong> 실시간 동기화 (<50ms)</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span><strong>약점 기반 압박 면접 질문 3종</strong> 자동 생성</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span>국내 주요 ATS(그리팅, 나인하이어) Webhook 연동</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span>사내 맞춤형 평가 기준 커스텀 가중치</span>
+          </li>
+        </ul>
+
+        <div class="p-2.5 rounded-xl bg-blue-900/60 border border-blue-700/60 text-center text-xs text-blue-200 font-medium">
+          토큰 원가 월 2,000원 ➔ <strong class="text-emerald-300">마진율 98.7%</strong>
+        </div>
+      </div>
+
+      <!-- Plan 3: Enterprise / Custom -->
+      <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="px-2.5 py-0.5 rounded-md bg-purple-100 text-purple-700 font-bold text-[11px]">중견·대기업 / 맞춤형</span>
+            <span class="text-xs text-slate-400 font-medium">300인 이상</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900">Enterprise Plan</h3>
+            <p class="text-xs text-slate-500">사내 인재상 RAG 임베딩 및 전용 보안 인프라</p>
+          </div>
+          <div class="pt-1">
+            <span class="text-3xl font-black text-slate-900">Custom</span>
+            <span class="text-xs text-slate-500 font-normal"> (별도 협의)</span>
+          </div>
+        </div>
+
+        <ul class="text-xs text-slate-600 space-y-2.5 pt-3 border-t border-slate-200">
+          <li class="flex items-center gap-2">
+            <span class="text-purple-600 font-bold">✓</span>
+            <span><strong>월 무제한</strong> 평가 크레딧 & 대량 공채 배치</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-purple-600 font-bold">✓</span>
+            <span>기업 고유 인재상·핵심 가치 <strong>RAG 벡터 임베딩</strong></span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-purple-600 font-bold">✓</span>
+            <span>기업 전용 VPC 격리 인프라 & 데이터 보관 RLS</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-purple-600 font-bold">✓</span>
+            <span>전담 고객 성공 매니저(CSM) 및 99.9% SLA</span>
+          </li>
+        </ul>
+
+        <div class="p-2.5 rounded-xl bg-white border border-slate-200 text-center text-xs text-slate-500 font-medium">
+          맞춤 구축 및 연간 계약 ➔ <strong class="text-purple-600">고객 락인 극대화</strong>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1180px] bg-white rounded-3xl p-7 shadow-xl border border-slate-200">
+    
+    <!-- Center Content: Competitor Matrix (7 cols) + Unit Economics (5 cols) -->
+    <div class="grid grid-cols-12 gap-5 items-stretch">
+      
+      <!-- Left: 4-Way Competitor Comparison Table (7 cols) -->
+      <div class="col-span-7 bg-slate-50/80 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+          <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            📊 주요 채용 솔루션 정밀 비교 매트릭스
+          </span>
+          <span class="text-[10px] text-slate-500 font-bold">단순 표절 vs 실무 역량 검증</span>
+        </div>
+
+        <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3 w-1/5">비교 항목</th>
+                <th class="py-2.5 px-2.5 w-1/4 text-slate-500 font-semibold">무하유 / 마이다스</th>
+                <th class="py-2.5 px-2.5 w-1/4 text-slate-500 font-semibold">일반 LLM (ChatGPT)</th>
+                <th class="py-2.5 px-3 w-3/10 text-blue-700 bg-blue-50 font-black">Check-Mate</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-600">
+              <tr>
+                <td class="py-2.5 px-3 font-bold text-slate-800">평가 영역</td>
+                <td class="py-2.5 px-2.5">표절률·게임 인적성</td>
+                <td class="py-2.5 px-2.5">단순 텍스트 요약</td>
+                <td class="py-2.5 px-3 text-blue-700 bg-blue-50/50 font-bold">STAR 실무 역량 검증</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-bold text-slate-800">근거 투명성</td>
+                <td class="py-2.5 px-2.5">블랙박스 점수</td>
+                <td class="py-2.5 px-2.5 text-rose-500 font-semibold">환각(가짜 인용) 위험</td>
+                <td class="py-2.5 px-3 text-blue-700 bg-blue-50/50 font-bold">1:1 형광펜 바인딩</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-bold text-slate-800">면접 연계</td>
+                <td class="py-2.5 px-2.5">정적 PDF 출력</td>
+                <td class="py-2.5 px-2.5">단발성 질의</td>
+                <td class="py-2.5 px-3 text-blue-700 bg-blue-50/50 font-bold">약점 압박 질문 도출</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-bold text-slate-800">도입 비용</td>
+                <td class="py-2.5 px-2.5 text-rose-500 font-semibold">수천만 원 SI 구축비</td>
+                <td class="py-2.5 px-2.5">수작업 프롬프트 복붙</td>
+                <td class="py-2.5 px-3 text-emerald-700 bg-emerald-50 font-black">건당 4.0원 / SaaS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-bold text-slate-800">협업 환경</td>
+                <td class="py-2.5 px-2.5">불가 (개별 열람)</td>
+                <td class="py-2.5 px-2.5">개별 계정 단절</td>
+                <td class="py-2.5 px-3 text-blue-700 bg-blue-50/50 font-bold">1-Click 실시간 공유</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+          <span>* 국내 B2B 채용 소프트웨어 3대 영역 기능 정밀 비교</span>
+          <span class="text-blue-600 font-bold">환각 0% · 1:1 증거 바인딩 특허 출원</span>
+        </div>
+      </div>
+
+      <!-- Right: Unit Economics & Gross Margin (5 cols) -->
+      <div class="col-span-5 bg-slate-900 rounded-2xl p-5 border border-slate-800 text-white flex flex-col justify-between space-y-4 shadow-lg">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+          <span class="text-xs font-bold text-white flex items-center gap-1.5">
+            ⚡ 건당 원가 우위 (Unit Economics)
+          </span>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">
+            90.4% 비용 절감
+          </span>
+        </div>
+
+        <!-- Comparative Cost Bars -->
+        <div class="space-y-3">
+          <!-- GPT-4o Bar -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400">GPT-4o 단일 호출</span>
+              <strong class="text-rose-400 font-mono font-bold">41.5원 / 건</strong>
+            </div>
+            <div class="w-full bg-slate-800 h-5 rounded-lg overflow-hidden flex items-center px-2">
+              <div class="bg-rose-500 h-2.5 rounded" style="width: 100%;"></div>
+            </div>
+            <span class="text-[10px] text-slate-500 block">1,000건 심사 시 토큰 원가만 4만 2천 원 소요</span>
+          </div>
+
+          <!-- Check-Mate Bar -->
+          <div class="space-y-1 pt-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-blue-400">Check-Mate (Flash 4대 분업)</span>
+              <strong class="text-emerald-400 font-mono text-base font-black">4.0원 / 건</strong>
+            </div>
+            <div class="w-full bg-slate-800 h-5 rounded-lg overflow-hidden flex items-center px-2 border border-blue-500/50 bg-blue-950/20">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-2.5 rounded" style="width: 10%;"></div>
+            </div>
+            <span class="text-[10px] text-emerald-300 font-semibold block">1,000건 심사 시 토큰 원가 단 4,000원 (90.4% 절감)</span>
+          </div>
+        </div>
+
+        <!-- Profit Margin Highlight Box -->
+        <div class="p-3.5 rounded-xl bg-slate-800/90 border border-emerald-500/40 space-y-1 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">B2B 표준 구독 (월 29만 원 / 150건 기준)</div>
+          <div class="text-xl font-black text-emerald-400 flex items-center justify-center gap-2">
+            <span>매출 총이익률</span>
+            <span class="text-2xl text-white">98.7 %</span>
+          </div>
+          <span class="text-[10px] text-slate-400 block">토큰 원가 월 600원 ➔ 고정비 최소화된 압도적 SaaS 수익성</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

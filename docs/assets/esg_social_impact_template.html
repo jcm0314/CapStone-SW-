@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1150px] bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+    
+    <!-- 3-Column ESG & Regional Impact Grid -->
+    <div class="grid grid-cols-3 gap-6 items-stretch">
+      
+      <!-- 1. [S] 사회적 약자 포용 & 공정 채용 (Two-Sided Inclusion) -->
+      <div class="bg-gradient-to-b from-blue-900 to-slate-900 rounded-2xl p-6 border-2 border-blue-500 text-white flex flex-col justify-between space-y-4 shadow-xl">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <span class="px-2.5 py-0.5 rounded-full bg-blue-500 text-white text-[10px] font-black uppercase">S · SOCIAL INCLUSION</span>
+            <span class="text-xs text-blue-300 font-medium">양방향 상생 포용</span>
+          </div>
+          <h3 class="text-lg font-black text-white">사회적 약자 포용 & 공정 채용</h3>
+          <p class="text-xs text-blue-200 leading-relaxed">
+            취업 소외 청년 구직자와 채용 기술 소외 영세 기업 동시 구제
+          </p>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <!-- 구직자 측 -->
+          <div class="p-3 bg-white/10 rounded-xl border border-white/10 space-y-1 backdrop-blur-sm">
+            <div class="flex items-center justify-between">
+              <strong class="text-emerald-400 font-bold text-xs">🎓 구직자 측 (청년 취약계층)</strong>
+              <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[9px] font-bold">블라인드 100%</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              7종 PII 완전 마스킹으로 학벌·스펙 소외 청년에게 <strong>1:1 실무 역량(STAR) 기반 공정 평가 기회</strong> 보장
+            </p>
+          </div>
+
+          <!-- 기업 측 -->
+          <div class="p-3 bg-white/10 rounded-xl border border-white/10 space-y-1 backdrop-blur-sm">
+            <div class="flex items-center justify-between">
+              <strong class="text-blue-300 font-bold text-xs">🏢 기업 측 (50인 미만 스타트업)</strong>
+              <span class="px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 text-[9px] font-bold">건당 4.0원</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              수천만 원대 고가 솔루션 독점에 맞서 영세 기업에 초저비용 AI 인프라 보급 ➔ <strong>채용 디지털 격차(HR Divide) 해소</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-xs text-blue-300 border-t border-slate-800">
+          핵심 가치 : 학벌 편견 철폐 & 중소기업 채용 주권 회복
+        </div>
+      </div>
+
+      <!-- 2. [E] 친환경 Paperless 탄소 중립 -->
+      <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase">E · ENVIRONMENTAL</span>
+            <span class="text-xs text-slate-400 font-medium">친환경 페이퍼리스</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900">친환경 Paperless 탄소 중립</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            채용 서류의 100% 디지털 전환 및 클라우드 실시간 협업
+          </p>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <div class="p-3.5 bg-white rounded-xl border border-slate-200 space-y-1 shadow-sm">
+            <div class="flex items-center justify-between">
+              <strong class="text-emerald-700 block font-bold text-xs">🌱 연간 수만 장 인쇄 낭비 제로화</strong>
+              <span class="text-[10px] font-bold text-emerald-600 font-mono">100% 디지털</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              1-Click Share ID 무설치 웹 링크 공유로 대면 면접장의 <strong>종이 서류 인쇄비 및 폐기물 0원 달성</strong>
+            </p>
+          </div>
+
+          <div class="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100 space-y-1">
+            <strong class="text-emerald-800 block font-bold text-xs">⚡ 클라우드 서버리스 탄소 절감</strong>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              Google Cloud Run Scale-to-Zero 인프라로 유휴 전력 소모를 차단하여 온프레미스 서버 대비 <strong>탄소 배출 84% 감축</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-xs text-slate-400 border-t border-slate-200">
+          핵심 가치 : 채용 전주기 완전 무종이(Paperless) 실현
+        </div>
+      </div>
+
+      <!-- 3. [Region] 단국대 & 경기 남부 창업 생태계 기여 -->
+      <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-black uppercase">REGION · LOCAL IMPACT</span>
+            <span class="text-xs text-slate-400 font-medium">지역 지산학 상생</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900">단국대·경기남부 생태계 기여</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            판교·용인 테크 밸리 유망 스타트업 인재 매칭 및 지산학 협력
+          </p>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <div class="p-3.5 bg-white rounded-xl border border-slate-200 space-y-1 shadow-sm">
+            <div class="flex items-center justify-between">
+              <strong class="text-purple-700 block font-bold text-xs">🏛️ 단국대 창업지원단 우선 무상 공급</strong>
+              <span class="px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 text-[9px] font-bold">100건 바우처</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              교내 및 보육센터 입주기업 50개사에 '서류 100건 무료 바우처'를 공급하여 <strong>초기 데스밸리 채용 병목 즉시 해결</strong>
+            </p>
+          </div>
+
+          <div class="p-3.5 bg-purple-50/60 rounded-xl border border-purple-100 space-y-1">
+            <strong class="text-purple-800 block font-bold text-xs">🚀 경기 남부 청년 일자리 미스매칭 해소</strong>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              판교 테크노밸리 스타트업과 단국대 재학생·지역 청년 간의 <strong>실무 중심 공정 채용 연결 파이프라인 구축</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center text-xs text-slate-400 border-t border-slate-200">
+          핵심 가치 : 단국대 발 스타트업 성공 사례 & 지역 경제 활성화
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

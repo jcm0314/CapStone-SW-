@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1180px] bg-white rounded-3xl p-7 shadow-xl border border-slate-200">
+    
+    <!-- Center Content: TAM-SAM-SOM (6 cols) + 3-Tier Pricing (6 cols) -->
+    <div class="grid grid-cols-12 gap-6 items-stretch">
+      
+      <!-- Left: TAM-SAM-SOM Concentric Circle Cards (6 cols) -->
+      <div class="col-span-6 bg-slate-50/80 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+          <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            🎯 3단계 목표 시장 규모 (Market Sizing)
+          </span>
+          <span class="text-[10px] text-purple-600 font-bold">단계적 시장 침투</span>
+        </div>
+
+        <div class="space-y-3">
+          <!-- TAM -->
+          <div class="p-3.5 rounded-xl bg-purple-50/50 border border-purple-200 flex items-center justify-between">
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-purple-200 text-purple-800 text-[10px] font-black">TAM</span>
+                <span class="font-bold text-slate-900 text-xs">국내 HR 테크 전체 시장</span>
+              </div>
+              <p class="text-[11px] text-slate-500">채용 솔루션, 인적성, 평가 시스템 전반</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xl font-black text-purple-700">1조 2,000억</div>
+              <span class="text-[10px] text-slate-400">연평균 14% 성장</span>
+            </div>
+          </div>
+
+          <!-- SAM -->
+          <div class="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-200 flex items-center justify-between">
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-indigo-200 text-indigo-800 text-[10px] font-black">SAM</span>
+                <span class="font-bold text-slate-900 text-xs">스타트업 & 중소기업 채용 시장</span>
+              </div>
+              <p class="text-[11px] text-slate-500">수작업 서류 검토 대체 가능한 소프트웨어</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xl font-black text-indigo-700">2,400억</div>
+              <span class="text-[10px] text-slate-400">국내 45,000개 사업체</span>
+            </div>
+          </div>
+
+          <!-- SOM -->
+          <div class="p-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between shadow-md">
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-white text-blue-700 text-[10px] font-black">SOM</span>
+                <span class="font-black text-white text-xs">50~300인 성장기 IT/바이오 기업</span>
+              </div>
+              <p class="text-[11px] text-blue-100">전담 HR 부족으로 실무진 야근이 발생하는 15,000개사</p>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-black text-white">360억</div>
+              <span class="text-[10px] text-blue-200">초기 3개년 정조준</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-500 pt-1 flex items-center justify-between">
+          <span>* 통계청 및 한국소프트웨어산업협회 2025 실태조사 기준</span>
+          <span class="text-purple-600 font-bold">연평균 28% 고성장 타깃</span>
+        </div>
+      </div>
+
+      <!-- Right: 3-Tier SaaS Subscription Monetization (6 cols) -->
+      <div class="col-span-6 bg-slate-50/80 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+          <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            💳 B2B SaaS 3-Tier 구독 요금제
+          </span>
+          <span class="text-[10px] text-emerald-600 font-bold">순마진 98.7%</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          
+          <!-- Starter -->
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col justify-between space-y-2 shadow-sm">
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-bold text-slate-400 block uppercase">Starter</span>
+              <div class="text-base font-black text-slate-900">29만 <small class="text-[10px] font-normal text-slate-400">/월</small></div>
+              <span class="text-[10px] text-blue-600 font-semibold block">월 150건 평가</span>
+            </div>
+            <ul class="text-[10px] text-slate-500 space-y-1 border-t border-slate-100 pt-1.5">
+              <li>· 1-Click 협업 3명</li>
+              <li>· 7종 PII 마스킹</li>
+              <li>· 원가 월 600원</li>
+            </ul>
+            <span class="text-[9px] text-slate-400 bg-slate-50 p-1 rounded text-center block">소규모 스타트업</span>
+          </div>
+
+          <!-- Pro (Featured) -->
+          <div class="bg-gradient-to-b from-blue-900 to-slate-900 p-3 rounded-xl border-2 border-blue-500 text-white flex flex-col justify-between space-y-2 shadow-md relative">
+            <div class="space-y-0.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold text-blue-300 block uppercase">Pro Growth</span>
+                <span class="px-1.5 py-0.2 rounded bg-blue-500 text-white text-[8px] font-black">추천</span>
+              </div>
+              <div class="text-base font-black text-white">79만 <small class="text-[10px] font-normal text-slate-300">/월</small></div>
+              <span class="text-[10px] text-emerald-300 font-semibold block">월 500건 평가</span>
+            </div>
+            <ul class="text-[10px] text-slate-200 space-y-1 border-t border-slate-800 pt-1.5">
+              <li>· 다인 무제한 협업</li>
+              <li>· ATS 연동 웹훅</li>
+              <li>· 면접 질문 키트</li>
+            </ul>
+            <span class="text-[9px] text-blue-200 bg-blue-950 p-1 rounded text-center font-bold block border border-blue-800">50~300인 표준 플랜</span>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col justify-between space-y-2 shadow-sm">
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-bold text-slate-400 block uppercase">On-Demand</span>
+              <div class="text-base font-black text-slate-900">300원 <small class="text-[10px] font-normal text-slate-400">/건</small></div>
+              <span class="text-[10px] text-indigo-600 font-semibold block">대량 공채 종량제</span>
+            </div>
+            <ul class="text-[10px] text-slate-500 space-y-1 border-t border-slate-100 pt-1.5">
+              <li>· 1,000건 단위 충전</li>
+              <li>· 실시간 크레딧 차감</li>
+              <li>· 토큰 원가 4.0원</li>
+            </ul>
+            <span class="text-[9px] text-emerald-700 font-bold bg-emerald-50 p-1 rounded text-center block">마진율 98.7%</span>
+          </div>
+
+        </div>
+
+        <!-- Strategy Note -->
+        <div class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-[11px] text-slate-300 flex items-center justify-between">
+          <span>⚡ <strong>PLG 바이럴 성장:</strong> 면접관 링크(Share ID) 공유 시 타사 심사위원에게 자연 유입</span>
+          <span class="text-emerald-400 font-bold">CAC 60% 절감</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

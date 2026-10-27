@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1150px] bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+    
+    <!-- 3-Phase Timeline Cards (Core Lifecycle Display) -->
+    <div class="grid grid-cols-3 gap-6 items-stretch">
+      
+      <!-- Phase 1: 낮 시간 -->
+      <div class="bg-slate-50/70 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-200">
+            <span class="text-xs font-bold text-blue-600 flex items-center gap-1.5">
+              ☀️ 09:00 ~ 18:00 (낮)
+            </span>
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-blue-100 text-blue-700">본업 100% 포화</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 pt-1">스프린트 개발 & 코드 리뷰</h3>
+        </div>
+
+        <div class="space-y-2.5 text-xs text-slate-600">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+            <span>프로덕트 백로그 스프린트 완결 압박</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+            <span>주니어 개발자 PR 리뷰 및 배포 트러블슈팅</span>
+          </div>
+          <div class="p-3 bg-white rounded-xl text-[11px] text-slate-500 border border-slate-200/80 italic">
+            "정규 근무 시간에는 채용 서류를 단 1장도 열어볼 여유가 없음"
+          </div>
+        </div>
+
+        <div class="pt-2.5 text-center text-xs font-bold text-slate-500 border-t border-slate-200">
+          ⏳ 근무 시간 내 채용 검토율 : <strong class="text-rose-600">0%</strong>
+        </div>
+      </div>
+
+      <!-- Phase 2: 밤 시간 (채용 야근 지옥) -->
+      <div class="bg-rose-50/40 rounded-2xl p-6 border-2 border-rose-300 flex flex-col justify-between space-y-4 relative shadow-sm">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2.5 border-b border-rose-200">
+            <span class="text-xs font-bold text-rose-600 flex items-center gap-1.5">
+              🌙 19:00 ~ 02:00 (심야)
+            </span>
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-700">3일간 밤샘 야근</span>
+          </div>
+          <h3 class="text-lg font-black text-rose-900 pt-1">자소서 100건 검토 지옥</h3>
+        </div>
+
+        <div class="space-y-2.5 text-xs text-slate-600">
+          <div class="flex items-center gap-2 text-rose-700 font-semibold">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+            <span>100건 검토 시 총 25시간 소요 (건당 15분)</span>
+          </div>
+          <div class="flex items-center gap-2 text-rose-700 font-semibold">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+            <span>후반부 검토 시 피로도 89% 도달 ➔ 스펙 검증 포기</span>
+          </div>
+          <div class="p-3 bg-white/90 rounded-xl text-[11px] text-rose-800 border border-rose-200 italic font-medium">
+            "눈이 침침해서 70번째 지원서부터는 대충 훑고 통과시킴"
+          </div>
+        </div>
+
+        <div class="pt-2.5 text-center text-xs font-bold text-rose-700 border-t border-rose-200">
+          📉 심사관 인지 피로도 : <strong class="text-rose-600 text-sm">89% (품질 왜곡)</strong>
+        </div>
+      </div>
+
+      <!-- Phase 3: 3개월 후 (채용 실패 및 조기 퇴사) -->
+      <div class="bg-slate-50/70 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-200">
+            <span class="text-xs font-bold text-purple-600 flex items-center gap-1.5">
+              ⚠️ 채용 3개월 후
+            </span>
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-purple-100 text-purple-700">조기 퇴사 38%</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 pt-1">실무 미달 & 조직 손실</h3>
+        </div>
+
+        <div class="space-y-2.5 text-xs text-slate-600">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+            <span>자소서 수치 과장·대필 미검증으로 직무 부적격 발생</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+            <span>온보딩 실패 및 수습 탈락 ➔ 온보딩 매몰비용 증발</span>
+          </div>
+          <div class="p-3 bg-white rounded-xl text-[11px] text-slate-500 border border-slate-200/80 italic">
+            "채용 사고 수습하느라 또 재공고… 야근의 무한 반복."
+          </div>
+        </div>
+
+        <div class="pt-2.5 text-center text-xs font-bold text-slate-500 border-t border-slate-200">
+          💸 부적격 채용 손실 : <strong class="text-purple-600">1인당 수천만 원</strong>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
