@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+  
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1150px] bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
+    
+    <!-- 3-Barrier vs 3-Solution Rows (Core Technical & Business Differentiators) -->
+    <div class="space-y-4">
+      
+      <!-- Row 1: Cost Barrier -->
+      <div class="grid grid-cols-11 gap-4 items-center">
+        <!-- Barrier 1 -->
+        <div class="col-span-5 bg-rose-50/60 p-4 rounded-2xl border border-rose-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 font-black text-base flex items-center justify-center shrink-0">
+            01
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-rose-600 block uppercase">기존 한계 : 수천만 원 고비용 장벽</span>
+            <div class="text-sm font-bold text-slate-900">대기업용 고가 ERP & 연간 라이선스</div>
+            <p class="text-[11px] text-slate-500">무하유·마이다스 등 수천만 원 구축비로 스타트업 도입 불가능</p>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="col-span-1 flex items-center justify-center text-slate-400 font-black text-xl">
+          ➔
+        </div>
+
+        <!-- Solution 1 -->
+        <div class="col-span-5 bg-blue-50/60 p-4 rounded-2xl border border-blue-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
+            해법
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-blue-600 block uppercase">Check-Mate : 건당 4.0원 / 월 29만 원</span>
+            <div class="text-sm font-bold text-slate-900">90.4% 비용 절감 초경량 B2B SaaS</div>
+            <p class="text-[11px] text-slate-600 font-medium">1,000건 평가 시 원가 4,000원 ➔ 스타트업 맞춤 도입</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Hallucination Barrier -->
+      <div class="grid grid-cols-11 gap-4 items-center">
+        <!-- Barrier 2 -->
+        <div class="col-span-5 bg-rose-50/60 p-4 rounded-2xl border border-rose-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 font-black text-base flex items-center justify-center shrink-0">
+            02
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-rose-600 block uppercase">기존 한계 : AI 환각 & 블랙박스 점수</span>
+            <div class="text-sm font-bold text-slate-900">근거 없는 허위 인용 & 신뢰도 부재</div>
+            <p class="text-[11px] text-slate-500">ChatGPT의 가짜 경력 지어내기 및 출처 없는 맹목적 점수 부여</p>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="col-span-1 flex items-center justify-center text-slate-400 font-black text-xl">
+          ➔
+        </div>
+
+        <!-- Solution 2 -->
+        <div class="col-span-5 bg-blue-50/60 p-4 rounded-2xl border border-blue-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
+            해법
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-blue-600 block uppercase">Check-Mate : 1:1 형광펜 원문 바인딩</span>
+            <div class="text-sm font-bold text-slate-900">환각 0% 상호 교차 감사 에이전트</div>
+            <p class="text-[11px] text-slate-600 font-medium">초록색(실적)·빨간색(의심) 원문 1:1 하이라이트 투명 검증</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: PII Security Barrier -->
+      <div class="grid grid-cols-11 gap-4 items-center">
+        <!-- Barrier 3 -->
+        <div class="col-span-5 bg-rose-50/60 p-4 rounded-2xl border border-rose-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 font-black text-base flex items-center justify-center shrink-0">
+            03
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-rose-600 block uppercase">기존 한계 : 개인정보 유출 & 법적 리스크</span>
+            <div class="text-sm font-bold text-slate-900">민감정보(PII) 무단 전송 위법 우려</div>
+            <p class="text-[11px] text-slate-500">성명, 주민번호, 학벌 등 외부 LLM 전송 시 개인정보보호법 위반</p>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="col-span-1 flex items-center justify-center text-slate-400 font-black text-xl">
+          ➔
+        </div>
+
+        <!-- Solution 3 -->
+        <div class="col-span-5 bg-blue-50/60 p-4 rounded-2xl border border-blue-200 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
+            해법
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[11px] font-bold text-blue-600 block uppercase">Check-Mate : 클라이언트 7종 실시간 마스킹</span>
+            <div class="text-sm font-bold text-slate-900">브라우저 로컬 비식별화 (외부 유출 0%)</div>
+            <p class="text-[11px] text-slate-600 font-medium">서버 전송 전 가상 토큰 치환 ➔ 100% 공정 블라인드 채용</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

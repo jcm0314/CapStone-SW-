@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Pretendard', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-8">
+
+  <!-- Infographic Canvas: Core Only (No Title/Subtitle/Conclusion) -->
+  <div id="capture-target" class="w-[1180px] bg-white rounded-3xl p-7 shadow-xl border border-slate-200">
+    
+    <!-- Center: 2 Team Member Cards -->
+    <div class="grid grid-cols-2 gap-6 items-stretch">
+      
+      <!-- MEMBER 1: 대표자 장천명 -->
+      <div class="bg-gradient-to-b from-blue-50/70 to-white rounded-2xl p-5 border-2 border-blue-500 shadow-md flex flex-col justify-between space-y-3 relative">
+        <span class="absolute -top-3 right-5 bg-blue-600 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow">
+          팀 대표 (Founder &amp; PM)
+        </span>
+
+        <div class="flex items-start justify-between border-b border-blue-200 pb-2.5">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl font-black shadow-md">
+              장
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-lg font-black text-slate-900">장천명</h3>
+                <span class="text-xs text-blue-700 font-bold bg-blue-100 px-2 py-0.5 rounded">대표자 / PM</span>
+              </div>
+              <p class="text-xs text-slate-500">단국대학교 컴퓨터공학과 5학년 (32203919)</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-200">
+            AI &amp; Cloud Architecture
+          </span>
+        </div>
+
+        <!-- TeeMoa Tag -->
+        <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-xs text-emerald-900 font-bold flex items-center justify-between">
+          <span>⛳ 사전 상용 플랫폼 이력 : <strong>실시간 골프 예약 플랫폼 'TeeMoa' 기획·총괄</strong></span>
+          <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded font-black">공동 검증</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-blue-900 flex items-center gap-1">
+              <span>🤖 4대 멀티에이전트(Grounding·Critic·Supervisor·Interviewer) 독자 설계</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Gemini 3.8 Flash 기반 환각 0% 상호 교차 감사 파이프라인 및 건당 4.0원(90.4% 절감) 구조화.
+            </p>
+          </div>
+
+          <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-blue-900 flex items-center gap-1">
+              <span>🎯 1:1 형광펜 Fuzzy 바인딩 &amp; 약점 압박 면접 질문 도출 엔진 완결</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Levenshtein &amp; Jaccard 2단계 텍스트 정합성 엔진으로 지원서 원문-평가 근거 매칭률 92.4% 달성.
+            </p>
+          </div>
+
+          <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-blue-900 flex items-center gap-1">
+              <span>☁️ Google Cloud Run 무중단 컨테이너 배포 &amp; Vitest 51개 100% 통과</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Docker 기반 서울 리전 상시 서빙 인프라 구축 및 14개 테스트 스위트 결함률 0% 입증.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-2 bg-blue-100/60 rounded-xl text-xs text-blue-900 font-semibold flex items-center justify-between px-3">
+          <span>역할: 비즈니스 BM 총괄 · 멀티에이전트 감사 알고리즘 · 배포 파이프라인</span>
+          <span class="font-mono font-bold text-blue-700">100% PASS</span>
+        </div>
+      </div>
+
+      <!-- MEMBER 2: 팀원 박상윤 -->
+      <div class="bg-gradient-to-b from-indigo-50/70 to-white rounded-2xl p-5 border-2 border-indigo-500 shadow-md flex flex-col justify-between space-y-3 relative">
+        <span class="absolute -top-3 right-5 bg-indigo-600 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow">
+          공동 창업 팀원 (Co-Founder &amp; Core Dev)
+        </span>
+
+        <div class="flex items-start justify-between border-b border-indigo-200 pb-2.5">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-md">
+              박
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-lg font-black text-slate-900">박상윤</h3>
+                <span class="text-xs text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded">코어 엔지니어</span>
+              </div>
+              <p class="text-xs text-slate-500">단국대학교 컴퓨터공학과</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded border border-indigo-200">
+            Realtime &amp; High-Perf Frontend
+          </span>
+        </div>
+
+        <!-- TeeMoa Tag -->
+        <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-300 text-xs text-emerald-900 font-bold flex items-center justify-between">
+          <span>⛳ 사전 상용 플랫폼 이력 : <strong>실시간 골프 예약 플랫폼 'TeeMoa' 백엔드 최적화</strong></span>
+          <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded font-black">원팀 시너지</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-2.5 bg-white rounded-xl border border-indigo-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-indigo-900 flex items-center gap-1">
+              <span>⚡ Supabase Realtime 기반 다인 면접관 1-Click 협업 파이프라인</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              WebSocket 양방향 채널 기반 코멘트 및 점수 동기화 지연시간 &lt;50ms 달성.
+            </p>
+          </div>
+
+          <div class="p-2.5 bg-white rounded-xl border border-indigo-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-indigo-900 flex items-center gap-1">
+              <span>🚀 DOM 가상 윈도잉으로 렌더링 36배 고속화 (0.05초)</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              1만 자 장문 지원서 렌더링 지연시간을 2.8초에서 0.05초로 36배 단축하여 브라우저 프리징 해결.
+            </p>
+          </div>
+
+          <div class="p-2.5 bg-white rounded-xl border border-indigo-100 shadow-sm space-y-0.5">
+            <div class="text-xs font-bold text-indigo-900 flex items-center gap-1">
+              <span>⚙️ gRPC / REST 하이브리드 &amp; 대량 서류 배치 파서 최적화</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              수백 명 규모 공채 지원서(PDF/TXT) 일괄 업로드 파싱 파이프라인 및 Top-N 동적 슬라이더 연동.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-2 bg-indigo-100/60 rounded-xl text-xs text-indigo-900 font-semibold flex items-center justify-between px-3">
+          <span>인터랙션: HITL 실시간 미세조정 모달 &amp; RLS 감사로그 기록 완결</span>
+          <span class="font-mono font-bold text-indigo-700">&lt;50ms SYNC</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
