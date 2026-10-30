@@ -3,7 +3,7 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot, Share2 } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
 
-export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal }) {
+export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback }) {
   const [showAuditModal, setShowAuditModal] = useState(false);
 
   if (!result || !result.analysis) return null;
@@ -120,6 +120,19 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
 
           {/* Right Action & Decision Badge */}
           <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0 flex-wrap">
+            {/* Candidate Growth Feedback Button (B2B2C / ESG) */}
+            {onOpenCandidateFeedback && (
+              <button
+                type="button"
+                onClick={onOpenCandidateFeedback}
+                className="px-3 py-2 bg-gradient-to-r from-emerald-600/30 to-teal-600/30 hover:from-emerald-600/40 hover:to-teal-600/40 text-emerald-200 border border-emerald-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
+                title="지원자 맞춤형 AI 성장 피드백 리포트 생성"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>지원자 피드백 리포트</span>
+              </button>
+            )}
+
             {/* Share Link Button */}
             {onOpenShareModal && (
               <button

@@ -13,6 +13,7 @@ import HITLEditorModal from './components/HITLEditorModal';
 import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
+import CandidateFeedbackModal from './components/CandidateFeedbackModal';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { analyzeApplicant } from './services/aiEvaluator';
@@ -38,6 +39,7 @@ export default function App() {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [showHITLEditor, setShowHITLEditor] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showCandidateFeedback, setShowCandidateFeedback] = useState(false);
   const [activeShareId, setActiveShareId] = useState(null);
   const [sharedBannerInfo, setSharedBannerInfo] = useState(null);
 
@@ -354,6 +356,7 @@ export default function App() {
                 currentJob={currentJob}
                 onOpenHITLEditor={() => setShowHITLEditor(true)}
                 onOpenShareModal={() => setShowShareModal(true)}
+                onOpenCandidateFeedback={() => setShowCandidateFeedback(true)}
               />
             )}
 
@@ -445,6 +448,15 @@ export default function App() {
         onClose={() => setShowShareModal(false)}
         applicant={selectedApplicant}
         onShareCreated={(newShareId) => setActiveShareId(newShareId)}
+      />
+
+      {/* Candidate Growth Feedback Modal (ESG / B2B2C) */}
+      <CandidateFeedbackModal
+        isOpen={showCandidateFeedback}
+        onClose={() => setShowCandidateFeedback(false)}
+        result={selectedApplicant}
+        currentJob={currentJob}
+        tenantName={currentTenant?.name}
       />
     </div>
   );
