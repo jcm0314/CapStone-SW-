@@ -20,13 +20,16 @@ describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
     expect(result.maskedCategories).toContain('전화번호');
   });
 
-  it('출신 학교명(대학교, 고등학교 등)을 [학교명 익명화]로 마스킹해야 함', () => {
-    const rawText = '저는 서울대학교 컴퓨터공학과를 졸업하였으며, 대전고등학교 출신입니다.';
+  it('출신 학교명(대학교, 고등학교, 약칭 및 영문 과학기술원)을 [학교명 익명화]로 마스킹해야 함', () => {
+    const rawText = '저는 서울대학교와 단국대, KAIST 공동 연구를 수행했으며 대전고등학교 출신입니다. 사내대학 프로그램도 이수했습니다.';
     const result = anonymizePII(rawText);
 
     expect(result.anonymizedText).toContain('[학교명 익명화]');
     expect(result.anonymizedText).not.toContain('서울대학교');
+    expect(result.anonymizedText).not.toContain('단국대');
+    expect(result.anonymizedText).not.toContain('KAIST');
     expect(result.anonymizedText).not.toContain('대전고등학교');
+    expect(result.anonymizedText).toContain('사내대학'); // 일반 명사 오탐 방지 확인
     expect(result.maskedCategories).toContain('출신학교');
   });
 
@@ -50,6 +53,7 @@ describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
   it('hasPII가 개인정보 포함 여부를 올바르게 검출해야 함', () => {
     expect(hasPII('test@company.com으로 문의하세요')).toBe(true);
     expect(hasPII('서울대학교 졸업')).toBe(true);
+    expect(hasPII('단국대 컴퓨터공학과')).toBe(true);
     expect(hasPII('Redis 캐싱 도입으로 성능 향상')).toBe(false);
   });
 
