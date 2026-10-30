@@ -2,8 +2,37 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 
 dotenv.config();
+
+const SSO_HMAC_SECRET = process.env.SSO_JWT_SECRET || 'checkmate-enterprise-hmac-secret-2026';
+
+export function signSsoToken(payload) {
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto
+    .createHmac('sha256', SSO_HMAC_SECRET)
+    .update(encodedPayload)
+    .digest('base64url');
+  return `chk_sso_${encodedPayload}.${signature}`;
+}
+
+export function verifySsoToken(token) {
+  if (!token || !token.startsWith('chk_sso_')) return null;
+  const raw = token.slice('chk_sso_'.length);
+  const [encodedPayload, signature] = raw.split('.');
+  if (!encodedPayload || !signature) return null;
+  const expectedSig = crypto
+    .createHmac('sha256', SSO_HMAC_SECRET)
+    .update(encodedPayload)
+    .digest('base64url');
+  if (signature !== expectedSig) return null;
+  try {
+    return JSON.parse(Buffer.from(encodedPayload, 'base64url').toString('utf-8'));
+  } catch {
+    return null;
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -217,7 +246,7 @@ app.post('/api/v1/auth/sso-login', (req, res) => {
   };
 
   return res.status(200).json({
-    token: `chk_sso_${Buffer.from(JSON.stringify(tokenPayload)).toString('base64')}`,
+    token: signSsoToken(tokenPayload),
     user: tokenPayload
   });
 });

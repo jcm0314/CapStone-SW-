@@ -114,7 +114,9 @@ export async function executeMultiAgentEvaluation({
   };
 
   // ----------------------------------------------------
-  // Stage 3: Supervisor Agent Execution
+  // Stage 3 & Stage 4: Parallel DAG Execution (Supervisor + Interviewer)
+  // Both agents depend only on Stage 1 (enrichedEvidences) & Stage 2 (criticReport).
+  // Executing them concurrently via Promise.all reduces end-to-end LLM latency.
   // ----------------------------------------------------
   if (onProgress) {
     onProgress({
@@ -122,23 +124,6 @@ export async function executeMultiAgentEvaluation({
       status: '⚖️ [Agent 3/4] Supervisor Agent: 직무 가중치 정산 및 최종 종합 합격 판정 중...',
       currentAgent: 'Supervisor Agent'
     });
-  }
-
-  const supervisorRes = await runSupervisorAgent({
-    name,
-    jobTemplate,
-    rawText: cleanText,
-    groundingEvidences: enrichedEvidences,
-    criticReport,
-    apiKey
-  });
-
-  const supervisorData = supervisorRes.data || {};
-
-  // ----------------------------------------------------
-  // Stage 4: Interviewer Agent Execution
-  // ----------------------------------------------------
-  if (onProgress) {
     onProgress({
       percent: 90,
       status: '🎙️ [Agent 4/4] Interviewer Agent: Critic 약점 지적 기반 맞춤형 심층 면접 질문 도출 중...',
@@ -146,14 +131,26 @@ export async function executeMultiAgentEvaluation({
     });
   }
 
-  const interviewerRes = await runInterviewerAgent({
-    name,
-    jobTemplate,
-    rawText: cleanText,
-    groundingEvidences: enrichedEvidences,
-    criticReport,
-    apiKey
-  });
+  const [supervisorRes, interviewerRes] = await Promise.all([
+    runSupervisorAgent({
+      name,
+      jobTemplate,
+      rawText: cleanText,
+      groundingEvidences: enrichedEvidences,
+      criticReport,
+      apiKey
+    }),
+    runInterviewerAgent({
+      name,
+      jobTemplate,
+      rawText: cleanText,
+      groundingEvidences: enrichedEvidences,
+      criticReport,
+      apiKey
+    })
+  ]);
+
+  const supervisorData = supervisorRes.data || {};
 
   const rawQuestions = interviewerRes.data?.interviewQuestions || [];
   const enrichedQuestions = rawQuestions.map((iq, idx) => ({

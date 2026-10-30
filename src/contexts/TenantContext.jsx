@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+import { fetchTenantApplicantsFromSupabase, syncTenantApplicantsToSupabase } from '../services/supabaseClient';
 
 const TenantContext = createContext(null);
 
@@ -166,6 +167,11 @@ export function TenantProvider({ children }) {
       if (typeof window !== 'undefined') {
         localStorage.setItem('checkmate_current_tenant_id', target.id);
       }
+      fetchTenantApplicantsFromSupabase(target.id).then((remoteRows) => {
+        if (Array.isArray(remoteRows) && remoteRows.length > 0 && typeof window !== 'undefined') {
+          localStorage.setItem(`checkmate_applicants_${target.id}`, JSON.stringify(remoteRows));
+        }
+      });
     }
   };
 
@@ -185,7 +191,7 @@ export function TenantProvider({ children }) {
     return currentTenant.defaultApplicants;
   };
 
-  // Save Tenant-specific applicants
+  // Save Tenant-specific applicants (LocalStorage + Supabase PostgreSQL RLS Sync)
   const saveTenantApplicants = (applicants) => {
     if (typeof window !== 'undefined') {
       const storageKey = `checkmate_applicants_${currentTenant.id}`;
@@ -195,6 +201,7 @@ export function TenantProvider({ children }) {
         orgId: currentTenant.id
       }));
       localStorage.setItem(storageKey, JSON.stringify(securedApplicants));
+      syncTenantApplicantsToSupabase(currentTenant.id, securedApplicants);
     }
   };
 
