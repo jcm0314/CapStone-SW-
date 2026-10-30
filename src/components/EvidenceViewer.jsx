@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
 import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
@@ -84,15 +84,36 @@ function EvidenceViewerContent({ result }) {
     }
   }, [activeQuoteId, filteredEvidences]);
 
-  // Render text with interactive highlighted spans (Exact + Fuzzy Matcher)
-  const renderHighlightedText = () => {
-    let text = rawText;
-    const matches = [];
+  // Precompute and memoize matched intervals so hover (activeQuoteId) changes never re-run O(N*M) Levenshtein
+  const resolvedMatches = useMemo(() => {
+    const text = rawText || '';
+    const rawMatches = [];
 
-    groundingEvidences.forEach(ev => {
+    (groundingEvidences || []).forEach(ev => {
+      if (!ev || !ev.quote) return;
+
+      // 1) Reuse pre-computed valid indices if available
+      if (
+        typeof ev.startIndex === 'number' &&
+        typeof ev.endIndex === 'number' &&
+        ev.startIndex >= 0 &&
+        ev.endIndex > ev.startIndex &&
+        ev.endIndex <= text.length
+      ) {
+        rawMatches.push({
+          start: ev.startIndex,
+          end: ev.endIndex,
+          evidence: ev,
+          isExact: true,
+          similarity: 1
+        });
+        return;
+      }
+
+      // 2) Fallback to fuzzy matcher only once when evidence list or text changes
       const match = findFuzzyMatch(text, ev.quote, 0.75);
       if (match) {
-        matches.push({
+        rawMatches.push({
           start: match.start,
           end: match.end,
           evidence: ev,
@@ -102,12 +123,31 @@ function EvidenceViewerContent({ result }) {
       }
     });
 
-    matches.sort((a, b) => a.start - b.start);
+    rawMatches.sort((a, b) => a.start - b.start || (b.end - b.start) - (a.end - a.start));
 
+    // Filter out overlapping intervals to prevent duplicate/corrupted DOM slices
+    const nonOverlapping = [];
+    let cursor = 0;
+    for (const m of rawMatches) {
+      if (m.start < cursor) {
+        continue;
+      }
+      nonOverlapping.push(m);
+      cursor = Math.max(cursor, m.end);
+    }
+
+    return nonOverlapping;
+  }, [rawText, groundingEvidences]);
+
+  // Render text with interactive highlighted spans (Exact + Fuzzy Matcher)
+  const renderHighlightedText = () => {
+    const text = rawText || '';
     const elements = [];
     let lastIndex = 0;
 
-    matches.forEach((m) => {
+    resolvedMatches.forEach((m) => {
+      if (m.start < lastIndex) return;
+
       // Text before match
       if (m.start > lastIndex) {
         elements.push(
@@ -138,19 +178,19 @@ function EvidenceViewerContent({ result }) {
 
       elements.push(
         <mark
-          key={`mark_${ev.id}`}
+          key={`mark_${ev.id}_${m.start}`}
           onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
           onMouseEnter={() => setActiveQuoteId(ev.id)}
           className={`cursor-pointer px-1 py-0.5 rounded transition-all border ${badgeStyle} mx-0.5 inline-block`}
         >
-          {ev.quote}
+          {text.slice(m.start, m.end)}
           <span className="ml-1 text-[10px] uppercase font-bold opacity-80">
             {ev.type === 'positive' ? '🟢 긍정근거' : ev.type === 'risk' ? '🔴 리스크' : '🟡 검증필요'}
           </span>
         </mark>
       );
 
-      lastIndex = m.end;
+      lastIndex = Math.max(lastIndex, m.end);
     });
 
     if (lastIndex < text.length) {
