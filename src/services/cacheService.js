@@ -3,18 +3,27 @@
  * Prevents redundant API calls and eliminates token costs for re-evaluated candidates.
  */
 
+import { getCompanyPromptSettings } from './promptStudioService';
+
 const DB_NAME = 'HR_AX_EVALUATOR_DB';
 const STORE_NAME = 'evaluation_cache';
 const DB_VERSION = 1;
 
 /**
- * Generates a unique cache key based on rawText substring and job ID
+ * Generates a unique cache key based on full rawText hash, job ID, and active Prompt Studio settings
  */
 export function generateCacheKey(rawText, applyJobId) {
   if (!rawText) return '';
-  const textSample = rawText.trim().slice(0, 100);
-  const length = rawText.length;
-  return `cache_${applyJobId}_${length}_${hashCode(textSample)}`;
+  const normalizedText = rawText.trim();
+  const length = normalizedText.length;
+  const promptSettings = getCompanyPromptSettings();
+  const promptSignature = JSON.stringify({
+    c: promptSettings.companyName,
+    v: promptSettings.coreValues,
+    t: promptSettings.tabooWords,
+    i: promptSettings.customInstruction
+  });
+  return `cache_${applyJobId}_${length}_${hashCode(normalizedText)}_${hashCode(promptSignature)}`;
 }
 
 /**

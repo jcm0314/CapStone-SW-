@@ -182,6 +182,7 @@ export async function executeMultiAgentEvaluation({
     applyJobId: jobTemplate.id,
     applyJobTitle: jobTemplate.title,
     rawText: targetText,
+    maskedText: cleanText || targetText,
     mode: 'MULTI_AGENT_ENSEMBLE',
     modelsUsed: {
       grounding: groundingRes.modelUsed,

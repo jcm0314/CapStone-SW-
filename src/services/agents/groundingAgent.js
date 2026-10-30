@@ -1,13 +1,16 @@
 import { callGeminiJson } from './geminiClient';
+import { formatCustomPromptAddendum } from '../promptStudioService';
 
 /**
  * [Agent 1] Grounding Agent
  * 전문 역할: 자기소개서 본문 텍스트에서 평가의 근거가 되는 실제 문장을 1:1로 발췌 및 역량별 인덱싱
  */
 export async function runGroundingAgent({ name, jobTemplate, rawText, apiKey }) {
+  const customAddendum = formatCustomPromptAddendum();
   const prompt = `
 [역할]: 당신은 HR 채용 전문 "Grounding Agent"입니다.
 지원자의 자기소개서 본문을 면밀히 스캔하여, 평가의 객관적 증거가 되는 실제 핵심 문장들만을 100% 원문 그대로 발췌(Quote)하세요.
+${customAddendum}
 
 [지원자 정보]:
 - 성명: ${name}

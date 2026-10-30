@@ -1,13 +1,16 @@
 import { callGeminiJson } from './geminiClient';
+import { formatCustomPromptAddendum } from '../promptStudioService';
 
 /**
  * [Agent 2] Critic Agent
  * 전문 역할: 비판적 2차 감사, 과장/허위 표현 팩트체크, AI 생성 문체 판별 (Red-Teaming)
  */
 export async function runCriticAgent({ name, jobTemplate, rawText, groundingEvidences, apiKey }) {
+  const customAddendum = formatCustomPromptAddendum();
   const prompt = `
 [역할]: 당신은 엄격하고 날카로운 HR 채용 감사 전문 "Critic Agent (비판적 검증관)"입니다.
 Grounding Agent가 1차 발췌한 근거 문장과 지원자의 자기소개서 원문을 교차 검증하여, 허위/과장 진술, AI 생성 문체 여부, 실현 불가능한 수치 성과를 엄격하게 적발하세요.
+${customAddendum}
 
 [지원자 정보]:
 - 성명: ${name}

@@ -4,6 +4,7 @@ import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
 import { getAvailableGeminiModels } from './agents/geminiClient';
+import { formatCustomPromptAddendum } from './promptStudioService';
 
 /**
  * AI Grounding Evaluation Coordinator (Gemini API Only)
@@ -106,6 +107,7 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
 
   if (finalResult) {
     finalResult.piiMeta = piiResult;
+    finalResult.maskedText = cleanText;
     await saveAnalysisToCache(rawText, jobTemplate.id, finalResult);
   }
 
@@ -117,9 +119,11 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
  * Cycles through official supported Gemini models (gemini-1.5-flash, gemini-2.0-flash, gemini-2.5-flash)
  */
 async function analyzeWithGeminiAPI({ name, jobTemplate, rawText, originalRawText, apiKey, onProgress }) {
+  const customAddendum = formatCustomPromptAddendum();
   const prompt = `
 당신은 대기업 최고 수준의 HR 채용 전문가 및 시니어 면접관 AI입니다.
 아래 지원자의 자기소개서 본문을 꼼꼼히 검토하고, 직무 역량 기준에 따라 엄격하고 공정하게 평가하세요.
+${customAddendum}
 
 [지원자 성명]: ${name}
 [지원 직무]: ${jobTemplate.title}

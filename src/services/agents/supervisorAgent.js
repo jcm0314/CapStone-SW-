@@ -1,13 +1,16 @@
 import { callGeminiJson } from './geminiClient';
+import { formatCustomPromptAddendum } from '../promptStudioService';
 
 /**
  * [Agent 3] Scoring & Supervisor Agent
  * 전문 역할: 5대 직무 역량 정량 점수화, 종합 결재 및 최종 인사 판정 (Decision Maker)
  */
 export async function runSupervisorAgent({ name, jobTemplate, rawText, groundingEvidences, criticReport, apiKey }) {
+  const customAddendum = formatCustomPromptAddendum();
   const prompt = `
 [역할]: 당신은 최고인사책임자(CHO) 수준의 권한을 가진 "Supervisor Agent (최종 의사결정 수석 에이전트)"입니다.
 Grounding Agent가 수집한 객관적 증거와 Critic Agent의 비판적 감사 소견을 종합 검토하여, 직무 역량 가중치에 따라 공정하고 균형 잡힌 최종 점수와 채용 결정을 내리세요.
+${customAddendum}
 
 [지원자 정보]:
 - 성명: ${name}

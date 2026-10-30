@@ -3,9 +3,16 @@
  * Uses the standard 'gemini-1.5-flash' model with clear, diagnostic error reporting.
  */
 
-// Primary model: Google Gemini 3.8 Flash (Official 2026 Recommended)
+// Primary model: Google Gemini 3.8 Flash (with production Google API v1beta fallbacks)
 const PRIMARY_MODEL = 'gemini-3.8-flash';
 const FALLBACK_MODEL = 'gemini-3.5-flash-lite';
+const PRODUCTION_FALLBACK_MODELS = [
+  PRIMARY_MODEL,
+  'gemini-2.5-flash',
+  'gemini-2.0-flash',
+  'gemini-flash-latest',
+  FALLBACK_MODEL
+];
 
 /**
  * Diagnostic helper to format Google API errors into user-friendly explanations
@@ -45,7 +52,7 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
   }
 
   const cleanKey = apiKey.trim();
-  const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
+  const modelsToTry = PRODUCTION_FALLBACK_MODELS;
   let lastError = null;
 
   for (const model of modelsToTry) {
@@ -101,7 +108,7 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
 
 // Backward compatibility export
 export async function getAvailableGeminiModels() {
-  return [PRIMARY_MODEL, FALLBACK_MODEL];
+  return [...PRODUCTION_FALLBACK_MODELS];
 }
 
 

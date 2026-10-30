@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import * as ReactWindow from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
+import { anonymizePII } from '../utils/piiAnonymizer';
 
 // Robust List resolver to prevent runtime unmounting on production bundles
 const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
@@ -65,7 +66,14 @@ export default function EvidenceViewer({ result }) {
   const { groundingEvidences } = result.analysis;
   const [activeQuoteId, setActiveQuoteId] = useState(null);
   const [filterType, setFilterType] = useState('ALL');
+  const [showMaskedPII, setShowMaskedPII] = useState(true);
   const listRef = useRef(null);
+
+  const displayedText = useMemo(() => {
+    if (!showMaskedPII) return rawText || '';
+    if (result.maskedText) return result.maskedText;
+    return anonymizePII(rawText || '', result.name || '').anonymizedText;
+  }, [rawText, result.maskedText, result.name, showMaskedPII]);
 
   // Filtered evidences
   const filteredEvidences = groundingEvidences.filter(ev => {
@@ -85,7 +93,7 @@ export default function EvidenceViewer({ result }) {
 
   // Render text with interactive highlighted spans (Exact + Fuzzy Matcher)
   const renderHighlightedText = () => {
-    let text = rawText;
+    let text = displayedText;
     const matches = [];
 
     groundingEvidences.forEach(ev => {
@@ -170,9 +178,19 @@ export default function EvidenceViewer({ result }) {
             <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
               <Zap className="w-3 h-3 text-blue-400" /> Virtualized
             </span>
-            <span className="px-2 py-0.5 bg-purple-500/10 text-purple-300 border border-purple-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-purple-400" /> PII Masked (Blind Recruitment)
-            </span>
+            <button
+              type="button"
+              onClick={() => setShowMaskedPII(prev => !prev)}
+              className={`px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 border transition-all ${
+                showMaskedPII
+                  ? 'bg-purple-500/20 text-purple-200 border-purple-500/40'
+                  : 'bg-gray-800 text-gray-400 border-gray-700'
+              }`}
+              title="블라인드 채용 PII 마스킹 본문 / 원본 전환"
+            >
+              {showMaskedPII ? <EyeOff className="w-3 h-3 text-purple-300" /> : <Eye className="w-3 h-3 text-gray-400" />}
+              {showMaskedPII ? 'PII Masked (Blind ON)' : '원본 텍스트 보기'}
+            </button>
           </div>
           <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 가상 스크롤 목록이 해당 위치로 자동 이동합니다.</p>
         </div>
