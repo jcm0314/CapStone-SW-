@@ -46,30 +46,53 @@ function HITLEditorModalContent({
 
   const [reviewerNote, setReviewerNote] = useState(result.reviewerNote || '');
 
-  // Handlers for Grounding Evidences
+  // Handlers for Grounding Evidences (with automatic totalScore synchronization)
   const handleUpdateEvidence = (idx, field, value) => {
     setGroundingEvidences(prev => {
       const next = [...prev];
+      const prevImpact = Number(next[idx]?.scoreImpact || 0);
       next[idx] = { ...next[idx], [field]: value };
+      if (field === 'scoreImpact') {
+        const delta = Number(value || 0) - prevImpact;
+        setSummary(s => ({
+          ...s,
+          totalScore: Math.min(100, Math.max(0, Number(s.totalScore || 0) + delta))
+        }));
+      }
       return next;
     });
   };
 
   const handleDeleteEvidence = (idx) => {
-    setGroundingEvidences(prev => prev.filter((_, i) => i !== idx));
+    setGroundingEvidences(prev => {
+      const removed = prev[idx];
+      const removedImpact = Number(removed?.scoreImpact || 0);
+      if (removedImpact !== 0) {
+        setSummary(s => ({
+          ...s,
+          totalScore: Math.min(100, Math.max(0, Number(s.totalScore || 0) - removedImpact))
+        }));
+      }
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
   const handleAddEvidence = () => {
+    const defaultImpact = 5;
     const newEv = {
       id: `ev_hitl_${Date.now()}`,
       quote: '',
       type: 'positive',
       competencyId: currentJob.competencies[0]?.id || 'problem_solving',
-      scoreImpact: 10,
+      scoreImpact: defaultImpact,
       title: '인사담당자 수동 보정 근거',
       explanation: '인간 검토관이 자기소개서 원문에서 직접 확인한 역량 근거'
     };
     setGroundingEvidences(prev => [newEv, ...prev]);
+    setSummary(s => ({
+      ...s,
+      totalScore: Math.min(100, Math.max(0, Number(s.totalScore || 0) + defaultImpact))
+    }));
   };
 
   // Handlers for Interview Questions
