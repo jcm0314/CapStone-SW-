@@ -3,9 +3,13 @@ import { X, Building2, UserCheck, ShieldCheck, CheckCircle2, RefreshCw, KeyRound
 import { useAuth, ROLES } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 
+// Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
 export default function SSOProfileModal({ isOpen, onClose }) {
   if (!isOpen) return null;
+  return <SSOProfileModalContent onClose={onClose} />;
+}
 
+function SSOProfileModalContent({ onClose }) {
   const { currentUser, switchRole } = useAuth();
   const { currentTenant, allTenants, switchTenant } = useTenant();
 

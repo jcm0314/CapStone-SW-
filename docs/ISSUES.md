@@ -8,10 +8,12 @@
 
 | Issue ID | 종류 | 제목 (Title) | 심각도 | 상태 |
 | :--- | :--- | :--- | :--- | :--- |
-| **#1** | `Performance` | 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목 | 🔴 High | Proposed |
-| **#2** | `AI Grounding` | Exact Substring Matching의 줄바꿈/오타 미스매치 한계 및 퍼지 매칭 필요성 | 🔴 High | Proposed |
-| **#3** | `Security/PII` | 채용 서류 내 개인식별정보(PII) AI API 전송 전 마스킹 처리 | 🟡 Medium | Proposed |
-| **#4** | `Scalability` | Gemini API Rate Limit (HTTP 429) 대처 및 Queue/Caching 레이어 구축 | 🟡 Medium | Proposed |
+| **#1** | `Performance` | 대용량 텍스트 & 대량 지원서 Batch 분석 시 메인 UI 쓰레드 렌더링 병목 | 🔴 High | Partial: 근거 카드 목록 가상 스크롤 적용(react-window v2, `EvidenceViewer.jsx`). Web Worker(`src/workers/evaluatorWorker.js`)는 미사용 |
+| **#2** | `AI Grounding` | Exact Substring Matching의 줄바꿈/오타 미스매치 한계 및 퍼지 매칭 필요성 | 🔴 High | Done: `src/utils/fuzzyMatcher.js` (Levenshtein + 공백 정규화) |
+| **#3** | `Security/PII` | 채용 서류 내 개인식별정보(PII) AI API 전송 전 마스킹 처리 | 🟡 Medium | Done: `src/utils/piiAnonymizer.js`. 프롬프트에서 성명 제외 |
+| **#4** | `Scalability` | Gemini API Rate Limit (HTTP 429) 대처 및 Queue/Caching 레이어 구축 | 🟡 Medium | Partial: 결과 캐시(`cacheService.js`)와 게이트웨이 Rate Limit 구현. 동시성 제한 큐와 Exponential Backoff는 미구현 |
+
+> 상태 갱신일: 2026-11-10 (코드 대조 결과, `tasks/14_docs-consistency.md` 참고)
 
 ---
 

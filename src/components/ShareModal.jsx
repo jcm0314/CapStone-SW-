@@ -4,9 +4,13 @@ import { createSharedEvaluation } from '../services/shareService';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 
+// Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
 export default function ShareModal({ isOpen, onClose, applicant }) {
   if (!isOpen || !applicant) return null;
+  return <ShareModalContent onClose={onClose} applicant={applicant} />;
+}
 
+function ShareModalContent({ onClose, applicant }) {
   const { currentUser } = useAuth();
   const { currentTenant } = useTenant();
 

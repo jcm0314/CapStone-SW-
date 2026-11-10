@@ -276,7 +276,7 @@ const handleEvaluation = async (req, res) => {
 You are an expert HR Executive & Senior Recruiter AI.
 Evaluate the following candidate self-introduction text based on the provided job requirements and criteria.
 
-[Candidate Name]: ${name}
+[Candidate Name]: [ANONYMIZED] (blind recruitment: the candidate name is never sent to the AI model)
 [Target Job ID]: ${applyJobId || 'dev'}
 
 [Candidate Self-Introduction Text]:

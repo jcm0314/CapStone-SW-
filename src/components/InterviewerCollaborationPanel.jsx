@@ -3,6 +3,10 @@ import { MessageSquare, Send, User, PlusCircle, ShieldCheck, ThumbsUp, ThumbsDow
 import { useAuth } from '../contexts/AuthContext';
 import { addCollaborativeNote, getSharedEvaluation } from '../services/shareService';
 
+// Polling interval for multi-interviewer note sync via the API gateway
+// (Supabase Realtime push is tracked separately in tasks/16)
+const NOTES_POLL_INTERVAL_MS = 10000;
+
 export default function InterviewerCollaborationPanel({ applicant, shareId }) {
   const { currentUser } = useAuth();
   const [notes, setNotes] = useState([]);
@@ -14,14 +18,14 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
     let isMounted = true;
     const fetchNotes = async () => {
       if (!shareId) {
-        // Fallback default notes from applicant
+        // Neutral local-only guide note (not tied to any specific applicant's content)
         setNotes([
           {
-            id: 'init_1',
-            author: '김서아 수석',
-            role: 'RECRUITER',
-            timestamp: new Date(Date.now() - 3600000).toISOString(),
-            content: '1차 AI 서류 심사에서 대규모 트래픽 튜닝 경험에 높은 점수가 부여되었습니다. 기술 면접에서 실제 코드 기여도를 집중 검증해주세요.',
+            id: 'init_local_guide',
+            author: 'Check-Mate',
+            role: 'SYSTEM',
+            timestamp: new Date().toISOString(),
+            content: '아직 공유 링크가 생성되지 않아 메모는 이 브라우저에만 임시로 기록됩니다. 다른 면접관과 실시간으로 공유하려면 [면접관 공유] 버튼으로 링크를 생성하세요.',
             scoreAdjustment: 0
           }
         ]);
@@ -38,7 +42,19 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
     };
     fetchNotes();
 
-    return () => { isMounted = false; };
+    // Periodic sync so notes written by other interviewers appear without reload
+    let timerId = null;
+    if (shareId) {
+      timerId = setInterval(() => {
+        if (typeof document !== 'undefined' && document.hidden) return; // skip while tab is hidden
+        fetchNotes();
+      }, NOTES_POLL_INTERVAL_MS);
+    }
+
+    return () => {
+      isMounted = false;
+      if (timerId) clearInterval(timerId);
+    };
   }, [shareId, applicant?.id]);
 
   const handleAddNote = async (e) => {

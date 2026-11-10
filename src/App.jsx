@@ -243,17 +243,21 @@ export default function App() {
   const handleRevertHITL = async () => {
     if (!selectedApplicant || !selectedApplicant.originalAnalysis) return;
 
+    // Drop HITL-only metadata so the record is identical to the original AI draft
+    const { originalAnalysis, lastEditedAt, ...rest } = selectedApplicant;
     const revertedApplicant = {
-      ...selectedApplicant,
-      analysis: selectedApplicant.originalAnalysis,
+      ...rest,
+      orgId: currentTenant.id,
+      analysis: originalAnalysis,
       isHumanVerified: false,
       reviewerNote: ''
     };
 
     setSelectedApplicant(revertedApplicant);
-    setApplicantList(prev =>
-      prev.map(app => (app.id === revertedApplicant.id ? revertedApplicant : app))
-    );
+    const updatedList = applicantList.map(app => (app.id === revertedApplicant.id ? revertedApplicant : app));
+    setApplicantList(updatedList);
+    // Persist to tenant storage (same path as handleSaveHITL) so the rollback survives reload
+    saveTenantApplicants(updatedList);
 
     try {
       await saveAnalysisToCache(revertedApplicant.rawText, revertedApplicant.applyJobId, revertedApplicant);

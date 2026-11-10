@@ -6,7 +6,19 @@
 
 ## 1. 아키텍처 개요 (Architecture Overview)
 
-본 시스템은 **프리미엄 싱글 페이지 앱(SPA)**으로 구성되어 있으며, 클라이언트 단에서 구동되는 **Grounding Evidence Parser**와 **Google Gemini API Client**를 통해 백엔드 서버 구축 없이도 안전하고 빠른 서류 분석 경험을 제공합니다.
+본 시스템은 **React 18 + Vite 싱글 페이지 앱(SPA)**과 **Express 기반 BFF API 게이트웨이(`server/index.js`)**로 구성됩니다. 평가 경로는 두 가지입니다.
+
+| 경로 | 조건 | 처리 위치 | 구현 |
+| :--- | :--- | :--- | :--- |
+| **BYOK (사용자 API 키)** | 브라우저에 Gemini API 키가 등록된 경우 | 브라우저 | `src/services/multiAgentEvaluator.js` → 4-에이전트(Grounding → Critic → Supervisor → Interviewer) 순차 파이프라인. 실패 시 단일 프롬프트 백업(`aiEvaluator.analyzeWithGeminiAPI`) |
+| **B2B 관리형 (서버 키)** | 브라우저에 키가 없는 경우 | Express 게이트웨이 | `POST /api/v1/evaluate` → 서버 환경변수 `GEMINI_API_KEY`로 **단일 프롬프트** 1회 호출 (서버 측 4-에이전트는 미구현, `tasks/17`) |
+
+공통 처리 흐름은 다음과 같습니다.
+- 두 경로 모두 전송 전에 브라우저에서 PII를 마스킹합니다(`src/utils/piiAnonymizer.js`). LLM 프롬프트에는 지원자 성명을 넣지 않습니다.
+- 결과는 IndexedDB/localStorage에 캐시합니다(`src/services/cacheService.js`, FNV-1a 키).
+- 게이트웨이는 면접관 공유 링크와 협업 메모 API(`/api/v1/shares*`)도 제공합니다. 현재 저장소는 프로세스 메모리입니다.
+
+> 현재 미연동 항목: Supabase RLS/Realtime(`src/services/supabaseClient.js`는 미사용), Web Worker(`src/workers/evaluatorWorker.js` 미사용), Redis(compose에만 정의). 상세는 `tasks/00_INDEX.md`를 참고하세요.
 
 ### 🏛️ 레이어드 아키텍처 (Layered Architecture)
 

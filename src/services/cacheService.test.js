@@ -20,4 +20,19 @@ describe('IndexedDB & LocalStorage Cache Service', () => {
 
     expect(key1).not.toBe(key2);
   });
+
+  it('앞 100자와 길이가 같고 뒷부분만 다른 자소서는 서로 다른 캐시 키를 가져야 함 (충돌 방지)', () => {
+    const prefix = '가'.repeat(120);
+    const key1 = generateCacheKey(`${prefix}성과A`, 'tech_backend');
+    const key2 = generateCacheKey(`${prefix}성과B`, 'tech_backend');
+
+    expect(key1).not.toBe(key2);
+  });
+
+  it('공백/줄바꿈 차이만 있는 동일 본문은 같은 캐시 키를 가져야 함', () => {
+    const key1 = generateCacheKey('Redis 캐싱 도입\n\n0.4초 단축', 'tech_backend');
+    const key2 = generateCacheKey('Redis 캐싱 도입 0.4초 단축', 'tech_backend');
+
+    expect(key1).toBe(key2);
+  });
 });

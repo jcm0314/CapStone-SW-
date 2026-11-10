@@ -7,7 +7,7 @@
 [![GCP Cloud Run](https://img.shields.io/badge/GCP_Cloud_Run-Production_Live-4285F4?logo=google-cloud)](https://hr-evaluator-frontend-779722422570.asia-northeast3.run.app)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?logo=supabase)](https://supabase.com)
 [![Gemini 3.8](https://img.shields.io/badge/Google_Gemini-3.8_Flash_Multi--Agent-8E75C7?logo=google-gemini)](https://ai.google.dev/)
-[![Vitest](https://img.shields.io/badge/Vitest-51_Tests_100%25_Passed-22C55E?logo=vitest)](package.json)
+[![Vitest](https://img.shields.io/badge/Vitest-61_Unit_Tests-22C55E?logo=vitest)](package.json)
 
 > **"화면은 정상인데 숫자가 가짜면, 그건 거짓 평가서입니다."**  
 > Check-Mate는 감이나 편향에 의존하던 전통적 서류 심사를 혁신하여, **자소서 본문 속 실제 문장(Grounding) 1:1 형광펜 검증**, **4대 멀티에이전트 병렬 분업**, **B2B 무설정 일괄 결제(건당 4원)** 및 **Supabase Multi-Tenancy RLS 기반 다인 면접관 실시간 협업**을 제공하는 엔터프라이즈 B2B HR SaaS 솔루션입니다.
@@ -59,7 +59,7 @@ flowchart TD
     subgraph BackendGateway ["Cloud Run B2B API Gateway (Node.js)"]
         EXPRESS["Express Gateway (Rate Limit 100/15m)"]
         B2B_TOKEN["Enterprise Managed Token Manager"]
-        CACHE["SHA-256 In-Memory / Redis Cache"]
+        CACHE["Rate Limiter (Redis 캐시 미연동, 결과 캐시는 클라이언트 IndexedDB)"]
     end
 
     subgraph MultiAgentEngine ["Google Gemini 3.8 Flash 4대 멀티에이전트 파이프라인"]
@@ -133,14 +133,16 @@ flowchart TD
 
 ## 🛠️ 로컬 개발 및 검증 방법
 
+> **요구 사항**: Node.js **22.12 이상** (`.nvmrc` 참고). vitest 5, `@supabase/*`, `@google-cloud/*` 의존성이 Node 22 이상을 요구합니다.
+
 ### 1) 로컬 개발 서버 실행
 ```bash
 npm install
 npm run dev
 ```
-브라우저에서 `http://localhost:5173` 접속.
+브라우저에서 `http://localhost:3000` 접속 (`vite.config.js`의 `server.port`).
 
-### 2) 전체 단위 테스트 실행 (Vitest 14개 스위트, 51개 테스트)
+### 2) 전체 단위 테스트 실행 (Vitest 15개 파일, 61개 테스트 케이스)
 ```bash
 npm test
 ```
@@ -149,6 +151,22 @@ npm test
 ```bash
 npm run build
 ```
+
+---
+
+## 🧭 구현 현황 및 알려진 한계 (2026-11-10 코드 대조)
+
+| 영역 | 현재 구현 상태 | 근거 / 후속 작업 |
+| :--- | :--- | :--- |
+| 4-에이전트 파이프라인 | BYOK 모드(브라우저)에서 순차 실행됩니다. B2B 게이트웨이(`/api/v1/evaluate`)는 단일 프롬프트입니다. | `src/services/multiAgentEvaluator.js`, `server/index.js` · `tasks/17` |
+| 멀티테넌시 격리 | 브라우저 localStorage 키를 테넌트별로 나눈 것입니다. Supabase RLS는 스키마 DDL(`infra/supabase_schema.sql`)만 있고 앱과 연동되어 있지 않습니다. | `src/contexts/TenantContext.jsx` · `tasks/16` |
+| 면접관 공유/협업 | 게이트웨이 메모리 저장소와 10초 폴링으로 동기화합니다. Supabase Realtime은 미연동입니다. | `server/index.js`, `InterviewerCollaborationPanel.jsx` · `tasks/13`, `tasks/17` |
+| 결과 캐시 | 브라우저 IndexedDB/localStorage에 FNV-1a 전체 본문 해시 키로 저장합니다. 서버 측 Redis 캐시는 미사용입니다. | `src/services/cacheService.js` · `tasks/08` |
+| SSO | 데모용 시뮬레이션입니다. 서명 없는 토큰이며, 엔드포인트 인증도 없습니다. | `server/index.js` · `tasks/17` |
+| Web Worker | 코드는 있지만 호출되지 않습니다. | `src/workers/evaluatorWorker.js` · `tasks/18` |
+| 테스트/빌드 | 테스트 61건(정적 집계: `it` 59개, 그중 스키마 테스트가 테넌트 3곳에 대해 실행). 2026-11-10 작업 환경에 Node가 없어 실행 재검증이 필요합니다. | `tasks/15` |
+
+전체 작업 단위와 진행 상태: [`tasks/00_INDEX.md`](tasks/00_INDEX.md)
 
 ---
 

@@ -1,13 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
-import * as ReactWindow from 'react-window';
+import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
-// Robust List resolver to prevent runtime unmounting on production bundles
-const List = ReactWindow.FixedSizeList || (ReactWindow.default && ReactWindow.default.FixedSizeList);
-
-const EvidenceCardRow = ({ index, style, data }) => {
-  const { filteredEvidences, activeQuoteId, setActiveQuoteId } = data;
+// react-window v2 rowComponent signature: ({ index, style, ariaAttributes, ...rowProps })
+const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setActiveQuoteId }) => {
   const ev = filteredEvidences[index];
   if (!ev) return null;
 
@@ -58,11 +55,15 @@ const EvidenceCardRow = ({ index, style, data }) => {
   );
 };
 
+// Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
 export default function EvidenceViewer({ result }) {
   if (!result || !result.analysis) return null;
+  return <EvidenceViewerContent result={result} />;
+}
 
-  const { rawText } = result;
-  const { groundingEvidences } = result.analysis;
+function EvidenceViewerContent({ result }) {
+  const rawText = result.rawText || '';
+  const groundingEvidences = result.analysis.groundingEvidences || [];
   const [activeQuoteId, setActiveQuoteId] = useState(null);
   const [filterType, setFilterType] = useState('ALL');
   const listRef = useRef(null);
@@ -75,10 +76,10 @@ export default function EvidenceViewer({ result }) {
 
   // Auto scroll to active quote when selected
   useEffect(() => {
-    if (activeQuoteId && listRef.current && typeof listRef.current.scrollToItem === 'function') {
+    if (activeQuoteId && listRef.current && typeof listRef.current.scrollToRow === 'function') {
       const idx = filteredEvidences.findIndex(ev => ev.id === activeQuoteId);
       if (idx !== -1) {
-        listRef.current.scrollToItem(idx, 'smart');
+        listRef.current.scrollToRow({ index: idx, align: 'smart' });
       }
     }
   }, [activeQuoteId, filteredEvidences]);
@@ -216,19 +217,17 @@ export default function EvidenceViewer({ result }) {
             </div>
           ) : List ? (
             <List
-              ref={listRef}
-              height={460}
-              itemCount={filteredEvidences.length}
-              itemSize={145}
-              width="100%"
-              itemData={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
-            >
-              {EvidenceCardRow}
-            </List>
+              listRef={listRef}
+              rowComponent={EvidenceCardRow}
+              rowCount={filteredEvidences.length}
+              rowHeight={145}
+              rowProps={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
+              style={{ height: 460, width: '100%' }}
+            />
           ) : (
             <div className="space-y-2 overflow-y-auto max-h-[460px]">
               {filteredEvidences.map((ev, idx) => (
-                <EvidenceCardRow key={ev.id || idx} index={idx} style={{}} data={{ filteredEvidences, activeQuoteId, setActiveQuoteId }} />
+                <EvidenceCardRow key={ev.id || idx} index={idx} style={{}} filteredEvidences={filteredEvidences} activeQuoteId={activeQuoteId} setActiveQuoteId={setActiveQuoteId} />
               ))}
             </div>
           )}

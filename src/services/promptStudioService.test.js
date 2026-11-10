@@ -1,11 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   getCompanyPromptSettings,
   saveCompanyPromptSettings,
   resetCompanyPromptSettings,
   formatCustomPromptAddendum,
+  getActivePromptAddendum,
   PROMPT_PRESETS
 } from './promptStudioService';
+import * as geminiClient from './agents/geminiClient';
+import { runGroundingAgent } from './agents/groundingAgent';
+import { JOB_TEMPLATES } from '../data/jobTemplates';
 
 describe('Enterprise Custom HR Prompt Studio Service', () => {
   beforeEach(() => {
@@ -35,5 +39,30 @@ describe('Enterprise Custom HR Prompt Studio Service', () => {
     expect(addendum).toContain('[Enterprise Custom HR Requirements]');
     expect(addendum).toContain('LG그룹');
     expect(addendum).toContain('Taboo / Forbidden Words');
+  });
+
+  it('저장된 설정이 없으면 에이전트 프롬프트 addendum은 비어 있어야 함', () => {
+    expect(getActivePromptAddendum()).toBe('');
+  });
+
+  it('저장된 Prompt Studio 설정(회사명/금기어)이 실제 에이전트 프롬프트에 반영되어야 함', async () => {
+    saveCompanyPromptSettings({ companyName: '테스트전자', tabooWords: ['귀사', '열정페이'] });
+
+    const spy = vi.spyOn(geminiClient, 'callGeminiJson').mockResolvedValue({
+      data: { groundingEvidences: [] },
+      modelUsed: 'mock-model'
+    });
+
+    await runGroundingAgent({
+      name: '김민준',
+      jobTemplate: JOB_TEMPLATES[0],
+      rawText: '본문',
+      apiKey: 'test-api-key-12345'
+    });
+
+    const sentPrompt = spy.mock.calls[0][0].prompt;
+    expect(sentPrompt).toContain('테스트전자');
+    expect(sentPrompt).toContain('열정페이');
+    spy.mockRestore();
   });
 });

@@ -4,6 +4,7 @@ import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
 import { getAvailableGeminiModels } from './agents/geminiClient';
+import { getActivePromptAddendum } from './promptStudioService';
 
 /**
  * AI Grounding Evaluation Coordinator (Gemini API Only)
@@ -33,7 +34,8 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
         status: '⚡ IndexedDB 로컬 캐시에서 즉시 조회 완료 (토큰 비용 0원)'
       });
     }
-    return cachedResult;
+    // Same text may be re-submitted under a different applicant name: keep the requested name
+    return { ...cachedResult, name: name || cachedResult.name };
   }
 
   // Step 3: Client-Side PII Security & Blind Recruitment Anonymization
@@ -121,9 +123,10 @@ async function analyzeWithGeminiAPI({ name, jobTemplate, rawText, originalRawTex
 당신은 대기업 최고 수준의 HR 채용 전문가 및 시니어 면접관 AI입니다.
 아래 지원자의 자기소개서 본문을 꼼꼼히 검토하고, 직무 역량 기준에 따라 엄격하고 공정하게 평가하세요.
 
-[지원자 성명]: ${name}
+[지원자 성명]: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 [지원 직무]: ${jobTemplate.title}
 [직무 역량 평가 가중치]: ${JSON.stringify(jobTemplate.competencies)}
+${getActivePromptAddendum()}
 
 [지원자 자기소개서 본문]:
 """

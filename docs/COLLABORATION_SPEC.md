@@ -88,7 +88,7 @@ git checkout -b feat/17-batch-cutoff
 
 # 2. 코드 작업 및 로컬 테스트
 npm run dev     # 화면 확인
-npm test        # 51개 테스트 통과 확인 필수!
+npm test        # 전체 테스트 통과 확인 필수! (Node 22.12 이상)
 
 # 3. 커밋 및 푸시
 git add .

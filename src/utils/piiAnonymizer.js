@@ -25,6 +25,41 @@ const REGEX_PATTERNS = {
 };
 
 /**
+ * Stateless test helper: global (/g) regexes keep `lastIndex` between `.test()` calls,
+ * which caused false negatives on subsequent calls. Always reset before testing.
+ */
+function matches(regex, text) {
+  regex.lastIndex = 0;
+  const found = regex.test(text);
+  regex.lastIndex = 0;
+  return found;
+}
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Builds the list of name variants to mask.
+ * e.g. "정지훈 (지원자)" -> ["정지훈 (지원자)", "정지훈"]
+ */
+function getNameVariants(candidateName) {
+  const full = (candidateName || '').trim();
+  const base = full.replace(/\s*[([{].*?[)\]}]\s*/g, ' ').trim();
+  return [...new Set([full, base])].filter(v => v.length >= 2);
+}
+
+// Ordered masking rules applied after name masking
+const MASKING_RULES = [
+  { key: 'email', token: '[이메일 익명화]', category: '이메일' },
+  { key: 'phone', token: '[전화번호 익명화]', category: '전화번호' },
+  { key: 'rrn', token: '[주민번호 익명화]', category: '주민번호' },
+  { key: 'dob', token: '[생년월일 익명화]', category: '생년월일' },
+  { key: 'school', token: '[학교명 익명화]', category: '출신학교' },
+  { key: 'address', token: '[거주지역 익명화]', category: '거주지역' }
+];
+
+/**
  * Anonymizes PII in candidate text
  * @param {string} text - Raw candidate self-introduction text
  * @param {string} [candidateName] - Candidate's name to mask specifically
@@ -37,56 +72,27 @@ export function anonymizePII(text, candidateName = '') {
   let piiCount = 0;
   const maskedCategories = new Set();
 
-  // 1. Candidate Name Masking (if provided)
-  if (candidateName && candidateName.trim().length >= 2) {
-    const nameRegex = new RegExp(candidateName.trim(), 'g');
-    if (nameRegex.test(anonymizedText)) {
+  // 1. Candidate Name Masking (if provided) - name is escaped so regex metacharacters are literal
+  for (const variant of getNameVariants(candidateName)) {
+    const nameRegex = new RegExp(escapeRegExp(variant), 'g');
+    if (matches(nameRegex, anonymizedText)) {
       anonymizedText = anonymizedText.replace(nameRegex, '[성명 익명화]');
-      piiCount++;
-      maskedCategories.add('성명');
+      if (!maskedCategories.has('성명')) {
+        piiCount++;
+        maskedCategories.add('성명');
+      }
     }
   }
 
-  // 2. Email Masking
-  if (REGEX_PATTERNS.email.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.email, '[이메일 익명화]');
-    piiCount++;
-    maskedCategories.add('이메일');
-  }
-
-  // 3. Phone Number Masking
-  if (REGEX_PATTERNS.phone.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.phone, '[전화번호 익명화]');
-    piiCount++;
-    maskedCategories.add('전화번호');
-  }
-
-  // 4. Resident Registration Number Masking
-  if (REGEX_PATTERNS.rrn.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.rrn, '[주민번호 익명화]');
-    piiCount++;
-    maskedCategories.add('주민번호');
-  }
-
-  // 5. Date of Birth Masking
-  if (REGEX_PATTERNS.dob.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.dob, '[생년월일 익명화]');
-    piiCount++;
-    maskedCategories.add('생년월일');
-  }
-
-  // 6. School Name Masking (Blind Recruitment)
-  if (REGEX_PATTERNS.school.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.school, '[학교명 익명화]');
-    piiCount++;
-    maskedCategories.add('출신학교');
-  }
-
-  // 7. Address Masking
-  if (REGEX_PATTERNS.address.test(anonymizedText)) {
-    anonymizedText = anonymizedText.replace(REGEX_PATTERNS.address, '[거주지역 익명화]');
-    piiCount++;
-    maskedCategories.add('거주지역');
+  // 2~7. Email, Phone, RRN, DOB, School, Address
+  for (const rule of MASKING_RULES) {
+    const regex = REGEX_PATTERNS[rule.key];
+    if (matches(regex, anonymizedText)) {
+      anonymizedText = anonymizedText.replace(regex, rule.token);
+      regex.lastIndex = 0;
+      piiCount++;
+      maskedCategories.add(rule.category);
+    }
   }
 
   return {
@@ -101,12 +107,5 @@ export function anonymizePII(text, candidateName = '') {
  */
 export function hasPII(text) {
   if (!text) return false;
-  return (
-    REGEX_PATTERNS.email.test(text) ||
-    REGEX_PATTERNS.phone.test(text) ||
-    REGEX_PATTERNS.rrn.test(text) ||
-    REGEX_PATTERNS.dob.test(text) ||
-    REGEX_PATTERNS.school.test(text) ||
-    REGEX_PATTERNS.address.test(text)
-  );
+  return MASKING_RULES.some(rule => matches(REGEX_PATTERNS[rule.key], text));
 }

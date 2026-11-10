@@ -43,7 +43,7 @@ AI 생성/과장 위험도: ${summary.aiTextProbability}%
 ${currentJob.competencies.map(c => `- ${c.name}: ${competencyScores?.[c.id] ?? 70}점`).join('\n')}
 
 [주요 본문 근거(Grounding Evidences)]
-${groundingEvidences.map(e => `[${e.type.toUpperCase()}] ${e.title}\n - 원문: "${e.quote}"\n - 이유: ${e.explanation}`).join('\n\n')}
+${groundingEvidences.map(e => `[${(e.type || 'verify').toUpperCase()}] ${e.title || '근거 항목'}\n - 원문: "${e.quote}"\n - 이유: ${e.explanation}`).join('\n\n')}
 
 [맞춤형 면접 질문 제안]
 ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - 의도: ${q.intent}`).join('\n\n')}
@@ -145,10 +145,10 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-white print:text-black">포착된 본문 근거 (Grounding Evidence)</h4>
             <div className="space-y-2">
-              {groundingEvidences.map(ev => (
-                <div key={ev.id} className="bg-gray-900/50 p-3 rounded-lg border border-gray-800 space-y-1 text-xs print:bg-gray-50 print:border-gray-300">
+              {groundingEvidences.map((ev, idx) => (
+                <div key={ev.id || `ev_${idx}`} className="bg-gray-900/50 p-3 rounded-lg border border-gray-800 space-y-1 text-xs print:bg-gray-50 print:border-gray-300">
                   <div className="flex justify-between font-bold">
-                    <span className="text-white print:text-black">[{ev.type.toUpperCase()}] {ev.title}</span>
+                    <span className="text-white print:text-black">[{(ev.type || 'verify').toUpperCase()}] {ev.title || '근거 항목'}</span>
                     <span className={ev.type === 'positive' ? 'text-emerald-400' : 'text-rose-400'}>
                       {ev.scoreImpact > 0 ? `+${ev.scoreImpact}점` : `${ev.scoreImpact}점`}
                     </span>

@@ -74,12 +74,18 @@
 #### 🔹 Sprint 6.2: Express API Proxy Gateway & Docker Compose (완료 ✓)
 - [x] **Task 6.2.1**: `server/index.js` 보안 역방향 프록시 및 API Rate Limiter 구축.
 - [x] **Task 6.2.2**: `docker-compose.yml` 프론트엔드 + 게이트웨이 + Redis 캐시 오케스트레이션 세팅.
-- [x] **Task 6.2.3**: `server/index.test.js` 단위 테스트 작성 및 28개 단체 테스트 100% 통과.
+- [x] **Task 6.2.3**: `server/index.test.js` 게이트웨이 단위 테스트 8건 작성. (전체 테스트는 2026-11-10 기준 15개 파일 61건(정적 집계)이며, Node 22 환경에서 실행 재검증이 필요합니다: `tasks/15`)
 
 #### 🔹 Sprint 6.3: GitHub Actions CI/CD & Kubernetes IaC (완료 ✓)
 - [x] **Task 6.3.1**: `.github/workflows/ci-cd.yml` 자동 테스트 및 Docker 이미지 빌드 검증 파이프라인 구축.
 - [x] **Task 6.3.2**: `infra/k8s/` Deployment, Service, Ingress, ConfigMap, Secret 매니페스트 작성.
 
 ---
+
+### ⚠️ 코드 대조 각주 (2026-11-10)
+- **M2 Web Worker**: `src/services/workerService.js`와 `src/workers/evaluatorWorker.js`가 존재하지만 호출되는 곳이 없습니다. 가상 스크롤은 react-window v2 API로 수정해서 적용했습니다(`tasks/07`).
+- **M5 Prompt Studio**: 저장한 설정은 2026-11-10부터 에이전트 프롬프트에 반영됩니다(`tasks/12`).
+- **M6 / v2.0**: Supabase RLS·Realtime 연동, 게이트웨이 영속 저장소·인증, Redis 사용은 미구현입니다(`tasks/16`, `tasks/17`).
+- 전체 현황: [`tasks/00_INDEX.md`](../tasks/00_INDEX.md)
 
 © 2026 HR AX Smart Evaluator Granular Roadmap.
