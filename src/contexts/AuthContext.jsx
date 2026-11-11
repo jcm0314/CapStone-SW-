@@ -20,6 +20,12 @@ export const ROLES = {
     label: '면접관 (Interviewer)',
     badgeColor: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
     description: '배정된 지원자 평가서 열람, 1:1 형광펜 원문 확인, 실시간 면접 질문 및 코멘트 작성'
+  },
+  CANDIDATE: {
+    key: 'CANDIDATE',
+    label: '구직자 셀프 진단 (Candidate B2C)',
+    badgeColor: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
+    description: '청년 구직자 자소서 셀프 팩트체크, 약점 문장 보완 코칭 및 예상 압박 면접 연습 모드'
   }
 };
 
@@ -50,6 +56,15 @@ const DEFAULT_USERS = {
     role: 'INTERVIEWER',
     roleTitle: '결제코어플랫폼 테크 리드',
     provider: 'Slack Enterprise Grid'
+  },
+  CANDIDATE: {
+    id: 'usr_candidate_04',
+    name: '이준호 (취업준비생)',
+    email: 'junho.lee@dankook.ac.kr',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
+    role: 'CANDIDATE',
+    roleTitle: '청년 구직자 셀프 진단 모드',
+    provider: 'University Career Center'
   }
 };
 
@@ -113,8 +128,10 @@ export function AuthProvider({ children }) {
 
       case 'UPLOAD_RESUME':
       case 'RUN_EVALUATION':
-      case 'CALIBRATE_SCORE': // HITL
       case 'EXPORT_REPORT':
+        return role === 'ADMIN' || role === 'RECRUITER' || role === 'CANDIDATE';
+
+      case 'CALIBRATE_SCORE': // HITL
         return role === 'ADMIN' || role === 'RECRUITER';
 
       case 'VIEW_APPLICANTS':
