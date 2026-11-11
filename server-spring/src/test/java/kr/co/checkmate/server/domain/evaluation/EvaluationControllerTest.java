@@ -182,3 +182,4 @@ class EvaluationControllerTest {
                 .andExpect(jsonPath("$.data.reviewerNotes").value("최종 면접관 서명 확인"));
     }
 }
+

@@ -132,6 +132,16 @@ cd server-spring
 | `GET` | `/api/v1/tenants/{tenantId}/applicants/{id}/evaluation` | 지원자 평가 결과 및 근거 문장 조회 | 없음 | `200 OK` (404 Not Found) |
 | `PATCH` | `/api/v1/tenants/{tenantId}/applicants/{id}/evaluation/approve` | 인간 검토관 최종 서명 승인 (Human-Gate 잠금 해제) | `EvaluationApprovalRequest` | `200 OK` |
 
+---
+
+## 📡 면접관 채점표 및 실시간 집계 REST API 명세
+
+| Method | Endpoint | 설명 | 요청 본문 | 응답 |
+|---|---|---|---|---|
+| `POST` | `/api/v1/tenants/{tenantId}/applicants/{id}/interviews` | 면접관 개별 1-Click 채점표 및 질문 평가 제출 (Upsert) | `InterviewScorecardSubmitRequest` | `201 Created` |
+| `GET` | `/api/v1/tenants/{tenantId}/applicants/{id}/interviews` | 다중 면접관 채점표 및 종합 집계(평균점수, 합격합의) 조회 | 없음 | `200 OK` |
+
+
 
 
 
