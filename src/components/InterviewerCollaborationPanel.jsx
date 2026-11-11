@@ -14,6 +14,37 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
   const [newComment, setNewComment] = useState('');
   const [scoreAdj, setScoreAdj] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [questionRatings, setQuestionRatings] = useState({});
+
+  const handleQuickScorecardClick = async (qIdx, questionText, verdictLabel, deltaScore) => {
+    setQuestionRatings(prev => ({ ...prev, [qIdx]: verdictLabel }));
+    const noteData = {
+      author: currentUser?.name || '면접관',
+      role: currentUser?.role || 'INTERVIEWER',
+      content: `[1-Click 면접 채점 - Q${qIdx + 1} ${verdictLabel}] "${questionText.slice(0, 48)}..."`,
+      scoreAdjustment: deltaScore
+    };
+
+    try {
+      if (shareId) {
+        const updatedPayload = await addCollaborativeNote(shareId, noteData);
+        if (updatedPayload?.collaborativeNotes) {
+          setNotes(updatedPayload.collaborativeNotes);
+        }
+      } else {
+        setNotes(prev => [
+          ...prev,
+          {
+            id: `note_quick_${Date.now()}_${qIdx}`,
+            ...noteData,
+            timestamp: new Date().toISOString()
+          }
+        ]);
+      }
+    } catch (err) {
+      console.error('Failed to add quick scorecard note:', err);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -129,6 +160,67 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
           총 {notes.length}건의 기록
         </span>
       </div>
+
+      {/* 1-Click Live Interview Scorecard */}
+      {Array.isArray(applicant?.analysis?.interviewQuestions) && applicant.analysis.interviewQuestions.length > 0 && (
+        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-indigo-500/20 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5 text-indigo-400" />
+              실전 면접관용 1-Click 팩트체크 채점표 (타이핑 없이 즉시 기록)
+            </span>
+            <span className="text-[10px] text-slate-400">질문별 원클릭 판정</span>
+          </div>
+          <div className="space-y-2">
+            {applicant.analysis.interviewQuestions.map((iq, qIdx) => {
+              const currentVerdict = questionRatings[qIdx];
+              return (
+                <div key={iq.id || qIdx} className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="text-xs text-slate-200 flex-1 pr-2">
+                    <span className="font-mono font-bold text-indigo-400 mr-1.5">Q{qIdx + 1}.</span>
+                    <span>{iq.question}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '검증 통과', 3)}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
+                        currentVerdict === '검증 통과'
+                          ? 'bg-emerald-600 text-white border-emerald-400'
+                          : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
+                      }`}
+                    >
+                      ✅ 검증 통과 (+3)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '보완 필요', 0)}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
+                        currentVerdict === '보완 필요'
+                          ? 'bg-amber-600 text-white border-amber-400'
+                          : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
+                      }`}
+                    >
+                      ⚠️ 보완 필요 (0)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '과장 확인', -5)}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
+                        currentVerdict === '과장 확인'
+                          ? 'bg-rose-600 text-white border-rose-400'
+                          : 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
+                      }`}
+                    >
+                      ❌ 과장 확인 (-5)
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Notes Timeline List */}
       <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
