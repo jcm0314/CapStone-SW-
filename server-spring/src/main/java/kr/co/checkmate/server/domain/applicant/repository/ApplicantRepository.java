@@ -24,3 +24,4 @@ public interface ApplicantRepository extends JpaRepository<Applicant, UUID> {
 
     void deleteByTenantIdAndId(UUID tenantId, UUID id);
 }
+

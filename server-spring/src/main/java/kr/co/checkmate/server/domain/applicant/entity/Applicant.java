@@ -83,3 +83,4 @@ public class Applicant extends BaseTimeEntity {
         this.status = EvaluationStatus.FAILED;
     }
 }
+

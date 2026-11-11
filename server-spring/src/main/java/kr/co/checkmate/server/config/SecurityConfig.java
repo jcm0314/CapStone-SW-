@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/health").permitAll()
+                        .requestMatchers("/api/v1/tenants/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()

@@ -6,3 +6,4 @@ public enum TenantTier {
     PRO,
     ENTERPRISE
 }
+
