@@ -36,3 +36,4 @@ class HealthControllerTest {
                 .andExpect(jsonPath("$.error").doesNotExist());
     }
 }
+

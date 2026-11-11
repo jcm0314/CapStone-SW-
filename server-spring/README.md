@@ -50,3 +50,34 @@ cd server-spring
   "error": null
 }
 ```
+
+---
+
+## 🗄️ B2B 멀티테넌트 도메인 모델 (Entities)
+
+### 1. `CompanyTenant` (`company_tenants`)
+- **역할**: B2B 고객사(토스, 당근 등) 엔터프라이즈 계정 정보
+- **주요 필드**:
+  - `id`: UUID (PK)
+  - `slug`: VARCHAR(50) (UK, e.g. `toss`, `daangn`)
+  - `name`: VARCHAR(100) (회사명)
+  - `tier`: `FREE`, `STARTER`, `PRO`, `ENTERPRISE`
+  - `active`: BOOLEAN (계정 활성 여부)
+  - `created_at`, `updated_at`: JPA Auditing 자동 관리
+
+### 2. `Applicant` (`applicants`)
+- **역할**: 채용 지원자 및 자기소개서 평가 엔티티
+- **주요 필드**:
+  - `id`: UUID (PK)
+  - `tenantId`: UUID (소속 테넌트 식별자, 복합 인덱스)
+  - `name`: VARCHAR(100) (가상 마스킹 토큰/실명)
+  - `email`: VARCHAR(150)
+  - `targetRole`: VARCHAR(100) (지원 직무)
+  - `coverLetterText`: TEXT (자소서 본문)
+  - `status`: `PENDING`, `EVALUATING`, `COMPLETED`, `FAILED`
+  - `finalScore`: INTEGER (0-100)
+  - `passRecommendation`: BOOLEAN
+  - `anonymized`: BOOLEAN (PII 블라인드 여부)
+- **데이터 격리 보장**: 모든 지원자 쿼리는 `tenant_id` 조건을 필수로 적용하여 테넌트 간 데이터 침범(Cross-Tenant Leakage)을 원천 차단합니다.
+
+
