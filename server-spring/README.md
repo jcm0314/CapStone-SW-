@@ -80,4 +80,17 @@ cd server-spring
   - `anonymized`: BOOLEAN (PII 블라인드 여부)
 - **데이터 격리 보장**: 모든 지원자 쿼리는 `tenant_id` 조건을 필수로 적용하여 테넌트 간 데이터 침범(Cross-Tenant Leakage)을 원천 차단합니다.
 
+---
+
+## 📡 지원자 관리 REST API 명세
+
+| Method | Endpoint | 설명 | 요청 본문 | 응답 |
+|---|---|---|---|---|
+| `POST` | `/api/v1/tenants/{tenantId}/applicants` | 신규 지원자 자소서 등록 | `ApplicantCreateRequest` | `201 Created` |
+| `GET` | `/api/v1/tenants/{tenantId}/applicants` | 테넌트 지원자 목록 (`?status=` 필터) | 없음 | `200 OK` |
+| `GET` | `/api/v1/tenants/{tenantId}/applicants/{id}` | 지원자 상세 및 자소서 본문 조회 | 없음 | `200 OK` (404 Not Found) |
+| `PATCH` | `/api/v1/tenants/{tenantId}/applicants/{id}/status` | 평가 상태 및 점수 갱신 | `ApplicantStatusUpdateRequest` | `200 OK` |
+| `DELETE` | `/api/v1/tenants/{tenantId}/applicants/{id}` | 지원자 데이터 삭제 | 없음 | `200 OK` |
+
+
 

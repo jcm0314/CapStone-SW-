@@ -19,4 +19,6 @@ server/data/
 *.war
 .idea/
 *.iml
+.vscode/
+
 

@@ -6,3 +6,4 @@ public enum EvaluationStatus {
     COMPLETED,
     FAILED
 }
+

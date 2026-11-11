@@ -120,3 +120,4 @@ class ApplicantRepositoryTest {
         assertThat(completedList.get(0).getName()).isEqualTo("지원자2");
     }
 }
+

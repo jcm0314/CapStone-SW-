@@ -67,3 +67,4 @@ public class CompanyTenant extends BaseTimeEntity {
         this.active = true;
     }
 }
+

@@ -69,3 +69,4 @@ class CompanyTenantRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 }
+

@@ -12,3 +12,4 @@ public interface CompanyTenantRepository extends JpaRepository<CompanyTenant, UU
     Optional<CompanyTenant> findBySlug(String slug);
     boolean existsBySlug(String slug);
 }
+
