@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+import {
+  isSupabaseConfigured,
+  fetchTenantApplicantsFromSupabase,
+  syncTenantApplicantsToSupabase
+} from '../services/supabaseClient';
 
 const TenantContext = createContext(null);
 
@@ -38,7 +43,8 @@ export const TENANTS = [
         name: '정지훈 (지원자)',
         orgId: 'daangn',
         targetTeam: '동네피드추천팀',
-        applyJobId: 'dev',
+        applyJobId: 'tech_backend',
+        applyJobTitle: '백엔드 소프트웨어 엔지니어',
         status: 'COMPLETED',
         appliedAt: '2026-10-18T10:30:00Z',
         rawText: `[동네 커뮤니티 추천 모델 개발 경험]
@@ -56,31 +62,64 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
           competencyScores: {
             problem_solving: 95,
             tech_skill: 94,
-            logic_structure: 90,
-            growth_potential: 88,
-            communication: 91
+            teamwork: 88,
+            growth: 90,
+            ethics: 91
           },
-          competencies: [
-            { id: 'problemSolving', name: '문제 해결력', score: 95, reason: 'CDC 도입을 통한 장애 복구 시간 85% 단축 등 실질적 문제 해결 증명.' },
-            { id: 'techDepth', name: '기술적 깊이', score: 94, reason: 'Kafka 및 실시간 Feature Store 18ms 지연시간 최적화 역량 보유.' },
-            { id: 'authenticity', name: '진실성', score: 90, reason: '수치 중심의 구체적 서술로 신뢰도가 매우 높음.' },
-            { id: 'cultureFit', name: '협업 및 소통', score: 88, reason: '장애 대응 과정에서 팀 간 데이터 정합성 조율 경험 명시.' }
-          ],
           groundingEvidences: [
-            { quote: '피처 서빙 지연 시간을 18ms로 단축했습니다.', category: 'positive', rationale: '엔지니어링 레이턴시의 구체적 정량 지표 달성.' },
-            { quote: '조회 전환율을 14.8% 개선하는 성과를 거두었습니다.', category: 'positive', rationale: '비즈니스 핵심 KPI 기여도 입증.' },
-            { quote: '초당 12,000건의 사용자 인터랙션을 병렬 수집하고', category: 'verify', rationale: '면접 시 파티셔닝 전략 및 백프레셔 제어 방식 심층 검증 필요.' }
+            {
+              id: 'ev_1',
+              quote: '피처 서빙 지연 시간을 18ms로 단축했습니다.',
+              type: 'positive',
+              competencyId: 'tech_skill',
+              scoreImpact: 14,
+              title: '실시간 서빙 레이턴시 정량 개선',
+              explanation: '엔지니어링 레이턴시의 구체적 정량 지표(18ms)를 달성함.'
+            },
+            {
+              id: 'ev_2',
+              quote: '조회 전환율을 14.8% 개선하는 성과를 거두었습니다.',
+              type: 'positive',
+              competencyId: 'problem_solving',
+              scoreImpact: 13,
+              title: '비즈니스 KPI 기여도 입증',
+              explanation: 'A/B 테스트 기반으로 핵심 KPI(전환율 14.8%) 개선을 제시함.'
+            },
+            {
+              id: 'ev_3',
+              quote: 'CDC(Change Data Capture) 기반 재처리 파이프라인을 구축하여 장애 복구 시간을 85% 단축했습니다.',
+              type: 'positive',
+              competencyId: 'teamwork',
+              scoreImpact: 10,
+              title: '데이터 정합성 장애 대응',
+              explanation: '협업 중 발생한 정합성 이슈를 재처리 파이프라인으로 해결한 경험이 명확함.'
+            },
+            {
+              id: 'ev_4',
+              quote: '초당 12,000건의 사용자 인터랙션을 병렬 수집하고',
+              type: 'verify',
+              competencyId: 'tech_skill',
+              scoreImpact: 0,
+              title: '고부하 스트리밍 처리 본인 기여도 확인 필요',
+              explanation: '면접 시 파티셔닝 전략 및 백프레셔 제어 방식 심층 검증 필요.'
+            }
           ],
           interviewQuestions: [
             {
+              id: 'iq_1',
+              basedQuote: '초당 12,000건의 사용자 인터랙션을 병렬 수집하고',
               question: '초당 12,000건의 고부하 스트리밍 환경에서 Kafka 파티션 불균형(Skew)이나 Consumer Lag이 발생했을 때 어떻게 대응하셨나요?',
               category: '기술 검증',
-              intent: '대용량 트래픽 장애 대응 역량 확인'
+              intent: '대용량 트래픽 장애 대응 역량 확인',
+              checklist: ['파티션 키 설계 근거 설명 여부', 'Consumer Lag 모니터링 지표 제시 여부']
             },
             {
+              id: 'iq_2',
+              basedQuote: '피처 서빙 지연 시간을 18ms로 단축했습니다.',
               question: 'Feature Store 도입 시 온라인 서빙과 오프라인 학습 데이터 간의 일관성(Train-Serve Skew)은 어떻게 방지하셨습니까?',
               category: '시스템 설계',
-              intent: 'MLOps 실무 아키텍처 이해도 확인'
+              intent: 'MLOps 실무 아키텍처 이해도 확인',
+              checklist: ['온라인/오프라인 스토어 동기화 방식 설명', '18ms 측정 조건(p50/p99) 명시 여부']
             }
           ]
         }
@@ -104,7 +143,8 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
         name: '한태양 (지원자)',
         orgId: 'woowa',
         targetTeam: '라이더배차플랫폼팀',
-        applyJobId: 'dev',
+        applyJobId: 'tech_backend',
+        applyJobTitle: '백엔드 소프트웨어 엔지니어',
         status: 'COMPLETED',
         appliedAt: '2026-10-17T15:20:00Z',
         rawText: `[배차 라우팅 최적화 및 분산 캐시 아키텍처 개선]
@@ -121,25 +161,47 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
           competencyScores: {
             problem_solving: 96,
             tech_skill: 95,
-            logic_structure: 93,
-            growth_potential: 90,
-            communication: 92
+            teamwork: 90,
+            growth: 92,
+            ethics: 93
           },
-          competencies: [
-            { id: 'problemSolving', name: '문제 해결력', score: 96, reason: 'DB 락 경합을 CQRS와 Geo-Hashing으로 해결.' },
-            { id: 'techDepth', name: '기술적 깊이', score: 95, reason: 'p99 240ms -> 35ms(85.4% 향상)의 엔터프라이즈급 튜닝.' },
-            { id: 'authenticity', name: '진실성', score: 93, reason: '아키텍처 패턴과 수치 근거가 정밀함.' },
-            { id: 'cultureFit', name: '협업 및 소통', score: 90, reason: '물류/라이더 현장 요구사항에 맞춘 최적화 추진.' }
-          ],
           groundingEvidences: [
-            { quote: 'p99 응답 속도를 240ms에서 35ms로 85.4% 개선했습니다.', category: 'positive', rationale: '극적인 레이턴시 개선 지표 입증.' },
-            { quote: '배달 평균 완료 시간을 3.2분 단축시켰습니다.', category: 'positive', rationale: '서비스 운영 비용 절감 및 고객 만족도 향상.' }
+            {
+              id: 'ev_1',
+              quote: 'p99 응답 속도를 240ms에서 35ms로 85.4% 개선했습니다.',
+              type: 'positive',
+              competencyId: 'tech_skill',
+              scoreImpact: 15,
+              title: '피크 트래픽 레이턴시 정량 개선',
+              explanation: 'CQRS 적용으로 p99 240ms → 35ms(85.4%) 개선 지표를 입증함.'
+            },
+            {
+              id: 'ev_2',
+              quote: '배달 평균 완료 시간을 3.2분 단축시켰습니다.',
+              type: 'positive',
+              competencyId: 'problem_solving',
+              scoreImpact: 12,
+              title: '서비스 운영 지표 개선',
+              explanation: '경로 예측 알고리즘 개선으로 운영 비용 절감 및 고객 만족도 향상에 기여함.'
+            },
+            {
+              id: 'ev_3',
+              quote: 'Redis Cluster 기반의 지리공간 인덱싱(Geo-Hashing) 시스템을 설계했습니다.',
+              type: 'verify',
+              competencyId: 'tech_skill',
+              scoreImpact: 0,
+              title: '설계 범위 및 본인 역할 확인 필요',
+              explanation: '설계 주도 여부와 클러스터 운영 경험의 깊이를 면접에서 확인해야 함.'
+            }
           ],
           interviewQuestions: [
             {
+              id: 'iq_1',
+              basedQuote: 'Redis Cluster 기반의 지리공간 인덱싱(Geo-Hashing) 시스템을 설계했습니다.',
               question: 'Redis Geo-Hashing 기반 지리 공간 인덱스 사용 시 클러스터 노드 간 데이터 리밸런싱 과정에서 발생할 수 있는 데이터 정합성 이슈를 어떻게 다루셨나요?',
               category: '인프라/DB',
-              intent: '분산 환경 정합성 검증'
+              intent: '분산 환경 정합성 검증',
+              checklist: ['리샤딩 중 읽기/쓰기 처리 전략 설명', '본인이 직접 설계한 범위 명확화']
             }
           ]
         }
@@ -185,18 +247,35 @@ export function TenantProvider({ children }) {
     return currentTenant.defaultApplicants;
   };
 
-  // Save Tenant-specific applicants
+  // Save Tenant-specific applicants (localStorage + non-blocking Supabase RLS sync when configured)
   const saveTenantApplicants = (applicants) => {
+    const securedApplicants = applicants.map(app => ({
+      ...app,
+      orgId: currentTenant.id
+    }));
     if (typeof window !== 'undefined') {
       const storageKey = `checkmate_applicants_${currentTenant.id}`;
-      // Enforce RLS (Row Level Security): Attach current tenant orgId to all records
-      const securedApplicants = applicants.map(app => ({
-        ...app,
-        orgId: currentTenant.id
-      }));
       localStorage.setItem(storageKey, JSON.stringify(securedApplicants));
     }
+    if (isSupabaseConfigured) {
+      syncTenantApplicantsToSupabase(currentTenant.id, securedApplicants);
+    }
   };
+
+  // Hydrate tenant applicants from Supabase if configured
+  useEffect(() => {
+    if (!isSupabaseConfigured || typeof window === 'undefined') return;
+    let active = true;
+    fetchTenantApplicantsFromSupabase(currentTenant.id).then((remoteList) => {
+      if (active && Array.isArray(remoteList) && remoteList.length > 0) {
+        const storageKey = `checkmate_applicants_${currentTenant.id}`;
+        localStorage.setItem(storageKey, JSON.stringify(remoteList));
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [currentTenant.id]);
 
   return (
     <TenantContext.Provider

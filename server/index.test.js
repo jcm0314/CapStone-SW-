@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import http from 'http';
 import app from './index.js';
@@ -99,7 +100,7 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
   });
 
   describe('Enterprise SSO & Multi-Tenancy API', () => {
-    it('POST /api/v1/auth/sso-login: SSO 토큰과 사용자 프로필을 반환해야 한다', async () => {
+    it('POST /api/v1/auth/sso-login & GET /api/v1/auth/verify: HMAC-SHA256 서명된 SSO 토큰을 발급하고 검증해야 한다', async () => {
       const res = await fetch(`${baseUrl}/api/v1/auth/sso-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -113,8 +114,24 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(res.status).toBe(200);
       const body = await res.json();
       expect(body.token).toBeDefined();
+      expect(body.token).toContain('.');
       expect(body.user.role).toBe('ADMIN');
       expect(body.user.tenantId).toBe('toss-payments');
+
+      // 정상 서명 토큰 검증
+      const verifyRes = await fetch(`${baseUrl}/api/v1/auth/verify`, {
+        headers: { Authorization: `Bearer ${body.token}` }
+      });
+      expect(verifyRes.status).toBe(200);
+      const verifyBody = await verifyRes.json();
+      expect(verifyBody.valid).toBe(true);
+      expect(verifyBody.user.tenantId).toBe('toss-payments');
+
+      // 위변조 토큰 검증 거부
+      const tamperedRes = await fetch(`${baseUrl}/api/v1/auth/verify`, {
+        headers: { Authorization: `Bearer ${body.token}tampered` }
+      });
+      expect(tamperedRes.status).toBe(401);
     });
 
     it('GET /api/v1/tenants: 등록된 기업(테넌트) 목록을 반환해야 한다', async () => {

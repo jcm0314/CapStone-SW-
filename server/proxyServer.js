@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { VertexAI } from '@google-cloud/vertexai';
 import { BigQuery } from '@google-cloud/bigquery';
+import { PRIMARY_MODEL } from '../src/services/agents/geminiClient.js';
+import { anonymizePII as fullAnonymizePII } from '../src/utils/piiAnonymizer.js';
 
 dotenv.config();
 
@@ -30,11 +32,9 @@ try {
 app.use(cors());
 app.use(express.json());
 
-// Enterprise PII Masking Filter Helper (Regex Anonymizer)
-function anonymizePII(text) {
-  return text
-    .replace(/01[016789]-?\d{3,4}-?\d{4}/g, '010-****-****')
-    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '***@enterprise.com');
+// Enterprise PII Masking Filter Helper (7-Category Regex Anonymizer)
+function anonymizePII(text, name = '') {
+  return fullAnonymizePII(text, name).anonymizedText;
 }
 
 // Enterprise BigQuery Audit Trail Logging
@@ -68,15 +68,23 @@ app.post('/api/v1/enterprise/vertex-evaluator', async (req, res) => {
   const { name, applyJobId, rawText } = req.body;
 
   // 1. PII Anonymization Layer
-  const cleanText = anonymizePII(rawText || '');
+  const cleanText = anonymizePII(rawText || '', name || '');
+
+  // 2. Vertex AI 미설정 시: 가짜 평가 결과를 만들지 않고 명시적으로 503 반환
+  if (!vertexAI || !process.env.GCP_PROJECT_ID) {
+    return res.status(503).json({
+      error: 'VERTEX_NOT_CONFIGURED',
+      message: 'GCP_PROJECT_ID / 서비스 계정 자격 증명이 설정되지 않아 평가를 수행할 수 없습니다.'
+    });
+  }
 
   let analysisResult;
 
-  // 2. Official Google Cloud Vertex AI SDK Execution (If GCP credentials present)
-  if (vertexAI && process.env.GCP_PROJECT_ID) {
+  // 3. Official Google Cloud Vertex AI SDK Execution
+  {
     try {
       const generativeModel = vertexAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
+        model: process.env.GEMINI_MODEL || PRIMARY_MODEL,
         generationConfig: {
           maxOutputTokens: 2048,
           temperature: 0.2,
@@ -104,63 +112,22 @@ ${cleanText}
         analysis: parsedJson
       };
     } catch (gcpErr) {
-      console.error("[Vertex AI Real Connection Error - Falling back to Gateway Schema]", gcpErr.message);
+      // 실패를 가짜 결과로 덮지 않고 그대로 알림
+      console.error("[Vertex AI Error]", gcpErr.message);
+      return res.status(502).json({
+        error: 'VERTEX_EVALUATION_FAILED',
+        message: 'Vertex AI 평가 호출 또는 응답 파싱에 실패했습니다.'
+      });
     }
   }
 
-  // Fallback Enterprise Gateway Schema Response if live GCP credentials pending
-  if (!analysisResult) {
-    analysisResult = {
-      id: `corp_app_${Date.now()}`,
-      name,
-      applyJobId,
-      applyJobTitle: "Enterprise Software Engineer",
-      rawText: cleanText,
-      analysis: {
-        summary: {
-          totalScore: 90,
-          decision: "STRONG_PASS",
-          decisionReason: "Google Cloud Vertex AI Enterprise 엔진 분석 완료: 수치적 성과 및 기술 아키텍처 근거 우수.",
-          aiTextProbability: 10
-        },
-        competencyScores: {
-          problem_solving: 92,
-          tech_skill: 90,
-          teamwork: 88,
-          growth: 85,
-          ethics: 90
-        },
-        groundingEvidences: [
-          {
-            id: "corp_ev_1",
-            quote: "Redis 인메모리 캐싱 기법을 도입하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다.",
-            type: "positive",
-            competencyId: "problem_solving",
-            scoreImpact: 15,
-            title: "수치 기반 성능 개선 (Vertex AI 검증)",
-            explanation: "정량적 지표(86.8% 단축) 및 기술 도구(Redis) 명확히 서술됨."
-          }
-        ],
-        interviewQuestions: [
-          {
-            id: "corp_iq_1",
-            basedQuote: "Redis 인메모리 캐싱 기법을 도입하여 평균 응답 속도를 0.42초로 86.8% 단축시켰습니다.",
-            category: "엔터프라이즈 기술 검증",
-            question: "Redis 적용 시 캐시 데이터 정합성(Cache Invalidation) 및 Cache Stampede 현상은 어떻게 예방하셨습니까?",
-            intent: "대용량 프로덕션 환경에서의 분산 트랜잭션 깊이 검증",
-            checklist: ["캐시 만료 정책 서술 여부", "DB 동기화 패턴 구현 경험 확인"]
-          }
-        ]
-      }
-    };
-  }
-
-  // 3. BigQuery Audit Trail Logging
+  // 4. BigQuery Audit Trail Logging (실제 결과 값만 기록, 없으면 null)
+  const summary = analysisResult.analysis?.summary || {};
   await logBigQueryAudit({
     candidateName: name,
     jobTitle: "Enterprise Software Engineer",
-    score: analysisResult.analysis.summary.totalScore || 90,
-    decision: analysisResult.analysis.summary.decision || "STRONG_PASS"
+    score: summary.totalScore ?? null,
+    decision: summary.decision ?? null
   });
 
   res.json(analysisResult);

@@ -8,26 +8,25 @@ const STORE_NAME = 'evaluation_cache';
 const DB_VERSION = 1;
 
 /**
- * Generates a unique cache key based on rawText substring and job ID
+ * Generates a unique cache key based on the FULL (whitespace-normalized) rawText and job ID.
+ * Previously only the first 100 chars + length were hashed, so texts sharing a prefix and length collided.
  */
 export function generateCacheKey(rawText, applyJobId) {
   if (!rawText) return '';
-  const textSample = rawText.trim().slice(0, 100);
-  const length = rawText.length;
-  return `cache_${applyJobId}_${length}_${hashCode(textSample)}`;
+  const normalized = rawText.trim().replace(/\s+/g, ' ');
+  return `cache_${applyJobId}_${normalized.length}_${fnv1a(normalized, 0x811c9dc5)}${fnv1a(normalized, 0x01000193)}`;
 }
 
 /**
- * Simple string hash code helper
+ * 32-bit FNV-1a hash (synchronous, deterministic). Two seeds are combined for a ~64-bit key.
  */
-function hashCode(str) {
-  let hash = 0;
+function fnv1a(str, seed) {
+  let hash = seed >>> 0;
   for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0; // Convert to 32bit integer
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
   }
-  return Math.abs(hash).toString(16);
+  return hash.toString(16).padStart(8, '0');
 }
 
 /**

@@ -81,6 +81,25 @@ export function resetCompanyPromptSettings() {
 }
 
 /**
+ * Returns true only when the user has explicitly saved Prompt Studio settings
+ */
+export function hasCustomPromptSettings() {
+  try {
+    return typeof localStorage !== 'undefined' && Boolean(localStorage.getItem(PROMPT_STUDIO_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Addendum injected into every evaluation agent prompt.
+ * Empty when nothing has been saved, so default evaluations are not biased by the demo preset.
+ */
+export function getActivePromptAddendum() {
+  return hasCustomPromptSettings() ? formatCustomPromptAddendum(getCompanyPromptSettings()) : '';
+}
+
+/**
  * Formats custom prompt addendum for LLM prompt generation
  */
 export function formatCustomPromptAddendum(settings = getCompanyPromptSettings()) {

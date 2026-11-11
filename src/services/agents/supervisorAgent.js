@@ -1,4 +1,5 @@
-import { callGeminiJson } from './geminiClient';
+import { callGeminiJson } from './geminiClient.js';
+import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 3] Scoring & Supervisor Agent
@@ -10,9 +11,10 @@ export async function runSupervisorAgent({ name, jobTemplate, rawText, grounding
 Grounding Agent가 수집한 객관적 증거와 Critic Agent의 비판적 감사 소견을 종합 검토하여, 직무 역량 가중치에 따라 공정하고 균형 잡힌 최종 점수와 채용 결정을 내리세요.
 
 [지원자 정보]:
-- 성명: ${name}
+- 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
 - 직무 역량 가중치: ${JSON.stringify(jobTemplate.competencies)}
+${getActivePromptAddendum()}
 
 [Grounding Agent 수집 근거]:
 ${JSON.stringify(groundingEvidences, null, 2)}

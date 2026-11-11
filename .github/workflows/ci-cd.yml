@@ -16,16 +16,16 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js Environment (v20)
+      - name: Setup Node.js Environment (v22)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install Project Dependencies
         run: npm ci
 
-      - name: Execute Vitest Automated Test Suite (28 Tests)
+      - name: Execute Vitest Automated Test Suite
         run: npm test
 
       - name: Verify Production Vite Build Artifacts

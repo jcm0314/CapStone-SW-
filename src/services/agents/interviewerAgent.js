@@ -1,4 +1,5 @@
-import { callGeminiJson } from './geminiClient';
+import { callGeminiJson } from './geminiClient.js';
+import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 4] Interviewer Agent
@@ -10,8 +11,9 @@ export async function runInterviewerAgent({ name, jobTemplate, rawText, groundin
 Critic Agent가 감사한 의심/과장 문장과 Grounding Agent의 검증 필요(verify) 문장을 바탕으로, 실제 면접실에서 지원자의 진위를 가려낼 수 있는 날카로운 심층 면접 질문 2~4개와 검증 체크리스트를 작성하세요.
 
 [지원자 정보]:
-- 성명: ${name}
+- 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
+${getActivePromptAddendum()}
 
 [Critic Agent의 비판적 감사 소견]:
 ${JSON.stringify(criticReport, null, 2)}

@@ -6,6 +6,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Browser-side URL of the API gateway published on host port 3001
+        VITE_API_GATEWAY_URL: http://localhost:3001
     container_name: hr-evaluator-frontend
     ports:
       - "80:80"

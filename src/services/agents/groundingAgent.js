@@ -1,4 +1,5 @@
-import { callGeminiJson } from './geminiClient';
+import { callGeminiJson } from './geminiClient.js';
+import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 1] Grounding Agent
@@ -10,14 +11,15 @@ export async function runGroundingAgent({ name, jobTemplate, rawText, apiKey }) 
 지원자의 자기소개서 본문을 면밀히 스캔하여, 평가의 객관적 증거가 되는 실제 핵심 문장들만을 100% 원문 그대로 발췌(Quote)하세요.
 
 [지원자 정보]:
-- 성명: ${name}
+- 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
 - 직무 평가 역량 기준: ${JSON.stringify(jobTemplate.competencies)}
+${getActivePromptAddendum()}
 
 [자기소개서 본문]:
 """
 ${rawText}
-${name ? `[참고: 지원자 성명은 사전에 익명화 필터링 처리되었을 수 있습니다]` : ''}
+[참고: 본문 속 개인식별정보(성명/연락처/학교 등)는 사전에 익명화 처리되었습니다]
 """
 
 [발췌 규칙]:

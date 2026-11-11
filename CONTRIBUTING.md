@@ -71,7 +71,7 @@ git checkout -b feat/17-top50-cutoff
 - **가짜 Fallback 금지**: 
   - API 키 누락이나 에러 발생 시 임의의 가짜 점수로 채우는 코드는 금지하며, 정직한 에러를 표출해야 합니다.
 - **테스트 무결성 필수**: 
-  - 커밋이나 PR 생성 전 반드시 로컬에서 `npm test`를 실행하여 기존 51개 단위 테스트가 100% 통과하는지 확인합니다.
+  - 커밋이나 PR 생성 전 반드시 로컬에서 `npm test`를 실행하여 단위 테스트가 정상 동작하는지 확인합니다.
 - **자소서 본문 RAG 청킹 금지**: 
   - 자소서는 문맥 보존을 위해 Full-Context(1M 토큰 윈도우)로 다루며, 청킹하지 않습니다.
 
@@ -83,10 +83,10 @@ git checkout -b feat/17-top50-cutoff
 # 의존성 설치
 npm install
 
-# 로컬 개발 서버 실행 (http://localhost:5173)
+# 로컬 개발 서버 실행 (http://localhost:3000)
 npm run dev
 
-# 전체 단위 테스트 실행 (Vitest 51개 테스트)
+# 전체 단위 테스트 실행 (Vitest, Node 22.12 이상 필요)
 npm test
 
 # 프로덕션 빌드 번들 검증

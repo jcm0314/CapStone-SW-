@@ -1,0 +1,11 @@
+.gcloudignore
+.git
+.gitignore
+node_modules/
+dist/
+docs/
+presentation.pdf
+*.log
+.DS_Store
+*.local
+build_out.txt

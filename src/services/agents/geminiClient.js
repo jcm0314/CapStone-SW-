@@ -1,16 +1,35 @@
 /**
- * Shared Gemini API Client for Multi-Agent Pipeline
- * Uses the standard 'gemini-1.5-flash' model with clear, diagnostic error reporting.
+ * Shared Gemini API Client for Multi-Agent Pipeline (Browser & Node.js BFF Compatible)
+ * Uses official Google Generative Language API models ('gemini-2.5-flash' -> 'gemini-2.0-flash' -> 'gemini-1.5-flash')
+ * with environment variable override support (VITE_GEMINI_MODEL / GEMINI_MODEL).
  */
 
-// Primary model: Google Gemini 3.8 Flash (Official 2026 Recommended)
-const PRIMARY_MODEL = 'gemini-3.8-flash';
-const FALLBACK_MODEL = 'gemini-3.5-flash-lite';
+export const PRIMARY_MODEL = 'gemini-2.5-flash';
+export const FALLBACK_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+
+/**
+ * Resolves ordered list of candidate Gemini models, honoring runtime/build env overrides.
+ * @returns {string[]}
+ */
+export function resolveGeminiModels() {
+  const envModel = (
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_MODEL) ||
+    ''
+  ).trim();
+
+  const models = [
+    ...(envModel ? [envModel] : []),
+    PRIMARY_MODEL,
+    ...FALLBACK_MODELS
+  ];
+
+  return Array.from(new Set(models));
+}
 
 /**
  * Diagnostic helper to format Google API errors into user-friendly explanations
  */
-function parseGoogleApiError(status, errorJson, defaultMsg) {
+function parseGoogleApiError(status, errorJson, defaultMsg, modelName = PRIMARY_MODEL) {
   const rawMsg = errorJson?.error?.message || defaultMsg || '';
 
   if (status === 402 || rawMsg.includes('prepayment credits are depleted') || rawMsg.includes('RESOURCE_EXHAUSTED')) {
@@ -23,7 +42,7 @@ function parseGoogleApiError(status, errorJson, defaultMsg) {
     return '해당 GCP 프로젝트에 "Generative Language API"가 활성화되어 있지 않습니다. Google Cloud Console(또는 AI Studio)에서 API를 [사용 설정] 해주세요.';
   }
   if (status === 404) {
-    return `[HTTP 404] 모델(${PRIMARY_MODEL})을 찾을 수 없습니다. (상세: ${rawMsg})`;
+    return `[HTTP 404] 모델(${modelName})을 찾을 수 없습니다. (상세: ${rawMsg})`;
   }
   if (status === 429) {
     return 'Google Gemini API 무료 요청 한도(15 RPM)를 초과했습니다. 잠시 후(약 30초 뒤) 다시 시도해주세요.';
@@ -45,7 +64,7 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
   }
 
   const cleanKey = apiKey.trim();
-  const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
+  const modelsToTry = resolveGeminiModels();
   let lastError = null;
 
   for (const model of modelsToTry) {
@@ -67,7 +86,7 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
 
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
-        const formattedErr = parseGoogleApiError(response.status, errorJson, response.statusText);
+        const formattedErr = parseGoogleApiError(response.status, errorJson, response.statusText, model);
         throw new Error(formattedErr);
       }
 
@@ -101,7 +120,5 @@ export async function callGeminiJson({ prompt, apiKey, temperature = 0.2 }) {
 
 // Backward compatibility export
 export async function getAvailableGeminiModels() {
-  return [PRIMARY_MODEL, FALLBACK_MODEL];
+  return resolveGeminiModels();
 }
-
-

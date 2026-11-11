@@ -1,28 +1,28 @@
-import { runGroundingAgent } from './agents/groundingAgent';
-import { runCriticAgent } from './agents/criticAgent';
-import { runSupervisorAgent } from './agents/supervisorAgent';
-import { runInterviewerAgent } from './agents/interviewerAgent';
-import { findFuzzyMatch } from '../utils/fuzzyMatcher';
+import { runGroundingAgent } from './agents/groundingAgent.js';
+import { runCriticAgent } from './agents/criticAgent.js';
+import { runSupervisorAgent } from './agents/supervisorAgent.js';
+import { runInterviewerAgent } from './agents/interviewerAgent.js';
+import { enrichEvidencesInWorker } from './workerService.js';
 
 /**
- * 4-Stage HR Multi-Agent Orchestration Pipeline
- * 
+ * 4-Stage HR Multi-Agent Orchestration Pipeline (DAG + Promise.allSettled Fault Isolation)
+ *
  * Pipeline Workflow:
  * [Raw Text & PII Anonymized]
  *      │
  *      ▼
- * [Agent 1: Grounding Agent] ──► Extracts factual grounding quotes & initial tagging
+ * [Agent 1: Grounding Agent] ──► Extracts factual grounding quotes & Web Worker Fuzzy Offset Indexing
  *      │
  *      ▼
- * [Agent 2: Critic Agent]    ──► Performs adversarial fact-checking & AI risk audit
+ * [Agent 2: Critic Agent]    ──► Performs adversarial fact-checking & AI risk cross-audit
  *      │
- *      ▼
- * [Agent 3: Supervisor Agent]──► Synthesizes weights, calculates scores & final decision
- *      │
- *      ▼
- * [Agent 4: Interviewer Agent]─► Generates targeted interview probes for flagged points
- *      │
- *      ▼
+ *      ├───────────────────────────────────────┐ (Promise.allSettled Parallel Execution)
+ *      ▼                                       ▼
+ * [Agent 3: Supervisor Agent]           [Agent 4: Interviewer Agent]
+ *  Synthesizes weights & final score     Generates targeted interview probes
+ *      │                                       │
+ *      └───────────────────┬───────────────────┘
+ *                          ▼
  * [Final Multi-Agent Evaluation Result Package]
  */
 export async function executeMultiAgentEvaluation({
@@ -36,7 +36,7 @@ export async function executeMultiAgentEvaluation({
   const targetText = originalRawText || cleanText;
 
   // ----------------------------------------------------
-  // Stage 1: Grounding Agent Execution
+  // Stage 1: Grounding Agent Execution + Worker Offset Matching
   // ----------------------------------------------------
   if (onProgress) {
     onProgress({
@@ -55,41 +55,11 @@ export async function executeMultiAgentEvaluation({
 
   const rawGroundingEvidences = groundingRes.data?.groundingEvidences || [];
 
-  // Match and enrich indices with Exact + Fuzzy matching
-  const enrichedEvidences = rawGroundingEvidences.map((ev, idx) => {
-    let startIndex = -1;
-    let endIndex = -1;
-
-    if (ev.quote) {
-      startIndex = targetText.indexOf(ev.quote);
-      if (startIndex !== -1) {
-        endIndex = startIndex + ev.quote.length;
-      } else {
-        const fuzzy = findFuzzyMatch(targetText, ev.quote, 0.70);
-        if (fuzzy) {
-          startIndex = fuzzy.start;
-          endIndex = fuzzy.end;
-        }
-      }
-    }
-
-    return {
-      id: `ev_${idx + 1}`,
-      quote: ev.quote || '',
-      startIndex,
-      endIndex,
-      type: ['positive', 'risk', 'verify'].includes(ev.type) ? ev.type : 'verify',
-      competencyId: ev.competencyId || 'problem_solving',
-      scoreImpact: typeof ev.scoreImpact === 'number'
-        ? ev.scoreImpact
-        : (ev.type === 'positive' ? 12 : ev.type === 'risk' ? -10 : 0),
-      title: ev.title || '근거 항목',
-      explanation: ev.explanation || ''
-    };
-  });
+  // Match and enrich character indices via Web Worker (or sync fallback in Node/Test)
+  const enrichedEvidences = await enrichEvidencesInWorker(targetText, rawGroundingEvidences, 0.70);
 
   // ----------------------------------------------------
-  // Stage 2: Critic Agent Execution
+  // Stage 2: Critic Agent Execution (Adversarial Cross-Audit)
   // ----------------------------------------------------
   if (onProgress) {
     onProgress({
@@ -114,7 +84,8 @@ export async function executeMultiAgentEvaluation({
   };
 
   // ----------------------------------------------------
-  // Stage 3: Supervisor Agent Execution
+  // Stage 3 & 4: Parallel Execution via Promise.allSettled
+  // Supervisor Agent (Scoring) + Interviewer Agent (Probes)
   // ----------------------------------------------------
   if (onProgress) {
     onProgress({
@@ -122,23 +93,6 @@ export async function executeMultiAgentEvaluation({
       status: '⚖️ [Agent 3/4] Supervisor Agent: 직무 가중치 정산 및 최종 종합 합격 판정 중...',
       currentAgent: 'Supervisor Agent'
     });
-  }
-
-  const supervisorRes = await runSupervisorAgent({
-    name,
-    jobTemplate,
-    rawText: cleanText,
-    groundingEvidences: enrichedEvidences,
-    criticReport,
-    apiKey
-  });
-
-  const supervisorData = supervisorRes.data || {};
-
-  // ----------------------------------------------------
-  // Stage 4: Interviewer Agent Execution
-  // ----------------------------------------------------
-  if (onProgress) {
     onProgress({
       percent: 90,
       status: '🎙️ [Agent 4/4] Interviewer Agent: Critic 약점 지적 기반 맞춤형 심층 면접 질문 도출 중...',
@@ -146,15 +100,38 @@ export async function executeMultiAgentEvaluation({
     });
   }
 
-  const interviewerRes = await runInterviewerAgent({
-    name,
-    jobTemplate,
-    rawText: cleanText,
-    groundingEvidences: enrichedEvidences,
-    criticReport,
-    apiKey
-  });
+  const [supervisorOutcome, interviewerOutcome] = await Promise.allSettled([
+    runSupervisorAgent({
+      name,
+      jobTemplate,
+      rawText: cleanText,
+      groundingEvidences: enrichedEvidences,
+      criticReport,
+      apiKey
+    }),
+    runInterviewerAgent({
+      name,
+      jobTemplate,
+      rawText: cleanText,
+      groundingEvidences: enrichedEvidences,
+      criticReport,
+      apiKey
+    })
+  ]);
 
+  if (supervisorOutcome.status === 'rejected' && interviewerOutcome.status === 'rejected') {
+    throw supervisorOutcome.reason || interviewerOutcome.reason;
+  }
+
+  const supervisorRes = supervisorOutcome.status === 'fulfilled'
+    ? supervisorOutcome.value
+    : { modelUsed: groundingRes.modelUsed, data: {} };
+
+  const interviewerRes = interviewerOutcome.status === 'fulfilled'
+    ? interviewerOutcome.value
+    : { modelUsed: groundingRes.modelUsed, data: { interviewQuestions: [] } };
+
+  const supervisorData = supervisorRes.data || {};
   const rawQuestions = interviewerRes.data?.interviewQuestions || [];
   const enrichedQuestions = rawQuestions.map((iq, idx) => ({
     id: `iq_${idx + 1}`,
@@ -193,11 +170,20 @@ export async function executeMultiAgentEvaluation({
     analyzedAt: new Date().toISOString(),
     agentMetadata: {
       pipeline: 'HR-Multi-Agent-v2.5',
+      orchestration: 'DAG + Promise.allSettled',
       executedAgents: [
         { name: 'Grounding Agent', status: 'SUCCESS', summary: groundingRes.data?.agentSummary || `${enrichedEvidences.length}개 근거 문장 발췌` },
         { name: 'Critic Agent', status: 'SUCCESS', critique: criticReport.critiqueNotes, aiProb: criticReport.aiTextProbability, risk: criticReport.exaggerationRisk },
-        { name: 'Supervisor Agent', status: 'SUCCESS', comments: supervisorData.executiveComments || '최종 결재 완료' },
-        { name: 'Interviewer Agent', status: 'SUCCESS', questionsCount: enrichedQuestions.length }
+        {
+          name: 'Supervisor Agent',
+          status: supervisorOutcome.status === 'fulfilled' ? 'SUCCESS' : 'DEGRADED_FALLBACK',
+          comments: supervisorData.executiveComments || '최종 결재 완료'
+        },
+        {
+          name: 'Interviewer Agent',
+          status: interviewerOutcome.status === 'fulfilled' ? 'SUCCESS' : 'DEGRADED_FALLBACK',
+          questionsCount: enrichedQuestions.length
+        }
       ],
       criticReport
     },

@@ -52,4 +52,28 @@ describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
     expect(hasPII('서울대학교 졸업')).toBe(true);
     expect(hasPII('Redis 캐싱 도입으로 성능 향상')).toBe(false);
   });
+
+  it('hasPII/anonymizePII를 연속 호출해도 정규식 lastIndex 상태가 누수되지 않아야 함', () => {
+    const text = 'a@b.com 으로 연락 주세요';
+    // 동일 입력에 대한 반복 호출 결과가 항상 같아야 한다
+    for (let i = 0; i < 3; i++) {
+      expect(hasPII(text)).toBe(true);
+    }
+    expect(hasPII('x@y.com')).toBe(true);
+    expect(anonymizePII('x@y.com').maskedCategories).toContain('이메일');
+    expect(anonymizePII('x@y.com').anonymizedText).toBe('[이메일 익명화]');
+  });
+
+  it('괄호 등 정규식 특수문자가 포함된 성명도 안전하게 마스킹해야 함', () => {
+    const rawText = '안녕하세요, 정지훈입니다. 정지훈 (지원자)로 표기되기도 합니다.';
+    let result;
+    expect(() => {
+      result = anonymizePII(rawText, '정지훈 (지원자)');
+    }).not.toThrow();
+    expect(result.anonymizedText).not.toContain('정지훈');
+    expect(result.maskedCategories).toContain('성명');
+    expect(result.piiCount).toBe(1);
+
+    expect(() => anonymizePII('본문 a+b', 'a+b[')).not.toThrow();
+  });
 });

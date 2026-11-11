@@ -4,7 +4,14 @@ import {
   Sliders, MessageSquare, FileText, CheckCircle2, HelpCircle, Save, Info
 } from 'lucide-react';
 
-export default function HITLEditorModal({
+// Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
+export default function HITLEditorModal(props) {
+  const { isOpen, result } = props;
+  if (!isOpen || !result || !result.analysis) return null;
+  return <HITLEditorModalContent {...props} />;
+}
+
+function HITLEditorModalContent({
   isOpen,
   onClose,
   result,
@@ -12,8 +19,6 @@ export default function HITLEditorModal({
   onSave,
   onRevert
 }) {
-  if (!isOpen || !result || !result.analysis) return null;
-
   const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'evidences' | 'questions'
 
   // Editable local state cloned from current analysis

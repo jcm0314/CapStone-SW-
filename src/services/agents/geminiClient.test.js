@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getAvailableGeminiModels, callGeminiJson } from './geminiClient';
+import { PRIMARY_MODEL, getAvailableGeminiModels, callGeminiJson } from './geminiClient';
 
 describe('geminiClient', () => {
   beforeEach(() => {
@@ -11,10 +11,12 @@ describe('geminiClient', () => {
     await expect(callGeminiJson({ prompt: 'test', apiKey: 'abc' })).rejects.toThrow('Google Gemini API 키가 유효하지 않습니다.');
   });
 
-  it('returns primary models', async () => {
+  it('returns official Gemini models in priority order', async () => {
     const models = await getAvailableGeminiModels();
     expect(models).toBeInstanceOf(Array);
-    expect(models).toContain('gemini-3.8-flash');
+    expect(models).toContain(PRIMARY_MODEL);
+    expect(models).toContain('gemini-2.5-flash');
+    expect(models).toContain('gemini-1.5-flash');
   });
 
   it('parses valid JSON response from Gemini', async () => {
@@ -33,6 +35,6 @@ describe('geminiClient', () => {
 
     const result = await callGeminiJson({ prompt: 'hello', apiKey: 'valid-api-key-12345' });
     expect(result.data).toEqual({ status: 'ok' });
-    expect(result.modelUsed).toBe('gemini-3.8-flash');
+    expect(result.modelUsed).toBe(PRIMARY_MODEL);
   });
 });

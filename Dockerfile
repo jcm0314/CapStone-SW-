@@ -1,5 +1,5 @@
 # Stage 1: Build Environment
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -11,6 +11,11 @@ RUN npm ci
 
 # Copy full application source code
 COPY . .
+
+# Build-time public config (Vite inlines VITE_* at build time; .env files are excluded by .dockerignore)
+# e.g. docker build --build-arg VITE_API_GATEWAY_URL=https://<gateway-host> .
+ARG VITE_API_GATEWAY_URL=""
+ENV VITE_API_GATEWAY_URL=${VITE_API_GATEWAY_URL}
 
 # Run production build
 RUN npm run build

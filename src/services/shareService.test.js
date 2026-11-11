@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   generateShareId,
   createSharedEvaluation,
@@ -9,6 +9,12 @@ import {
 describe('shareService (Multi-Interviewer Live Sync & Share ID)', () => {
   beforeEach(() => {
     localStorage.clear();
+    // 게이트웨이 미가동(오프라인) 상황을 명시적으로 모킹: 실제 네트워크/로컬 포트 상태에 의존하지 않음
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network offline (mocked)')));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   const mockApplicant = {

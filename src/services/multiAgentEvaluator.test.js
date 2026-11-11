@@ -91,6 +91,11 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
     // 4단계 에이전트가 모두 호출되었는지 확인
     expect(mockCall).toHaveBeenCalledTimes(4);
 
+    // 블라인드 채용: 외부 LLM으로 전송되는 프롬프트에 지원자 성명이 포함되면 안 됨
+    mockCall.mock.calls.forEach(([args]) => {
+      expect(args.prompt).not.toContain('김민준');
+    });
+
     // 결과 객체 구조 검증
     expect(result.mode).toBe('MULTI_AGENT_ENSEMBLE');
     expect(result.agentMetadata).toBeDefined();

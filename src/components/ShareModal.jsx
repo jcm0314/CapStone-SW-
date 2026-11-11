@@ -4,9 +4,13 @@ import { createSharedEvaluation } from '../services/shareService';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 
-export default function ShareModal({ isOpen, onClose, applicant }) {
+// Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
+export default function ShareModal({ isOpen, onClose, applicant, onShareCreated }) {
   if (!isOpen || !applicant) return null;
+  return <ShareModalContent onClose={onClose} applicant={applicant} onShareCreated={onShareCreated} />;
+}
 
+function ShareModalContent({ onClose, applicant, onShareCreated }) {
   const { currentUser } = useAuth();
   const { currentTenant } = useTenant();
 
@@ -30,6 +34,9 @@ export default function ShareModal({ isOpen, onClose, applicant }) {
         if (isMounted) {
           setShareUrl(res.shareUrl);
           setShareId(res.shareId);
+          if (onShareCreated && res.shareId) {
+            onShareCreated(res.shareId);
+          }
         }
       } catch (err) {
         console.error('Failed to create share link:', err);
