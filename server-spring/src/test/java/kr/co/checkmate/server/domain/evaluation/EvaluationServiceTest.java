@@ -154,3 +154,4 @@ class EvaluationServiceTest {
         assertThat(response.getReviewerNotes()).isEqualTo("인사팀장 승인: 면접 대상자 확정");
     }
 }
+

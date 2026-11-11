@@ -32,3 +32,4 @@ public class EvaluationSaveRequest {
     @Builder.Default
     private List<EvidenceSentenceDto> evidenceSentences = new ArrayList<>();
 }
+
