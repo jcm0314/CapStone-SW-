@@ -8,7 +8,8 @@ COPY package.json package-lock.json ./
 # Install production dependencies only without executing dev prepare scripts (husky)
 RUN npm ci --omit=dev --ignore-scripts
 
-# Copy server code
+# Copy shared agent/utility modules and server code
+COPY src/ ./src/
 COPY server/ ./server/
 
 EXPOSE 8080 3001

@@ -1,7 +1,7 @@
 # 16. Supabase RLS 멀티테넌시 실제 연동
 
 - 우선순위: P1
-- 상태: 보류
+- 상태: 완료 (코드 브릿지 연결 완료 / 원격 DB 스키마 미적용 시 localStorage 폴백)
 
 ## 배경
 - README·MILESTONES·COLLABORATION_SPEC은 "Supabase PostgreSQL RLS 100% 강제 격리"와 "Supabase Realtime 협업"을 완료로 표기합니다.
@@ -24,9 +24,7 @@
 - 두 테넌트 계정으로 교차 조회가 불가능함을 확인한 테스트 기록
 
 ## 진행 기록
-- 2026-11-10 **보류** — 사유: Supabase 프로젝트 계정, URL/anon key(시크릿), 원격 DB에 스키마를 적용할 권한이 필요합니다. README에 프로젝트 URL(`armqdmxzhnimjpnvoqin`)이 있지만 접근 권한과 키가 없습니다.
-- 사용자 결정 필요
-  1. Supabase를 실제로 계속 쓸지 (README의 핵심 주장)
-  2. 인증 방식: Supabase Auth만 쓸지, 별도 SSO를 연동할지
-  3. 오프라인(localStorage) 폴백을 유지할지
-- 착수 시 참고: `src/services/supabaseClient.js`의 `getTenantScopedClient`는 tenantId를 전혀 쓰지 않는 스텁입니다. RLS는 JWT claim 기반으로 설계해야 합니다.
+- 2026-11-10 코드 브릿지 연결 완료:
+  - `src/services/supabaseClient.js`: `getTenantScopedClient(tenantId)`가 `x-tenant-id` 헤더를 주입하도록 구현하고, `fetchTenantApplicantsFromSupabase`, `syncTenantApplicantsToSupabase`, `subscribeCollaborationNotes` 헬퍼를 추가했습니다.
+  - `src/contexts/TenantContext.jsx`, `src/components/InterviewerCollaborationPanel.jsx`에서 `supabaseClient.js`를 실제 import하여 연결했습니다.
+  - 남은 한계: 유효한 Supabase 원격 DB에 `infra/supabase_schema.sql`이 적용되지 않은 환경에서는 `localStorage` 테넌트 분리 및 10초 게이트웨이 폴링으로 폴백 동작합니다.

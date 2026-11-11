@@ -1,5 +1,5 @@
-import { callGeminiJson } from './geminiClient';
-import { getActivePromptAddendum } from '../promptStudioService';
+import { callGeminiJson } from './geminiClient.js';
+import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 4] Interviewer Agent

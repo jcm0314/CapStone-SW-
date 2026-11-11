@@ -444,6 +444,7 @@ export default function App() {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         applicant={selectedApplicant}
+        onShareCreated={(newShareId) => setActiveShareId(newShareId)}
       />
     </div>
   );

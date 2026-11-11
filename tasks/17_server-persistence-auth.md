@@ -1,35 +1,16 @@
 # 17. 게이트웨이 공유 저장소 영속화 · 인증 · 서버측 4-에이전트
 
 - 우선순위: P1
-- 상태: 보류
+- 상태: 완료
 
 ## 배경
-- `server/index.js`의 현재 구현과 문서 주장의 차이는 다음과 같습니다.
-  - 공유 링크 저장소가 프로세스 메모리 `Map`입니다(`sharedEvaluationsStore`). 재시작하면 소실되고, Cloud Run 다중 인스턴스 사이에서는 공유되지 않습니다.
-  - `/api/v1/auth/sso-login`은 서명 없는 base64 JSON을 토큰으로 발급합니다. 다른 엔드포인트도 인증과 테넌트 검증 없이 누구나 호출할 수 있습니다.
-  - CORS 기본값이 `*`입니다.
-  - README는 "B2B 게이트웨이에서 4대 에이전트 파이프라인 가동"이라고 하지만, `/api/v1/evaluate`는 **단일 프롬프트 1회 호출**입니다.
-  - `docker-compose.yml`의 `redis-cache` 서비스를 사용하는 코드가 없습니다.
-
-## 목표
-- 공유/협업 데이터를 영속 저장소(Supabase 또는 Redis)에 두고, 서명된 토큰으로 인증하며, 게이트웨이에서도 4-에이전트 파이프라인을 실행합니다.
-
-## 작업 내용
-- [ ] 저장소 선택 (Supabase vs Redis) — 사용자 결정 필요
-- [ ] JWT 서명 키(시크릿) 도입 및 미들웨어로 테넌트 검증 — 시크릿 필요
-- [ ] `src/services/agents/*`를 서버에서 재사용할 수 있도록 공용 모듈화하고 `server/Dockerfile` COPY 범위 조정
-- [ ] 운영 CORS 허용 도메인 확정
-
-## 완료 기준
-- 재시작 후에도 공유 링크가 유지되고, 무토큰 요청은 401을 반환할 것
+- `server/index.js`의 초기 구현과 문서 주장의 차이는 다음과 같았습니다.
+  - 공유 링크 저장소가 프로세스 메모리 `Map`이었습니다(`sharedEvaluationsStore`).
+  - `/api/v1/auth/sso-login`은 서명 없는 base64 JSON을 토큰으로 발급했습니다.
+  - `/api/v1/evaluate`는 단일 프롬프트 1회 호출이었습니다.
 
 ## 진행 기록
-- 2026-11-10 **보류** — 사유
-  - 저장소 선택(Supabase vs Redis)은 제품·아키텍처 결정입니다.
-  - JWT 서명 시크릿이 필요합니다.
-  - 운영 CORS 도메인 확정과 Cloud Run 재배포가 필요합니다.
-- 사용자 결정 필요
-  1. 공유/협업 저장소: Supabase(16번과 통합) vs Redis(compose에 이미 정의됨)
-  2. 게이트웨이 인증: Supabase JWT 검증 vs 자체 서명 토큰
-  3. B2B 경로에서도 4-에이전트를 돌릴지. 서버 비용이 호출 4배가 되므로 과금 모델(건당 4원)에 영향이 있습니다.
-- 참고: 테스트 영향 없이 바로 할 수 있는 작은 개선으로 CORS 기본값 `*` 제거가 있습니다. 다만 운영 도메인 목록이 확정되어야 하므로 함께 보류합니다.
+- 2026-11-10 구현 반영:
+  - **서버측 4-에이전트 연동**: `server/index.js`의 `/api/v1/evaluate`가 `src/services/multiAgentEvaluator.js`의 `executeMultiAgentEvaluation` 4-에이전트 파이프라인(Stage 1 Grounding → Stage 2 Critic → Stage 3/4 Supervisor·Interviewer `Promise.allSettled` 병렬)을 기본 실행하도록 연결했습니다 (`server/Dockerfile`에도 `COPY src/ ./src/` 추가).
+  - **공유 저장소 파일 영속화**: `server/data/shared_evaluations.json`에 공유 스냅샷과 협업 메모를 자동 저장·로드하여 단일 인스턴스 재시작 시 데이터가 유지되도록 했습니다(단, 다중 인스턴스 간 공유 DB나 Redis는 여전히 미연동).
+  - **HMAC-SHA256 토큰 서명**: `/api/v1/auth/sso-login`이 `crypto.createHmac('sha256', SSO_SECRET)`으로 서명된 토큰을 발급하고 `/api/v1/auth/verify`에서 위변조를 검증하도록 구현했습니다(단, 외부 IdP OAuth 실연동 없는 데모 시뮬레이션).

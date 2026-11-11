@@ -1,18 +1,67 @@
 /**
- * Web Worker for Offloading Heavy Text Analysis & Substring Index Matching
+ * Web Worker for Offloading Heavy Text Analysis, PII Anonymization & 2-Stage Fuzzy Substring Matching
  * Runs on a background thread to ensure main UI remains smooth at 60fps.
  */
 
+import { anonymizePII } from '../utils/piiAnonymizer.js';
+import { findFuzzyMatch } from '../utils/fuzzyMatcher.js';
+
+function enrichEvidences(targetText, rawGroundingEvidences = [], threshold = 0.70) {
+  return rawGroundingEvidences.map((ev, idx) => {
+    let startIndex = -1;
+    let endIndex = -1;
+
+    if (ev.quote && targetText) {
+      startIndex = targetText.indexOf(ev.quote);
+      if (startIndex !== -1) {
+        endIndex = startIndex + ev.quote.length;
+      } else {
+        const fuzzy = findFuzzyMatch(targetText, ev.quote, threshold);
+        if (fuzzy) {
+          startIndex = fuzzy.start;
+          endIndex = fuzzy.end;
+        }
+      }
+    }
+
+    return {
+      id: ev.id || `ev_${idx + 1}`,
+      quote: ev.quote || '',
+      startIndex,
+      endIndex,
+      type: ['positive', 'risk', 'verify'].includes(ev.type) ? ev.type : 'verify',
+      competencyId: ev.competencyId || 'problem_solving',
+      scoreImpact: typeof ev.scoreImpact === 'number'
+        ? ev.scoreImpact
+        : (ev.type === 'positive' ? 12 : ev.type === 'risk' ? -10 : 0),
+      title: ev.title || '근거 항목',
+      explanation: ev.explanation || ''
+    };
+  });
+}
+
 self.onmessage = function (e) {
-  const { type, payload } = e.data;
+  const { type, payload } = e.data || {};
+
+  if (type === 'ANONYMIZE_PII') {
+    const { rawText, name } = payload || {};
+    const result = anonymizePII(rawText || '', name || '');
+    self.postMessage({ type: 'COMPLETE', payload: result });
+    return;
+  }
+
+  if (type === 'MATCH_EVIDENCES') {
+    const { targetText, rawGroundingEvidences, threshold = 0.70 } = payload || {};
+    const enriched = enrichEvidences(targetText || '', rawGroundingEvidences || [], threshold);
+    self.postMessage({ type: 'COMPLETE', payload: enriched });
+    return;
+  }
 
   if (type === 'PARSE_EVALUATION') {
     const { name, jobTemplate, rawText } = payload;
 
-    // Step 1: Initialize (10%)
     self.postMessage({ type: 'PROGRESS', percent: 10, status: '텍스트 전처리 및 정규화 작업 중...' });
 
-    // Step 2: Sentence splitting & Regex Substring indexing (35%)
     const sentences = rawText
       .split(/(?<=[.!?\n])\s+/)
       .map(s => s.trim())
@@ -20,7 +69,6 @@ self.onmessage = function (e) {
 
     self.postMessage({ type: 'PROGRESS', percent: 35, status: '문장별 하이라이트 인덱스 백그라운드 파싱 중...' });
 
-    // Step 3: Heuristic / Grounding indexing calculation (70%)
     const groundingEvidences = [];
     const interviewQuestions = [];
 
@@ -119,7 +167,6 @@ self.onmessage = function (e) {
 
     self.postMessage({ type: 'PROGRESS', percent: 75, status: '역량 가중치 및 최종 의사결정 집계 중...' });
 
-    // Step 4: Final Calculations (90%)
     const baseScore = 75;
     const rawTotal = Math.min(98, Math.max(45, baseScore + positiveScoreAdd - riskScoreSub));
     const aiTextProb = Math.min(95, Math.max(8, Math.round((aiRiskHits / (sentences.length || 1)) * 40 + 10)));
@@ -141,10 +188,10 @@ self.onmessage = function (e) {
     const competencyScores = {};
     if (jobTemplate && jobTemplate.competencies) {
       jobTemplate.competencies.forEach(c => {
-        const delta = (c.id === "problem_solving" || c.id === "tech_skill") 
+        const delta = (c.id === "problem_solving" || c.id === "tech_skill")
           ? (positiveScoreAdd > 15 ? 12 : -5)
           : 5;
-        competencyScores[c.id] = Math.min(98, Math.max(50, Math.round(rawTotal + (Math.random() * 8 - 4) + delta)));
+        competencyScores[c.id] = Math.min(98, Math.max(50, Math.round(rawTotal + delta)));
       });
     }
 
@@ -155,8 +202,8 @@ self.onmessage = function (e) {
       payload: {
         id: `app_${Date.now()}`,
         name,
-        applyJobId: jobTemplate ? jobTemplate.id : 'dev',
-        applyJobTitle: jobTemplate ? jobTemplate.title : 'Software Engineer',
+        applyJobId: jobTemplate ? jobTemplate.id : 'tech_backend',
+        applyJobTitle: jobTemplate ? jobTemplate.title : '백엔드 소프트웨어 엔지니어',
         rawText,
         analysis: {
           summary: {

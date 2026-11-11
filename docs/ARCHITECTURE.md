@@ -10,15 +10,16 @@
 
 | 경로 | 조건 | 처리 위치 | 구현 |
 | :--- | :--- | :--- | :--- |
-| **BYOK (사용자 API 키)** | 브라우저에 Gemini API 키가 등록된 경우 | 브라우저 | `src/services/multiAgentEvaluator.js` → 4-에이전트(Grounding → Critic → Supervisor → Interviewer) 순차 파이프라인. 실패 시 단일 프롬프트 백업(`aiEvaluator.analyzeWithGeminiAPI`) |
-| **B2B 관리형 (서버 키)** | 브라우저에 키가 없는 경우 | Express 게이트웨이 | `POST /api/v1/evaluate` → 서버 환경변수 `GEMINI_API_KEY`로 **단일 프롬프트** 1회 호출 (서버 측 4-에이전트는 미구현, `tasks/17`) |
+| **BYOK (사용자 API 키)** | 브라우저에 Gemini API 키가 등록된 경우 | 브라우저 | `src/services/multiAgentEvaluator.js` → 4-에이전트(Grounding → Critic → Supervisor·Interviewer `Promise.allSettled` 병렬) 파이프라인. 실패 시 단일 프롬프트 백업(`aiEvaluator.analyzeWithGeminiAPI`) |
+| **B2B 관리형 (서버 키)** | 브라우저에 키가 없는 경우 | Express 게이트웨이 | `POST /api/v1/evaluate` → 서버 환경변수 `GEMINI_API_KEY`로 `executeMultiAgentEvaluation` 4-에이전트 파이프라인 실행 (실패 시 단일 프롬프트 폴백, `tasks/17`) |
 
 공통 처리 흐름은 다음과 같습니다.
-- 두 경로 모두 전송 전에 브라우저에서 PII를 마스킹합니다(`src/utils/piiAnonymizer.js`). LLM 프롬프트에는 지원자 성명을 넣지 않습니다.
-- 결과는 IndexedDB/localStorage에 캐시합니다(`src/services/cacheService.js`, FNV-1a 키).
-- 게이트웨이는 면접관 공유 링크와 협업 메모 API(`/api/v1/shares*`)도 제공합니다. 현재 저장소는 프로세스 메모리입니다.
+- 두 경로 모두 전송 전에 PII를 마스킹합니다(`src/utils/piiAnonymizer.js`, 대용량 본문은 `workerService.js` Web Worker 오프로딩). LLM 프롬프트에는 지원자 성명을 넣지 않습니다.
+- 원문 근거 문장 위치 매핑(Exact + 2단계 Fuzzy DP)은 브라우저에서는 Web Worker(`src/workers/evaluatorWorker.js`)에서 수행하고, Node 서버에서는 동기 함수로 처리합니다.
+- 결과는 IndexedDB/localStorage에 캐시합니다(`src/services/cacheService.js`, FNV-1a 64bit 키).
+- 게이트웨이는 면접관 공유 링크와 협업 메모 API(`/api/v1/shares*`)도 제공합니다. 저장소는 메모리 `Map` 및 로컬 JSON 파일(`server/data/shared_evaluations.json`)입니다.
 
-> 현재 미연동 항목: Supabase RLS/Realtime(`src/services/supabaseClient.js`는 미사용), Web Worker(`src/workers/evaluatorWorker.js` 미사용), Redis(compose에만 정의). 상세는 `tasks/00_INDEX.md`를 참고하세요.
+> 알려진 한계 및 시뮬레이션 항목: Supabase RLS/Realtime(`src/services/supabaseClient.js`)은 환경변수 설정 시에만 동작하며 원격 DB 미적용 시 `localStorage`/10초 폴링으로 폴백됩니다. Redis(`docker-compose.yml`에만 정의)는 코드에서 호출되지 않으며, SSO는 외부 IdP 연동 없는 HMAC-SHA256 서명 토큰 데모 시뮬레이션입니다. 상세는 `tasks/00_INDEX.md`를 참고하세요.
 
 ### 🏛️ 레이어드 아키텍처 (Layered Architecture)
 

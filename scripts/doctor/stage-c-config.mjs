@@ -27,6 +27,9 @@ export const KNOWN_VARS = {
   GCP_PROJECT_ID: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 전용 (Vertex SDK/BigQuery)' },
   GCP_LOCATION: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 전용' },
   BIGQUERY_DATASET_ID: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 감사 로그 데이터셋' },
+  VITE_GEMINI_MODEL: { side: 'client', level: 'optional', desc: '클라이언트 Gemini 모델 ID 오버라이드 (기본 gemini-2.5-flash)' },
+  GEMINI_MODEL: { side: 'server', level: 'optional', desc: '서버 Gemini 모델 ID 오버라이드 (기본 gemini-2.5-flash)' },
+  SSO_TOKEN_SECRET: { side: 'server', level: 'optional', desc: '게이트웨이 SSO 토큰 HMAC-SHA256 서명 시크릿' },
 };
 
 /** src/, server/ 와 루트 설정 파일에서 환경변수 사용처를 정적으로 추출 */
@@ -371,7 +374,7 @@ export async function run(ctx, { pass, warn, fail, skip }) {
       else details.push(`${r.from} 사용처: ${importers.join(', ')}`);
       ctx.state.workerFiles = (ctx.state.workerFiles || []).concat(target);
     }
-    if (problems.length) return fail(problems[0], 'Worker는 new Worker(new URL("./x.js", import.meta.url), { type: "module" }) 형식으로 생성하고 파일명 대소문자를 정확히 맞추세요.', [...problems.slice(1), ...details]);
+    if (problems.length) return fail(problems[0], 'Worker는 new Worker(new URL("<worker-path>", import.meta.url), { type: "module" }) 형식으로 생성하고 파일명 대소문자를 정확히 맞추세요.', [...problems.slice(1), ...details]);
     if (!refs.length) return pass('Worker 생성 코드 없음', details);
     const unused = details.some((d) => d.startsWith('주의:'));
     if (unused || ctx.state.pdfWorkerCdn) return warn(unused ? 'Worker 파일은 존재하나 생성 모듈이 어디에서도 import되지 않음 (사용되지 않는 코드)' : 'pdf.js Worker를 외부 CDN에서 로드', unused ? '사용할 계획이면 src/services/workerService.js 를 호출부에 연결, 아니면 제거 (tasks/18 참고)' : "로컬 번들 사용 권장: import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'; GlobalWorkerOptions.workerSrc = workerUrl;", details);

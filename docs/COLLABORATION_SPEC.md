@@ -10,9 +10,9 @@
 - **현재 구현 완료(Phase 1)**:
   - 7종 PII 실시간 마스킹 (블라인드 채용)
   - 1:1 형광펜 Evidence Grounding 및 Levenshtein 퓨지 매칭 (초록/빨강 시각화)
-  - Gemini 3.8 Flash 4대 멀티에이전트 병렬 감사 파이프라인 (환각 0%)
-  - Supabase Realtime WebSocket 기반 1-Click Share ID 다인 면접관 실시간 협업
-  - Cloud Run 프로덕션 라이브 배포 및 Vitest 51개 단위 테스트 100% 통과 상태
+  - Gemini 2.5 Flash 4대 멀티에이전트 병렬 감사 파이프라인
+  - Supabase Realtime / 게이트웨이 폴링 기반 1-Click Share ID 다인 면접관 협업
+  - Cloud Run 프로덕션 배포 및 Vitest 단위 테스트 스위트 구축
 
 ---
 
@@ -69,9 +69,9 @@ CONTRIBUTING.md와 docs/COLLABORATION_SPEC.md 문서를 참고해서 전체 프�
 
 현재 상태:
 1. React 18 + Vite + Tailwind CSS 프론트엔드
-2. Gemini 3.8 Flash 4대 멀티에이전트 파이프라인 (src/services/agents/)
-3. Supabase Realtime & RLS 실시간 협업 시스템
-4. 51개 단위 테스트(npm test)가 100% 통과된 상태
+2. Gemini 2.5 Flash 4대 멀티에이전트 파이프라인 (src/services/agents/)
+3. Supabase RLS 브릿지 & 게이트웨이 기반 협업 시스템
+4. Vitest 단위 테스트(npm test) 구성 완료
 
 먼저 프로젝트의 전체 아키텍처와 주요 컴포넌트(src/components/), 서비스 흐름을 분석하고 내가 어떤 영역부터 파악하면 좋을지 가이드해줘!
 ```

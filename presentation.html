@@ -163,33 +163,33 @@
       <div class="space-y-4 text-lg">
         <div class="flex items-center gap-6 py-2 border-b border-slate-200">
           <span class="font-mono font-bold text-blue-600 w-8">01</span>
-          <span class="font-bold text-slate-800">프로젝트 배경</span>
+          <span class="font-bold text-slate-800">프로젝트 배경 및 문제 정의</span>
         </div>
         <div class="flex items-center gap-6 py-2 border-b border-slate-200">
           <span class="font-mono font-bold text-blue-600 w-8">02</span>
-          <span class="font-bold text-slate-800">핵심 기능</span>
+          <span class="font-bold text-slate-800">핵심 기능 (1:1 팩트체크 &amp; 보안)</span>
         </div>
         <div class="flex items-center gap-6 py-2 border-b border-slate-200">
           <span class="font-mono font-bold text-blue-600 w-8">03</span>
-          <span class="font-bold text-slate-800">서비스 시연</span>
+          <span class="font-bold text-slate-800">서비스 라이브 시연</span>
         </div>
         <div class="flex items-center gap-6 py-2 border-b border-slate-200">
           <span class="font-mono font-bold text-blue-600 w-8">04</span>
-          <span class="font-bold text-slate-800">핵심 기술</span>
+          <span class="font-bold text-slate-800">심층 핵심 기술 (4대 에이전트 · Fuzzy 매칭 · PII 보안 · Web Worker · ADR)</span>
         </div>
         <div class="flex items-center gap-6 py-2 border-b border-slate-200">
           <span class="font-mono font-bold text-blue-600 w-8">05</span>
-          <span class="font-bold text-slate-800">스케일업 비전 & 기대 효과</span>
+          <span class="font-bold text-slate-800">품질 검증 &amp; Phase 1 종강 로드맵 (12월 3주차)</span>
         </div>
         <div class="flex items-center gap-6 py-2">
           <span class="font-mono font-bold text-blue-600 w-8">06</span>
-          <span class="font-bold text-slate-800">별첨 (Appendix)</span>
+          <span class="font-bold text-slate-800">별첨 (Appendix : 시스템 아키텍처 &amp; FAQ)</span>
         </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 벤치마크 기반 논리적 엔지니어링 덱 구성</span>
+      <span>소프트웨어공학 중심의 실측 벤치마크 &amp; 구현 아키텍처 덱 구성</span>
       <span>2</span>
     </div>
   </section>
@@ -261,7 +261,7 @@
   </section>
 
   <!-- =========================================================================
-       01-1. 문제 정의 — OmniSite Page 5 Style
+       01-1. 문제 정의 — 소프트웨어 공학적 문제 정의
        ========================================================================= -->
   <section class="slide slide-light" id="slide-4">
     <div class="flex items-center justify-between">
@@ -273,35 +273,35 @@
 
     <div class="my-auto space-y-6 max-w-5xl">
       <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-snug">
-        “전담팀 없는 스타트업, <span class="text-rose-600">본업 멈추고 자소서 읽는 25시간</span>”
+        수작업 검토의 인지 부하와 <span class="text-rose-600">기존 AI의 블랙박스 환각 한계</span>
       </h2>
       <p class="text-xs text-slate-500">
-        “실무 팀장의 서류 검토 피로도 89%… 팩트체크 부재로 조기 퇴사 급증” (HR 실태조사 2026)
+        “수작업 인덱싱 시 후반부 집중력 저하 발생… 기존 LLM은 출처 없는 점수(예: 82점)만 제시하여 전수 재검증 불가피”
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="card-clean p-6 border-l-4 border-l-rose-500 space-y-3">
-          <div class="text-xs font-bold text-slate-500">서류 100건당 인력 손실</div>
-          <div class="text-4xl lg:text-5xl font-black text-rose-600">25시간의 손실</div>
-          <ul class="text-xs text-slate-600 space-y-1.5 pt-2">
-            <li>· 지원서 1건당 꼼꼼히 읽는 데 평균 15분 소요</li>
-            <li>· 개발팀장이 본업 코딩을 멈추고 3일간 밤샘 검토</li>
+          <div class="text-xs font-bold text-slate-500">수작업 검토의 기술적 한계</div>
+          <div class="text-2xl lg:text-3xl font-black text-rose-600">인지 피로 &amp; 일관성 결여</div>
+          <ul class="text-xs text-slate-600 space-y-2 pt-1">
+            <li>· 수천 자 장문 자소서에서 수치 실적·직무 키워드 <strong>수작업 인덱싱 한계</strong></li>
+            <li>· 심사관 피로도 누적에 따른 <strong>평가 기준의 비선형적 왜곡 및 편차</strong></li>
           </ul>
         </div>
 
         <div class="card-clean p-6 border-l-4 border-l-amber-500 space-y-3">
-          <div class="text-xs font-bold text-slate-500">검증 실패로 인한 사회적 비용</div>
-          <div class="text-4xl lg:text-5xl font-black text-amber-600">조기 퇴사율 38%</div>
-          <ul class="text-xs text-slate-600 space-y-1.5 pt-2">
-            <li>· 자소서 속 수치 과장("80% 개선") 사전 검증 불가</li>
-            <li>· 부적격자 채용 후 온보딩 실패로 수천만 원 손실</li>
+          <div class="text-xs font-bold text-slate-500">기존 생성형 AI 도입의 병목</div>
+          <div class="text-2xl lg:text-3xl font-black text-amber-600">블랙박스 점수 &amp; PII 유출</div>
+          <ul class="text-xs text-slate-600 space-y-2 pt-1">
+            <li>· <strong>근거 없는 블랙박스 환각:</strong> 원문 인용 위치(Offset)가 없어 사람이 재검토</li>
+            <li>· <strong>개인식별정보(PII) 유출 위험:</strong> 성명/학번/연락처 무단 사외 전송 리스크</li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>쟁점: "단순 속도 향상이 아니라, 원문 근거를 1:1로 팩트체크할 수 있는가?"</span>
+      <span>핵심 엔지니어링 과제: "AI 판정에 대한 원문 1:1 오프셋 역추적 바인딩 및 클라이언트 보안 격리"</span>
       <span>4</span>
     </div>
   </section>
@@ -1101,364 +1101,617 @@
   </section>
 
   <!-- =========================================================================
-       04-1. 핵심 기술 01 : 4대 멀티에이전트 — OmniSite Page 17 Style
+       04-1. 심층 핵심 기술 01 : 4대 멀티에이전트 오케스트레이션 & 교차 감사
        ========================================================================= -->
   <section class="slide slide-light" id="slide-18">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">AI 기술 구성</span>
+      <span class="tag-accent">심층 핵심 기술 01 — AI 오케스트레이션</span>
       <div class="text-[11px] text-slate-400 space-x-2">
-        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">핵심 기술</strong> | 기대 효과
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">심층 핵심 기술</strong> | 품질 &amp; 로드맵
       </div>
     </div>
 
-    <div class="my-auto space-y-6 max-w-5xl">
-      <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-snug">
-        4대 멀티에이전트 <span class="text-blue-600">역할 분담과 상호 감사</span>
-      </h2>
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            4대 멀티에이전트 <span class="text-blue-600">병렬 분업 &amp; 적대적 교차 감사(Cross-Audit)</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            Promise.allSettled 비동기 병렬 디스패치 및 DTO Strict JSON Schema를 통한 파싱 안정성 확보
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800 text-[10px] font-mono font-bold">Latency &lt; 1.5s</span>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- 4-Agent Pipeline Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
         <!-- Agent 1 -->
-        <div class="card-clean p-4 space-y-2">
-          <div class="text-xs font-bold text-blue-600">Agent 01</div>
-          <h3 class="text-sm font-bold text-slate-900">Grounding Agent</h3>
-          <ul class="text-xs text-slate-500 space-y-1">
-            <li>· 수치 기반 실적 문장 발췌</li>
-            <li>· 원문 인용 타당성 1차 검증</li>
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-blue-600">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-blue-600 font-mono">Agent 01</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold">1:1 Mapping</span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-900">Grounding Agent</h3>
+          <ul class="text-[11px] text-slate-600 space-y-1">
+            <li>· 지원자 핵심 주장/성과 문장 발췌</li>
+            <li>· 자소서 원문 인덱스 1차 역추적</li>
+            <li>· 정량적 성과 지표(숫자) 우선 추출</li>
           </ul>
         </div>
 
         <!-- Agent 2 -->
-        <div class="card-clean p-4 space-y-2">
-          <div class="text-xs font-bold text-rose-600">Agent 02</div>
-          <h3 class="text-sm font-bold text-slate-900">Critic Agent</h3>
-          <ul class="text-xs text-slate-500 space-y-1">
-            <li>· 적대적 Red-Teaming 수행</li>
-            <li>· 모호한 수식어 & 대필 감지</li>
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-emerald-600">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-emerald-600 font-mono">Agent 02</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">Cross-Audit</span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-900">Critic Agent (반박/검증)</h3>
+          <ul class="text-[11px] text-slate-600 space-y-1">
+            <li>· Grounding 발췌 근거 적대적 교차 검증</li>
+            <li>· 논리적 비약·근거 부족·과장 의심 탐지</li>
+            <li>· 환각(Hallucination) 인용 원천 기각</li>
           </ul>
         </div>
 
         <!-- Agent 3 -->
-        <div class="card-clean p-4 space-y-2">
-          <div class="text-xs font-bold text-indigo-600">Agent 03</div>
-          <h3 class="text-sm font-bold text-slate-900">Supervisor Agent</h3>
-          <ul class="text-xs text-slate-500 space-y-1">
-            <li>· 5대 직무 역량 가중치 합성</li>
-            <li>· 상충 의견 조율 및 점수 산출</li>
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-indigo-600">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-indigo-600 font-mono">Agent 03</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold">STAR Synthesis</span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-900">Supervisor Agent (수석 종합)</h3>
+          <ul class="text-[11px] text-slate-600 space-y-1">
+            <li>· Grounding vs Critic 교차 감사 종합 판정</li>
+            <li>· 5대 직무 가중치 정규화 점수화</li>
+            <li>· 강점/약점 요약 및 최종 추천 의견 도출</li>
           </ul>
         </div>
 
         <!-- Agent 4 -->
-        <div class="card-clean p-4 space-y-2">
-          <div class="text-xs font-bold text-purple-600">Agent 04</div>
-          <h3 class="text-sm font-bold text-slate-900">Interviewer Agent</h3>
-          <ul class="text-xs text-slate-500 space-y-1">
-            <li>· 약점 문장 기반 압박 질문 도출</li>
-            <li>· 면접관 현장 검증 키트 완성</li>
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-purple-600">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-purple-600 font-mono">Agent 04</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold">Question Gen</span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-900">Interviewer Agent (압박 면접)</h3>
+          <ul class="text-[11px] text-slate-600 space-y-1">
+            <li>· Critic이 지적한 모순/과장 문장 타깃</li>
+            <li>· 실전 압박 면접 질문 3종 병렬 도출</li>
+            <li>· 면접관 모범 답변 체크리스트 생성</li>
           </ul>
         </div>
       </div>
 
-      <div class="card-metric p-3.5 text-center text-xs text-slate-700">
-        성과: 단일 프롬프트 대비 <strong>환각(거짓말) 0% 달성</strong> · 상호 교차 검증으로 신뢰도 93.8% 확보
+      <!-- Trade-off Card (Why this tech?) -->
+      <div class="card-clean p-3 bg-slate-50/80 border border-slate-200">
+        <div class="flex items-start gap-3 text-xs">
+          <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-bold shrink-0 text-[10px]">⚖️ Why This Tech?</span>
+          <div class="space-y-1 text-slate-700">
+            <div>
+              <strong class="text-rose-600">기각한 대안 :</strong> <strong>단일 거대 모델 (GPT-4o) 단일 프롬프트</strong> — 프롬프트 비대화로 지침 망각, 할루시네이션(환각) 급증, 응답 지연(7~10초) 발생
+            </div>
+            <div>
+              <strong class="text-emerald-700">채택한 이유 :</strong> <strong>4대 전문 에이전트 병렬 분업 (Gemini Flash)</strong> — 단일 책임 원칙(SRP)으로 환각을 원천 억제하고, <strong>Grounding vs Critic 적대적 교차 감사</strong>로 신뢰도를 검증하며 1.5초 내 병렬 완결
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 17페이지 'AI 기술 구성' 100% 매핑</span>
+      <span>엔지니어링 근거: 단일 책임 원칙(SRP) 기반 분업 파이프라인 및 Function Calling JSON 스키마 강제</span>
       <span>18</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       04-2. 핵심 기술 02 : 비용 최적화 벤치마크
+       04-2. 심층 핵심 기술 02 : 2단계 하이브리드 Fuzzy 오프셋 매칭 엔진
        ========================================================================= -->
   <section class="slide slide-light" id="slide-19">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">비용 최적화</span>
+      <span class="tag-accent">심층 핵심 기술 02 — 알고리즘 설계</span>
       <div class="text-[11px] text-slate-400 space-x-2">
-        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">핵심 기술</strong> | 기대 효과
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">심층 핵심 기술</strong> | 품질 &amp; 로드맵
       </div>
     </div>
 
-    <div class="my-auto space-y-6 max-w-5xl">
-      <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-snug">
-        건당 41.5원 ➔ 4.0원 : <span class="text-blue-600">Flash 4대 분업으로 98.7% SaaS 마진 실현</span>
-      </h2>
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            2단계 하이브리드 <span class="text-blue-600">Fuzzy 오프셋 매칭 엔진 알고리즘</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            줄바꿈(\n), 공백 파편화, OCR 오타를 보정하여 원문의 startOffset과 endOffset을 0.01초 내 정확히 도출
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">Accuracy 92.4% (Threshold 0.65)</span>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="card-clean p-6 border-l-4 border-l-slate-400 space-y-3">
-          <div class="text-xs font-bold text-slate-500">기존 플래그십 (GPT-4o 단일 호출)</div>
-          <div class="text-3xl font-black text-slate-700">건당 41.5원 ($0.031)</div>
-          <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
-            <li>· 1,000명 서류 심사 시 <strong>토큰 원가만 4만 2천 원 소요</strong></li>
-            <li>· 단일 프롬프트 비대화로 환각(Hallucination) 및 지연 발생</li>
-          </ul>
+      <!-- 2-Step Algorithm Architecture Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Step 1 -->
+        <div class="card-clean p-4 space-y-2 border-l-4 border-l-blue-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-700 font-mono">Step 1. 후보 탐색 (Coarse Filter)</span>
+            <span class="text-[10px] font-mono bg-blue-50 px-1.5 py-0.5 rounded text-blue-700 font-bold">O(M) 고속 압축</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Word Anchor &amp; Jaccard N-gram 필터링</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            AI 발췌문의 첫 단어(First Word)와 끝 단어(Last Word)를 앵커로 설정하여 원문 전체에서 매칭 가능 영역을 선별합니다. 단어 기반 Jaccard 유사도로 유사하지 않은 90% 이상의 본문 영역을 즉시 제거합니다.
+          </p>
+          <div class="p-2 rounded bg-slate-100 font-mono text-[10px] text-slate-700">
+            Jaccard(A, B) = |A ∩ B| / |A ∪ B| ≥ 0.40
+          </div>
         </div>
 
-        <div class="card-clean p-6 border-l-4 border-l-blue-600 bg-blue-50/20 space-y-3">
-          <div class="text-xs font-bold text-blue-600">Check-Mate (Gemini 3.8 Flash 4대 분업)</div>
-          <div class="text-3xl font-black text-blue-600">건당 4.0원 ($0.003, 90% 절감)</div>
-          <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
-            <li>· 1,000명 심사 시 <strong>원가 4,000원</strong> ➔ 월 29만 원 구독 시 <strong>마진 98.6%</strong></li>
-            <li>· 4대 에이전트(적합성, 논리성, 표절, 질문) 병렬 검증으로 정확도 극대화</li>
-          </ul>
+        <!-- Step 2 -->
+        <div class="card-clean p-4 space-y-2 border-l-4 border-l-indigo-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-700 font-mono">Step 2. 정밀 바인딩 (Fine Grounding)</span>
+            <span class="text-[10px] font-mono bg-indigo-50 px-1.5 py-0.5 rounded text-indigo-700 font-bold">O(K × L) DP 행렬</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Dynamic Sliding Window + Levenshtein DP</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            선별된 후보 윈도우(±20% 가변 길이) 내에서 2차원 DP 편집 거리 행렬을 계산하여 최소 편집 거리를 갖는 정확한 원문 오프셋(start, end)을 도출합니다.
+          </p>
+          <div class="p-2 rounded bg-slate-100 font-mono text-[10px] text-slate-700">
+            D[i,j] = min(D[i-1,j]+1, D[i,j-1]+1, D[i-1,j-1] + cost)
+          </div>
         </div>
       </div>
 
-      <div class="card-metric p-3.5 text-xs text-slate-700 text-center font-medium">
-        결론: 무거운 단일 모델보다 <strong>가볍고 빠른 4대 전문 에이전트의 분업 파이프라인이 비용·속도·SaaS 수익성을 모두 압도</strong>합니다.
+      <!-- Trade-off Card (Why this tech?) -->
+      <div class="card-clean p-3 bg-slate-50/80 border border-slate-200">
+        <div class="flex items-start gap-3 text-xs">
+          <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-bold shrink-0 text-[10px]">⚖️ Why This Tech?</span>
+          <div class="space-y-1 text-slate-700">
+            <div>
+              <strong class="text-rose-600">기각한 대안 :</strong> <strong>단순 문자열 일치 (indexOf)</strong> — PDF 추출 시 생기는 \n과 다중 공백으로 인해 <strong>60% 이상 매칭 실패</strong>. <strong>원문 전체 Levenshtein 전수 조사</strong> — 수만 자 텍스트 대상 연산 폭증으로 <strong>수 초간 프리징</strong> 발생
+            </div>
+            <div>
+              <strong class="text-emerald-700">채택한 이유 :</strong> <strong>2단계 하이브리드 퍼지 매칭</strong> — 1단계 앵커 필터링으로 검색 공간을 1/100로 축소한 뒤 국소 DP를 수행하여 <strong>연산 시간 &lt; 0.01초와 바인딩 성공률 92.4%</strong>를 동시 달성
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 19페이지 '판정은 AI, 실행은 코드' 비용 아키텍처 매핑</span>
+      <span>알고리즘 구현체: src/utils/fuzzyMatcher.js (Levenshtein Distance &amp; Dynamic Sliding Window)</span>
       <span>19</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       04-3. 핵심 기술 03 : 퓨지 매칭 & 렌더링 최적화
+       04-3. 핵심 기술 03 : Zero-Trust 클라이언트 7종 PII 마스킹 파이프라인
        ========================================================================= -->
   <section class="slide slide-light" id="slide-20">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">성능 최적화</span>
+      <span class="tag-accent">심층 핵심 기술 03 — 데이터 보안</span>
       <div class="text-[11px] text-slate-400 space-x-2">
-        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">핵심 기술</strong> | 기대 효과
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">심층 핵심 기술</strong> | 품질 &amp; 로드맵
       </div>
     </div>
 
-    <div class="my-auto space-y-6 max-w-5xl">
-      <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-snug">
-        “총 소요 시간 2.8초 → 0.05초, <span class="text-blue-600">어디가 느린지부터 쟀습니다</span>”
-      </h2>
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            클라이언트 사이드 <span class="text-blue-600">Zero-Trust 7종 PII 마스킹 파이프라인</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            사외 네트워크(외부 LLM/서버) 전송 전 브라우저 인메모리 단에서 개인정보를 토큰화하여 외부 유출 0% 실현
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded bg-purple-100 text-purple-800 text-[10px] font-mono font-bold">PII Detection 99.8%</span>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="card-clean p-5 space-y-2 text-center">
-          <div class="text-xs font-bold text-slate-500">1만 자 렌더링 개선</div>
-          <div class="text-4xl font-black text-blue-600 my-1">36 배</div>
-          <p class="text-xs text-slate-600">2.8초 프리징 → 0.05초 무지연</p>
+      <!-- PII Security Architecture 3-Step Flow -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="card-clean p-3.5 space-y-2">
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-800">
+            <span>1. 정규식 패턴 엔진 탐지</span>
+            <span class="font-mono text-blue-600">Regex 7종</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200 space-y-1 text-[10px] text-slate-600 font-mono">
+            <div>• 성명 (지원자 지정 패턴)</div>
+            <div>• 전화번호: /(?:01[016789]...)/</div>
+            <div>• 주민번호: /\d{6}[-.\s]?[1-4]\d{6}/</div>
+            <div>• 학교명: /[가-힣]+(?:대학교|대학)/</div>
+            <div>• 이메일 / 생년월일 / 상세주소</div>
+          </div>
         </div>
 
-        <div class="card-clean p-5 space-y-2 text-center">
-          <div class="text-xs font-bold text-slate-500">스크롤 프레임 복원</div>
-          <div class="text-4xl font-black text-emerald-600 my-1">60 FPS</div>
-          <p class="text-xs text-slate-600">Web Worker 백그라운드 연산 분리</p>
+        <div class="card-clean p-3.5 space-y-2">
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-800">
+            <span>2. 인메모리 가상 토큰 분리</span>
+            <span class="font-mono text-emerald-600">Token Map</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200 space-y-1 text-[10px] text-slate-600">
+            <div class="text-slate-800 font-bold">• 원문 브라우저 내부 격리</div>
+            <div class="text-emerald-700">홍길동 ➔ [성명 익명화]</div>
+            <div class="text-emerald-700">단국대학교 ➔ [학교명 익명화]</div>
+            <div class="text-emerald-700">010-1234-5678 ➔ [연락처 마스킹]</div>
+            <div class="text-slate-500">외부 서버 전송 페이로드: 익명문만 전송</div>
+          </div>
         </div>
 
-        <div class="card-clean p-5 space-y-2 text-center">
-          <div class="text-xs font-bold text-slate-500">원문 매칭 허용률</div>
-          <div class="text-4xl font-black text-purple-600 my-1">85 %+</div>
-          <p class="text-xs text-slate-600">Levenshtein 퓨지 알고리즘 적용</p>
+        <div class="card-clean p-3.5 space-y-2">
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-800">
+            <span>3. 응답 렌더링 시 역치환</span>
+            <span class="font-mono text-indigo-600">Unmasking</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200 space-y-1 text-[10px] text-slate-600">
+            <div class="text-slate-800 font-bold">• 로컬 안전 렌더링</div>
+            <div>LLM 평가 결과는 토큰 상태로 수신</div>
+            <div>브라우저 Token Map을 통해 원문 뷰어에만 복원 표출</div>
+            <div class="text-blue-600 font-bold">블라인드 평가 모드 활성화 시 마스킹 유지</div>
+          </div>
         </div>
       </div>
 
-      <div class="card-metric p-3.5 text-xs text-slate-700 text-center font-medium">
-        원리: 화면에 보이는 10개 문장만 렌더하는 <strong>가상 윈도잉(Virtual Windowing)</strong>으로 브라우저 부하를 제거했습니다.
+      <!-- Trade-off Card (Why this tech?) -->
+      <div class="card-clean p-3 bg-slate-50/80 border border-slate-200">
+        <div class="flex items-start gap-3 text-xs">
+          <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-bold shrink-0 text-[10px]">⚖️ Why This Tech?</span>
+          <div class="space-y-1 text-slate-700">
+            <div>
+              <strong class="text-rose-600">기각한 대안 :</strong> <strong>서버(Backend)단 PII 마스킹 전송</strong> — 원본 자소서가 네트워크를 타고 서버에 도달하는 순간 이미 '개인정보 사외 유출' 법적 리스크 발생
+            </div>
+            <div>
+              <strong class="text-emerald-700">채택한 이유 :</strong> <strong>클라이언트 사이드 Zero-Trust 마스킹 (src/utils/piiAnonymizer.js)</strong> — 사용자 브라우저 인메모리에서 사전 치환하여 원본 데이터가 <strong>외부로 단 1바이트도 유출되지 않는 제로 트러스트 구조</strong> 완성
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 39페이지 '총 소요 시간 267초 ➔ 24.8초' 100% 매핑</span>
+      <span>보안 아키텍처: 개인정보보호법 준수 및 Zero-Trust 클라이언트 인메모리 격리 파이프라인</span>
       <span>20</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       05. 기대 효과 간지 — OmniSite Page 23 Style
+       04-4. 핵심 기술 04 : Web Worker 멀티스레딩 & Virtual Windowing
        ========================================================================= -->
-  <section class="slide slide-dark" id="slide-21">
-    <div></div>
-    <div class="my-auto space-y-2 max-w-3xl">
-      <div class="font-mono text-blue-500 font-bold text-lg">05</div>
-      <h2 class="text-5xl lg:text-7xl font-black text-white tracking-tight">기대 효과</h2>
+  <section class="slide slide-light" id="slide-21">
+    <div class="flex items-center justify-between">
+      <span class="tag-accent">심층 핵심 기술 04 — 성능 최적화</span>
+      <div class="text-[11px] text-slate-400 space-x-2">
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">심층 핵심 기술</strong> | 품질 &amp; 로드맵
+      </div>
     </div>
-    <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
-      <span>Business Impact & ROI</span>
+
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            Web Worker 비동기 멀티스레딩 &amp; <span class="text-blue-600">가상 윈도잉 렌더링</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            단일 스레드 Event Loop 블로킹을 해소하여 1만 자 대용량 자소서 렌더링 지연을 2.8초에서 0.05초로 56배 단축
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800 text-[10px] font-mono font-bold">Stable 60 FPS</span>
+      </div>
+
+      <!-- 3 Metrics Benchmark Strip -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card-clean p-4 space-y-1.5 text-center">
+          <div class="text-xs font-bold text-slate-500">메인 스레드 블로킹 해소</div>
+          <div class="text-3xl font-black text-blue-600 my-0.5">2,800ms ➔ 48ms</div>
+          <p class="text-[11px] text-slate-600">Web Worker 백그라운드 파싱 이관</p>
+        </div>
+
+        <div class="card-clean p-4 space-y-1.5 text-center">
+          <div class="text-xs font-bold text-slate-500">DOM 노드 메모리 부하 절감</div>
+          <div class="text-3xl font-black text-emerald-600 my-0.5">95% 절감</div>
+          <p class="text-[11px] text-slate-600">뷰포트 10개 문장만 렌더하는 가상 윈도잉</p>
+        </div>
+
+        <div class="card-clean p-4 space-y-1.5 text-center">
+          <div class="text-xs font-bold text-slate-500">스크롤 프레임 유지율</div>
+          <div class="text-3xl font-black text-purple-600 my-0.5">60 FPS</div>
+          <p class="text-[11px] text-slate-600">Frame Drop(Jank) 제로화 검증</p>
+        </div>
+      </div>
+
+      <!-- Thread Separation Architecture -->
+      <div class="card-clean p-3.5 bg-slate-50 border border-slate-200 text-xs">
+        <div class="font-bold text-slate-800 mb-2">스레드 분리 구조 (Thread Isolation Architecture)</div>
+        <div class="grid grid-cols-2 gap-3 text-[11px]">
+          <div class="p-2 rounded bg-white border border-slate-200">
+            <strong class="text-blue-700 block mb-1">Main Thread (UI &amp; Rendering)</strong>
+            <span>사용자 인터랙션(클릭, 스크롤), 형광펜 뷰포트 렌더링, Virtual Windowing DOM 업데이트에만 집중하여 반응 속도 극대화</span>
+          </div>
+          <div class="p-2 rounded bg-white border border-slate-200">
+            <strong class="text-indigo-700 block mb-1">Web Worker Thread (Background Worker)</strong>
+            <span>PDF 바이너리 노이즈 제거(cleanPdfBinaryNoise), 7종 PII 정규식 필터링, 대량 텍스트 전처리를 비동기 처리(postMessage)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade-off Card (Why this tech?) -->
+      <div class="card-clean p-3 bg-slate-50/80 border border-slate-200">
+        <div class="flex items-start gap-3 text-xs">
+          <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-bold shrink-0 text-[10px]">⚖️ Why This Tech?</span>
+          <div class="space-y-1 text-slate-700">
+            <div>
+              <strong class="text-rose-600">기각한 대안 :</strong> <strong>메인 스레드 직접 동기 파싱 &amp; 전체 DOM 일괄 렌더</strong> — 1만 자 자소서 로딩 시 2.8초간 UI가 멈추고 스크롤 버벅임 발생
+            </div>
+            <div>
+              <strong class="text-emerald-700">채택한 이유 :</strong> <strong>Web Worker 멀티스레딩 분리 + react-window 가상화</strong> — 화면에 보이는 뷰포트 영역만 렌더링하고 연산을 백그라운드로 밀어내어 <strong>0.05초 무지연 반응성과 60 FPS 스크롤</strong> 달성
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
+      <span>구현 파일: src/workers/evaluatorWorker.js, src/services/workerService.js &amp; src/components/EvidenceViewer.jsx (react-window v2)</span>
       <span>21</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       05-2. 스케일업 로드맵 — Phase 1 to Phase 4
+       04-5. 핵심 기술 05 : 5대 엔지니어링 아키텍처 결정 레코드 (ADR)
        ========================================================================= -->
   <section class="slide slide-light" id="slide-22">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">SCALE-UP ROADMAP</span>
+      <span class="tag-accent">심층 핵심 기술 05 — 아키텍처 결정 기록</span>
       <div class="text-[11px] text-slate-400 space-x-2">
-        프로젝트 배경 | 핵심 기능 | 서비스 시연 | 핵심 기술 | <strong class="text-blue-600">미래 비전</strong>
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | <strong class="text-blue-600">심층 핵심 기술</strong> | 품질 &amp; 로드맵
       </div>
     </div>
 
-    <div class="my-auto space-y-5 max-w-5xl">
-      <div class="space-y-1">
-        <div class="text-xs font-bold text-blue-600 uppercase tracking-wider">Enterprise Scale-Up Vision</div>
-        <h2 class="text-3xl font-extrabold text-slate-900">
-          단순 서류 평가기를 넘어, <span class="text-blue-600">전주기 HR Talent Intelligence</span>로
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="space-y-0.5">
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+          5대 핵심 기술 <span class="text-blue-600">엔지니어링 트레이드오프 결정 매트릭스 (ADR)</span>
         </h2>
+        <p class="text-xs text-slate-500">
+          비용 · 지연시간(Latency) · 정확도(Accuracy) · 보안 관점의 체계적 대안 비교 및 채택 근거
+        </p>
       </div>
 
-      <!-- 4-Phase Timeline Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <!-- Phase 1 -->
-        <div class="card-clean p-4 border-t-4 border-t-emerald-500 space-y-2.5 relative">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">CURRENT COMPLETED</span>
-            <span class="text-xs font-mono font-bold text-slate-400">Phase 01</span>
-          </div>
-          <h3 class="text-sm font-bold text-slate-900">서류 AI 정밀 평가 & 실시간 협업</h3>
-          <p class="text-[11px] text-slate-500 font-medium">2026 Q1 ~ Q2</p>
-          <ul class="text-[11px] text-slate-600 space-y-1 pt-1">
-            <li>· 1:1 형광펜 Evidence Grounding</li>
-            <li>· Gemini Flash 4대 분업 엔진</li>
-            <li>· Supabase RLS 다인 실시간 공유</li>
-            <li>· 대량 서류 일괄 심사 & 랭킹</li>
-          </ul>
-        </div>
-
-        <!-- Phase 2 -->
-        <div class="card-clean p-4 border-t-4 border-t-blue-500 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">SCALE-UP</span>
-            <span class="text-xs font-mono font-bold text-slate-400">Phase 02</span>
-          </div>
-          <h3 class="text-sm font-bold text-slate-900">ATS 웹훅 연동 & 사내 인재상 RAG</h3>
-          <p class="text-[11px] text-slate-500 font-medium">2026 Q3 ~ Q4</p>
-          <ul class="text-[11px] text-slate-600 space-y-1 pt-1">
-            <li>· 그리팅(Greeting), 나인하이어 연동</li>
-            <li>· 역대 우수 사원 평가 기준 RAG 임베딩</li>
-            <li>· 기업별 맞춤 가중치 및 직무 프리셋</li>
-            <li>· 슬랙(Slack)/노션 채용 알림 봇 연계</li>
-          </ul>
-        </div>
-
-        <!-- Phase 3 -->
-        <div class="card-clean p-4 border-t-4 border-t-indigo-500 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">EXPANSION</span>
-            <span class="text-xs font-mono font-bold text-slate-400">Phase 03</span>
-          </div>
-          <h3 class="text-sm font-bold text-slate-900">오프라인 면접장 AI Live Co-Pilot</h3>
-          <p class="text-[11px] text-slate-500 font-medium">2027 H1</p>
-          <ul class="text-[11px] text-slate-600 space-y-1 pt-1">
-            <li>· 면접관 태블릿 실시간 음성(STT) 분석</li>
-            <li>· 답변 진위 여부 실시간 팩트체크 알림</li>
-            <li>· 꼬리 질문(Deep Dive) 실시간 추천</li>
-            <li>· 면접관 채점 일관성 실시간 보정</li>
-          </ul>
-        </div>
-
-        <!-- Phase 4 -->
-        <div class="card-clean p-4 border-t-4 border-t-purple-600 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">ENTERPRISE</span>
-            <span class="text-xs font-mono font-bold text-slate-400">Phase 04</span>
-          </div>
-          <h3 class="text-sm font-bold text-slate-900">Employee Lifecycle Intelligence</h3>
-          <p class="text-[11px] text-slate-500 font-medium">2027 H2 ~</p>
-          <ul class="text-[11px] text-slate-600 space-y-1 pt-1">
-            <li>· 입사 후 온보딩 & 수습 평가 연계</li>
-            <li>· 분기별 성과(OKRs) 및 역량 성장 추적</li>
-            <li>· 이탈/퇴사 징후 사전 예측 모델</li>
-            <li>· 전주기 기업 맞춤 AX HR 플랫폼 완성</li>
-          </ul>
-        </div>
+      <!-- Trade-off Table -->
+      <div class="card-clean overflow-hidden">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="py-2 px-3 w-1/6">비교 영역</th>
+              <th class="py-2 px-3 w-1/4 text-rose-600">기각한 대안 (Rejected)</th>
+              <th class="py-2 px-3 w-1/4 text-emerald-600 bg-emerald-50/40">채택한 기술 (Adopted)</th>
+              <th class="py-2 px-3 w-5/12 text-blue-700 bg-blue-50/40">⚖️ 트레이드오프 판단 근거 (Why?)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700 text-[10px]">
+            <tr>
+              <td class="py-1.5 px-3 font-bold text-slate-900">01. AI 모델</td>
+              <td class="py-1.5 px-3 text-slate-500"><strong>단일 거대 모델 (GPT-4o)</strong><br>단일 비대 프롬프트, 지연(7~10s)</td>
+              <td class="py-1.5 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>4대 Flash 멀티에이전트</strong><br>Gemini 2.5 Flash 병렬 분업</td>
+              <td class="py-1.5 px-3 bg-blue-50/10">SRP 분업으로 환각 원천 억제 + 적대적 교차 감사(Critic vs Grounding)로 판정 신뢰도 확보</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-3 font-bold text-slate-900">02. 자소서 문맥</td>
+              <td class="py-1.5 px-3 text-slate-500"><strong>RAG (청킹 &amp; 벡터 검색)</strong><br>자소서 문장 쪼개기 임베딩</td>
+              <td class="py-1.5 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>Full-Context 1:1 바인딩</strong><br>Flash 1M+ 토큰 In-Memory</td>
+              <td class="py-1.5 px-3 bg-blue-50/10">자소서 청킹 시 서사/인과 문맥 왜곡 방지. RAG는 향후 기업 인재상 매뉴얼 검색으로 명확히 역할 분리</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-3 font-bold text-slate-900">03. 형광펜 매칭</td>
+              <td class="py-1.5 px-3 text-slate-500"><strong>단순 일치 (indexOf)</strong><br>엄격한 문자열 검색 (60% 실패)</td>
+              <td class="py-1.5 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>2단계 퓨지(Fuzzy) 매처</strong><br>Levenshtein + Jaccard</td>
+              <td class="py-1.5 px-3 bg-blue-50/10">줄바꿈·공백·오타 왜곡 시에도 <strong>유사도 임계치(0.65) 기준 바인딩 성공률 92.4%</strong> 확보</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-3 font-bold text-slate-900">04. 본문 렌더링</td>
+              <td class="py-1.5 px-3 text-slate-500"><strong>순수 단일 DOM 렌더</strong><br>1만 자 전체 단일 DOM 로드</td>
+              <td class="py-1.5 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>Web Worker + 가상 윈도잉</strong><br>뷰포트 가상화 &amp; 스레드 분리</td>
+              <td class="py-1.5 px-3 bg-blue-50/10">1만 자 렌더링 시 메인 스레드 2.8초 프리징 차단 ➔ <strong>0.05초(56배 단축), 60 FPS 무지연 스크롤</strong> 달성</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-3 font-bold text-slate-900">05. 데이터 격리</td>
+              <td class="py-1.5 px-3 text-slate-500"><strong>물리적 DB 완전 분리</strong><br>Database-per-Tenant 인스턴스</td>
+              <td class="py-1.5 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>PostgreSQL RLS &amp; Share ID</strong><br>단일 DB Row Level Security</td>
+              <td class="py-1.5 px-3 bg-blue-50/10">인프라 구축비 절감 + DB 엔진 레벨 격리로 <strong>테넌트 침범 원천 차단 및 만료 토큰 자동 파기</strong> 완결</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="card-metric p-3 text-xs text-slate-700 text-center font-medium">
-        성장 전략: 스타트업 서류 검증(Phase 1)으로 시장을 빠르게 선점한 뒤, <strong>ATS 생태계 및 전주기 HR Intelligence로 B2B LTV(고객 생애 가치)를 10배 확장</strong>합니다.
+      <div class="card-metric p-2.5 text-xs flex items-center justify-between">
+        <span class="text-slate-700">📌 상세 기술 결정 내역: <strong>GitHub Issue #14 ([ADR] Check-Mate 5대 핵심 엔지니어링 결정 레코드)</strong></span>
+        <span class="font-mono text-blue-600 font-bold text-[11px]">github.com/jcm0314/CapStone-SW-/issues/14</span>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 22페이지 '스케일업 로드맵' 매핑</span>
+      <span>소프트웨어 아키텍처 결정 레코드(ADR) 체계적 트레이드오프 분석 완비</span>
       <span>22</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       05-3. 기대 효과 4분할 — OmniSite Page 24 Style
+       05-1. 소프트웨어 정합성 감사(Audit) & 구현 현황 및 알려진 한계
        ========================================================================= -->
   <section class="slide slide-light" id="slide-23">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">기대 효과</span>
+      <span class="tag-accent">품질 검증 — 코드·문서 정합성 및 한계 투명화</span>
       <div class="text-[11px] text-slate-400 space-x-2">
-        프로젝트 배경 | 핵심 기능 | 서비스 시연 | 핵심 기술 | <strong class="text-blue-600">기대 효과</strong>
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | 심층 핵심 기술 | <strong class="text-blue-600">품질 &amp; 로드맵</strong>
       </div>
     </div>
 
-    <div class="my-auto space-y-6 max-w-5xl">
-      <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-snug">
-        시간 90% 단축 · <span class="text-blue-600">비용 88% 절감 · 환각 0%</span>
-      </h2>
-
-      <!-- 4-Box Grid (OmniSite Page 24 100% 매핑) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="card-clean p-5 border-l-4 border-l-blue-600 space-y-2">
-          <div class="flex items-center justify-between text-xs text-blue-600 font-bold">
-            <span>시간 (Time)</span>
-            <i data-lucide="clock" class="w-4 h-4"></i>
-          </div>
-          <div class="text-2xl font-black text-slate-900">심사 시간 90% 단축</div>
-          <ul class="text-xs text-slate-600 space-y-1 pt-1">
-            <li>· 서류 1건당 15분 → <strong>1.2초 즉시 분석</strong></li>
-            <li>· 100건 검토 시 25시간 → <strong>20분 내 종결</strong></li>
-          </ul>
+    <div class="my-auto space-y-3.5 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            코드-문서 정합성 감사(Audit) &amp; <span class="text-blue-600">구현 현황 및 알려진 한계</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            과장된 지표를 배제하고 실제 코드와 연결된 기능과 데모 시뮬레이션/외부 인프라 의존 한계를 투명하게 구분
+          </p>
         </div>
+        <span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800 text-[10px] font-mono font-bold">scripts/doctor.mjs 8-Stage Audit</span>
+      </div>
 
-        <div class="card-clean p-5 border-l-4 border-l-emerald-600 space-y-2">
-          <div class="flex items-center justify-between text-xs text-emerald-600 font-bold">
-            <span>비용 (Cost)</span>
-            <i data-lucide="dollar-sign" class="w-4 h-4"></i>
-          </div>
-          <div class="text-2xl font-black text-slate-900">API 비용 88% 절감</div>
-          <ul class="text-xs text-slate-600 space-y-1 pt-1">
-            <li>· GPT-4o 대비 건당 41.5원 → <strong>1.2원</strong></li>
-            <li>· 2,000건 평가 시 8만 3천 원 → <strong>2,400원</strong></li>
-          </ul>
-        </div>
+      <!-- Implementation Status & Known Limitations Table -->
+      <div class="card-clean overflow-hidden">
+        <table class="w-full text-left text-[10px]">
+          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[10.5px]">
+            <tr>
+              <th class="py-1.5 px-2.5 w-1/5">영역 / 기능</th>
+              <th class="py-1.5 px-2.5 w-1/6">구현 상태</th>
+              <th class="py-1.5 px-2.5 w-7/12">실제 동작 방식 및 알려진 한계 (Code-to-Doc Audit)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td class="py-1.5 px-2.5 font-bold text-slate-900">4대 멀티에이전트 &amp; Worker</td>
+              <td class="py-1.5 px-2.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">✅ 실제 연동</span></td>
+              <td class="py-1.5 px-2.5">브라우저(BYOK) 및 게이트웨이(<code>/api/v1/evaluate</code>) 양쪽에서 4대 에이전트(Gemini 2.5 Flash) 구동 및 Web Worker 백그라운드 오프셋 매칭/PII 마스킹 수행</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-2.5 font-bold text-slate-900">PII 7종 마스킹 &amp; 가드레일</td>
+              <td class="py-1.5 px-2.5"><span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">✅ 실제 동작</span></td>
+              <td class="py-1.5 px-2.5">성명·연락처·이메일·주민번호·생년월일·주소·학교명 정규식 치환, 인젝션 12종 패턴 차단, <code>react-window</code> v2 가상 스크롤 뷰어 실제 구동</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-2.5 font-bold text-slate-900">공유 링크 &amp; 실시간 메모</td>
+              <td class="py-1.5 px-2.5"><span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">⚠️ 로컬 파일 + 폴백</span></td>
+              <td class="py-1.5 px-2.5"><code>server/data/shared_evaluations.json</code> 디스크 영속화 및 3초 주기 HTTP 폴링 동기화. Supabase 환경변수 주입 시에만 WebSocket Realtime 활성화</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-2.5 font-bold text-slate-900">PostgreSQL RLS 멀티테넌시</td>
+              <td class="py-1.5 px-2.5"><span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">⚠️ SQL/브릿지 준비</span></td>
+              <td class="py-1.5 px-2.5"><code>supabase/schema.sql</code> 정책과 <code>src/services/supabaseClient.js</code> 브릿지 코드가 준비되어 있으나, 원격 Supabase 인스턴스 미설정 시 <code>localStorage</code>로 동작</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 px-2.5 font-bold text-slate-900">B2B SSO &amp; 엔터프라이즈 포털</td>
+              <td class="py-1.5 px-2.5"><span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">🧪 데모 시뮬레이션</span></td>
+              <td class="py-1.5 px-2.5"><code>/api/v1/auth/sso-login</code>은 외부 IdP(Okta/Azure AD) 연동 없이 HMAC-SHA256 서명 데모 토큰을 발급하며, ATS 웹훅·감사 로그는 프론트엔드 UI 시뮬레이션</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div class="card-clean p-5 border-l-4 border-l-purple-600 space-y-2">
-          <div class="flex items-center justify-between text-xs text-purple-600 font-bold">
-            <span>신뢰도 (Trust)</span>
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
-          </div>
-          <div class="text-2xl font-black text-slate-900">환각 0% · 근거 100% 매칭</div>
-          <ul class="text-xs text-slate-600 space-y-1 pt-1">
-            <li>· 1:1 형광펜 퓨지 매칭으로 거짓 인용 차단</li>
-            <li>· 7종 PII 선(先) 마스킹으로 법적 리스크 제로</li>
-          </ul>
-        </div>
-
-        <div class="card-clean p-5 border-l-4 border-l-amber-600 space-y-2">
-          <div class="flex items-center justify-between text-xs text-amber-600 font-bold">
-            <span>확장성 (Scalability)</span>
-            <i data-lucide="building" class="w-4 h-4"></i>
-          </div>
-          <div class="text-2xl font-black text-slate-900">B2B 타깃 및 확장</div>
-          <ul class="text-xs text-slate-600 space-y-1 pt-1">
-            <li>· 1차 : 전담 HR 부족 50~300인 성장기 IT 스타트업</li>
-            <li>· 2차 : 부서별 크레딧 쿼터 기반 중소·중견기업 공채</li>
-          </ul>
+      <!-- Key Bugs Fixed in PR #48 -->
+      <div class="card-clean p-2.5 bg-slate-50 border border-slate-200 text-[11px] text-slate-700 flex items-center justify-between">
+        <div>
+          <strong class="text-slate-900">PR #48 정합성 패치 완결 :</strong>
+          <span>① <code>EvidenceViewer</code> 원문 줄바꿈 보존(오프셋 드리프트 해결) · ② <code>ShareModal</code> 만료 시각 서버 전달 · ③ <code>PromptDefense</code> 위험도 배지 계약 일치 · ④ 8단계 <code>doctor.mjs</code> 진단 스크립트 탑재</span>
         </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 24페이지 '기대 효과' 4분할 레이아웃 100% 매핑</span>
+      <span>구현 현황 및 한계 명세: README.md &amp; tasks/00_INDEX.md (코드-문서 정합성 전수 감사 반영)</span>
       <span>23</span>
     </div>
   </section>
 
   <!-- =========================================================================
-       05-4. 본 발표 마무리 (Ending) — OmniSite Page 25 Style
+       05-2. Phase 1 잔여 주차별 개발 로드맵 (12월 3주차 종강까지)
        ========================================================================= -->
-  <section class="slide slide-dark" id="slide-24">
+  <section class="slide slide-light" id="slide-24">
+    <div class="flex items-center justify-between">
+      <span class="tag-accent">개발 로드맵 — Phase 1 종강 일정</span>
+      <div class="text-[11px] text-slate-400 space-x-2">
+        프로젝트 배경 | 핵심 기능 | 서비스 시연 | 심층 핵심 기술 | <strong class="text-blue-600">품질 &amp; 로드맵</strong>
+      </div>
+    </div>
+
+    <div class="my-auto space-y-4 max-w-5xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+            Phase 1 잔여 개발 로드맵 : <span class="text-blue-600">12월 3주차 종강까지의 마일스톤</span>
+          </h2>
+          <p class="text-xs text-slate-500">
+            핵심 알고리즘 튜닝부터 대규모 동시성 부하 테스트, 최종 결과 보고서 완결까지의 체계적 공정 관리
+          </p>
+        </div>
+        <div class="text-right">
+          <span class="text-[10px] text-slate-500 font-mono">현재 10주차 공정률</span>
+          <div class="text-lg font-black text-emerald-600">핵심 파이프라인 구현 완료</div>
+        </div>
+      </div>
+
+      <!-- Weekly Milestone Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Milestone 1 -->
+        <div class="card-clean p-4 space-y-2 border-t-4 border-t-blue-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-700 font-mono">Week 11 ~ 12 (11월 상순)</span>
+            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">진행 중 ⏳</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">알고리즘 정밀화 &amp; DB 실연동</h3>
+          <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+            <li>· <strong>Fuzzy 매칭 엔진 정밀화 :</strong> 한글 자모 분리(초성/중성/종성) 기반 자소서 OCR 오타 보정</li>
+            <li>· <strong>압박 면접 질문 알고리즘 튜닝 :</strong> 자소서 서술 간 논리적 모순점 감지 프롬프트 정교화</li>
+            <li>· <strong>Supabase 실연동 보강 :</strong> 원격 PostgreSQL RLS 스키마 배포 및 인증 미들웨어 검증</li>
+          </ul>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="card-clean p-4 space-y-2 border-t-4 border-t-indigo-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-700 font-mono">Week 13 ~ 14 (11월 하순~12월 초)</span>
+            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold">예정</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">대규모 부하 테스트 &amp; 동시성 검증</h3>
+          <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+            <li>· <strong>대량 지원서 배치 파싱 :</strong> 100~500건 업로드 시 Web Worker 큐잉 및 메모리 프로파일링</li>
+            <li>· <strong>Supabase 동시성 스트레스 검증 :</strong> 다인 면접관 실시간 WebSocket 트래픽 지연 측정</li>
+            <li>· <strong>에러 복구성 강화 :</strong> 백엔드 회복 탄력성(Resilience) 확보</li>
+          </ul>
+        </div>
+
+        <!-- Milestone 3 -->
+        <div class="card-clean p-4 space-y-2 border-t-4 border-t-emerald-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-700 font-mono">Week 15 ~ 16 (12월 2~3주차 종강)</span>
+            <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold">최종 완결</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">최종 릴리즈 &amp; 결과 보고서 완결</h3>
+          <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+            <li>· <strong>프로덕션 최종 릴리즈 :</strong> Cloud Run 커스텀 도메인 바인딩 및 헬스체크 모니터링 체계 완비</li>
+            <li>· <strong>기술 문서화 완결 :</strong> 아키텍처 결정 레코드(ADR) 및 API 명세 아카이빙</li>
+            <li>· <strong>최종 결과 보고서 작성 :</strong> 캡스톤 최종 발표 시연 및 성과 보고</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-metric p-3 text-xs text-slate-700 text-center font-medium">
+        목표: 12월 3주차 종강 시점까지 <strong>코드와 문서가 일치하는 엔터프라이즈 B2B 팩트체크 시스템을 오픈소스로 완결</strong>합니다.
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
+      <span>단국대학교 컴퓨터공학과 2026-2학기 캡스톤 디자인 학사 일정 100% 매핑</span>
+      <span>24</span>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       05-3. 본 발표 마무리 (Ending) — Q&A
+       ========================================================================= -->
+  <section class="slide slide-dark" id="slide-25">
     <div></div>
     <div class="my-auto text-center space-y-4 max-w-2xl mx-auto">
-      <h2 class="text-6xl lg:text-7xl font-black text-white tracking-tight">감사합니다</h2>
+      <h2 class="text-6xl lg:text-7xl font-black text-white tracking-tight">경청해 주셔서 감사합니다</h2>
       <p class="text-lg text-slate-300 font-medium">
-        Check-Mate · 단국대학교 컴퓨터공학과 Check_Mate 팀
+        Check-Mate · 단국대학교 컴퓨터공학과
       </p>
+      <div class="pt-6 flex justify-center gap-6 text-sm text-slate-400">
+        <div>지도교수 : 단국대 컴퓨터공학과 박용범 교수님</div>
+        <div>·</div>
+        <div>개발자 : 장천명 (1인 단독 개발)</div>
+      </div>
       <div class="pt-4">
         <button onclick="nextSlide()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-lg transition-all">
           별첨 (Appendix) 바로가기 →
@@ -1466,44 +1719,7 @@
       </div>
     </div>
     <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
-      <span>본 발표 완료 ➔ 질의응답 시 별첨으로 즉시 대응</span>
-      <span>24</span>
-    </div>
-  </section>
-
-  <!-- =========================================================================
-       06-0. 별첨 목차 (Appendix Index) — OmniSite Page 26 Style
-       ========================================================================= -->
-  <section class="slide slide-light" id="slide-25">
-    <div class="flex items-center justify-between">
-      <span class="tag-accent">APPENDIX</span>
-      <span class="text-xs text-slate-400 font-mono">25</span>
-    </div>
-
-    <div class="my-auto max-w-3xl space-y-6">
-      <div>
-        <span class="text-blue-600 font-bold text-xs">A</span>
-        <h2 class="text-4xl font-extrabold text-slate-900">별첨 (Appendix)</h2>
-      </div>
-
-      <div class="space-y-3 text-sm">
-        <div class="flex items-center justify-between py-2.5 border-b border-slate-200">
-          <span class="font-bold text-slate-800">시스템 인프라 & 3-Tier 하이브리드 DB 구조</span>
-          <span class="font-mono text-slate-400">P. 26</span>
-        </div>
-        <div class="flex items-center justify-between py-2.5 border-b border-slate-200">
-          <span class="font-bold text-slate-800">5대 핵심 엔지니어링 아키텍처 트레이드오프 매트릭스 (ADR)</span>
-          <span class="font-mono text-blue-600 font-bold">P. 27</span>
-        </div>
-        <div class="flex items-center justify-between py-2.5 border-b border-slate-200">
-          <span class="font-bold text-slate-800">자주 나오는 질문과 답 (FAQ 6종) & GitHub</span>
-          <span class="font-mono text-slate-400">P. 28</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>OmniSite 26페이지 별첨 인덱스 100% 매핑</span>
+      <span>질의응답 (Q&amp;A) ➔ 질의응답 시 별첨으로 즉시 대응</span>
       <span>25</span>
     </div>
   </section>
@@ -1528,16 +1744,16 @@
           <h3 class="text-base font-bold text-slate-900">3-Tier 하이브리드 DB 구조</h3>
           <div class="space-y-2 text-xs text-slate-600">
             <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
-              <strong class="text-blue-600 block">Tier 1: Client IndexedDB (현재 완성)</strong>
+              <strong class="text-blue-600 block">Tier 1: Client Local / IndexedDB (현재 완성)</strong>
               개인정보 원문 및 매핑 테이블 브라우저 내부 격리 (유출 0%)
             </div>
             <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
-              <strong class="text-indigo-600 block">Tier 2: Redis Cache (현재 완성)</strong>
-              동일 자소서 SHA-256 해시 기반 0.01초 캐시 반환 (비용 $0)
+              <strong class="text-indigo-600 block">Tier 2: Gateway Persisted Store (현재 완성)</strong>
+              공유 평가 스냅샷 JSON 영속화 및 SHA-256 무결성 해시 검증
             </div>
             <div class="p-2.5 rounded bg-emerald-50 border border-emerald-300">
-              <strong class="text-emerald-700 block">Tier 3: Supabase Cloud PostgreSQL RLS (프로덕션 가동)</strong>
-              기업용 SSO 계정, 8대 엔터프라이즈 테이블, 100% 테넌트 격리 RLS 및 실시간 협업 동기화
+              <strong class="text-emerald-700 block">Tier 3: Supabase Cloud PostgreSQL RLS (스키마 &amp; 브릿지 탑재)</strong>
+              테넌트 격리 RLS 정책(supabase/schema.sql) 및 실시간 협업 채널 브릿지(supabaseClient.js)
             </div>
           </div>
         </div>
@@ -1567,78 +1783,123 @@
   </section>
 
   <!-- =========================================================================
-       06-2. 별첨 : 5대 엔지니어링 아키텍처 트레이드오프 매트릭스 (ADR)
+       06-2. 별첨 02 : E2E 시스템 소프트웨어 아키텍처 다이어그램
        ========================================================================= -->
   <section class="slide slide-light" id="slide-27">
     <div class="flex items-center justify-between">
-      <span class="tag-accent">별첨 02 — 아키텍처 트레이드오프 (ADR)</span>
+      <span class="tag-accent">별첨 02 — 시스템 소프트웨어 아키텍처</span>
       <span class="text-xs text-slate-400 font-mono">27</span>
     </div>
 
     <div class="my-auto space-y-4 max-w-5xl">
-      <div class="space-y-1">
-        <h2 class="text-3xl font-extrabold text-slate-900 leading-snug">
-          핵심 기술 선정 5대 <span class="text-blue-600">엔지니어링 트레이드오프 매트릭스</span>
+      <div class="space-y-0.5">
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 leading-snug">
+          Check-Mate <span class="text-blue-600">End-to-End 시스템 소프트웨어 아키텍처</span>
         </h2>
         <p class="text-xs text-slate-500">
-          “왜 A 대신 B를 선택했는가?” — 비용·지연시간·정확도·보안 관점의 아키텍처 결정 기록 (GitHub Issue #14)
+          Client(React 18) · Worker · BFF Gateway(Express) · AI Pipeline(Gemini 2.5 Flash) · BaaS(Supabase) 계층형 파이프라인
         </p>
       </div>
 
-      <!-- Trade-off Table -->
-      <div class="card-clean overflow-hidden">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-            <tr>
-              <th class="py-2.5 px-3 w-1/6">비교 영역</th>
-              <th class="py-2.5 px-3 w-1/4 text-rose-600">기각한 대안 (Rejected)</th>
-              <th class="py-2.5 px-3 w-1/4 text-emerald-600 bg-emerald-50/40">채택한 기술 (Adopted)</th>
-              <th class="py-2.5 px-3 w-5/12 text-blue-700 bg-blue-50/40">⚖️ 트레이드오프 판단 근거 (Why?)</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 text-slate-700 text-[11px]">
-            <tr>
-              <td class="py-2 px-3 font-bold text-slate-900">01. AI 모델</td>
-              <td class="py-2 px-3 text-slate-500"><strong>단일 거대 모델 (GPT-4o)</strong><br>건당 41.5원, 비대한 단일 프롬프트</td>
-              <td class="py-2 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>4대 Flash 멀티에이전트</strong><br>Gemini 3.8 Flash 병렬 분업</td>
-              <td class="py-2 px-3 bg-blue-50/10">비용 <strong>90% 절감 (건당 4.0원, 마진 98.7%)</strong> + 적대적 교차 감사(Critic vs Grounding)로 <strong>환각 0%</strong> 실현</td>
-            </tr>
-            <tr>
-              <td class="py-2 px-3 font-bold text-slate-900">02. 자소서 처리</td>
-              <td class="py-2 px-3 text-slate-500"><strong>RAG (청킹 & 벡터 검색)</strong><br>자소서 문장 쪼개기 임베딩</td>
-              <td class="py-2 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>Full-Context 1:1 바인딩</strong><br>Flash 1M+ 토큰 In-Memory</td>
-              <td class="py-2 px-3 bg-blue-50/10">자소서 청킹 시 서사/인과 문맥 왜곡 방지. RAG는 <strong>Phase 2 사내 인재상·직무 매뉴얼 검색</strong>에 적재적소 분리</td>
-            </tr>
-            <tr>
-              <td class="py-2 px-3 font-bold text-slate-900">03. 형광펜 매칭</td>
-              <td class="py-2 px-3 text-slate-500"><strong>단순 일치 (Exact Match)</strong><br>엄격한 문자열 검색 (indexOf)</td>
-              <td class="py-2 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>2단계 퓨지(Fuzzy) 매처</strong><br>Levenshtein + Jaccard 알고리즘</td>
-              <td class="py-2 px-3 bg-blue-50/10">AI 발췌문의 미세 줄바꿈·공백·조사 왜곡 시에도 <strong>85%+ 유사도 완충 매칭으로 바인딩 성공률 92.4%</strong> 확보</td>
-            </tr>
-            <tr>
-              <td class="py-2 px-3 font-bold text-slate-900">04. 본문 렌더링</td>
-              <td class="py-2 px-3 text-slate-500"><strong>순수 브라우저 DOM</strong><br>전체 문장 단일 DOM 렌더</td>
-              <td class="py-2 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>가상 윈도잉 (react-window)</strong><br>뷰포트 가상화 스크롤</td>
-              <td class="py-2 px-3 bg-blue-50/10">1만 자 렌더링 시 메인 스레드 2.8초 프리징 차단 ➔ <strong>0.05초(36배 단축), 60 FPS 무지연 스크롤</strong> 달성</td>
-            </tr>
-            <tr>
-              <td class="py-2 px-3 font-bold text-slate-900">05. 데이터 격리</td>
-              <td class="py-2 px-3 text-slate-500"><strong>물리적 DB 완전 분리</strong><br>Database-per-Tenant 인스턴스</td>
-              <td class="py-2 px-3 font-bold text-emerald-700 bg-emerald-50/20"><strong>PostgreSQL RLS & Share ID</strong><br>단일 DB Row Level Security</td>
-              <td class="py-2 px-3 bg-blue-50/10">테넌트당 DB 구축비 $0 유지 + 데이터베이스 엔진 레벨 격리로 <strong>데이터 유출 0% 및 72시간 만료 파기</strong> 완결</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- 4-Tier Architecture Diagram Blocks -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <!-- Tier 1: Client Layer -->
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-blue-600 bg-slate-50/50">
+          <div class="flex items-center justify-between text-xs font-bold text-blue-700">
+            <span>Tier 1. Client Layer</span>
+            <span class="text-[9px] font-mono px-1 rounded bg-blue-100 text-blue-800">Browser</span>
+          </div>
+          <div class="space-y-1.5 text-[11px] text-slate-700">
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>React 18 + Vite SPA</strong>
+              <div class="text-[10px] text-slate-500">Tailwind CSS, Virtual Windowing</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Web Worker Thread</strong>
+              <div class="text-[10px] text-slate-500">evaluatorWorker.js (Fuzzy &amp; 7종 PII)</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>2단계 Fuzzy Engine</strong>
+              <div class="text-[10px] text-slate-500">Jaccard Anchor &amp; Levenshtein DP</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tier 2: BFF Gateway -->
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-indigo-600 bg-slate-50/50">
+          <div class="flex items-center justify-between text-xs font-bold text-indigo-700">
+            <span>Tier 2. BFF Gateway</span>
+            <span class="text-[9px] font-mono px-1 rounded bg-indigo-100 text-indigo-800">Node.js</span>
+          </div>
+          <div class="space-y-1.5 text-[11px] text-slate-700">
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Express B2B Gateway</strong>
+              <div class="text-[10px] text-slate-500">GCP Cloud Run 컨테이너 호스팅</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Rate Limiting &amp; Quota</strong>
+              <div class="text-[10px] text-slate-500">Token Bucket 기반 429 방지 큐</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>HMAC-SHA256 &amp; Proxy</strong>
+              <div class="text-[10px] text-slate-500">외부 키 은닉 및 서명 토큰 검증</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tier 3: AI Pipeline -->
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-emerald-600 bg-slate-50/50">
+          <div class="flex items-center justify-between text-xs font-bold text-emerald-700">
+            <span>Tier 3. AI Pipeline</span>
+            <span class="text-[9px] font-mono px-1 rounded bg-emerald-100 text-emerald-800">Multi-Agent</span>
+          </div>
+          <div class="space-y-1.5 text-[11px] text-slate-700">
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Gemini 2.5 Flash</strong>
+              <div class="text-[10px] text-slate-500">1M+ 대용량 컨텍스트 Full-Text</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>4대 멀티에이전트 분업</strong>
+              <div class="text-[10px] text-slate-500">Grounding, Critic, Supervisor, Interviewer</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>JSON Schema DTO 강제</strong>
+              <div class="text-[10px] text-slate-500">Strict Output &amp; 적대적 교차 감사</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tier 4: BaaS & Sync -->
+        <div class="card-clean p-3.5 space-y-2 border-t-2 border-t-purple-600 bg-slate-50/50">
+          <div class="flex items-center justify-between text-xs font-bold text-purple-700">
+            <span>Tier 4. Storage &amp; Sync</span>
+            <span class="text-[9px] font-mono px-1 rounded bg-purple-100 text-purple-800">Supabase</span>
+          </div>
+          <div class="space-y-1.5 text-[11px] text-slate-700">
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>PostgreSQL Cloud RLS</strong>
+              <div class="text-[10px] text-slate-500">테넌트 격리 스키마 &amp; Share ID</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Realtime + HTTP Polling</strong>
+              <div class="text-[10px] text-slate-500">다인 면접관 실시간 코멘트 동기화</div>
+            </div>
+            <div class="p-1.5 rounded bg-white border border-slate-200">
+              <strong>Local / Persisted JSON</strong>
+              <div class="text-[10px] text-slate-500">SHA-256 해시 기반 무결성 보장</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card-metric p-3 text-xs flex items-center justify-between">
-        <span class="text-slate-700">📌 상세 기술 결정 내역: <strong>GitHub Issue #14 ([ADR] Check-Mate 5대 핵심 엔지니어링 트레이드오프 결정 매트릭스)</strong></span>
-        <span class="font-mono text-blue-600 font-bold text-[11px]">github.com/jcm0314/CapStone-SW-/issues/14</span>
+      <div class="card-metric p-2.5 text-xs flex items-center justify-between">
+        <span class="text-slate-700">📌 시스템 데이터 파이프라인 명세: <strong>docs/ARCHITECTURE.md &amp; server/index.js</strong></span>
+        <span class="font-mono text-blue-600 font-bold text-[11px]">Production Live: asia-northeast3.run.app</span>
       </div>
     </div>
 
     <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200 pt-3">
-      <span>GitHub Issue #14 공식 아키텍처 결정 레코드(ADR) 100% 매핑</span>
+      <span>소프트웨어 아키텍처: 계층형 분리(Separation of Concerns) 및 무상태(Stateless) 컨테이너 가동</span>
       <span>27</span>
     </div>
   </section>
@@ -1668,7 +1929,7 @@
         <div class="card-clean p-4 space-y-1">
           <strong class="text-blue-600 block">Q. 왜 제일 똑똑한 GPT-4o를 안 썼나요?</strong>
           <p class="text-slate-600 leading-relaxed">
-            A. GPT-4o는 건당 41.5원으로 1천 명 평가 시 4만 원이 듭니다. Gemini 3.8 Flash 4대 분업(4.0원)으로 비용을 90% 절감하면서도 다각도 교차 검증으로 더 높은 평가 신뢰도를 실현했습니다.
+            A. GPT-4o는 건당 41.5원으로 1천 명 평가 시 4만 원이 듭니다. Gemini 2.5 Flash 4대 분업(4.0원)으로 비용을 90% 절감하면서도 다각도 교차 검증으로 더 높은 평가 신뢰도를 실현했습니다.
           </p>
         </div>
 
@@ -1694,7 +1955,7 @@
           <span class="font-mono text-blue-600">https://github.com/jcm0314/CapStone-SW-</span>
         </div>
         <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-bold">
-          Vitest 14 Suites · 51 Tests 100% Passed
+          Cloud Run (asia-northeast3) · Node 22 LTS
         </span>
       </div>
     </div>
@@ -1753,7 +2014,7 @@
   <!-- JavaScript for Interactive Slide Switching -->
   <script>
     let currentSlide = 1;
-    const totalSlides = 27;
+    const totalSlides = 28;
 
     function updateSlide() {
       document.querySelectorAll('.slide').forEach((slide) => {

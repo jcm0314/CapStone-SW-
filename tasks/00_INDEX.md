@@ -21,11 +21,11 @@
 | 12 | Prompt Studio 설정을 실제 에이전트 프롬프트에 반영 | P2 | 완료 | [12_prompt-studio-wiring.md](12_prompt-studio-wiring.md) |
 | 13 | 협업 메모 "Live Sync" 주기적 동기화(폴링) 구현 | P2 | 완료 | [13_collab-live-polling.md](13_collab-live-polling.md) |
 | 14 | 문서 정합성 정리 (ARCHITECTURE/README/ISSUES/CI 표기) | P1 | 완료 | [14_docs-consistency.md](14_docs-consistency.md) |
-| 15 | 실제 `npm test` / `npm run build` 실행 검증 | P0 | 보류 | [15_run-real-tests-build.md](15_run-real-tests-build.md) |
-| 16 | Supabase RLS 멀티테넌시 실제 연동 | P1 | 보류 | [16_supabase-integration.md](16_supabase-integration.md) |
-| 17 | 게이트웨이 공유 저장소 영속화 · 인증 · 서버측 4-에이전트 | P1 | 보류 | [17_server-persistence-auth.md](17_server-persistence-auth.md) |
-| 18 | 미사용(dead) 코드 정리 여부 결정 | P3 | 보류 | [18_dead-code-cleanup.md](18_dead-code-cleanup.md) |
-| 19 | Gemini 모델명/엔드포인트 실사용 검증 | P1 | 보류 | [19_gemini-model-validation.md](19_gemini-model-validation.md) |
+| 15 | 실제 `npm test` / `npm run build` 실행 검증 | P0 | 완료 | [15_run-real-tests-build.md](15_run-real-tests-build.md) |
+| 16 | Supabase RLS 멀티테넌시 실제 연동 | P1 | 완료(브릿지 연결 / 원격 DB는 환경변수 의존) | [16_supabase-integration.md](16_supabase-integration.md) |
+| 17 | 게이트웨이 공유 저장소 영속화 · 인증 · 서버측 4-에이전트 | P1 | 완료 | [17_server-persistence-auth.md](17_server-persistence-auth.md) |
+| 18 | 미사용(dead) 코드 정리 여부 결정 | P3 | 완료 | [18_dead-code-cleanup.md](18_dead-code-cleanup.md) |
+| 19 | Gemini 모델명/엔드포인트 실사용 검증 | P1 | 완료 | [19_gemini-model-validation.md](19_gemini-model-validation.md) |
 
 ## 핵심 격차 요약
 

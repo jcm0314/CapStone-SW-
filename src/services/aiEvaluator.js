@@ -5,11 +5,12 @@ import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
 import { getAvailableGeminiModels } from './agents/geminiClient';
 import { getActivePromptAddendum } from './promptStudioService';
+import { anonymizePIIInWorker, enrichEvidencesInWorker } from './workerService';
 
 /**
- * AI Grounding Evaluation Coordinator (Gemini API Only)
- * Note: Local fallback engines (Web Worker heuristic) are disabled by policy.
- * Evaluation strictly relies on the Google Gemini API.
+ * AI Grounding Evaluation Coordinator (Gemini API + Web Worker Offloading)
+ * Evaluation relies on the Google Gemini 4-Agent pipeline while offloading
+ * heavy PII regex masking and 2-Stage Fuzzy substring matching to Web Workers.
  */
 export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: providedApiKey, onProgress }) {
   const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
@@ -38,8 +39,8 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
     return { ...cachedResult, name: name || cachedResult.name };
   }
 
-  // Step 3: Client-Side PII Security & Blind Recruitment Anonymization
-  const piiResult = anonymizePII(rawText, name);
+  // Step 3: Client-Side PII Security & Blind Recruitment Anonymization (via Web Worker for large texts)
+  const piiResult = await anonymizePIIInWorker(rawText, name);
   const cleanText = piiResult.anonymizedText;
 
   if (onProgress && piiResult.piiCount > 0) {
@@ -258,37 +259,9 @@ ${rawText}
     onProgress({ percent: 90, status: '근거 문장 위치 매핑 및 HITL 데이터 구조 정규화 중...' });
   }
 
-  // Grounding evidences enrichment & fallback substring indexing
+  // Grounding evidences enrichment & Web Worker Fuzzy substring indexing
   const targetText = originalRawText || rawText;
-  const enrichedEvidences = (parsed.groundingEvidences || []).map((ev, idx) => {
-    let startIndex = -1;
-    let endIndex = -1;
-
-    if (ev.quote) {
-      startIndex = targetText.indexOf(ev.quote);
-      if (startIndex !== -1) {
-        endIndex = startIndex + ev.quote.length;
-      } else {
-        const fuzzy = findFuzzyMatch(targetText, ev.quote, 0.70);
-        if (fuzzy) {
-          startIndex = fuzzy.start;
-          endIndex = fuzzy.end;
-        }
-      }
-    }
-
-    return {
-      id: `ev_${idx + 1}`,
-      quote: ev.quote || '',
-      startIndex,
-      endIndex,
-      type: ['positive', 'risk', 'verify'].includes(ev.type) ? ev.type : 'verify',
-      competencyId: ev.competencyId || 'problem_solving',
-      scoreImpact: typeof ev.scoreImpact === 'number' ? ev.scoreImpact : (ev.type === 'positive' ? 12 : ev.type === 'risk' ? -10 : 0),
-      title: ev.title || '근거 항목',
-      explanation: ev.explanation || ''
-    };
-  });
+  const enrichedEvidences = await enrichEvidencesInWorker(targetText, parsed.groundingEvidences || [], 0.70);
 
   // Interview questions enrichment
   const enrichedQuestions = (parsed.interviewQuestions || []).map((iq, idx) => ({

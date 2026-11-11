@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+import {
+  isSupabaseConfigured,
+  fetchTenantApplicantsFromSupabase,
+  syncTenantApplicantsToSupabase
+} from '../services/supabaseClient';
 
 const TenantContext = createContext(null);
 
@@ -242,18 +247,35 @@ export function TenantProvider({ children }) {
     return currentTenant.defaultApplicants;
   };
 
-  // Save Tenant-specific applicants
+  // Save Tenant-specific applicants (localStorage + non-blocking Supabase RLS sync when configured)
   const saveTenantApplicants = (applicants) => {
+    const securedApplicants = applicants.map(app => ({
+      ...app,
+      orgId: currentTenant.id
+    }));
     if (typeof window !== 'undefined') {
       const storageKey = `checkmate_applicants_${currentTenant.id}`;
-      // Enforce RLS (Row Level Security): Attach current tenant orgId to all records
-      const securedApplicants = applicants.map(app => ({
-        ...app,
-        orgId: currentTenant.id
-      }));
       localStorage.setItem(storageKey, JSON.stringify(securedApplicants));
     }
+    if (isSupabaseConfigured) {
+      syncTenantApplicantsToSupabase(currentTenant.id, securedApplicants);
+    }
   };
+
+  // Hydrate tenant applicants from Supabase if configured
+  useEffect(() => {
+    if (!isSupabaseConfigured || typeof window === 'undefined') return;
+    let active = true;
+    fetchTenantApplicantsFromSupabase(currentTenant.id).then((remoteList) => {
+      if (active && Array.isArray(remoteList) && remoteList.length > 0) {
+        const storageKey = `checkmate_applicants_${currentTenant.id}`;
+        localStorage.setItem(storageKey, JSON.stringify(remoteList));
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [currentTenant.id]);
 
   return (
     <TenantContext.Provider

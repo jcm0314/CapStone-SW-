@@ -2,11 +2,24 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { executeMultiAgentEvaluation } from '../src/services/multiAgentEvaluator.js';
+import { resolveGeminiModels, callGeminiJson } from '../src/services/agents/geminiClient.js';
+import { JOB_TEMPLATES } from '../src/data/jobTemplates.js';
+import { anonymizePII } from '../src/utils/piiAnonymizer.js';
+import { enrichEvidencesSync } from '../src/services/workerService.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(__dirname, 'data');
+const STORE_FILE = path.join(DATA_DIR, 'shared_evaluations.json');
+const SSO_SECRET = process.env.SSO_TOKEN_SECRET || 'checkmate-enterprise-hmac-default-secret-2026';
 
 // Enable Trust Proxy for Load Balancers (Nginx / Cloud Run / K8s Ingress)
 app.set('trust proxy', 1);
@@ -31,8 +44,84 @@ const apiLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 
-// In-Memory Cloud Sync Store (Emulates Distributed Cloud DB / Supabase)
+// -------------------------------------------------------------
+// Persistent + In-Memory Share Store
+// Persists snapshots to server/data/shared_evaluations.json (except in unit tests)
+// -------------------------------------------------------------
 const sharedEvaluationsStore = new Map();
+
+function loadPersistedShares() {
+  if (process.env.NODE_ENV === 'test') return;
+  try {
+    if (fs.existsSync(STORE_FILE)) {
+      const raw = fs.readFileSync(STORE_FILE, 'utf8');
+      const entries = JSON.parse(raw);
+      if (Array.isArray(entries)) {
+        for (const [k, v] of entries) {
+          sharedEvaluationsStore.set(k, v);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[ShareStore] Failed to load persisted shares:', err.message);
+  }
+}
+
+function persistShares() {
+  if (process.env.NODE_ENV === 'test') return;
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const entries = Array.from(sharedEvaluationsStore.entries());
+    fs.writeFileSync(STORE_FILE, JSON.stringify(entries, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('[ShareStore] Failed to persist shares:', err.message);
+  }
+}
+
+loadPersistedShares();
+
+// -------------------------------------------------------------
+// HMAC-SHA256 Signed Token Helpers
+// -------------------------------------------------------------
+export function signSsoToken(payload) {
+  const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto
+    .createHmac('sha256', SSO_SECRET)
+    .update(encoded)
+    .digest('hex');
+  return `chk_sso_${encoded}.${signature}`;
+}
+
+export function verifySsoToken(token) {
+  if (!token || typeof token !== 'string' || !token.startsWith('chk_sso_')) {
+    return null;
+  }
+  const body = token.slice('chk_sso_'.length);
+  const dotIdx = body.lastIndexOf('.');
+  if (dotIdx === -1) return null;
+
+  const encoded = body.slice(0, dotIdx);
+  const signature = body.slice(dotIdx + 1);
+  const expectedSig = crypto
+    .createHmac('sha256', SSO_SECRET)
+    .update(encoded)
+    .digest('hex');
+
+  if (signature.length !== expectedSig.length) return null;
+  const isValid = crypto.timingSafeEqual(
+    Buffer.from(signature, 'utf8'),
+    Buffer.from(expectedSig, 'utf8')
+  );
+  if (!isValid) return null;
+
+  try {
+    return JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+  } catch {
+    return null;
+  }
+}
 
 // Preset Tenant Database & FinOps Quota
 const tenantsStore = new Map([
@@ -69,20 +158,22 @@ const tenantsStore = new Map([
 app.get('/', (req, res) => {
   res.status(200).json({
     service: 'Check-Mate Enterprise HR API Gateway',
-    version: 'v2.2.0',
+    version: 'v2.5.0',
     status: 'ONLINE',
     capabilities: [
       'Multi-Tenancy RLS Isolation',
-      'Multi-Interviewer Live Sync Sharing',
-      'SSO Authentication Proxy',
-      'Gemini 3.8 Flash AI Evaluation BFF'
+      'Multi-Interviewer Live Sync Sharing (File-Backed Persistence)',
+      'HMAC-SHA256 Signed SSO Authentication',
+      '4-Agent Multi-Agent Gemini Evaluation BFF'
     ],
+    models: resolveGeminiModels(),
     endpoints: {
       health: '/health',
       evaluate: '/api/v1/evaluate (POST)',
       shares: '/api/v1/shares (POST, GET)',
       tenants: '/api/v1/tenants (GET)',
-      ssoLogin: '/api/v1/auth/sso-login (POST)'
+      ssoLogin: '/api/v1/auth/sso-login (POST)',
+      ssoVerify: '/api/v1/auth/verify (GET)'
     },
     timestamp: new Date().toISOString()
   });
@@ -132,6 +223,7 @@ app.post('/api/v1/shares', (req, res) => {
     };
 
     sharedEvaluationsStore.set(shareId, record);
+    persistShares();
 
     return res.status(201).json({
       success: true,
@@ -157,6 +249,7 @@ app.get('/api/v1/shares/:shareId', (req, res) => {
   // Check TTL expiration
   if (record.expiresAt && new Date(record.expiresAt) < new Date()) {
     sharedEvaluationsStore.delete(shareId);
+    persistShares();
     return res.status(410).json({ error: '해당 면접관 공유 링크의 유효 기간(TTL)이 만료되었습니다.' });
   }
 
@@ -188,6 +281,7 @@ app.post('/api/v1/shares/:shareId/notes', (req, res) => {
 
   record.collaborativeNotes.push(newNote);
   sharedEvaluationsStore.set(shareId, record);
+  persistShares();
 
   return res.status(200).json({
     success: true,
@@ -200,9 +294,9 @@ app.post('/api/v1/shares/:shareId/notes', (req, res) => {
 // [2] Enterprise SSO & Multi-Tenancy Management Endpoints
 // -------------------------------------------------------------
 
-// Simulated SSO Login & Session Token Exchange
+// Simulated SSO Login with HMAC-SHA256 Signed Token
 app.post('/api/v1/auth/sso-login', (req, res) => {
-  const { provider = 'Google Workspace', targetRole = 'RECRUITER', email, tenantId = 'toss-payments' } = req.body;
+  const { provider = 'Google Workspace', targetRole = 'RECRUITER', email, tenantId = 'toss-payments' } = req.body || {};
 
   const tenant = tenantsStore.get(tenantId) || tenantsStore.get('toss-payments');
 
@@ -216,10 +310,25 @@ app.post('/api/v1/auth/sso-login', (req, res) => {
     issuedAt: new Date().toISOString()
   };
 
+  const token = signSsoToken(tokenPayload);
+
   return res.status(200).json({
-    token: `chk_sso_${Buffer.from(JSON.stringify(tokenPayload)).toString('base64')}`,
+    token,
     user: tokenPayload
   });
+});
+
+// Verify HMAC-SHA256 Signed SSO Token
+app.get('/api/v1/auth/verify', (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const rawToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : req.query.token;
+  const verified = verifySsoToken(String(rawToken || ''));
+
+  if (!verified) {
+    return res.status(401).json({ valid: false, error: '유효하지 않거나 위변조된 SSO 토큰입니다.' });
+  }
+
+  return res.status(200).json({ valid: true, user: verified });
 });
 
 // List Active Tenants (Multi-Tenancy Overview)
@@ -253,18 +362,18 @@ app.get('/api/v1/tenants/:tenantId/quota', (req, res) => {
 });
 
 // -------------------------------------------------------------
-// [3] BFF AI Evaluation Handler (Gemini 3.8 Flash Engine)
+// [3] BFF AI Evaluation Handler (4-Agent Multi-Agent Pipeline)
 // -------------------------------------------------------------
 const handleEvaluation = async (req, res) => {
   try {
-    const { name, applyJobId, rawText } = req.body;
+    const { name, applyJobId, rawText, singlePrompt = false } = req.body || {};
 
     if (!rawText || !name) {
       return res.status(400).json({ error: 'Missing required parameters: name and rawText are required.' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.VERTEX_API_KEY;
-    
+    const apiKey = process.env.GEMINI_API_KEY || process.env.VERTEX_API_KEY || process.env.VITE_GEMINI_API_KEY;
+
     if (!apiKey) {
       return res.status(401).json({
         error: 'SERVER_API_KEY_NOT_CONFIGURED',
@@ -272,34 +381,59 @@ const handleEvaluation = async (req, res) => {
       });
     }
 
+    const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
+
+    // Server-side Defense-in-Depth PII Anonymization (in case caller bypassed client masking)
+    const piiResult = anonymizePII(rawText, name);
+    const cleanText = piiResult.anonymizedText;
+
+    // Primary Path: Execute the full 4-Agent Orchestration Pipeline (Grounding -> Critic -> Supervisor + Interviewer)
+    if (!singlePrompt) {
+      try {
+        const multiAgentResult = await executeMultiAgentEvaluation({
+          name,
+          jobTemplate,
+          cleanText,
+          originalRawText: rawText,
+          apiKey
+        });
+
+        const tenantId = req.headers['x-tenant-id'] || 'toss-payments';
+        const tenant = tenantsStore.get(tenantId);
+        if (tenant) {
+          tenant.usedCredit = Math.min(tenant.totalCredit, tenant.usedCredit + 4);
+        }
+
+        return res.status(200).json({
+          ...multiAgentResult,
+          mode: 'BFF_MULTI_AGENT_GATEWAY',
+          modelUsed: multiAgentResult.modelsUsed?.supervisor || resolveGeminiModels()[0]
+        });
+      } catch (multiErr) {
+        console.warn('[BFF Gateway] 4-Agent pipeline encountered error, trying single-prompt fallback:', multiErr.message);
+      }
+    }
+
+    // Fallback Path: Single-prompt Gemini call using shared geminiClient
     const prompt = `
-You are an expert HR Executive & Senior Recruiter AI.
-Evaluate the following candidate self-introduction text based on the provided job requirements and criteria.
+당신은 대기업 최고 수준의 HR 채용 전문가 및 시니어 면접관 AI입니다.
+아래 지원자의 자기소개서 본문을 검토하고 직무 역량 기준에 따라 엄격하고 공정하게 평가하세요.
 
-[Candidate Name]: [ANONYMIZED] (blind recruitment: the candidate name is never sent to the AI model)
-[Target Job ID]: ${applyJobId || 'dev'}
+[지원자 성명]: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
+[지원 직무]: ${jobTemplate.title}
+[직무 역량 평가 가중치]: ${JSON.stringify(jobTemplate.competencies)}
 
-[Candidate Self-Introduction Text]:
+[지원자 자기소개서 본문]:
 """
-${rawText}
+${cleanText}
 """
 
-Instructions:
-1. Extract exact quotes (grounding sentences) from the text that justify your score.
-   - positive: Quantitative metrics, clear problem-solving process, specific tool/methodology used.
-   - risk: Overstated claims, buzzwords without proof, AI-generated generic fluff.
-   - verify: Claims of achievement missing exact metrics that HR needs to verify during interview.
-2. Ensure every 'quote' in groundingEvidences is an EXACT substring from the candidate's text.
-3. Calculate scores (0 to 100) for competencies.
-4. Provide a total score (0-100), decision ('STRONG_PASS' | 'INTERVIEW' | 'HOLD' | 'REJECT'), decisionReason, and aiTextProbability (0-100%).
-5. Generate 2-4 tailored interview questions based on the weak points or 'risk/verify' grounding quotes.
-
-Return ONLY a valid JSON object matching this exact structure:
+반드시 유효한 JSON 객체만 반환하세요:
 {
   "summary": {
     "totalScore": 85,
     "decision": "STRONG_PASS",
-    "decisionReason": "Summary reason here",
+    "decisionReason": "정량적 근거 기반 요약",
     "aiTextProbability": 15
   },
   "competencyScores": {
@@ -311,86 +445,64 @@ Return ONLY a valid JSON object matching this exact structure:
   },
   "groundingEvidences": [
     {
-      "quote": "exact sentence from rawText",
+      "quote": "본문 속 실제 문장",
       "type": "positive",
       "competencyId": "problem_solving",
       "scoreImpact": 12,
-      "title": "Brief title",
-      "explanation": "Detailed rationale"
+      "title": "핵심 성과 근거",
+      "explanation": "상세 평가 사유"
     }
   ],
   "interviewQuestions": [
     {
-      "basedQuote": "exact sentence from rawText",
-      "category": "Technique Verification",
-      "question": "Specific question for candidate",
-      "intent": "Why asking this",
-      "checklist": ["Checklist item 1", "Checklist item 2"]
+      "basedQuote": "본문 속 실제 문장",
+      "category": "기술 검증",
+      "question": "구체적인 면접 질문",
+      "intent": "질문 의도",
+      "checklist": ["체크포인트 1", "체크포인트 2"]
     }
   ]
 }
 `;
 
-    // 2026 Recommended Gemini Models
-    const candidateModels = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest'];
-    const project = process.env.GCP_PROJECT || 'ai-review-510606';
-    let data = null;
-    let successfulModel = '';
-    let lastError = '';
+    try {
+      const { data: parsedAnalysis, modelUsed } = await callGeminiJson({
+        prompt,
+        apiKey,
+        temperature: 0.2
+      });
 
-    for (const modelName of candidateModels) {
-      const endpoints = [
-        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
-        `https://us-central1-aiplatform.googleapis.com/v1/projects/${project}/locations/us-central1/publishers/google/models/${modelName}:generateContent?key=${apiKey}`
-      ];
+      const enrichedEvidences = enrichEvidencesSync(rawText, parsedAnalysis.groundingEvidences || [], 0.70);
+      const enrichedQuestions = (parsedAnalysis.interviewQuestions || []).map((iq, idx) => ({
+        id: iq.id || `iq_${idx + 1}`,
+        basedQuote: iq.basedQuote || '',
+        category: iq.category || '역량 검증',
+        question: iq.question || '',
+        intent: iq.intent || '답변 진위 및 문제 해결 역량 확인',
+        checklist: Array.isArray(iq.checklist) ? iq.checklist : ['구체적 경험 제시 여부', '역할 및 기여도 증명']
+      }));
 
-      for (const url of endpoints) {
-        try {
-          const resp = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { responseMimeType: 'application/json' }
-            })
-          });
-
-          if (resp.ok) {
-            data = await resp.json();
-            successfulModel = modelName;
-            break;
-          } else {
-            const errText = await resp.text();
-            lastError = `[${modelName}] (${resp.status}): ${errText.slice(0, 150)}`;
-          }
-        } catch (err) {
-          lastError = err.message;
-        }
-      }
-      if (data) break;
-    }
-
-    if (!data) {
-      console.warn(`Upstream API failed: ${lastError}`);
+      return res.status(200).json({
+        id: `app_${Date.now()}`,
+        name,
+        applyJobId: jobTemplate.id,
+        applyJobTitle: jobTemplate.title,
+        rawText,
+        analysis: {
+          ...parsedAnalysis,
+          groundingEvidences: enrichedEvidences,
+          interviewQuestions: enrichedQuestions
+        },
+        modelUsed,
+        mode: 'BFF_GEMINI_GATEWAY'
+      });
+    } catch (upstreamErr) {
+      console.warn(`Upstream AI failed: ${upstreamErr.message}`);
       return res.status(502).json({
         error: 'UPSTREAM_AI_FAILED',
-        message: `Google Gemini AI 서비스 호출에 실패했습니다: ${lastError}`
+        message: `Google Gemini AI 서비스 호출에 실패했습니다: ${upstreamErr.message}`
       });
     }
-
-    const rawTextResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    const parsedAnalysis = JSON.parse(rawTextResp);
-
-    return res.status(200).json({
-      id: `app_${Date.now()}`,
-      name,
-      applyJobId: applyJobId || 'dev',
-      applyJobTitle: 'Software Engineer',
-      rawText,
-      analysis: parsedAnalysis,
-      modelUsed: successfulModel,
-      mode: 'BFF_GEMINI_GATEWAY'
-    });
   } catch (error) {
     console.error('API Gateway Error:', error.message);
     return res.status(500).json({

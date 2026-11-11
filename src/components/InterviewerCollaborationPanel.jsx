@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MessageSquare, Send, User, PlusCircle, ShieldCheck, ThumbsUp, ThumbsDown, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { addCollaborativeNote, getSharedEvaluation } from '../services/shareService';
+import { isSupabaseConfigured, subscribeCollaborationNotes } from '../services/supabaseClient';
 
 // Polling interval for multi-interviewer note sync via the API gateway
 // (Supabase Realtime push is tracked separately in tasks/16)
@@ -43,17 +44,26 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
     fetchNotes();
 
     // Periodic sync so notes written by other interviewers appear without reload
+    // Also subscribes to Supabase Realtime channel when configured
     let timerId = null;
+    let unsubscribeRealtime = () => {};
     if (shareId) {
       timerId = setInterval(() => {
         if (typeof document !== 'undefined' && document.hidden) return; // skip while tab is hidden
         fetchNotes();
       }, NOTES_POLL_INTERVAL_MS);
+
+      if (isSupabaseConfigured) {
+        unsubscribeRealtime = subscribeCollaborationNotes(shareId, () => {
+          fetchNotes();
+        });
+      }
     }
 
     return () => {
       isMounted = false;
       if (timerId) clearInterval(timerId);
+      unsubscribeRealtime();
     };
   }, [shareId, applicant?.id]);
 

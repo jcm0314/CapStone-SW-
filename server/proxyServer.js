@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { VertexAI } from '@google-cloud/vertexai';
 import { BigQuery } from '@google-cloud/bigquery';
+import { PRIMARY_MODEL } from '../src/services/agents/geminiClient.js';
+import { anonymizePII as fullAnonymizePII } from '../src/utils/piiAnonymizer.js';
 
 dotenv.config();
 
@@ -30,11 +32,9 @@ try {
 app.use(cors());
 app.use(express.json());
 
-// Enterprise PII Masking Filter Helper (Regex Anonymizer)
-function anonymizePII(text) {
-  return text
-    .replace(/01[016789]-?\d{3,4}-?\d{4}/g, '010-****-****')
-    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '***@enterprise.com');
+// Enterprise PII Masking Filter Helper (7-Category Regex Anonymizer)
+function anonymizePII(text, name = '') {
+  return fullAnonymizePII(text, name).anonymizedText;
 }
 
 // Enterprise BigQuery Audit Trail Logging
@@ -68,7 +68,7 @@ app.post('/api/v1/enterprise/vertex-evaluator', async (req, res) => {
   const { name, applyJobId, rawText } = req.body;
 
   // 1. PII Anonymization Layer
-  const cleanText = anonymizePII(rawText || '');
+  const cleanText = anonymizePII(rawText || '', name || '');
 
   // 2. Vertex AI 미설정 시: 가짜 평가 결과를 만들지 않고 명시적으로 503 반환
   if (!vertexAI || !process.env.GCP_PROJECT_ID) {
@@ -84,7 +84,7 @@ app.post('/api/v1/enterprise/vertex-evaluator', async (req, res) => {
   {
     try {
       const generativeModel = vertexAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
+        model: process.env.GEMINI_MODEL || PRIMARY_MODEL,
         generationConfig: {
           maxOutputTokens: 2048,
           temperature: 0.2,

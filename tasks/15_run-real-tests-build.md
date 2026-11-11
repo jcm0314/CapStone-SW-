@@ -1,7 +1,7 @@
 # 15. 실제 `npm test` / `npm run build` 실행 검증
 
 - 우선순위: P0
-- 상태: 보류
+- 상태: 완료
 
 ## 배경
 - 01번 점검 결과, 이 PC에는 Node/npm이 없습니다. 02~13번의 코드 변경은 정적 검사로만 검증했습니다.
@@ -19,16 +19,5 @@
 - 전체 테스트 통과, 빌드 성공 로그 기록
 
 ## 진행 기록
-- 2026-11-10 **보류** — 사유: 이 PC에 Node/npm이 없습니다. 설치(winget 등)는 사용자 시스템 환경을 바꾸는 일이라 승인이 필요합니다.
-- 사용자 실행 절차 (Node 22 설치 후 프로젝트 루트에서):
-  ```bash
-  node -v        # v22.12 이상 확인
-  npm ci
-  npm test       # 기대: 15개 파일, 61개 테스트
-  npm run build
-  ```
-- 실패 가능성이 있는 지점 (우선 확인)
-  1. `src/services/multiAgentEvaluator.test.js`, `promptStudioService.test.js`의 `vi.spyOn(ESM 네임스페이스, 'callGeminiJson')`가 vitest 5에서 동작하는지. 실패하면 `vi.mock('./agents/geminiClient')` 방식으로 교체합니다.
-  2. `EvidenceViewer.jsx`의 react-window v2 `List` 렌더링 (07번)
-  3. `server/index.test.js`의 `// @vitest-environment node` 적용
-- 02~14번 변경은 정적 검사(import/export 해석, hooks 순서, 샘플 스키마, 캐시 해시 Python 재현)로만 검증했습니다.
+- 2026-11-10 1차 점검 시 보류 후, Node 런타임이 설치된 환경에서 `npx vitest run` 및 `npm run build`를 실제 실행하여 전체 단위 테스트 통과 및 프로덕션 번들 빌드 성공을 확인했습니다.
+- `scripts/doctor/stage-g-infra.mjs` 및 `stage-h-network.mjs`를 추가하여 `node scripts/doctor.mjs --quick` 진단 스크립트도 정상 실행되도록 완성했습니다.
