@@ -15,3 +15,4 @@ public class HealthStatusResponse {
     private final List<String> activeProfiles;
     private final Instant timestamp;
 }
+

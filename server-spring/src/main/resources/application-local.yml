@@ -24,3 +24,4 @@ logging:
     kr.co.checkmate: DEBUG
     org.springframework.web: INFO
     org.springframework.security: INFO
+

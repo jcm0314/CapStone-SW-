@@ -36,3 +36,4 @@ public class HealthController {
         return ResponseEntity.ok(ApiResponse.success(status));
     }
 }
+
