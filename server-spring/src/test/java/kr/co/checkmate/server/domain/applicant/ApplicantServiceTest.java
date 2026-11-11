@@ -116,3 +116,4 @@ class ApplicantServiceTest {
         assertThat(response.getPassRecommendation()).isTrue();
     }
 }
+

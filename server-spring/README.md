@@ -80,6 +80,36 @@ cd server-spring
   - `anonymized`: BOOLEAN (PII 블라인드 여부)
 - **데이터 격리 보장**: 모든 지원자 쿼리는 `tenant_id` 조건을 필수로 적용하여 테넌트 간 데이터 침범(Cross-Tenant Leakage)을 원천 차단합니다.
 
+### 3. `EvaluationResult` (`evaluation_results`)
+- **역할**: 지원자 자기소개서 종합 AI 평가 결과 및 검토관 승인
+- **주요 필드**:
+  - `id`: UUID (PK)
+  - `tenantId`: UUID (소속 테넌트 식별자, 복합 인덱스)
+  - `applicantId`: UUID (대상 지원자 ID, 복합 인덱스)
+  - `summary`: TEXT (종합 역량 평가 요약)
+  - `totalScore`: INTEGER (0-100)
+  - `passRecommendation`: BOOLEAN
+  - `fitScore`: INTEGER (인재상 부합도)
+  - `competencyScore`: INTEGER (직무 전문성)
+  - `plagiarismScore`: INTEGER (표절 의심도)
+  - `reviewedByHuman`: BOOLEAN (인간 검토관 승인 게이트)
+  - `reviewerNotes`: TEXT (검토관 메모)
+  - `evidenceSentences`: List<EvidenceSentence> (Cascade 1:N)
+
+### 4. `EvidenceSentence` (`evidence_sentences`)
+- **역할**: 설명 가능한 AI(XAI) 1:1 형광펜 원문 근거 문장 및 추천 면접 질문
+- **주요 필드**:
+  - `id`: UUID (PK)
+  - `evaluationResult`: EvaluationResult (@ManyToOne)
+  - `category`: VARCHAR(100) (역량 항목, e.g. 문제해결력, 협업)
+  - `sentence`: TEXT (매칭된 자소서 원문 문장)
+  - `quoteOffsetStart`: INTEGER (원문 시작 오프셋)
+  - `quoteOffsetEnd`: INTEGER (원문 종료 오프셋)
+  - `confidenceScore`: DOUBLE (신뢰도 0.0 ~ 1.0)
+  - `rationale`: TEXT (AI 채점 근거 사유)
+  - `interviewQuestion`: TEXT (해당 근거 기반 심층 면접 질문)
+
+
 ---
 
 ## 📡 지원자 관리 REST API 명세

@@ -50,3 +50,4 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.failure("INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다."));
     }
 }
+

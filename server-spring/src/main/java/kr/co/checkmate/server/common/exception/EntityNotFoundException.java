@@ -6,3 +6,4 @@ public class EntityNotFoundException extends BusinessException {
         super("ENTITY_NOT_FOUND", message);
     }
 }
+

@@ -20,3 +20,4 @@ public class ApplicantStatusUpdateRequest {
 
     private Boolean passRecommendation;
 }
+

@@ -25,3 +25,4 @@ public class ApplicantCreateRequest {
 
     private Boolean anonymized;
 }
+

@@ -68,3 +68,4 @@ public class ApplicantController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
+
