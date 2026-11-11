@@ -198,3 +198,4 @@ class ApplicantControllerTest {
                 .andExpect(jsonPath("$.success").value(true));
     }
 }
+

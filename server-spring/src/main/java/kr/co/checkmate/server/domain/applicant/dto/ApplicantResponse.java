@@ -42,3 +42,4 @@ public class ApplicantResponse {
                 .build();
     }
 }
+

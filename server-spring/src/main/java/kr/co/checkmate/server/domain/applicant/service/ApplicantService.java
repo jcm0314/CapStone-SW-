@@ -78,3 +78,4 @@ public class ApplicantService {
         applicantRepository.delete(applicant);
     }
 }
+
