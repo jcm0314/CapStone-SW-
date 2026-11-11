@@ -24,3 +24,4 @@ public interface EvaluationResultRepository extends JpaRepository<EvaluationResu
 
     void deleteByTenantIdAndApplicantId(UUID tenantId, UUID applicantId);
 }
+

@@ -68,3 +68,4 @@ public class EvidenceSentence extends BaseTimeEntity {
         this.evaluationResult = evaluationResult;
     }
 }
+

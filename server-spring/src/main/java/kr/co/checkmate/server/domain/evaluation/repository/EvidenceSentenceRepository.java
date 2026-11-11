@@ -14,3 +14,4 @@ public interface EvidenceSentenceRepository extends JpaRepository<EvidenceSenten
 
     List<EvidenceSentence> findByCategory(String category);
 }
+

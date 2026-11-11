@@ -122,5 +122,16 @@ cd server-spring
 | `PATCH` | `/api/v1/tenants/{tenantId}/applicants/{id}/status` | 평가 상태 및 점수 갱신 | `ApplicantStatusUpdateRequest` | `200 OK` |
 | `DELETE` | `/api/v1/tenants/{tenantId}/applicants/{id}` | 지원자 데이터 삭제 | 없음 | `200 OK` |
 
+---
+
+## 📡 평가 결과 및 Human-Gate 승인 REST API 명세
+
+| Method | Endpoint | 설명 | 요청 본문 | 응답 |
+|---|---|---|---|---|
+| `POST` | `/api/v1/tenants/{tenantId}/applicants/{id}/evaluation` | AI 평가 결과 및 근거 문장 일괄 저장 | `EvaluationSaveRequest` | `201 Created` |
+| `GET` | `/api/v1/tenants/{tenantId}/applicants/{id}/evaluation` | 지원자 평가 결과 및 근거 문장 조회 | 없음 | `200 OK` (404 Not Found) |
+| `PATCH` | `/api/v1/tenants/{tenantId}/applicants/{id}/evaluation/approve` | 인간 검토관 최종 서명 승인 (Human-Gate 잠금 해제) | `EvaluationApprovalRequest` | `200 OK` |
+
+
 
 
