@@ -88,3 +88,4 @@ public class EvaluationResult extends BaseTimeEntity {
         this.reviewerNotes = notes;
     }
 }
+

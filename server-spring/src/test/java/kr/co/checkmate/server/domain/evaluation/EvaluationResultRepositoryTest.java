@@ -140,3 +140,4 @@ class EvaluationResultRepositoryTest {
         assertThat(updated.getReviewerNotes()).contains("인사팀장 김철수");
     }
 }
+
