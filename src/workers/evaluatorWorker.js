@@ -4,41 +4,7 @@
  */
 
 import { anonymizePII } from '../utils/piiAnonymizer.js';
-import { findFuzzyMatch } from '../utils/fuzzyMatcher.js';
-
-function enrichEvidences(targetText, rawGroundingEvidences = [], threshold = 0.70) {
-  return rawGroundingEvidences.map((ev, idx) => {
-    let startIndex = -1;
-    let endIndex = -1;
-
-    if (ev.quote && targetText) {
-      startIndex = targetText.indexOf(ev.quote);
-      if (startIndex !== -1) {
-        endIndex = startIndex + ev.quote.length;
-      } else {
-        const fuzzy = findFuzzyMatch(targetText, ev.quote, threshold);
-        if (fuzzy) {
-          startIndex = fuzzy.start;
-          endIndex = fuzzy.end;
-        }
-      }
-    }
-
-    return {
-      id: ev.id || `ev_${idx + 1}`,
-      quote: ev.quote || '',
-      startIndex,
-      endIndex,
-      type: ['positive', 'risk', 'verify'].includes(ev.type) ? ev.type : 'verify',
-      competencyId: ev.competencyId || 'problem_solving',
-      scoreImpact: typeof ev.scoreImpact === 'number'
-        ? ev.scoreImpact
-        : (ev.type === 'positive' ? 12 : ev.type === 'risk' ? -10 : 0),
-      title: ev.title || '근거 항목',
-      explanation: ev.explanation || ''
-    };
-  });
-}
+import { enrichEvidences } from '../utils/evidenceEnricher.js';
 
 self.onmessage = function (e) {
   const { type, payload } = e.data || {};

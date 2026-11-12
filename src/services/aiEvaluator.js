@@ -132,7 +132,7 @@ async function analyzeWithBffGateway({ name, applyJobId, jobTemplate, cleanText,
   }
 
   // Attach local metadata
-  body.rawText = rawText;
+  body.rawText = cleanText;
   body.piiMeta = piiResult;
   body.mode = 'B2B_MANAGED_TOKEN';
 

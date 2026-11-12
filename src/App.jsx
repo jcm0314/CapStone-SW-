@@ -13,6 +13,8 @@ import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
 import CandidateFeedbackModal from './components/CandidateFeedbackModal';
+import SampleBadge from './components/SampleBadge';
+import { isSampleResult } from './utils/sampleResult';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { analyzeApplicant } from './services/aiEvaluator';
@@ -271,6 +273,12 @@ export default function App() {
                 <p className="text-[11px] text-purple-300/80 mt-0.5">
                   생성자: <strong>{sharedBannerInfo.createdBy}</strong> • 1:1 형광펜 원문 및 맞춤 면접 질문이 실시간 동기화되었습니다.
                 </p>
+                {isSampleResult(selectedApplicant) && (
+                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-amber-200">
+                    <SampleBadge />
+                    <span>공유된 평가서는 AI를 실행하지 않은 예시 결과입니다.</span>
+                  </div>
+                )}
               </div>
             </div>
             <button

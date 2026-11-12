@@ -34,7 +34,9 @@ export async function executeMultiAgentEvaluation({
   tenantId,
   onProgress
 }) {
-  const targetText = originalRawText || cleanText;
+  // Blind recruitment: quotes are matched and displayed against the PII-masked text the AI actually saw.
+  // The unmasked original is never stored in the evaluation result.
+  const targetText = cleanText;
 
   // ----------------------------------------------------
   // Stage 1: Grounding Agent Execution + Worker Offset Matching

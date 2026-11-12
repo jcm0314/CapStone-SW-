@@ -40,6 +40,7 @@ export const TENANTS = [
     defaultApplicants: [
       {
         id: 'daangn_app_01',
+        isSample: true,
         name: '정지훈 (지원자)',
         orgId: 'daangn',
         targetTeam: '동네피드추천팀',
@@ -140,6 +141,7 @@ A/B 테스트 결과 기존 휴리스틱 피드 대비 동네 소식 조회 전�
     defaultApplicants: [
       {
         id: 'woowa_app_01',
+        isSample: true,
         name: '한태양 (지원자)',
         orgId: 'woowa',
         targetTeam: '라이더배차플랫폼팀',

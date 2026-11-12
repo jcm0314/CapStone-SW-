@@ -428,7 +428,7 @@ const handleEvaluation = async (req, res) => {
         name,
         jobTemplate,
         cleanText,
-        originalRawText: rawText,
+        originalRawText: cleanText,
         promptAddendum: buildPromptAddendumFromSettings(promptSettings),
         tenantId
       });

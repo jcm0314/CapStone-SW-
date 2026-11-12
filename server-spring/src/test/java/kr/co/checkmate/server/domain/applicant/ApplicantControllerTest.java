@@ -10,6 +10,7 @@ import kr.co.checkmate.server.domain.applicant.dto.ApplicantResponse;
 import kr.co.checkmate.server.domain.applicant.dto.ApplicantStatusUpdateRequest;
 import kr.co.checkmate.server.domain.applicant.entity.EvaluationStatus;
 import kr.co.checkmate.server.domain.applicant.service.ApplicantService;
+import kr.co.checkmate.server.support.TestAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,7 @@ class ApplicantControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants", tenantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -97,6 +99,7 @@ class ApplicantControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants", tenantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest())
@@ -121,7 +124,8 @@ class ApplicantControllerTest {
         given(applicantService.getApplicants(eq(tenantId), any())).willReturn(List.of(res));
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants", tenantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants", tenantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").isArray())
@@ -139,7 +143,8 @@ class ApplicantControllerTest {
                 .willThrow(new EntityNotFoundException("해당 지원자를 찾을 수 없습니다: " + applicantId));
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}", tenantId, applicantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error.code").value("ENTITY_NOT_FOUND"));
@@ -174,6 +179,7 @@ class ApplicantControllerTest {
 
         // when & then
         mockMvc.perform(patch("/api/v1/tenants/{tenantId}/applicants/{applicantId}/status", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
@@ -193,7 +199,8 @@ class ApplicantControllerTest {
         willDoNothing().given(applicantService).deleteApplicant(tenantId, applicantId);
 
         // when & then
-        mockMvc.perform(delete("/api/v1/tenants/{tenantId}/applicants/{applicantId}", tenantId, applicantId))
+        mockMvc.perform(delete("/api/v1/tenants/{tenantId}/applicants/{applicantId}", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
