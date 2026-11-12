@@ -63,7 +63,9 @@ describe('AI Grounding Evaluator Core Engine (Gemini API Only)', () => {
     expect(sentBody.rawText).toContain('[이메일 익명화]');
 
     expect(result.mode).toBe('B2B_MANAGED_TOKEN');
-    expect(result.rawText).toBe(rawText);
+    // 블라인드 채용: 결과 화면에 표시되는 본문도 마스킹본이어야 함 (원본 PII 미보관)
+    expect(result.rawText).not.toContain('minjun@test.com');
+    expect(result.rawText).toContain('[이메일 익명화]');
     expect(result.analysis.summary.totalScore).toBe(84);
   });
 });
