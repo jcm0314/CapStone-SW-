@@ -29,6 +29,9 @@ jobs:
         run: npm test
 
       - name: Verify Production Vite Build Artifacts
+        # production 빌드는 게이트웨이 주소가 필수 (#24). 저장소 변수가 없으면 CI 전용 placeholder 사용
+        env:
+          VITE_API_GATEWAY_URL: ${{ vars.VITE_API_GATEWAY_URL || 'https://api-gateway.ci-placeholder.invalid' }}
         run: npm run build
 
   # Job 2: Multi-Stage Docker Container Build Verification
@@ -50,6 +53,8 @@ jobs:
           context: .
           file: Dockerfile
           push: false
+          build-args: |
+            VITE_API_GATEWAY_URL=${{ vars.VITE_API_GATEWAY_URL || 'https://api-gateway.ci-placeholder.invalid' }}
           tags: hr-evaluator-frontend:test-latest
 
       - name: Build Express API Gateway Docker Image

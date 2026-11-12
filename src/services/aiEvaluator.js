@@ -307,16 +307,18 @@ ${rawText}
   };
 }
 
-function getApiBaseUrl() {
-  if (typeof window !== 'undefined') {
-    if (import.meta.env?.VITE_API_GATEWAY_URL) {
-      return import.meta.env.VITE_API_GATEWAY_URL;
-    }
-    if (window.location && window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('about:')) {
-      return window.location.origin;
-    }
+// 게이트웨이 주소는 빌드 시 VITE_API_GATEWAY_URL 로만 결정합니다.
+// window.location.origin 으로 대체하면 프론트 nginx 가 /api/* 에 index.html 을 돌려줘
+// "Unexpected token '<'" 오류가 나므로 사용하지 않습니다 (#24). production 빌드는 vite.config.js 에서 미설정 시 실패합니다.
+export function getApiBaseUrl() {
+  const configured = (import.meta.env?.VITE_API_GATEWAY_URL || '').trim();
+  if (configured) {
+    return configured.replace(/\/+$/, '');
   }
-  return 'http://127.0.0.1:3001';
+  if (import.meta.env?.PROD) {
+    throw new Error('VITE_API_GATEWAY_URL 이 설정되지 않은 빌드입니다. API 게이트웨이 주소를 넣어 다시 빌드하세요 (docs/DEPLOY.md).');
+  }
+  return 'http://127.0.0.1:3001'; // 로컬 개발 전용
 }
 
 /**
