@@ -62,7 +62,7 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
     return (
       <div className="glass-panel rounded-2xl p-8 border border-line text-center space-y-3">
         <Layers className="w-10 h-10 text-fg-subtle mx-auto" />
-        <h3 className="text-sm font-bold text-fg-muted">비교할 지원자 분석 데이터가 없습니다.</h3>
+        <h3 className="text-sm font-semibold text-fg-muted">비교할 지원자 분석 데이터가 없습니다.</h3>
         <p className="text-xs text-fg-subtle">서류 평가 탭에서 자기소개서를 분석하거나 샘플 데이터를 선택해 주세요.</p>
       </div>
     );
@@ -73,19 +73,13 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
   return (
     <div className="space-y-6">
       {/* 0. Dynamic Weight Simulator & Top-N Cutoff Panel */}
-      <div className="glass-panel rounded-2xl p-5 border border-brand-line bg-brand-soft space-y-4">
+      <div className="card p-4 border border-brand-line bg-brand-soft space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-line">
           <div>
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-brand-fg" />
-              <h2 className="text-sm font-bold text-fg">가중치 조절 · 상위 N명 컷오프</h2>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-soft text-brand-fg border border-brand-line">
-                AI 재호출 없음
-              </span>
+              <h2 className="text-sm font-semibold text-fg">가중치 · 컷오프</h2>
+              <span className="text-xs text-fg-subtle">AI 재호출 없이 바로 재계산</span>
             </div>
-            <p className="text-xs text-fg-muted mt-0.5">
-              역량 비중과 AI 대필 의심 기준을 바꾸면 순위가 바로 다시 계산됩니다. AI를 다시 호출하지 않아 비용이 들지 않습니다.
-            </p>
           </div>
           <button
             type="button"
@@ -105,7 +99,7 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
             <div key={comp.id} className="bg-subtle border border-line rounded-xl p-3 space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-fg-muted font-medium">{comp.label}</span>
-                <span className="font-mono font-bold text-brand-fg">{weights[comp.id]}%</span>
+                <span className=" font-semibold text-brand-fg">{weights[comp.id]}%</span>
               </div>
               <input
                 type="range"
@@ -123,8 +117,8 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           <div className="bg-subtle border border-line rounded-xl p-3 flex items-center justify-between gap-4">
             <div className="text-xs">
-              <span className="font-bold text-ok">합격권 인원: </span>
-              <span className="font-mono text-fg font-bold">상위 {topNCutoff}명 선발</span>
+              <span className="font-semibold text-ok">합격권 인원: </span>
+              <span className=" text-fg font-semibold">상위 {topNCutoff}명 선발</span>
             </div>
             <input
               type="range"
@@ -138,8 +132,8 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
 
           <div className="bg-subtle border border-line rounded-xl p-3 flex items-center justify-between gap-4">
             <div className="text-xs">
-              <span className="font-bold text-warn">AI 대필 의심 상한: </span>
-              <span className="font-mono text-fg font-bold">{maxAiRiskFilter}% 이하만 표시</span>
+              <span className="font-semibold text-warn">AI 대필 의심 상한: </span>
+              <span className=" text-fg font-semibold">{maxAiRiskFilter}% 이하만 표시</span>
             </div>
             <input
               type="range"
@@ -155,20 +149,18 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
       </div>
 
       {/* 1. Comparison Matrix Data Table */}
-      <div className="glass-panel rounded-2xl p-5 border border-line space-y-4">
+      <div className="card p-4 border border-line space-y-4">
         {/* Title */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-line">
           <div>
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-brand-fg" />
-              <h2 className="text-sm font-bold text-fg">지원자 순위</h2>
+              <h2 className="text-sm font-semibold text-fg">지원자 순위</h2>
             </div>
-            <p className="text-xs text-fg-muted">점수·판정·근거 수를 한눈에 비교합니다. 이름 옆 버튼으로 상세 결과를 엽니다.</p>
           </div>
 
           <button
             onClick={() => onOpenExport(applicants[0])}
-            className="px-3.5 py-1.5 bg-brand hover:bg-brand-strong text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
+            className="px-3.5 py-1.5 bg-brand hover:bg-brand-strong text-on-brand rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5 transition-all"
           >
             <Download className="w-3.5 h-3.5" /> 비교 보고서 출력
           </button>
@@ -199,30 +191,22 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                 const riskCount = (app.analysis?.groundingEvidences || []).filter(e => e.type === 'risk').length;
 
                 return (
-                  <tr key={app.id} className={`hover:bg-brand-soft transition-colors ${isTopN ? 'bg-ok-soft' : ''}`}>
-                    <td className="py-3.5 px-4 font-mono">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                        isTopN
-                          ? 'bg-ok-soft text-ok border-ok-line'
-                          : 'bg-muted text-fg-muted border-line-strong'
-                      }`}>
-                        #{idx + 1} {isTopN ? '합격권' : '대기'}
-                      </span>
+                  <tr key={app.id} className="hover:bg-subtle transition-colors">
+                    <td className="py-2.5 px-3 ">
+                      <span className="tabular-nums text-fg">{idx + 1}</span>
+                      <span className={`ml-2 text-xs ${isTopN ? 'text-ok font-medium' : 'text-fg-subtle'}`}>{isTopN ? '합격권' : '대기'}</span>
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-fg flex items-center gap-2">
-                      <span className="w-7 h-7 rounded-lg bg-brand-soft border border-brand-line text-brand-fg font-mono flex items-center justify-center text-xs">
-                        {app.name[0]}
-                      </span>
+                    <td className="py-2.5 px-3 font-semibold text-fg flex items-center gap-2">
                       <span>{app.name}</span>
                       {isSampleResult(app) && <SampleBadge />}
                       {app.isHumanVerified && (
-                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-warn-soft text-warn border border-warn-line" title="인간 검토관 HITL 보정 완료">
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-warn-soft text-warn border border-warn-line" title="인간 검토관 HITL 보정 완료">
                           HITL
                         </span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-fg-muted font-medium">{app.applyJobTitle}</td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-base">
+                    <td className="py-2.5 px-3 text-fg-muted font-medium">{app.applyJobTitle}</td>
+                    <td className="py-2.5 px-3  font-semibold text-base">
                       <span className={totalScore >= 85 ? 'text-ok' : totalScore >= 70 ? 'text-warn' : 'text-bad'}>
                         {totalScore}점
                       </span>
@@ -232,8 +216,8 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                         </span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border ${
+                    <td className="py-2.5 px-3">
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border ${
                         decision === 'STRONG_PASS' ? 'bg-ok-soft text-ok border-ok-line' :
                         decision === 'INTERVIEW' ? 'bg-brand-soft text-brand-fg border-brand-line' :
                         decision === 'HOLD' ? 'bg-warn-soft text-warn border-warn-line' :
@@ -242,17 +226,17 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                         {decision === 'STRONG_PASS' ? '통과 추천' : decision === 'INTERVIEW' ? '면접 추천' : decision === 'HOLD' ? '보류' : '탈락 권장'}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 font-mono">
+                    <td className="py-2.5 px-3 ">
                       <span className={`font-semibold ${aiTextProbability > 60 ? 'text-bad' : 'text-fg-muted'}`}>
                         {aiTextProbability}%
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-[11px] font-mono">
-                      <span className="text-ok font-bold">{positiveCount}개</span>
+                    <td className="py-2.5 px-3 text-[11px] ">
+                      <span className="text-ok font-semibold">{positiveCount}개</span>
                       <span className="text-fg-subtle mx-1">|</span>
-                      <span className="text-bad font-bold">{riskCount}개</span>
+                      <span className="text-bad font-semibold">{riskCount}개</span>
                     </td>
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-2.5 px-3 text-right">
                       <button
                         onClick={() => onSelectApplicant(app)}
                         className="px-3 py-1 bg-muted hover:bg-brand-strong hover:text-white text-fg-muted rounded-lg text-xs font-semibold border border-line-strong transition-all"
@@ -269,14 +253,11 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
       </div>
 
       {/* 2. Pairwise Plagiarism Detection Heatmap Matrix (Sprint 5.2 Finale) */}
-      <div className="glass-panel rounded-2xl p-5 border border-line space-y-4">
+      <div className="card p-4 border border-line space-y-4">
         <div className="flex items-center justify-between border-b border-line pb-3">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-bad" />
-            <h3 className="text-sm font-bold text-fg">자소서 표절 매트릭스</h3>
-            <span className="px-2 py-0.5 bg-bad-soft text-bad border border-bad-line rounded text-[10px] font-bold">
-              N-gram 유사도
-            </span>
+            <h3 className="text-sm font-semibold text-fg">자소서 표절 매트릭스</h3>
+            <span className="text-xs text-fg-subtle">N-gram 유사도</span>
           </div>
           <span className="text-[11px] text-fg-muted">40% 이상이면 표절 의심</span>
         </div>
@@ -287,20 +268,20 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
               <tr className="bg-subtle text-fg-muted border-b border-line">
                 <th className="p-3 text-left">지원자</th>
                 {applicants.map((app) => (
-                  <th key={`head_${app.id}`} className="p-3 font-mono">{app.name}</th>
+                  <th key={`head_${app.id}`} className="p-3 ">{app.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800/60">
               {plagiarismMatrix.map((row, i) => (
                 <tr key={`row_${applicants[i].id}`}>
-                  <td className="p-3 font-bold text-fg text-left font-mono">
+                  <td className="p-3 font-semibold text-fg text-left ">
                     {applicants[i].name}
                   </td>
                   {row.map((cell, j) => {
                     if (cell.isSelf) {
                       return (
-                        <td key={`cell_${i}_${j}`} className="p-3 text-fg-subtle bg-subtle font-mono">
+                        <td key={`cell_${i}_${j}`} className="p-3 text-fg-subtle bg-subtle ">
                           -
                         </td>
                       );
@@ -309,13 +290,13 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                     const rate = cell.plagiarismRate;
                     let bgClass = 'bg-subtle text-fg-muted';
                     if (rate >= 40) {
-                      bgClass = 'bg-bad-soft text-bad font-bold border border-bad-line';
+                      bgClass = 'bg-bad-soft text-bad font-semibold border border-bad-line';
                     } else if (rate >= 20) {
                       bgClass = 'bg-warn-soft text-warn font-semibold';
                     }
 
                     return (
-                      <td key={`cell_${i}_${j}`} className={`p-3 font-mono rounded ${bgClass}`}>
+                      <td key={`cell_${i}_${j}`} className={`p-3  rounded ${bgClass}`}>
                         {rate}% {cell.isHighRisk && ''}
                       </td>
                     );

@@ -152,7 +152,7 @@ export default function DepartmentCreditDashboard() {
                 2,048명 매핑 정상 작동
               </span>
             </div>
-            <h2 className="text-2xl lg:text-3xl font-extrabold text-fg tracking-tight">
+            <h2 className="text-2xl lg:text-3xl font-semibold text-fg tracking-tight">
               부서별 AI 크레딧 쿼터 & 토큰 비용 관리 대시보드
             </h2>
             <p className="text-sm text-fg-muted mt-1 max-w-2xl">
@@ -183,7 +183,7 @@ export default function DepartmentCreditDashboard() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl font-black text-fg">
+            <div className="text-2xl font-semibold text-fg">
               ${totalAllocated.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-fg-muted mt-1">
@@ -201,7 +201,7 @@ export default function DepartmentCreditDashboard() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl font-black text-brand-fg">
+            <div className="text-2xl font-semibold text-brand-fg">
               ${totalUsed.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-fg-muted mt-1 flex items-center gap-1.5">
@@ -220,7 +220,7 @@ export default function DepartmentCreditDashboard() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl font-black text-ok">
+            <div className="text-2xl font-semibold text-ok">
               +${totalSavingsUsd.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-ok mt-1 font-medium">
@@ -238,7 +238,7 @@ export default function DepartmentCreditDashboard() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl font-black text-fg">
+            <div className="text-2xl font-semibold text-fg">
               {users.length.toLocaleString()}명
             </div>
             <div className="text-xs text-fg-muted mt-1 flex items-center gap-2">
@@ -303,7 +303,7 @@ export default function DepartmentCreditDashboard() {
                   <div className="flex items-baseline justify-between mt-4">
                     <div>
                       <span className="text-xs text-fg-muted">사용액 / 한도:</span>
-                      <div className="text-base font-extrabold text-fg mt-0.5">
+                      <div className="text-base font-semibold text-fg mt-0.5">
                         ${dept.usedUsd.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         <span className="text-xs font-normal text-fg-muted ml-1">
                           / ${dept.allocatedUsd.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -311,7 +311,7 @@ export default function DepartmentCreditDashboard() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className={`text-sm font-black ${
+                      <span className={`text-sm font-semibold ${
                         isDanger ? 'text-bad' : isWarning ? 'text-warn' : 'text-ok'
                       }`}>
                         {usagePercent.toFixed(1)}%
@@ -594,7 +594,7 @@ export default function DepartmentCreditDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-brand hover:bg-brand-strong text-white shadow-sm"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-brand hover:bg-brand-strong text-on-brand shadow-sm"
                 >
                   변경사항 저장
                 </button>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Highlighter, CheckCircle2, AlertTriangle, HelpCircle, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
 import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
@@ -32,7 +32,7 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
       <div
         onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
         onMouseEnter={() => setActiveQuoteId(ev.id)}
-        className={`p-3 rounded-xl border transition-colors cursor-pointer h-[135px] flex flex-col justify-between gap-2 ${borderClass}`}
+        className={`p-3 rounded-md border transition-colors cursor-pointer h-[128px] flex flex-col justify-between gap-1.5 ${borderClass}`}
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 overflow-hidden">
@@ -159,7 +159,6 @@ function EvidenceViewerContent({ result }) {
       const isSelected = activeQuoteId === ev.id;
       const hlTone = ev.type === 'positive' ? 'hl-ok' : ev.type === 'risk' ? 'hl-bad' : 'hl-warn';
       const typeLabel = ev.type === 'positive' ? '긍정 근거' : ev.type === 'risk' ? '리스크' : '면접 확인';
-      const ringTone = ev.type === 'positive' ? 'ring-ok' : ev.type === 'risk' ? 'ring-bad' : 'ring-warn';
 
       elements.push(
         <mark
@@ -167,7 +166,7 @@ function EvidenceViewerContent({ result }) {
           onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
           onMouseEnter={() => setActiveQuoteId(ev.id)}
           title={`${typeLabel} · ${ev.title || ''}`}
-          className={`hl ${hlTone} text-fg ${isSelected ? `ring-2 ${ringTone} ring-offset-1 ring-offset-surface font-medium` : ''}`}
+          className={`hl ${hlTone} ${isSelected ? 'hl-active' : ''}`}
         >
           {text.slice(m.start, m.end)}
         </mark>
@@ -185,29 +184,18 @@ function EvidenceViewerContent({ result }) {
 
   const FILTERS = [
     { id: 'ALL', label: '전체' },
-    { id: 'POSITIVE', label: '긍정 근거', dot: 'bg-[rgb(var(--hl-ok))]' },
-    { id: 'RISK', label: '리스크', dot: 'bg-[rgb(var(--hl-bad))]' },
-    { id: 'VERIFY', label: '면접 확인', dot: 'bg-[rgb(var(--hl-warn))]' }
+    { id: 'POSITIVE', label: '긍정 근거', hl: 'hl-ok' },
+    { id: 'VERIFY', label: '면접 확인', hl: 'hl-warn' },
+    { id: 'RISK', label: '리스크', hl: 'hl-bad' }
   ];
 
   return (
-    <div className="card card-pad space-y-4">
+    <section className="card" aria-labelledby="evidence-title">
       {/* Title & Filter Tabs */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-        <div className="flex items-start gap-2.5">
-          <Highlighter className="w-[18px] h-[18px] text-fg-subtle mt-0.5" />
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="section-title">근거 문장 형광펜</h3>
-              <span className="chip chip-neutral" title="이름·연락처 등 개인정보는 가린 상태로 평가합니다 (블라인드 채용)">
-                <ShieldCheck className="w-3 h-3" /> 개인정보 가림
-              </span>
-            </div>
-            <p className="section-desc">형광펜 문장을 누르거나 마우스를 올리면 오른쪽 근거 카드로 이동합니다.</p>
-          </div>
-        </div>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 px-4 pt-3 pb-2 border-b border-line">
+        <h2 id="evidence-title" className="section-title">근거 문장</h2>
 
-        <div className="flex items-center gap-1 p-1 rounded-lg bg-muted/70 border border-line text-[12px] max-w-full overflow-x-auto" role="tablist" aria-label="근거 유형">
+        <div className="flex items-center gap-0.5 text-[12px] max-w-full overflow-x-auto -mx-1" role="tablist" aria-label="근거 유형">
           {FILTERS.map((f) => (
             <button
               key={f.id}
@@ -215,26 +203,25 @@ function EvidenceViewerContent({ result }) {
               role="tab"
               aria-selected={filterType === f.id}
               onClick={() => setFilterType(f.id)}
-              className={`px-2.5 py-1 rounded-md inline-flex items-center gap-1.5 whitespace-nowrap transition-colors ${
-                filterType === f.id ? 'bg-surface text-fg font-semibold shadow-card' : 'text-fg-muted hover:text-fg'
+              className={`px-2 h-7 rounded inline-flex items-center whitespace-nowrap transition-colors ${
+                filterType === f.id ? 'bg-muted text-fg font-medium' : 'text-fg-muted hover:text-fg'
               }`}
             >
-              {f.dot && <span className={`w-2 h-2 rounded-sm ${f.dot}`} />}
-              {f.label}
+              {f.hl ? <span className={`hl ${f.hl} cursor-pointer`}>{f.label}</span> : f.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Main Split View: Left Document View vs Right Evidence Drawer */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-3">
         {/* Left: Document View */}
-        <div className="lg:col-span-7 rounded-xl border border-line bg-surface">
-          <div className="flex justify-between items-center text-[12px] text-fg-subtle border-b border-line px-4 py-2.5">
-            <span className="font-medium">자기소개서 원문</span>
-            <span>근거 {groundingEvidences.length}개</span>
+        <div className="lg:col-span-7">
+          <div className="flex justify-between items-center text-xs text-fg-subtle px-1 pb-1.5">
+            <span>자기소개서 원문 · 개인정보 가림</span>
+            <span className="tabular-nums">근거 {groundingEvidences.length}</span>
           </div>
-          <div className="px-4 py-3 text-[14px] text-fg leading-[1.95] whitespace-pre-wrap break-keep max-h-[420px] overflow-y-auto">
+          <div className="px-1 text-[14px] text-fg leading-[1.95] whitespace-pre-wrap break-keep max-h-[430px] overflow-y-auto">
             {renderHighlightedText()}
           </div>
         </div>
@@ -242,7 +229,7 @@ function EvidenceViewerContent({ result }) {
         {/* Right: Virtualized Evidence Cards List */}
         <div className="lg:col-span-5 h-[460px]">
           {filteredEvidences.length === 0 ? (
-            <div className="h-full rounded-xl border border-dashed border-line-strong flex items-center justify-center p-6 text-center text-[13px] text-fg-subtle">
+            <div className="h-full rounded-md border border-dashed border-line-strong flex items-center justify-center p-6 text-center text-[13px] text-fg-subtle">
               이 유형의 근거 문장이 없습니다.
             </div>
           ) : List ? (
@@ -250,7 +237,7 @@ function EvidenceViewerContent({ result }) {
               listRef={listRef}
               rowComponent={EvidenceCardRow}
               rowCount={filteredEvidences.length}
-              rowHeight={145}
+              rowHeight={138}
               rowProps={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
               style={{ height: 460, width: '100%' }}
             />
@@ -263,6 +250,6 @@ function EvidenceViewerContent({ result }) {
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

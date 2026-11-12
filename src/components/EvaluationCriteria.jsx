@@ -28,15 +28,9 @@ export default function EvaluationCriteria({ currentJob, setCurrentJob, onCriter
   };
 
   return (
-    <div className="card card-pad space-y-5">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5">
-          <Sliders className="w-[18px] h-[18px] text-fg-subtle mt-0.5" />
-          <div>
-            <h3 className="section-title">평가 기준</h3>
-            <p className="section-desc">직무를 고르면 역량 비중이 자동으로 채워집니다.</p>
-          </div>
-        </div>
+    <div className="card card-pad space-y-4 bg-subtle/50">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="section-title">평가 기준</h2>
         <button onClick={resetWeights} className="btn btn-ghost btn-sm shrink-0">
           <RotateCcw className="w-3.5 h-3.5" /> 초기화
         </button>
@@ -58,13 +52,13 @@ export default function EvaluationCriteria({ currentJob, setCurrentJob, onCriter
       {/* Competency Weight Sliders */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="label">역량별 비중</span>
+          <span className="label">역량 비중</span>
           <span className={`chip ${totalWeight === 100 ? 'chip-ok' : 'chip-warn'}`}>
-            합계 {totalWeight}%{totalWeight === 100 ? '' : ' · 100%로 맞춰 주세요'}
+            합계 {totalWeight}%{totalWeight === 100 ? '' : ', 100%로 맞추기'}
           </span>
         </div>
 
-        <div className="space-y-4 rounded-xl border border-line p-4">
+        <div className="space-y-3">
           {competencies.map(c => (
             <div key={c.id} className="space-y-1.5">
               <div className="flex justify-between items-center text-[13px]">

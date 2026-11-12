@@ -36,7 +36,7 @@ export default function ReportExporter({ result, currentJob, onClose }) {
   const handleCopyText = () => {
     const textReport = `
 ==================================================
-[HR AX 서류 평가 보고서]${isSample ? `\n※ 샘플 데이터 — ${SAMPLE_NOTE}` : ''}
+[HR AX 서류 평가 보고서]${isSample ? `\n※ 샘플 데이터: ${SAMPLE_NOTE}` : ''}
 지원자명: ${name}
 지원직무: ${applyJobTitle}
 평가점수: ${summary.totalScore}점 / 100점
@@ -86,7 +86,7 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
             <button
               onClick={handlePrint}
               disabled={!humanGateApproved}
-              className="px-3 py-1.5 bg-brand hover:bg-brand-strong disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
+              className="px-3 py-1.5 bg-brand hover:bg-brand-strong disabled:opacity-40 disabled:cursor-not-allowed text-on-brand rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
               title={!humanGateApproved ? '고위험 AI 채용 규제 준수를 위해 하단의 인간 검토관 최종 결재 서명을 먼저 체크해주세요.' : ''}
             >
               <Printer className="w-3.5 h-3.5" /> 인쇄 · PDF 저장

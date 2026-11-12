@@ -176,7 +176,7 @@ function SSOProfileModalContent({ onClose }) {
         <div className="px-6 py-3.5 bg-subtle border-t border-line flex items-center justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-brand hover:bg-brand-strong text-white rounded-xl text-xs font-semibold shadow-sm transition-all"
+            className="px-4 py-2 bg-brand hover:bg-brand-strong text-on-brand rounded-xl text-xs font-semibold shadow-sm transition-all"
           >
             확인 및 닫기
           </button>

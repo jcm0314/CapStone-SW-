@@ -121,7 +121,7 @@ function ShareModalContent({ onClose, applicant, onShareCreated }) {
                 className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 ${
                   isCopied
                     ? 'bg-ok-solid text-white shadow-sm'
-                    : 'bg-brand hover:bg-brand-strong text-white shadow-sm'
+                    : 'bg-brand hover:bg-brand-strong text-on-brand shadow-sm'
                 }`}
               >
                 {isCopied ? (

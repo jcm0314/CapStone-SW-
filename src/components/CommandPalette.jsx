@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, CornerDownLeft } from 'lucide-react';
 import FeatureIcon from './FeatureIcon';
-import { FEATURE_STATUS } from '../data/featureCatalog';
 
 const normalize = (s) => (s || '').toLowerCase().replace(/\s+/g, '');
 
@@ -90,7 +89,7 @@ export default function CommandPalette({ isOpen, onClose, items, onSelect }) {
         role="dialog"
         aria-modal="true"
         aria-label="기능 검색"
-        className="w-full max-w-xl bg-surface border border-line rounded-2xl shadow-pop overflow-hidden"
+        className="w-full max-w-lg bg-surface border border-line rounded-lg shadow-pop overflow-hidden"
         onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
@@ -101,8 +100,8 @@ export default function CommandPalette({ isOpen, onClose, items, onSelect }) {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="기능이나 화면을 검색하세요 (예: 형광펜, 보고서, 비교)"
-            className="flex-1 h-12 bg-transparent text-[15px] text-fg placeholder:text-fg-subtle focus:outline-none"
+            placeholder="기능, 화면 검색"
+            className="flex-1 h-11 bg-transparent text-sm text-fg placeholder:text-fg-subtle focus:outline-none"
             aria-label="기능 검색어"
           />
           <kbd className="hidden sm:inline-flex text-[11px] font-medium text-fg-subtle border border-line rounded px-1.5 py-0.5">ESC</kbd>
@@ -110,7 +109,7 @@ export default function CommandPalette({ isOpen, onClose, items, onSelect }) {
 
         <div ref={listRef} className="max-h-[60vh] overflow-y-auto py-2">
           {filtered.length === 0 && (
-            <p className="px-4 py-10 text-center text-sm text-fg-muted">‘{query}’에 맞는 기능이 없습니다.</p>
+            <p className="px-4 py-8 text-center text-sm text-fg-muted">‘{query}’에 맞는 기능이 없습니다.</p>
           )}
           {groups.map((group) => (
             <div key={group.name} className="pb-1">
@@ -119,22 +118,19 @@ export default function CommandPalette({ isOpen, onClose, items, onSelect }) {
                 runningIndex += 1;
                 const idx = runningIndex;
                 const isActive = idx === activeIndex;
-                const status = item.status ? FEATURE_STATUS[item.status] : null;
-                return (
+                                return (
                   <button
                     key={item.id}
                     type="button"
                     data-index={idx}
                     onMouseMove={() => setActiveIndex(idx)}
                     onClick={() => choose(item)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                      isActive ? 'bg-brand-soft' : ''
+                    className={`w-full flex items-center gap-3 px-3 py-2 text-left transition-colors ${
+                      isActive ? 'bg-muted' : ''
                     }`}
                   >
                     <span
-                      className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${
-                        item.status === 'planned' ? 'border-line text-fg-subtle bg-subtle' : 'border-line text-brand-fg bg-surface'
-                      }`}
+                      className={`w-6 h-6 flex items-center justify-center shrink-0 ${item.status === 'planned' ? 'text-fg-subtle' : 'text-fg-muted'}`}
                     >
                       <FeatureIcon name={item.icon} />
                     </span>
@@ -144,8 +140,7 @@ export default function CommandPalette({ isOpen, onClose, items, onSelect }) {
                       </span>
                       {item.desc && <span className="block text-xs text-fg-subtle truncate">{item.desc}</span>}
                     </span>
-                    {status && <span className={`chip ${status.chip}`}>{status.label}</span>}
-                    {isActive && <CornerDownLeft className="hidden sm:block w-3.5 h-3.5 text-fg-subtle shrink-0" />}
+                                        {isActive && <CornerDownLeft className="hidden sm:block w-3.5 h-3.5 text-fg-subtle shrink-0" />}
                   </button>
                 );
               })}

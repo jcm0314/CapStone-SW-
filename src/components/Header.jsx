@@ -40,7 +40,7 @@ export default function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-40 h-14 bg-surface/90 backdrop-blur border-b border-line">
+      <header className="sticky top-0 z-40 h-12 bg-surface border-b border-line">
         <div className="h-full px-3 sm:px-5 flex items-center gap-2 sm:gap-4">
           {/* Mobile menu */}
           <button
@@ -54,10 +54,10 @@ export default function Header({
 
           {/* Brand */}
           <a href="/" className="flex items-center gap-2 shrink-0" aria-label="Check-Mate 홈">
-            <span className="w-7 h-7 rounded-lg bg-brand text-white flex items-center justify-center">
-              <Check className="w-4 h-4" strokeWidth={3} />
+            <span className="w-6 h-6 rounded bg-accent text-accent-ink flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" strokeWidth={3} />
             </span>
-            <span className="text-[15px] font-bold tracking-[-0.02em] text-fg">Check-Mate</span>
+            <span className="text-sm font-semibold text-fg">Check-Mate</span>
           </a>
 
           {/* Search (opens command palette) */}
@@ -65,12 +65,12 @@ export default function Header({
             <button
               type="button"
               onClick={onOpenPalette}
-              className="hidden md:flex w-full max-w-md items-center gap-2 h-9 px-3 rounded-lg border border-line bg-subtle hover:border-line-strong text-[13px] text-fg-subtle transition-colors"
+              className="hidden md:flex w-full max-w-sm items-center gap-2 h-8 px-2.5 rounded border border-line bg-subtle hover:border-line-strong text-[13px] text-fg-subtle transition-colors"
               aria-label={`기능 검색 (${SHORTCUT_LABEL})`}
             >
               <Search className="w-4 h-4 shrink-0" />
-              <span className="flex-1 text-left truncate">기능 검색 — 형광펜, 면접 질문, 보고서…</span>
-              <kbd className="text-[11px] font-medium border border-line rounded px-1.5 py-0.5 bg-surface">{SHORTCUT_LABEL}</kbd>
+              <span className="flex-1 text-left truncate">검색</span>
+              <kbd className="text-[11px] border border-line rounded-sm px-1 bg-surface">{SHORTCUT_LABEL}</kbd>
             </button>
           </div>
 
@@ -144,7 +144,7 @@ export default function Header({
               <img
                 src={currentUser?.avatar}
                 alt={currentUser?.name}
-                className="w-8 h-8 rounded-full object-cover border border-line"
+                className="w-7 h-7 rounded-full object-cover border border-line"
               />
             </button>
           </div>

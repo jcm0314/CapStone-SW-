@@ -106,7 +106,7 @@ ${tenantName} 인재영입팀 드림`;
                 <div key={g.id || idx} className="p-3 rounded-xl bg-subtle border border-line space-y-1">
                   <p className="font-mono text-[11px] text-warn italic">"{g.quote}"</p>
                   <p className="text-fg-muted text-[11px]">
-                    <strong className="text-warn">코칭 포인트:</strong> {g.explanation || g.rationale} — 본인의 실질적 기여 비중(%)과 개선 전/후 수치 지표를 구체화해 보세요.
+                    <strong className="text-warn">코칭 포인트:</strong> {g.explanation || g.rationale} 본인의 실질적 기여 비중(%)과 개선 전/후 수치 지표를 구체화해 보세요.
                   </p>
                 </div>
               ))}

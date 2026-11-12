@@ -177,7 +177,7 @@ export default function MultiAgentAuditModal({ result, isOpen, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-brand hover:bg-brand-strong text-white font-semibold rounded-xl text-xs transition-colors shadow-sm"
+            className="px-4 py-2 bg-brand hover:bg-brand-strong text-on-brand font-semibold rounded-xl text-xs transition-colors shadow-sm"
           >
             확인 및 닫기
           </button>

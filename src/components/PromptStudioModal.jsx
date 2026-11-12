@@ -152,7 +152,7 @@ export default function PromptStudioModal({ onClose, onSaved }) {
             <button
               type="button"
               onClick={handleSave}
-              className="bg-brand hover:bg-brand-strong px-4 py-2 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5"
+              className="bg-brand hover:bg-brand-strong px-4 py-2 text-on-brand rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5"
             >
               <Check className="w-4 h-4" /> 프롬프트 저장 및 평가 적용
             </button>

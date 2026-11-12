@@ -163,9 +163,6 @@ function HITLEditorModalContent({
                 <h3 className="text-sm font-bold text-fg">
                   사람 검토(HITL) 보정
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-warn-soft text-warn border border-warn-line">
-                  담당자 직접 수정
-                </span>
               </div>
               <p className="text-[11px] text-fg-muted">
                 AI가 잘못 인용한 문장, 어긋난 점수, 어색한 질문을 담당자가 직접 고쳐 확정합니다.
@@ -566,7 +563,7 @@ function HITLEditorModalContent({
             <button
               type="button"
               onClick={handleSave}
-              className="bg-brand hover:bg-brand-strong px-4 py-2 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
+              className="bg-brand hover:bg-brand-strong px-4 py-2 text-on-brand rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
             >
               <Save className="w-3.5 h-3.5" /> 보정 저장
             </button>

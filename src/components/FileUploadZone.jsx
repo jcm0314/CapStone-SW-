@@ -133,7 +133,7 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
                   });
                   onBatchAnalyze(candidateBatch);
                 }}
-                className="bg-brand hover:bg-brand-strong px-2.5 py-1 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
+                className="bg-brand hover:bg-brand-strong px-2.5 py-1 text-on-brand rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
               >
                 <span>{parsedFiles.length}건 한 번에 평가</span>
               </button>

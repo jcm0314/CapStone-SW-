@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Send, CheckCircle } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { addCollaborativeNote, getSharedEvaluation } from '../services/shareService';
 import { isSupabaseConfigured, subscribeCollaborationNotes } from '../services/supabaseClient';
@@ -144,37 +144,27 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
   ];
 
   return (
-    <div className="card card-pad space-y-5">
+    <div className="card card-pad space-y-4">
       {/* Panel Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5">
-          <MessageSquare className="w-[18px] h-[18px] text-fg-subtle mt-0.5" />
-          <div>
-            <h3 className="section-title flex items-center gap-2 flex-wrap">
-              면접관 메모
-              {shareId && <span className="chip chip-ok">실시간 공유 중</span>}
-            </h3>
-            <p className="section-desc">면접 중 질문별 판정과 의견을 남기고 점수를 가감합니다. 공유 링크로 들어온 면접관과 함께 봅니다.</p>
-          </div>
-        </div>
-        <span className="chip chip-neutral shrink-0 tabular-nums">{notes.length}건</span>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="section-title">
+          면접관 메모 <span className="ml-1 text-xs font-normal text-fg-subtle tabular-nums">{notes.length}</span>
+        </h2>
+        {shareId && <span className="text-xs text-ok">공유 중</span>}
       </div>
 
       {/* 1-Click Live Interview Scorecard */}
       {Array.isArray(applicant?.analysis?.interviewQuestions) && applicant.analysis.interviewQuestions.length > 0 && (
-        <div className="rounded-xl border border-line overflow-hidden">
-          <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-subtle border-b border-line">
-            <span className="text-[13px] font-semibold text-fg flex items-center gap-1.5">
-              <CheckCircle className="w-4 h-4 text-fg-subtle" />
-              질문별 빠른 채점
-            </span>
-            <span className="text-[12px] text-fg-subtle">누르면 바로 메모로 기록됩니다</span>
+        <div className="rounded-md border border-line overflow-hidden">
+          <div className="flex items-center justify-between gap-2 px-3 py-2 bg-subtle border-b border-line">
+            <span className="text-xs font-medium text-fg">질문별 판정</span>
+            <span className="text-xs text-fg-subtle">누르면 메모로 기록</span>
           </div>
           <div className="divide-y divide-line">
             {applicant.analysis.interviewQuestions.map((iq, qIdx) => {
               const currentVerdict = questionRatings[qIdx];
               return (
-                <div key={iq.id || qIdx} className="px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                <div key={iq.id || qIdx} className="px-3 py-2.5 flex flex-col gap-2">
                   <p className="text-[13px] text-fg flex-1 min-w-0 break-keep">
                     <span className="font-semibold text-brand-fg mr-1.5 tabular-nums">Q{qIdx + 1}</span>
                     {iq.question}
@@ -204,7 +194,7 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
       {/* Notes Timeline List */}
       <ul className="space-y-2 max-h-64 overflow-y-auto pr-1">
         {notes.map((note) => (
-          <li key={note.id} className="rounded-lg border border-line bg-subtle/60 px-3.5 py-3 space-y-1">
+          <li key={note.id} className="border-l-2 border-line-strong pl-3 py-1 space-y-0.5">
             <div className="flex items-center justify-between gap-2 text-[12px]">
               <div className="flex items-center gap-1.5 flex-wrap min-w-0">
                 <span className="font-semibold text-fg">{note.author}</span>

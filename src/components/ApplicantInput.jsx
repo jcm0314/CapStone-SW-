@@ -55,26 +55,18 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
   const statusMsg = progressState ? progressState.status : 'AI가 근거 문장을 찾는 중입니다…';
 
   const tabClass = (active) =>
-    `flex-1 py-2 rounded-md flex items-center justify-center gap-1.5 transition-colors text-[13px] font-semibold ${
-      active ? 'bg-surface text-fg shadow-card' : 'text-fg-muted hover:text-fg'
+    `relative -mb-px h-8 flex items-center gap-1.5 border-b-2 transition-colors text-[13px] ${
+      active ? 'border-fg text-fg font-medium' : 'border-transparent text-fg-muted hover:text-fg'
     }`;
 
   return (
-    <div className="card card-pad space-y-5">
+    <div className="card card-pad space-y-4">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5">
-          <FileText className="w-[18px] h-[18px] text-fg-subtle mt-0.5" />
-          <div>
-            <h3 className="section-title">자기소개서 입력</h3>
-            <p className="section-desc">붙여 넣거나 파일로 올리세요. AI에 보내기 전에 연락처·이메일 같은 개인정보는 자동으로 가려집니다.</p>
-          </div>
-        </div>
-      </div>
+      <h2 className="section-title">자기소개서</h2>
 
       {/* Quick samples */}
       <div className="space-y-2">
-        <p className="text-[12px] font-medium text-fg-subtle">예시 자소서로 바로 해 보기</p>
+        <p className="label">예시 자소서</p>
         <div className="flex flex-wrap gap-1.5">
           {SAMPLE_APPLICANTS.map((sample) => {
             const tone = DECISION_TONE[sample.analysis.summary.decision] || DECISION_TONE.DEFAULT;
@@ -104,12 +96,12 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
       </div>
 
       {/* Input method */}
-      <div className="flex gap-1 p-1 rounded-lg bg-muted/70 border border-line" role="tablist" aria-label="입력 방식">
+      <div className="flex gap-4 border-b border-line" role="tablist" aria-label="입력 방식">
         <button type="button" role="tab" aria-selected={inputTab === 'TEXT'} onClick={() => setInputTab('TEXT')} className={tabClass(inputTab === 'TEXT')}>
           <PenLine className="w-3.5 h-3.5" /> 직접 입력
         </button>
         <button type="button" role="tab" aria-selected={inputTab === 'FILE'} onClick={() => setInputTab('FILE')} className={tabClass(inputTab === 'FILE')}>
-          <UploadCloud className="w-3.5 h-3.5" /> PDF / TXT 파일 업로드
+          <UploadCloud className="w-3.5 h-3.5" /> PDF · TXT 파일
         </button>
       </div>
 
@@ -136,18 +128,18 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">
             <label htmlFor="applicant-text" className="label">자기소개서 본문</label>
-            <span className="text-[12px] text-fg-subtle tabular-nums">{rawText.length.toLocaleString()}자</span>
+            <span className="text-xs text-fg-subtle tabular-nums">{rawText.length.toLocaleString()}자 · 개인정보는 자동으로 가려집니다</span>
           </div>
           <textarea
             id="applicant-text"
-            rows={9}
+            rows={12}
             value={rawText}
             onChange={(e) => {
               setRawText(e.target.value);
               setSelectedSampleId('');
             }}
             placeholder="자기소개서나 경력기술서 본문을 붙여 넣으세요."
-            className="field leading-[1.75] resize-y min-h-[180px]"
+            className="field leading-[1.75] resize-y min-h-[220px]"
           />
         </div>
       )}
@@ -188,7 +180,7 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
         type="button"
         onClick={handleRun}
         disabled={isAnalyzing || !rawText.trim()}
-        className="btn btn-primary btn-lg w-full"
+        className="btn btn-primary btn-lg w-full sm:w-auto sm:min-w-[160px]"
       >
         {isAnalyzing ? (
           <>
@@ -197,7 +189,7 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
           </>
         ) : (
           <>
-            <Sparkles className="w-4 h-4" /> AI 평가 실행
+            평가 실행
           </>
         )}
       </button>
