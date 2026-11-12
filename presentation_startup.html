@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CheckMate (체크메이트) - 창업 멘토링 발표자료</title>
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Fonts: Pretendard & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      font-family: 'Pretendard', 'Inter', -apple-system, sans-serif;
+      background-color: #090D16;
+      color: #F8FAFC;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* 16:9 Slide Canvas */
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 2.25rem 4.5rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transform: scale(0.99);
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* Modern Visual Cards */
+    .v-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.25rem;
+      backdrop-filter: blur(12px);
+    }
+    .v-card-highlight {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* Screen Frame Container */
+    .screen-frame {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      background: #020617;
+    }
+
+    /* Gradient Typography */
+    .grad-cyan {
+      background: linear-gradient(135deg, #38BDF8 0%, #3B82F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .grad-emerald {
+      background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .grad-amber {
+      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Interactive Progress */
+    #progress-bar {
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="select-none bg-[#090D16]">
+
+  <!-- Top Progress Bar -->
+  <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-900 z-50">
+    <div id="progress-bar" class="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 w-[11%]"></div>
+  </div>
+
+  <!-- Top Right Navigation Status -->
+  <div class="fixed top-5 right-8 z-50 flex items-center gap-3">
+    <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800/80 text-slate-300 border border-slate-700 font-mono">
+      <span id="slide-num">1</span> / <span id="total-slides">9</span>
+    </span>
+    <button onclick="toggleFullScreen()" class="p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700 transition" title="전체화면 (F)">
+      <i data-lucide="maximize" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <!-- ==========================================
+       SLIDE 1: 표지 (Visual Impact Cover)
+       ========================================== -->
+  <section class="slide active justify-between" data-slide="1">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-blue-500/25">
+          ✓
+        </div>
+        <div>
+          <span class="text-2xl font-black tracking-tight text-white">CheckMate</span>
+          <span class="text-[11px] px-2 py-0.5 ml-2 rounded bg-blue-500/20 text-blue-400 font-bold border border-blue-500/30">B2B HR AX</span>
+        </div>
+      </div>
+      <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider">
+        창업경진대회 멘토링 IR
+      </span>
+    </div>
+
+    <!-- Main Hero -->
+    <div class="my-auto max-w-4xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold mb-4">
+        <i data-lucide="shield-check" class="w-4 h-4"></i>
+        Grounded AI & Human-in-the-Loop Recruitment
+      </div>
+      <h1 class="text-6xl font-black leading-tight tracking-tight mb-6">
+        자소서 <span class="grad-cyan">AI 팩트체크</span>와<br />
+        <span class="grad-emerald">깜깜이 탈락 방지</span> 솔루션
+      </h1>
+      <p class="text-xl text-slate-400 font-medium">
+        원문 100% 역추적 형광펜 검증으로 <strong class="text-white">기업의 채용 신뢰</strong>를 세우고,<br />
+        맞춤형 성장 코칭 리포트로 <strong class="text-white">구직자의 탈락 경험</strong>을 혁신합니다.
+      </p>
+
+      <!-- 3 Key Metric Pills -->
+      <div class="flex items-center gap-4 mt-8">
+        <div class="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center gap-2 text-sm font-bold text-slate-200">
+          <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i> 환각 인용 침투율 0% (Grounding Guard)
+        </div>
+        <div class="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center gap-2 text-sm font-bold text-slate-200">
+          <i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i> PII 개인정보 사전 가명화
+        </div>
+        <div class="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center gap-2 text-sm font-bold text-slate-200">
+          <i data-lucide="send" class="w-4 h-4 text-indigo-400"></i> 1-Click 구직자 피드백
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="pt-5 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500 font-medium">
+      <div>발표자: <strong class="text-slate-300">천명</strong> · CheckMate 팀</div>
+      <div>키보드 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300 font-mono">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300 font-mono">→</kbd> 로 슬라이드 이동</div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 2: 문제 정의 (Visual Problem: 2x2 Contrast)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="2">
+    <div>
+      <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">01. Problem</span>
+      <h2 class="text-3xl font-black text-white mt-1">AI 자소서 폭증 시대, 채용 시장의 2대 모순</h2>
+    </div>
+
+    <!-- 2 Contrast Cards -->
+    <div class="grid grid-cols-2 gap-8 my-auto">
+      <!-- Card 1: 기업 -->
+      <div class="v-card p-7 border-l-4 border-l-rose-500 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-rose-400 uppercase flex items-center gap-1.5">
+              <i data-lucide="building" class="w-4 h-4"></i> 기업 HR & 면접관의 고통
+            </span>
+            <span class="text-2xl font-black text-rose-400">2.8분</span>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">양산형 AI 자소서로 신뢰도 붕괴</h3>
+          
+          <div class="space-y-3 mt-4 text-sm text-slate-300">
+            <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center gap-3">
+              <div class="text-xl font-black text-rose-400">85%</div>
+              <div class="text-xs leading-snug">구직자 대부분이 생성형 AI로 작성 ➔ <strong>스펙·문장 획일화로 변별력 상실</strong></div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-3">
+              <i data-lucide="x-circle" class="w-6 h-6 text-rose-400 shrink-0"></i>
+              <div class="text-xs leading-snug">서류 1건당 검토 시간 2.8분 ➔ <strong>주관적 '감'에 의존한 탈락 빈번</strong></div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-3">
+              <i data-lucide="help-circle" class="w-6 h-6 text-rose-400 shrink-0"></i>
+              <div class="text-xs leading-snug">기존 AI 채용기는 블랙박스 ➔ <strong>왜 이 점수인지 근거 설명 불가</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-bold text-rose-400">
+          결과: 채용 실패 비용 증가 & 면접관 피로도 극대화
+        </div>
+      </div>
+
+      <!-- Card 2: 구직자 -->
+      <div class="v-card p-7 border-l-4 border-l-amber-500 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5">
+              <i data-lucide="user-x" class="w-4 h-4"></i> 구직자(지원자)의 고통
+            </span>
+            <span class="text-2xl font-black text-amber-400">0건</span>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">피드백 없는 "깜깜이 탈락"의 악순환</h3>
+          
+          <div class="space-y-3 mt-4 text-sm text-slate-300">
+            <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center gap-3">
+              <div class="text-xl font-black text-amber-400">0건</div>
+              <div class="text-xs leading-snug">수십 군데 지원해도 피드백 0건 ➔ <strong>"왜 떨어졌는지 몰라" 극심한 불안</strong></div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-3">
+              <i data-lucide="repeat" class="w-6 h-6 text-amber-400 shrink-0"></i>
+              <div class="text-xs leading-snug">개선점을 모르니 <strong>다시 AI 복사-붙여넣기에 의존하는 악순환</strong> 발생</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-3">
+              <i data-lucide="thumbs-down" class="w-6 h-6 text-amber-400 shrink-0"></i>
+              <div class="text-xs leading-snug">일방적 불합격 통보는 <strong>기업 채용 브랜드와 고객 이미지에 악영향</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-bold text-amber-400">
+          결과: 취업 준비 장기화 & 사회적 불신 심화
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Punchline -->
+    <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between text-xs">
+      <span class="font-bold text-cyan-400">💡 핵심 기회:</span>
+      <span class="text-slate-300">기업의 <strong>"평가 신뢰 & 비용 절감"</strong>과 구직자의 <strong>"성장 피드백 갈증"</strong>을 하나의 양방향 플랫폼으로 해결합니다.</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 3: 솔루션 (실제 작동 스크린샷 3종 배치!)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="3">
+    <div>
+      <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">02. Solution & Live Screens</span>
+      <h2 class="text-3xl font-black text-white mt-1">CheckMate의 3대 핵심 기능 실제 작동 화면</h2>
+    </div>
+
+    <!-- 3 Real Screenshot Cards -->
+    <div class="grid grid-cols-3 gap-5 my-auto">
+      <!-- Feature 1: 형광펜 역추적 실제 스크린샷 -->
+      <div class="v-card p-4 flex flex-col justify-between hover:border-blue-500/40 transition">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold text-blue-400 tracking-wider uppercase">01. 원문 형광펜 매핑</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">환각 인용 100% 차단</span>
+          </div>
+          <h4 class="text-sm font-bold text-white mb-2">자소서 원문 실시간 역추적</h4>
+          
+          <!-- Real Screenshot -->
+          <div class="screen-frame mb-2 aspect-[4/3] flex items-center justify-center bg-slate-950">
+            <img src="docs/assets/screenshots/03_grounding_highlight_active.png" alt="형광펜 역추적 화면" class="w-full h-full object-cover object-top hover:scale-105 transition duration-300" />
+          </div>
+          <p class="text-[11px] text-slate-300 leading-snug">
+            AI 점수 근거를 원문에 즉시 하이라이팅. 원문에 없는 가짜 인용은 <strong class="text-amber-400">🟡 검증필요 (점수 0점 강제 몰수)</strong>로 자동 격하
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 2: 1-Click 채점표 실제 스크린샷 -->
+      <div class="v-card p-4 flex flex-col justify-between hover:border-emerald-500/40 transition">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase">02. 면접관 1-Click 채점</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">합의 집계</span>
+          </div>
+          <h4 class="text-sm font-bold text-white mb-2">AI 맞춤 검증 질문 & 스코어카드</h4>
+          
+          <!-- Real Screenshot -->
+          <div class="screen-frame mb-2 aspect-[4/3] flex items-center justify-center bg-slate-950">
+            <img src="docs/assets/screenshots/04_interview_kit_questions.png" alt="면접 질문 및 채점표" class="w-full h-full object-cover object-top hover:scale-105 transition duration-300" />
+          </div>
+          <p class="text-[11px] text-slate-300 leading-snug">
+            자소서 기반 실시간 검증 질문 제공. 다중 면접관의 우수/보통/미흡 1-Click 채점으로 <strong class="text-emerald-400">최종 합의(Consensus)</strong> 자동 도출
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 3: 구직자 코칭 리포트 실제 스크린샷 -->
+      <div class="v-card p-4 flex flex-col justify-between hover:border-pink-500/40 transition">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold text-pink-400 tracking-wider uppercase">03. 구직자 성장 리포트</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 font-bold">1-Click 발송</span>
+          </div>
+          <h4 class="text-sm font-bold text-white mb-2">깜깜이 탈락 방지 피드백</h4>
+          
+          <!-- Real Screenshot -->
+          <div class="screen-frame mb-2 aspect-[4/3] flex items-center justify-center bg-slate-950">
+            <img src="docs/assets/redesign/26-after-report.png" alt="지원자 성장 리포트" class="w-full h-full object-cover object-top hover:scale-105 transition duration-300" />
+          </div>
+          <p class="text-[11px] text-slate-300 leading-snug">
+            탈락자에게 단순 불합격 대신 강점·보완점·STAR 실천 가이드가 담긴 <strong class="text-pink-400">보안 링크를 1-Click 발송</strong>하여 채용 브랜드 극대화
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Footnote -->
+    <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs text-slate-400">
+      <span>🛡️ <strong>개인정보 철통 보안:</strong> 외부 LLM 전송 전 실명·연락처·이메일을 사전 가명화하여 ISMS-P 및 해외 이전 규제 완전 준수</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 4: 프로덕트 사용 흐름 (Dashboard Screen & 4-Steps)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="4">
+    <div>
+      <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">03. User Journey & Dashboard</span>
+      <h2 class="text-3xl font-black text-white mt-1">4단계 완결형 채용 워크플로우 & 대시보드</h2>
+    </div>
+
+    <!-- 2 Column: Left 4 Steps / Right Dashboard Screenshot -->
+    <div class="grid grid-cols-12 gap-6 my-auto items-center">
+      <!-- Left: 4 Steps (5 cols) -->
+      <div class="col-span-5 space-y-3">
+        <div class="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center shrink-0 text-xs">01</div>
+          <div>
+            <h5 class="text-xs font-bold text-white">접수 & PII 사전 가명화</h5>
+            <p class="text-[11px] text-slate-400 mt-0.5">이름·연락처가 <code class="text-cyan-300 bg-slate-900 px-1 rounded">[지원자]</code>로 자동 치환되어 블라인드 채용 보장</p>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 font-mono font-bold flex items-center justify-center shrink-0 text-xs">02</div>
+          <div>
+            <h5 class="text-xs font-bold text-white">4대 AI 멀티에이전트 병렬 분석</h5>
+            <p class="text-[11px] text-slate-400 mt-0.5">직무역량, 인재상, 문제해결, 협업 분석 및 표절률 전수 대조</p>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center shrink-0 text-xs">03</div>
+          <div>
+            <h5 class="text-xs font-bold text-white">형광펜 검증 & 1-Click 채점</h5>
+            <p class="text-[11px] text-slate-400 mt-0.5">원문 형광펜 클릭으로 팩트체크 후 면접관 다자간 합의 판정</p>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-pink-500/20 text-pink-400 font-mono font-bold flex items-center justify-center shrink-0 text-xs">04</div>
+          <div>
+            <h5 class="text-xs font-bold text-white">구직자 성장 코칭 리포트 발송</h5>
+            <p class="text-[11px] text-slate-400 mt-0.5">64자 보안 공개 토큰으로 로그인 없이 즉시 열람 피드백 제공</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Real Full Dashboard Screenshot (7 cols) -->
+      <div class="col-span-7">
+        <div class="screen-frame aspect-[16/10] overflow-hidden border border-slate-700 shadow-2xl relative group">
+          <img src="docs/assets/screenshots/01_dashboard_overview.png" alt="대시보드 전체 화면" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500" />
+          <div class="absolute bottom-2 right-2 px-2 py-1 bg-slate-900/90 rounded text-[10px] text-slate-300 font-mono border border-slate-700">
+            실제 CheckMate 대시보드 화면
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Demo Badge -->
+    <div class="p-3 rounded-xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-pink-500/10 border border-blue-500/20 flex items-center justify-between text-xs">
+      <span class="text-cyan-400 font-bold flex items-center gap-2">
+        <i data-lucide="play-circle" class="w-4 h-4"></i> 2분 라이브 시연 가능:
+      </span>
+      <span class="text-slate-300">현재 로컬 환경 및 Spring Boot 백엔드와 실연동되어 위 4단계 전 과정을 즉시 시연할 수 있습니다.</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 5: 시장 규모 & 타깃 (Big Numbers)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="5">
+    <div>
+      <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">04. Market & Target</span>
+      <h2 class="text-3xl font-black text-white mt-1">시장 기회 및 1차 타깃 고객 (ICP)</h2>
+    </div>
+
+    <!-- 3 Big Number Cards -->
+    <div class="grid grid-cols-3 gap-6 my-auto">
+      <div class="v-card p-6 border-b-4 border-b-cyan-500 text-center">
+        <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">SOM (초기 유효 시장)</span>
+        <div class="text-5xl font-black text-white my-3 tracking-tight">1,200억</div>
+        <p class="text-xs text-slate-400">국내 수시 채용 및 IT 스타트업/중견기업<br />(약 15,000개 사, 채용 리소스 부족군)</p>
+      </div>
+
+      <div class="v-card p-6 border-b-4 border-b-blue-500 text-center">
+        <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">SAM (유효 시장)</span>
+        <div class="text-5xl font-black text-white my-3 tracking-tight">8,500억</div>
+        <p class="text-xs text-slate-400">국내 채용 관리(ATS) 및 역량 평가 솔루션 시장<br />(기존 레거시 채용 사이트 이탈군)</p>
+      </div>
+
+      <div class="v-card p-6 border-b-4 border-b-indigo-500 text-center">
+        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">TAM (전체 시장)</span>
+        <div class="text-5xl font-black text-white my-3 tracking-tight">35조 원</div>
+        <p class="text-xs text-slate-400">글로벌 AI HR Tech & Talent Assessment 시장<br />(연평균 14.8% 고성장)</p>
+      </div>
+    </div>
+
+    <!-- ICP Tag Boxes -->
+    <div class="v-card p-4">
+      <div class="text-xs font-bold text-slate-300 mb-2">🎯 CheckMate가 가장 먼저 침투할 이상적인 초기 고객 (ICP):</div>
+      <div class="grid grid-cols-3 gap-3 text-xs text-slate-300">
+        <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>연간 서류 접수 500건 이상인 스타트업</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>채용 전담 인사가 1~3명뿐인 중소 규모 HR팀</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-2">
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>채용 브랜딩을 강화하려는 성장기 기업</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 6: 비즈니스 모델 (Pricing Table)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="6">
+    <div>
+      <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">05. Business Model</span>
+      <h2 class="text-3xl font-black text-white mt-1">B2B SaaS 월 구독제 요금 구조</h2>
+    </div>
+
+    <!-- 3 Pricing Cards -->
+    <div class="grid grid-cols-3 gap-6 my-auto">
+      <!-- Starter -->
+      <div class="v-card p-6 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase">Starter</span>
+          <div class="text-3xl font-black text-white mt-1 mb-1">월 29만 원</div>
+          <span class="text-xs text-slate-500">초기 스타트업 및 소규모 채용</span>
+          
+          <ul class="space-y-2.5 mt-5 text-xs text-slate-300">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 월 150건 자소서 정밀 분석</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 원문 형광펜 매핑 & 환각 차단</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 면접관 1-Click 채점표 3인</li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 text-center font-mono">
+          건당 약 1,930원
+        </div>
+      </div>
+
+      <!-- Pro (Highlighted) -->
+      <div class="v-card-highlight p-6 rounded-2xl flex flex-col justify-between relative shadow-xl shadow-blue-500/10">
+        <span class="absolute -top-3 right-5 px-2.5 py-0.5 rounded-full bg-blue-500 text-white text-[10px] font-bold">
+          RECOMMENDED
+        </span>
+        <div>
+          <span class="text-xs font-bold text-blue-400 uppercase">Professional</span>
+          <div class="text-3xl font-black text-white mt-1 mb-1">월 69만 원</div>
+          <span class="text-xs text-slate-400">수시 채용 활발한 성장 기업</span>
+          
+          <ul class="space-y-2.5 mt-5 text-xs text-slate-200">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 font-bold"></i> <strong>월 600건 분석</strong></li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 font-bold"></i> <strong>기업 전용 인재상 가중치 커스텀</strong></li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 font-bold"></i> <strong>HITL 교정 데이터 Few-Shot 축적</strong></li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400 font-bold"></i> 구직자 코칭 리포트 무제한 발송</li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-blue-500/30 text-[11px] text-blue-300 text-center font-bold font-mono">
+          건당 약 1,150원
+        </div>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="v-card p-6 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase">Enterprise</span>
+          <div class="text-3xl font-black text-white mt-1 mb-1">맞춤 견적</div>
+          <span class="text-xs text-slate-500">대기업 및 공채 대량 검토 기업</span>
+          
+          <ul class="space-y-2.5 mt-5 text-xs text-slate-300">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 연간 수만 건 대량 처리</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 사내 사설망(On-Prem) 격리 구축</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> 기존 ERP/ATS API 연동 지원</li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-slate-800 text-[11px] text-slate-400 text-center font-mono">
+          연간 계약 단위
+        </div>
+      </div>
+    </div>
+
+    <!-- B2C Sub Revenue -->
+    <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs text-slate-300">
+      <span class="text-pink-400 font-bold flex items-center gap-1.5">
+        <i data-lucide="sparkles" class="w-4 h-4"></i> B2C 추가 확장:
+      </span>
+      <span>리포트를 받은 구직자가 다음 지원을 위해 <strong>"AI 자소서 사전 모의평가 및 첨삭(건당 9,900원)"</strong>을 결제하는 플라이휠 수익 창출</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 7: 경쟁 우위 및 해자 (Comparison & Moat)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="7">
+    <div>
+      <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">06. Competitive Moat</span>
+      <h2 class="text-3xl font-black text-white mt-1">경쟁사 비교 및 모방 불가능한 3대 데이터 해자</h2>
+    </div>
+
+    <div class="grid grid-cols-12 gap-6 my-auto items-center">
+      <!-- Left: Comparison Table (8 cols) -->
+      <div class="col-span-8 overflow-hidden rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="p-3">비교 축</th>
+              <th class="p-3">범용 AI (ChatGPT)</th>
+              <th class="p-3">기존 채용 솔루션</th>
+              <th class="p-3 bg-blue-900/30 text-blue-300 font-bold">CheckMate</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/70 bg-slate-900/30">
+            <tr>
+              <td class="p-3 font-bold text-white">평가 근거 역추적</td>
+              <td class="p-3 text-rose-400">❌ 블랙박스</td>
+              <td class="p-3 text-amber-400">⚠️ 단순 키워드</td>
+              <td class="p-3 bg-blue-900/20 font-bold text-emerald-400">✅ 원문 형광펜 매핑</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">AI 환각(거짓) 차단</td>
+              <td class="p-3 text-rose-400">❌ 없는 문장 생성</td>
+              <td class="p-3 text-slate-500">해당 없음</td>
+              <td class="p-3 bg-blue-900/20 font-bold text-emerald-400">✅ 원문 불일치 시 0점 강제 몰수 (반영률 0%)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">개인정보보호</td>
+              <td class="p-3 text-rose-400">❌ 평문 해외 전송</td>
+              <td class="p-3 text-slate-300">내부 서버</td>
+              <td class="p-3 bg-blue-900/20 font-bold text-emerald-400">✅ 사전 가명화</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">기업 전용 학습 축적</td>
+              <td class="p-3 text-rose-400">❌ 매번 초기화</td>
+              <td class="p-3 text-slate-500">❌ 불가</td>
+              <td class="p-3 bg-blue-900/20 font-bold text-emerald-400">✅ Few-Shot 축적</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">구직자 탈락 케어</td>
+              <td class="p-3 text-slate-500">없음</td>
+              <td class="p-3 text-rose-400">❌ "불합격" 단문</td>
+              <td class="p-3 bg-blue-900/20 font-bold text-emerald-400">✅ 코칭 리포트</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Right: HITL Calibration Screen (4 cols) -->
+      <div class="col-span-4 flex flex-col justify-between">
+        <div class="screen-frame aspect-[4/3] overflow-hidden border border-slate-700 shadow-xl mb-2">
+          <img src="docs/assets/screenshots/06_hitl_calibration_modal.png" alt="HITL 보정 모달" class="w-full h-full object-cover object-top hover:scale-105 transition duration-300" />
+        </div>
+        <p class="text-[11px] text-slate-400 text-center">
+          실제 채용관 점수 보정 화면 (Few-Shot 데이터 영구 축적)
+        </p>
+      </div>
+    </div>
+
+    <!-- Moat Highlight -->
+    <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between text-xs text-slate-300">
+      <span class="text-cyan-400 font-bold">🏰 CheckMate의 해자(Lock-in):</span>
+      <span>기업이 면접 결과를 보정할수록 그 기업만의 인재상 데이터셋이 축적되어, <strong>경쟁사로 이탈할 수 없는 강력한 전환 비용(Switching Cost)</strong>이 발생합니다.</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 8: 진척도 & 로드맵 (Execution Traction)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="8">
+    <div>
+      <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">07. Execution</span>
+      <h2 class="text-3xl font-black text-white mt-1">실제 작동하는 완성된 시스템과 실행력</h2>
+    </div>
+
+    <!-- 4 Big Metric Cards -->
+    <div class="grid grid-cols-4 gap-4 my-auto">
+      <div class="v-card p-5 text-center">
+        <div class="text-4xl font-black text-cyan-400 font-mono mb-1">86/86</div>
+        <div class="text-xs font-bold text-white mb-1">프론트엔드 테스트</div>
+        <p class="text-[11px] text-slate-400">React 18 SPA 단위 검증 100% 통과</p>
+      </div>
+
+      <div class="v-card p-5 text-center border-t-2 border-t-blue-500">
+        <div class="text-4xl font-black text-blue-400 font-mono mb-1">65/65</div>
+        <div class="text-xs font-bold text-white mb-1">Spring Boot 백엔드</div>
+        <p class="text-[11px] text-slate-400">Java 21 LTS + JWT 테넌트 격리</p>
+      </div>
+
+      <div class="v-card p-5 text-center border-t-2 border-t-emerald-500">
+        <div class="text-4xl font-black text-emerald-400 font-mono mb-1">0%</div>
+        <div class="text-xs font-bold text-white mb-1">환각 인용 점수 반영률</div>
+        <p class="text-[11px] text-slate-400">원문 오프셋 역추적 검증 (가짜 인용 0점 몰수)</p>
+      </div>
+
+      <div class="v-card p-5 text-center border-t-2 border-t-pink-500">
+        <div class="text-4xl font-black text-pink-400 font-mono mb-1">1-Click</div>
+        <div class="text-xs font-bold text-white mb-1">코칭 리포트 발행</div>
+        <p class="text-[11px] text-slate-400">64자 토큰 기반 로그인 프리 열람</p>
+      </div>
+    </div>
+
+    <!-- 3-Month Execution Roadmap -->
+    <div class="v-card p-4">
+      <div class="text-xs font-bold text-slate-300 mb-2">🗺️ 향후 3개월 실행 계획:</div>
+      <div class="grid grid-cols-3 gap-4 text-xs">
+        <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+          <div class="text-blue-400 font-bold mb-1">1단계 (2026.11)</div>
+          <div class="font-bold text-white">클로즈드 베타 & PoC</div>
+          <p class="text-[11px] text-slate-400 mt-1">IT 스타트업 5개사 대상 무료 PoC 및 현장 검증</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+          <div class="text-emerald-400 font-bold mb-1">2단계 (2026.12)</div>
+          <div class="font-bold text-white">상용 B2B SaaS 출시</div>
+          <p class="text-[11px] text-slate-400 mt-1">월 정기 구독 결제 연동 및 유료 고객사 20개 사 유치</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+          <div class="text-pink-400 font-bold mb-1">3단계 (2027.01~)</div>
+          <div class="font-bold text-white">ATS 제휴 & B2C 확장</div>
+          <p class="text-[11px] text-slate-400 mt-1">채용 플랫폼 플러그인 연동 및 구직자 모의평가 출시</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       SLIDE 9: 멘토링 요청 사항 (The Ask - 3 Key Questions)
+       ========================================== -->
+  <section class="slide justify-between" data-slide="9">
+    <div>
+      <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">08. The Ask</span>
+      <h2 class="text-3xl font-black text-white mt-1">오늘 멘토님께 조언을 구하고 싶은 3가지 질문</h2>
+    </div>
+
+    <!-- 3 Questions Cards -->
+    <div class="grid grid-cols-3 gap-6 my-auto">
+      <div class="v-card p-6 border-t-4 border-t-cyan-500 flex flex-col justify-between">
+        <div>
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold mb-3 font-mono">Q1</div>
+          <h4 class="text-base font-bold text-white mb-2">초기 PoC 파트너사 확보 GTM 전략</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            채용 시즌에 맞춰 스타트업 5~10개 사에 무료 PoC를 제공하고자 합니다. <strong>보수적인 인사담당자를 가장 빠르게 설득할 수 있는 초기 영업 접근법</strong>이 궁금합니다.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-cyan-400 font-bold">
+          #GTM #초기영업 #PoC유치
+        </div>
+      </div>
+
+      <div class="v-card p-6 border-t-4 border-t-blue-500 flex flex-col justify-between">
+        <div>
+          <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold mb-3 font-mono">Q2</div>
+          <h4 class="text-base font-bold text-white mb-2">스타트업 대상 최적의 가격 모델</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            현재 '기본 구독료 + 초과 건당 과금' 모델을 설계했습니다. <strong>수시 채용 중심 기업이 가격 저항 없이 도입할 수 있는 가장 적절한 과금 구조</strong>는 무엇일까요?
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-blue-400 font-bold">
+          #가격정책 #Pricing #B2BSaaS
+        </div>
+      </div>
+
+      <div class="v-card p-6 border-t-4 border-t-pink-500 flex flex-col justify-between">
+        <div>
+          <div class="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold mb-3 font-mono">Q3</div>
+          <h4 class="text-base font-bold text-white mb-2">기존 채용 솔루션(ATS)과의 제휴 전략</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            그리팅, 나인하이어 등 기존 ATS와 직접 경쟁하기보다 <strong>"AI 팩트체크 플러그인/API"로 임베딩되는 파트너십 전략</strong>의 실현 가능성과 확장성에 대한 고견을 여쭙고 싶습니다.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-pink-400 font-bold">
+          #플랫폼제휴 #ATS연동 #스케일업
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Thanks -->
+    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs text-slate-400">
+      <span>경청해 주셔서 감사합니다. 멘토님의 소중한 피드백을 겸허히 경청하겠습니다! 🙇‍♂️</span>
+      <span class="font-bold text-white">CheckMate 팀 일동</span>
+    </div>
+  </section>
+
+  <!-- Navigation Script -->
+  <script>
+    let currentSlide = 1;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const progressBar = document.getElementById('progress-bar');
+    const slideNum = document.getElementById('slide-num');
+
+    function updateSlide(index) {
+      if (index < 1 || index > totalSlides) return;
+      slides.forEach((s) => s.classList.remove('active'));
+      currentSlide = index;
+      slides[currentSlide - 1].classList.add('active');
+
+      if (slideNum) slideNum.textContent = currentSlide;
+      if (progressBar) {
+        progressBar.style.width = ((currentSlide / totalSlides) * 100) + '%';
+      }
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) updateSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) updateSlide(currentSlide - 1);
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key >= '1' && e.key <= '9') {
+        const target = parseInt(e.key);
+        if (target <= totalSlides) updateSlide(target);
+      }
+    });
+
+    // Touch Support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) nextSlide();
+      else if (touchEndX - touchStartX > 50) prevSlide();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      updateSlide(1);
+    });
+  </script>
+</body>
+</html>
