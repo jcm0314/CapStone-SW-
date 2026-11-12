@@ -236,8 +236,8 @@ export async function run(ctx, { pass, warn, fail, skip }) {
     const hard = bad.filter(([, v]) => !v.pj);
     const soft = bad.filter(([, v]) => v.pj);
     const details = Object.entries(res).map(([n, v]) => `${n}: ${v.ok ? `OK(${v.mode})` : `실패 — ${v.err}`}`);
-    const geminiSdk = ['@google/genai', '@google/generative-ai'].filter((k) => k in all);
-    details.push(geminiSdk.length ? `Gemini SDK: ${geminiSdk.join(', ')}` : 'Gemini SDK 패키지 미사용 — src/services/agents/geminiClient.js, server/index.js가 fetch로 REST 직접 호출');
+    const claudeSdk = ['@anthropic-ai/sdk'].filter((k) => k in all);
+    details.push(claudeSdk.length ? `Claude SDK: ${claudeSdk.join(', ')} (src/services/agents/claudeClient.js, 서버 전용)` : 'Claude SDK(@anthropic-ai/sdk) 미설치 — 게이트웨이 평가 불가');
     if (hard.length) return fail(`해석 실패 ${hard.length}개: ${hard.map(([n]) => n).join(', ')}`, '`npm ci` 로 재설치. 계속 실패하면 node_modules 삭제 후 재설치', details);
     if (soft.length) return warn(`설치는 되어 있으나 로드 실패: ${soft.map(([n, v]) => `${n}(${v.err})`).join('; ')}`, '해당 패키지의 Node 버전 요구사항(engines)과 플랫폼 바이너리를 확인하세요.', details);
     return pass(`${Object.keys(res).length}개 패키지 해석 성공`, details);

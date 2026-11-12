@@ -10,6 +10,7 @@ import kr.co.checkmate.server.domain.interview.dto.InterviewSummaryResponse;
 import kr.co.checkmate.server.domain.interview.dto.QuestionEvaluationDto;
 import kr.co.checkmate.server.domain.interview.entity.InterviewRecommendation;
 import kr.co.checkmate.server.domain.interview.service.InterviewService;
+import kr.co.checkmate.server.support.TestAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ class InterviewControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants/{applicantId}/interviews", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -115,7 +117,8 @@ class InterviewControllerTest {
         given(interviewService.getInterviewSummary(tenantId, applicantId)).willReturn(summaryResponse);
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/interviews", tenantId, applicantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/interviews", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.totalInterviewers").value(2))

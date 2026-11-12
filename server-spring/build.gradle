@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // JWT (HS256) 발급/검증 - Spring Security 표준 Nimbus 구현 사용
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     
     // Database (H2 for local/test, PostgreSQL for prod)
     runtimeOnly 'com.h2database:h2'

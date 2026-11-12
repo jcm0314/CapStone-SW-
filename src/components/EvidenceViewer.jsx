@@ -40,7 +40,9 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
             <h4 className="text-[13px] font-semibold text-fg truncate">{ev.title}</h4>
           </div>
           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border shrink-0 ${badgeColor}`}>
-            {ev.type === 'positive' ? `+${ev.scoreImpact}점 (긍정)` : ev.type === 'risk' ? `${ev.scoreImpact}점 (리스크)` : '면접 검증'}
+            {ev.matched === false
+              ? '원문 미확인 · 점수 미반영'
+              : ev.type === 'positive' ? `+${ev.scoreImpact}점 (긍정)` : ev.type === 'risk' ? `${ev.scoreImpact}점 (리스크)` : '면접 검증'}
           </span>
         </div>
 
@@ -88,6 +90,8 @@ function EvidenceViewerContent({ result }) {
 
     (groundingEvidences || []).forEach(ev => {
       if (!ev || !ev.quote) return;
+      // Quotes the enricher could not find in the text (possible hallucinations) are never highlighted
+      if (ev.matched === false) return;
 
       // 1) Reuse pre-computed valid indices if available
       if (

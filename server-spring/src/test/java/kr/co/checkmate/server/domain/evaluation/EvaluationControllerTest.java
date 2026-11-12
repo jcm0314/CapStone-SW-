@@ -10,6 +10,7 @@ import kr.co.checkmate.server.domain.evaluation.dto.EvaluationResponse;
 import kr.co.checkmate.server.domain.evaluation.dto.EvaluationSaveRequest;
 import kr.co.checkmate.server.domain.evaluation.dto.EvidenceSentenceDto;
 import kr.co.checkmate.server.domain.evaluation.service.EvaluationService;
+import kr.co.checkmate.server.support.TestAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,7 @@ class EvaluationControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(saveRequest)))
                 .andExpect(status().isCreated())
@@ -122,7 +124,8 @@ class EvaluationControllerTest {
         given(evaluationService.getEvaluationByApplicant(tenantId, applicantId)).willReturn(response);
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation", tenantId, applicantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.totalScore").value(88))
@@ -140,7 +143,8 @@ class EvaluationControllerTest {
                 .willThrow(new EntityNotFoundException("해당 지원자의 평가 결과를 찾을 수 없습니다: " + applicantId));
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation", tenantId, applicantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error.code").value("ENTITY_NOT_FOUND"));
@@ -174,6 +178,7 @@ class EvaluationControllerTest {
 
         // when & then
         mockMvc.perform(patch("/api/v1/tenants/{tenantId}/applicants/{applicantId}/evaluation/approve", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(approvalRequest)))
                 .andExpect(status().isOk())

@@ -15,7 +15,7 @@ export default function MultiAgentAuditModal({ result, isOpen, onClose }) {
       icon: <FileSearch className="w-5 h-5 text-ok" />,
       badge: '원문 1:1 인덱싱',
       color: 'emerald',
-      model: modelsUsed.grounding || 'gemini-1.5-flash',
+      model: modelsUsed.grounding || '-',
       summary: agentMeta.executedAgents?.find(a => a.name === 'Grounding Agent')?.summary || `${result.analysis?.groundingEvidences?.length || 0}건의 근거 문장 발췌 완료`,
       details: (
         <div className="space-y-1.5 text-xs text-fg-muted">
@@ -34,7 +34,7 @@ export default function MultiAgentAuditModal({ result, isOpen, onClose }) {
       icon: <ShieldAlert className="w-5 h-5 text-bad" />,
       badge: '허위/과장 팩트체크',
       color: 'rose',
-      model: modelsUsed.critic || 'gemini-1.5-flash',
+      model: modelsUsed.critic || '-',
       summary: criticReport.critiqueNotes || '비판적 감사 및 AI 생성 문체 검증 완료',
       details: (
         <div className="space-y-2 text-xs text-fg-muted">
@@ -72,7 +72,7 @@ export default function MultiAgentAuditModal({ result, isOpen, onClose }) {
       icon: <Scale className="w-5 h-5 text-brand-fg" />,
       badge: '가중치 정산 & 최종 결재',
       color: 'blue',
-      model: modelsUsed.supervisor || 'gemini-1.5-flash',
+      model: modelsUsed.supervisor || '-',
       summary: result.analysis?.summary?.decisionReason || '5대 역량 종합 정산 완료',
       details: (
         <div className="space-y-2 text-xs text-fg-muted">
@@ -94,7 +94,7 @@ export default function MultiAgentAuditModal({ result, isOpen, onClose }) {
       icon: <Mic className="w-5 h-5 text-brand-fg" />,
       badge: '약점 집중 검증',
       color: 'purple',
-      model: modelsUsed.interviewer || 'gemini-1.5-flash',
+      model: modelsUsed.interviewer || '-',
       summary: `${result.analysis?.interviewQuestions?.length || 0}개의 실전 압박 면접 질문 도출`,
       details: (
         <div className="space-y-1 text-xs text-fg-muted">

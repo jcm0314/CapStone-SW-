@@ -86,8 +86,17 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
         <div className="px-4 pt-3 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-line">
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 id="result-title" className="text-lg font-semibold text-fg">{result.name}</h1>
               <span className="text-[13px] text-fg-muted">{result.applyJobTitle}</span>
+              {isSample && <SampleBadge />}
+              {isHumanVerified ? (
+                <span className="badge badge-warn">
+                  <UserCheck className="w-3 h-3" /> 사람 검토 완료
+                </span>
+              ) : (
+                <span className="badge badge-subtle">검토 대기</span>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5">

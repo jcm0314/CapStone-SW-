@@ -9,6 +9,7 @@ import kr.co.checkmate.server.domain.calibration.dto.CalibrationResponse;
 import kr.co.checkmate.server.domain.calibration.dto.WeightProfileResponse;
 import kr.co.checkmate.server.domain.calibration.dto.WeightProfileUpsertRequest;
 import kr.co.checkmate.server.domain.calibration.service.CalibrationService;
+import kr.co.checkmate.server.support.TestAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ class CalibrationControllerTest {
 
         // when & then
         mockMvc.perform(put("/api/v1/tenants/{tenantId}/weights", tenantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -103,7 +105,8 @@ class CalibrationControllerTest {
                 .willReturn(List.of(response));
 
         // when & then
-        mockMvc.perform(get("/api/v1/tenants/{tenantId}/weights", tenantId))
+        mockMvc.perform(get("/api/v1/tenants/{tenantId}/weights", tenantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].jobRole").value("DEFAULT"))
@@ -146,6 +149,7 @@ class CalibrationControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/calibrations", tenantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -170,6 +174,7 @@ class CalibrationControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/calibrations", tenantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())

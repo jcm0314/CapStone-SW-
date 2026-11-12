@@ -7,10 +7,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { executeMultiAgentEvaluation } from '../src/services/multiAgentEvaluator.js';
-import { resolveGeminiModels, callGeminiJson } from '../src/services/agents/geminiClient.js';
+import { resolveClaudeModel, isClaudeConfigured } from '../src/services/agents/claudeClient.js';
+import { formatCustomPromptAddendum } from '../src/services/promptStudioService.js';
 import { JOB_TEMPLATES } from '../src/data/jobTemplates.js';
 import { anonymizePII } from '../src/utils/piiAnonymizer.js';
-import { enrichEvidencesSync } from '../src/services/workerService.js';
 
 dotenv.config();
 
@@ -164,9 +164,9 @@ app.get('/', (req, res) => {
       'Multi-Tenancy RLS Isolation',
       'Multi-Interviewer Live Sync Sharing (File-Backed Persistence)',
       'HMAC-SHA256 Signed SSO Authentication',
-      '4-Agent Multi-Agent Gemini Evaluation BFF'
+      '4-Agent Multi-Agent Claude (Anthropic) Evaluation BFF'
     ],
-    models: resolveGeminiModels(),
+    models: [resolveClaudeModel()],
     endpoints: {
       health: '/health',
       evaluate: '/api/v1/evaluate (POST)',
@@ -364,143 +364,90 @@ app.get('/api/v1/tenants/:tenantId/quota', (req, res) => {
 // -------------------------------------------------------------
 // [3] BFF AI Evaluation Handler (4-Agent Multi-Agent Pipeline)
 // -------------------------------------------------------------
+const MAX_PROMPT_LIST_ITEMS = 20;
+const MAX_PROMPT_FIELD_CHARS = 500;
+
+function sanitizePromptText(value) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_PROMPT_FIELD_CHARS);
+}
+
+function sanitizePromptList(value) {
+  return (Array.isArray(value) ? value : [])
+    .map(sanitizePromptText)
+    .filter(Boolean)
+    .slice(0, MAX_PROMPT_LIST_ITEMS);
+}
+
+/**
+ * Prompt Studio settings arrive from the browser (the server has no localStorage).
+ * Only known fields are accepted, each trimmed and length-capped, then formatted by the shared formatter.
+ */
+export function buildPromptAddendumFromSettings(promptSettings) {
+  if (!promptSettings || typeof promptSettings !== 'object') return '';
+  return formatCustomPromptAddendum({
+    companyName: sanitizePromptText(promptSettings.companyName),
+    coreValues: sanitizePromptList(promptSettings.coreValues),
+    tabooWords: sanitizePromptList(promptSettings.tabooWords),
+    customInstruction: sanitizePromptText(promptSettings.customInstruction)
+  });
+}
+
+function upstreamHttpStatus(err) {
+  if (err?.code === 'ANTHROPIC_API_KEY_MISSING') return 503;
+  if (err?.code === 'ANTHROPIC_RATE_LIMITED') return 429;
+  if (err?.code === 'ANTHROPIC_TIMEOUT') return 504;
+  return 502;
+}
+
 const handleEvaluation = async (req, res) => {
   try {
-    const { name, applyJobId, rawText, singlePrompt = false } = req.body || {};
+    const { name, applyJobId, rawText, promptSettings } = req.body || {};
 
     if (!rawText || !name) {
       return res.status(400).json({ error: 'Missing required parameters: name and rawText are required.' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.VERTEX_API_KEY || process.env.VITE_GEMINI_API_KEY;
-
-    if (!apiKey) {
-      return res.status(401).json({
+    if (!isClaudeConfigured()) {
+      return res.status(503).json({
         error: 'SERVER_API_KEY_NOT_CONFIGURED',
-        message: '서버 환경변수 GEMINI_API_KEY가 설정되지 않았습니다. 클라이언트 직접 호출 모드를 사용하세요.'
+        message: '서버에 ANTHROPIC_API_KEY가 설정되지 않았습니다. 게이트웨이 실행 환경(.env)에 키를 설정한 뒤 서버를 재시작하세요.'
       });
     }
 
     const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
+    const tenantId = req.headers['x-tenant-id'] || 'toss-payments';
 
     // Server-side Defense-in-Depth PII Anonymization (in case caller bypassed client masking)
     const piiResult = anonymizePII(rawText, name);
     const cleanText = piiResult.anonymizedText;
 
-    // Primary Path: Execute the full 4-Agent Orchestration Pipeline (Grounding -> Critic -> Supervisor + Interviewer)
-    if (!singlePrompt) {
-      try {
-        const multiAgentResult = await executeMultiAgentEvaluation({
-          name,
-          jobTemplate,
-          cleanText,
-          originalRawText: rawText,
-          apiKey
-        });
-
-        const tenantId = req.headers['x-tenant-id'] || 'toss-payments';
-        const tenant = tenantsStore.get(tenantId);
-        if (tenant) {
-          tenant.usedCredit = Math.min(tenant.totalCredit, tenant.usedCredit + 4);
-        }
-
-        return res.status(200).json({
-          ...multiAgentResult,
-          mode: 'BFF_MULTI_AGENT_GATEWAY',
-          modelUsed: multiAgentResult.modelsUsed?.supervisor || resolveGeminiModels()[0]
-        });
-      } catch (multiErr) {
-        console.warn('[BFF Gateway] 4-Agent pipeline encountered error, trying single-prompt fallback:', multiErr.message);
-      }
-    }
-
-    // Fallback Path: Single-prompt Gemini call using shared geminiClient
-    const prompt = `
-당신은 대기업 최고 수준의 HR 채용 전문가 및 시니어 면접관 AI입니다.
-아래 지원자의 자기소개서 본문을 검토하고 직무 역량 기준에 따라 엄격하고 공정하게 평가하세요.
-
-[지원자 성명]: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
-[지원 직무]: ${jobTemplate.title}
-[직무 역량 평가 가중치]: ${JSON.stringify(jobTemplate.competencies)}
-
-[지원자 자기소개서 본문]:
-"""
-${cleanText}
-"""
-
-반드시 유효한 JSON 객체만 반환하세요:
-{
-  "summary": {
-    "totalScore": 85,
-    "decision": "STRONG_PASS",
-    "decisionReason": "정량적 근거 기반 요약",
-    "aiTextProbability": 15
-  },
-  "competencyScores": {
-    "problem_solving": 88,
-    "tech_skill": 85,
-    "teamwork": 80,
-    "growth": 82,
-    "ethics": 80
-  },
-  "groundingEvidences": [
-    {
-      "quote": "본문 속 실제 문장",
-      "type": "positive",
-      "competencyId": "problem_solving",
-      "scoreImpact": 12,
-      "title": "핵심 성과 근거",
-      "explanation": "상세 평가 사유"
-    }
-  ],
-  "interviewQuestions": [
-    {
-      "basedQuote": "본문 속 실제 문장",
-      "category": "기술 검증",
-      "question": "구체적인 면접 질문",
-      "intent": "질문 의도",
-      "checklist": ["체크포인트 1", "체크포인트 2"]
-    }
-  ]
-}
-`;
-
     try {
-      const { data: parsedAnalysis, modelUsed } = await callGeminiJson({
-        prompt,
-        apiKey,
-        temperature: 0.2
+      // 4-Agent Orchestration Pipeline (Grounding -> Critic -> Supervisor + Interviewer) on Claude.
+      // No single-prompt fallback and no fake scores: failures are reported honestly.
+      const multiAgentResult = await executeMultiAgentEvaluation({
+        name,
+        jobTemplate,
+        cleanText,
+        originalRawText: cleanText,
+        promptAddendum: buildPromptAddendumFromSettings(promptSettings),
+        tenantId
       });
 
-      const enrichedEvidences = enrichEvidencesSync(rawText, parsedAnalysis.groundingEvidences || [], 0.70);
-      const enrichedQuestions = (parsedAnalysis.interviewQuestions || []).map((iq, idx) => ({
-        id: iq.id || `iq_${idx + 1}`,
-        basedQuote: iq.basedQuote || '',
-        category: iq.category || '역량 검증',
-        question: iq.question || '',
-        intent: iq.intent || '답변 진위 및 문제 해결 역량 확인',
-        checklist: Array.isArray(iq.checklist) ? iq.checklist : ['구체적 경험 제시 여부', '역할 및 기여도 증명']
-      }));
+      const tenant = tenantsStore.get(tenantId);
+      if (tenant) {
+        tenant.usedCredit = Math.min(tenant.totalCredit, tenant.usedCredit + 4);
+      }
 
       return res.status(200).json({
-        id: `app_${Date.now()}`,
-        name,
-        applyJobId: jobTemplate.id,
-        applyJobTitle: jobTemplate.title,
-        rawText,
-        analysis: {
-          ...parsedAnalysis,
-          groundingEvidences: enrichedEvidences,
-          interviewQuestions: enrichedQuestions
-        },
-        modelUsed,
-        mode: 'BFF_GEMINI_GATEWAY'
+        ...multiAgentResult,
+        mode: 'BFF_MULTI_AGENT_GATEWAY',
+        modelUsed: multiAgentResult.modelsUsed?.supervisor || resolveClaudeModel()
       });
     } catch (upstreamErr) {
-      console.warn(`Upstream AI failed: ${upstreamErr.message}`);
-      return res.status(502).json({
-        error: 'UPSTREAM_AI_FAILED',
-        message: `Google Gemini AI 서비스 호출에 실패했습니다: ${upstreamErr.message}`
+      console.warn(`[BFF Gateway] Claude evaluation failed (${upstreamErr.code || 'ERROR'}): ${upstreamErr.message}`);
+      return res.status(upstreamHttpStatus(upstreamErr)).json({
+        error: upstreamErr.code || 'UPSTREAM_AI_FAILED',
+        message: upstreamErr.message || 'Claude AI 평가 호출에 실패했습니다.'
       });
     }
   } catch (error) {

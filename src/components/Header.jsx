@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, KeyRound, SlidersHorizontal, Building2, ChevronDown, Menu, Moon, Sun, Check } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, SlidersHorizontal, Building2, ChevronDown, Menu, Moon, Sun, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 import SSOProfileModal from './SSOProfileModal';
@@ -14,7 +14,6 @@ const ROLE_LABEL = {
 
 export default function Header({
   onOpenPromptStudio,
-  onOpenApiKeyModal,
   onOpenPalette,
   onOpenMenu,
   theme,
@@ -22,19 +21,8 @@ export default function Header({
   showSSOModal,
   setShowSSOModal
 }) {
-  const [hasApiKey, setHasApiKey] = useState(false);
   const { currentUser, hasPermission } = useAuth();
   const { currentTenant } = useTenant();
-
-  useEffect(() => {
-    const checkKey = () => {
-      const k = (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
-      setHasApiKey(Boolean(k && k.trim().length > 5));
-    };
-    checkKey();
-    window.addEventListener('storage', checkKey);
-    return () => window.removeEventListener('storage', checkKey);
-  }, []);
 
   const roleKey = currentUser?.role;
 
@@ -96,17 +84,7 @@ export default function Header({
               <ChevronDown className="w-3.5 h-3.5 text-fg-subtle" />
             </button>
 
-            <button
-              type="button"
-              onClick={onOpenApiKeyModal}
-              className="hidden xl:inline-flex btn btn-ghost btn-sm"
-              title={hasApiKey ? '개인 API 키 사용 중' : '회사 공용 키(B2B 일괄 결제) 사용 중'}
-            >
-              <KeyRound className="w-4 h-4" />
-              <span>{hasApiKey ? '개인 API 키' : 'B2B 일괄 결제'}</span>
-              <span className={`w-1.5 h-1.5 rounded-full ${hasApiKey ? 'bg-brand' : 'bg-ok-solid'}`} />
-            </button>
-
+            {/* Prompt Studio (Admin & Recruiter Only) */}
             {hasPermission('MANAGE_API_KEYS') && (
               <button
                 type="button"

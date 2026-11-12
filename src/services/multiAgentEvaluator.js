@@ -30,10 +30,13 @@ export async function executeMultiAgentEvaluation({
   jobTemplate,
   cleanText,
   originalRawText,
-  apiKey,
+  promptAddendum,
+  tenantId,
   onProgress
 }) {
-  const targetText = originalRawText || cleanText;
+  // Blind recruitment: quotes are matched and displayed against the PII-masked text the AI actually saw.
+  // The unmasked original is never stored in the evaluation result.
+  const targetText = cleanText;
 
   // ----------------------------------------------------
   // Stage 1: Grounding Agent Execution + Worker Offset Matching
@@ -47,10 +50,9 @@ export async function executeMultiAgentEvaluation({
   }
 
   const groundingRes = await runGroundingAgent({
-    name,
     jobTemplate,
     rawText: cleanText,
-    apiKey
+    promptAddendum
   });
 
   const rawGroundingEvidences = groundingRes.data?.groundingEvidences || [];
@@ -70,18 +72,17 @@ export async function executeMultiAgentEvaluation({
   }
 
   const criticRes = await runCriticAgent({
-    name,
     jobTemplate,
     rawText: cleanText,
     groundingEvidences: enrichedEvidences,
-    apiKey
+    promptAddendum
   });
 
-  const criticReport = criticRes.data || {
-    aiTextProbability: 15,
-    exaggerationRisk: 'LOW',
-    critiqueNotes: '주요 성과 검증 완료'
-  };
+  // No invented defaults: a missing critic report fails the evaluation instead of faking "LOW risk".
+  const criticReport = criticRes.data;
+  if (!criticReport) {
+    throw new Error('Critic Agent가 감사 보고서를 반환하지 않았습니다.');
+  }
 
   // ----------------------------------------------------
   // Stage 3 & 4: Parallel Execution via Promise.allSettled
@@ -102,36 +103,39 @@ export async function executeMultiAgentEvaluation({
 
   const [supervisorOutcome, interviewerOutcome] = await Promise.allSettled([
     runSupervisorAgent({
-      name,
       jobTemplate,
-      rawText: cleanText,
       groundingEvidences: enrichedEvidences,
       criticReport,
-      apiKey
+      tenantId,
+      promptAddendum
     }),
     runInterviewerAgent({
-      name,
       jobTemplate,
-      rawText: cleanText,
       groundingEvidences: enrichedEvidences,
       criticReport,
-      apiKey
+      promptAddendum
     })
   ]);
 
-  if (supervisorOutcome.status === 'rejected' && interviewerOutcome.status === 'rejected') {
-    throw supervisorOutcome.reason || interviewerOutcome.reason;
+  // The score/decision comes only from the Supervisor Agent: if it fails, the evaluation fails (no fake score).
+  if (supervisorOutcome.status === 'rejected') {
+    throw supervisorOutcome.reason;
   }
 
-  const supervisorRes = supervisorOutcome.status === 'fulfilled'
-    ? supervisorOutcome.value
-    : { modelUsed: groundingRes.modelUsed, data: {} };
+  const supervisorRes = supervisorOutcome.value;
+  if (!supervisorRes.data?.summary || !supervisorRes.data?.competencyScores) {
+    throw new Error('Supervisor Agent가 점수/판정을 반환하지 않았습니다.');
+  }
 
+  // Interviewer failure only degrades (no questions) — it never affects the score.
   const interviewerRes = interviewerOutcome.status === 'fulfilled'
     ? interviewerOutcome.value
-    : { modelUsed: groundingRes.modelUsed, data: { interviewQuestions: [] } };
+    : { modelUsed: null, data: { interviewQuestions: [] } };
+  if (interviewerOutcome.status === 'rejected') {
+    console.warn('[Multi-Agent] Interviewer Agent failed, returning without interview questions:', interviewerOutcome.reason?.message);
+  }
 
-  const supervisorData = supervisorRes.data || {};
+  const supervisorData = supervisorRes.data;
   const rawQuestions = interviewerRes.data?.interviewQuestions || [];
   const enrichedQuestions = rawQuestions.map((iq, idx) => ({
     id: `iq_${idx + 1}`,
@@ -176,8 +180,8 @@ export async function executeMultiAgentEvaluation({
         { name: 'Critic Agent', status: 'SUCCESS', critique: criticReport.critiqueNotes, aiProb: criticReport.aiTextProbability, risk: criticReport.exaggerationRisk },
         {
           name: 'Supervisor Agent',
-          status: supervisorOutcome.status === 'fulfilled' ? 'SUCCESS' : 'DEGRADED_FALLBACK',
-          comments: supervisorData.executiveComments || '최종 결재 완료'
+          status: 'SUCCESS',
+          comments: supervisorData.executiveComments || ''
         },
         {
           name: 'Interviewer Agent',
@@ -188,19 +192,8 @@ export async function executeMultiAgentEvaluation({
       criticReport
     },
     analysis: {
-      summary: supervisorData.summary || {
-        totalScore: 78,
-        decision: 'INTERVIEW',
-        decisionReason: 'Multi-Agent 협업 평가 완료',
-        aiTextProbability: criticReport.aiTextProbability || 15
-      },
-      competencyScores: supervisorData.competencyScores || {
-        problem_solving: 75,
-        tech_skill: 75,
-        teamwork: 75,
-        growth: 75,
-        ethics: 75
-      },
+      summary: supervisorData.summary,
+      competencyScores: supervisorData.competencyScores,
       groundingEvidences: enrichedEvidences,
       interviewQuestions: enrichedQuestions
     }

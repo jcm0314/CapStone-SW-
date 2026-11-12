@@ -7,16 +7,17 @@ const STORAGE_PREFIX = 'checkmate_shared_eval_';
 const SHARED_INDEX_KEY = 'checkmate_shared_index';
 
 // Resolve Backend API Base URL
-function getApiBaseUrl() {
-  if (typeof window !== 'undefined') {
-    if (import.meta.env?.VITE_API_GATEWAY_URL) {
-      return import.meta.env.VITE_API_GATEWAY_URL;
-    }
-    if (window.location && window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('about:')) {
-      return window.location.origin;
-    }
+// VITE_API_GATEWAY_URL 만 사용합니다. window.location.origin 대체는 프론트 nginx 의 index.html 을 받아
+// "Unexpected token '<'" 를 일으켰으므로 제거했습니다 (#24). production 빌드는 미설정 시 실패합니다 (vite.config.js).
+export function getApiBaseUrl() {
+  const configured = (import.meta.env?.VITE_API_GATEWAY_URL || '').trim();
+  if (configured) {
+    return configured.replace(/\/+$/, '');
   }
-  return 'http://127.0.0.1:3001';
+  if (import.meta.env?.PROD) {
+    throw new Error('VITE_API_GATEWAY_URL 이 설정되지 않은 빌드입니다 (docs/DEPLOY.md).');
+  }
+  return 'http://127.0.0.1:3001'; // 로컬 개발 전용
 }
 
 // Generate unique Share ID (e.g., eval_8f9a2b1c)

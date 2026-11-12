@@ -11,6 +11,13 @@ server:
   port: ${PORT:8080}
   shutdown: graceful
 
+checkmate:
+  jwt:
+    # 필수. 미설정 시 기동 실패 (local 프로필만 application-local.yml 의 개발용 기본값 허용)
+    secret: ${JWT_SECRET:}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:3600}
+    issuer: checkmate-core
+
 management:
   endpoints:
     web:
