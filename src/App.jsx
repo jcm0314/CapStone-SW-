@@ -26,7 +26,7 @@ import confetti from 'canvas-confetti';
 import { Lock, ShieldAlert, Share2, Link2 } from 'lucide-react';
 
 export default function App() {
-  const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant } = useTenant();
+  const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant, applicantsVersion } = useTenant();
   const { currentUser, hasPermission } = useAuth();
 
   const [activeTab, setActiveTab] = useState('evaluator');
@@ -71,14 +71,14 @@ export default function App() {
     }
   }, []);
 
-  // Sync state when Tenant switches (Multi-Tenancy Isolation)
+  // Sync state when Tenant switches (Multi-Tenancy Isolation) or Spring 목록이 합쳐졌을 때
   useEffect(() => {
     const tenantApps = getTenantApplicants();
     setApplicantList(tenantApps);
     if (!activeShareId) {
-      setSelectedApplicant(tenantApps[0] || null);
+      setSelectedApplicant(prev => tenantApps.find(a => a.id === prev?.id) || tenantApps[0] || null);
     }
-  }, [currentTenant.id]);
+  }, [currentTenant.id, applicantsVersion]);
 
   // Analysis via the API gateway (server-side Claude API; no API key in the browser, no local fallbacks)
   const handleAnalyze = async ({ name, rawText }) => {
