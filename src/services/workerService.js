@@ -4,44 +4,15 @@
  * when running in the browser, with automatic synchronous fallback in Node.js / SSR / Vitest environments.
  */
 
-import { findFuzzyMatch } from '../utils/fuzzyMatcher.js';
+import { enrichEvidences } from '../utils/evidenceEnricher.js';
 import { anonymizePII } from '../utils/piiAnonymizer.js';
 
 /**
- * Synchronous fallback for enriching grounding evidence quotes with character offsets
+ * Synchronous fallback for enriching grounding evidence quotes with character offsets.
+ * Unmatched (possibly hallucinated) quotes are forced to type "verify" with scoreImpact 0.
  */
 export function enrichEvidencesSync(targetText, rawGroundingEvidences = [], threshold = 0.70) {
-  return (rawGroundingEvidences || []).map((ev, idx) => {
-    let startIndex = -1;
-    let endIndex = -1;
-
-    if (ev.quote && targetText) {
-      startIndex = targetText.indexOf(ev.quote);
-      if (startIndex !== -1) {
-        endIndex = startIndex + ev.quote.length;
-      } else {
-        const fuzzy = findFuzzyMatch(targetText, ev.quote, threshold);
-        if (fuzzy) {
-          startIndex = fuzzy.start;
-          endIndex = fuzzy.end;
-        }
-      }
-    }
-
-    return {
-      id: ev.id || `ev_${idx + 1}`,
-      quote: ev.quote || '',
-      startIndex,
-      endIndex,
-      type: ['positive', 'risk', 'verify'].includes(ev.type) ? ev.type : 'verify',
-      competencyId: ev.competencyId || 'problem_solving',
-      scoreImpact: typeof ev.scoreImpact === 'number'
-        ? ev.scoreImpact
-        : (ev.type === 'positive' ? 12 : ev.type === 'risk' ? -10 : 0),
-      title: ev.title || '근거 항목',
-      explanation: ev.explanation || ''
-    };
-  });
+  return enrichEvidences(targetText, rawGroundingEvidences, threshold);
 }
 
 /**

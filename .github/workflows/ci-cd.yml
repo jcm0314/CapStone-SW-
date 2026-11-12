@@ -34,10 +34,41 @@ jobs:
           VITE_API_GATEWAY_URL: ${{ vars.VITE_API_GATEWAY_URL || 'https://api-gateway.ci-placeholder.invalid' }}
         run: npm run build
 
+  # Job 1-b: Spring Boot Core API (server-spring) Unit & Integration Tests
+  spring-tests:
+    name: ☕ Spring Boot Gradle Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server-spring
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java (Temurin 21)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Gradle (dependency cache)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Execute Gradle Test Suite
+        run: ./gradlew test --no-daemon
+
+      - name: Upload Test Reports on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-test-reports
+          path: server-spring/build/reports/tests/test
+
   # Job 2: Multi-Stage Docker Container Build Verification
   docker-build:
     name: 🐳 Production Docker Build & Health Check
-    needs: unit-tests
+    needs: [unit-tests, spring-tests]
     runs-on: ubuntu-latest
 
     steps:
@@ -64,3 +95,11 @@ jobs:
           file: server/Dockerfile
           push: false
           tags: hr-evaluator-api-gateway:test-latest
+
+      - name: Build Spring Boot Core API Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: server-spring
+          file: server-spring/Dockerfile
+          push: false
+          tags: checkmate-core-api:test-latest

@@ -112,6 +112,60 @@ cd server-spring
 
 ---
 
+## 🔐 인증 · 테넌트 격리 · 역할 권한 (Issue #23)
+
+- 모든 `/api/v1/tenants/{tenantId}/**` 요청은 `Authorization: Bearer <JWT>` 필수 (없으면 **401**).
+- 경로의 `tenantId` 가 토큰의 `tenantId` 와 다르면 **404** (다른 회사 리소스의 존재 여부를 숨김).
+- 공개: `GET /api/v1/health`, `/api/v1/public/**`, `POST /api/v1/auth/login`.
+
+| Method | Endpoint | 설명 |
+|---|---|---|
+| `POST` | `/api/v1/auth/login` | `{ email, password }` → `{ accessToken, tokenType, expiresIn, user{ id, name, email, role, tenantId, tenantName } }` (실패 시 같은 메시지로 401) |
+| `GET` | `/api/v1/auth/me` | 토큰 사용자 정보 (`user` 객체) |
+
+| 기능 | ADMIN | RECRUITER | INTERVIEWER |
+|---|:-:|:-:|:-:|
+| 모든 GET 조회 | ✅ | ✅ | ✅ |
+| 면접 스코어카드 제출 | ✅ | ✅ | ✅ |
+| 지원자 등록/삭제/상태 변경 | ✅ | ✅ | ❌ (403) |
+| 평가 저장 / HITL 승인 | ✅ | ✅ | ❌ (403) |
+| 피드백 리포트·공유링크 생성/발송 | ✅ | ✅ | ❌ (403) |
+| 가중치 수정 / 보정 기록 | ✅ | ✅ | ❌ (403) |
+| 그 밖의 테넌트 쓰기 (기본 거부) | ✅ | ❌ | ❌ |
+
+### 환경변수
+| 변수 | 필수 | 설명 |
+|---|---|---|
+| `JWT_SECRET` | prod 필수 | HS256 서명 키 (32바이트 이상, 예: `openssl rand -base64 48`). 없으면 **기동 실패**. local 프로필만 개발용 기본값 허용 |
+| `JWT_EXPIRATION_SECONDS` | 선택 | 토큰 유효시간 (기본 3600) |
+
+### local 데모 계정 (`LocalDataSeeder`, local 프로필 전용)
+`{admin|recruiter|interviewer}@{toss|daangn}.test` / 비밀번호 `checkmate1234!` (`CHECKMATE_SEED_PASSWORD` 로 변경 가능)
+
+```bash
+curl -s -X POST localhost:8080/api/v1/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"recruiter@toss.test","password":"checkmate1234!"}'
+```
+
+### prod(PostgreSQL) 스키마 추가
+prod 는 `ddl-auto: validate` 이므로 배포 전에 `users` 테이블을 먼저 만들어야 합니다.
+```sql
+CREATE TABLE users (
+  id            UUID PRIMARY KEY,
+  tenant_id     UUID         NOT NULL,
+  email         VARCHAR(150) NOT NULL UNIQUE,
+  password_hash VARCHAR(100) NOT NULL,
+  name          VARCHAR(100) NOT NULL,
+  role          VARCHAR(20)  NOT NULL CHECK (role IN ('ADMIN','RECRUITER','INTERVIEWER')),
+  is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP    NOT NULL,
+  updated_at    TIMESTAMP    NOT NULL
+);
+CREATE INDEX idx_users_tenant_id ON users (tenant_id);
+```
+
+---
+
 ## 📡 지원자 관리 REST API 명세
 
 | Method | Endpoint | 설명 | 요청 본문 | 응답 |

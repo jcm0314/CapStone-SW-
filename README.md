@@ -157,13 +157,13 @@ npm run build
 
 | 영역 | 현재 구현 상태 | 근거 / 후속 작업 |
 | :--- | :--- | :--- |
-| 4-에이전트 파이프라인 | BYOK 모드(브라우저)와 B2B 게이트웨이(`POST /api/v1/evaluate`) 모두 `executeMultiAgentEvaluation` 4-에이전트 파이프라인(Stage 1 Grounding → Stage 2 Critic → Stage 3/4 Supervisor·Interviewer `Promise.allSettled` 병렬)을 실행하며, 실패 시 단일 프롬프트로 폴백합니다. | `src/services/multiAgentEvaluator.js`, `server/index.js` · `tasks/17` |
+| 4-에이전트 파이프라인 | 게이트웨이(`POST /api/v1/evaluate`)에서만 `executeMultiAgentEvaluation` 4-에이전트 파이프라인(Stage 1 Grounding → Stage 2 Critic → Stage 3/4 Supervisor·Interviewer `Promise.allSettled` 병렬)을 Claude API로 실행합니다. 브라우저에는 API 키가 없고, 실패 시 가짜 점수·단일 프롬프트 폴백 없이 에러를 반환합니다. | `src/services/multiAgentEvaluator.js`, `server/index.js` · `tasks/17` |
 | 멀티테넌시 격리 | 기본 동작은 브라우저 `localStorage` 키를 테넌트별로 나눈 것입니다. `src/services/supabaseClient.js`가 `TenantContext`에 연결되어 있으나, 유효한 Supabase 프로젝트 키와 원격 DB 스키마(`infra/supabase_schema.sql`)가 적용되지 않은 환경에서는 로컬 스토리지 시뮬레이션으로만 동작합니다. | `src/contexts/TenantContext.jsx`, `src/services/supabaseClient.js` · `tasks/16` |
 | 면접관 공유/협업 | 게이트웨이 메모리+로컬 파일(`server/data/shared_evaluations.json`) 저장소와 10초 폴링으로 동기화하며, Supabase 설정 시에만 Realtime 채널을 구독합니다. Cloud Run 다중 인스턴스 간 공유 DB나 외부 Redis는 미연동입니다. | `server/index.js`, `InterviewerCollaborationPanel.jsx` · `tasks/13`, `tasks/17` |
 | 결과 캐시 | 브라우저 IndexedDB/localStorage에 FNV-1a 전체 본문 해시 키로 저장합니다. 서버 측 Redis 캐시는 `docker-compose.yml`에만 정의되어 있고 코드에서는 호출되지 않습니다. | `src/services/cacheService.js` · `tasks/08` |
 | SSO | 실제 외부 IdP(Google Workspace/Okta) OAuth 연동이 없는 데모용 시뮬레이션입니다. 게이트웨이가 HMAC-SHA256 서명 토큰(`/api/v1/auth/sso-login`, `/api/v1/auth/verify`)을 발급·검증하지만, 일반 API 엔드포인트 자체에 인증 강제 미들웨어는 걸려 있지 않습니다. | `server/index.js` · `tasks/17` |
 | Web Worker | `src/services/workerService.js`와 `src/workers/evaluatorWorker.js`가 2단계 Fuzzy 오프셋 매칭 및 대용량 PII 마스킹에 연결되어 있습니다(Node/테스트 환경에서는 동기 함수로 자동 폴백). 단, `evaluatorWorker.js` 내부의 구형 휴리스틱 평가 분기(`PARSE_EVALUATION`)는 호출되지 않습니다. | `src/services/workerService.js`, `src/workers/evaluatorWorker.js` · `tasks/18` |
-| Gemini 모델 ID | 기본 모델을 `gemini-2.5-flash` (폴백 `gemini-2.0-flash`, `gemini-1.5-flash`)로 통일하고 환경변수(`VITE_GEMINI_MODEL`, `GEMINI_MODEL`) 오버라이드를 지원합니다. | `src/services/agents/geminiClient.js` · `tasks/19` |
+| AI 모델 | Claude API(Anthropic, 서버 전용). 기본 `claude-haiku-5-5`(최저가), `ANTHROPIC_MODEL`/`ANTHROPIC_EFFORT`로 변경. 구조화 JSON 출력(`output_config.format`) 사용. | `src/services/agents/claudeClient.js` |
 
 전체 작업 단위와 진행 상태: [`tasks/00_INDEX.md`](tasks/00_INDEX.md)
 

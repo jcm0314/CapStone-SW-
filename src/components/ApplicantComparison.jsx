@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Layers, CheckCircle2, AlertTriangle, ShieldCheck, XCircle, FileText, Download, ShieldAlert, Sparkles, Sliders, RotateCcw } from 'lucide-react';
 import { generatePlagiarismMatrix } from '../utils/plagiarismEngine';
+import SampleBadge from './SampleBadge';
+import { isSampleResult } from '../utils/sampleResult';
 
 const DEFAULT_WEIGHTS = {
   problem_solving: 30,
@@ -212,6 +214,7 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                         {app.name[0]}
                       </span>
                       <span>{app.name}</span>
+                      {isSampleResult(app) && <SampleBadge />}
                       {app.isHumanVerified && (
                         <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="인간 검토관 HITL 보정 완료">
                           🧑‍💼 HITL

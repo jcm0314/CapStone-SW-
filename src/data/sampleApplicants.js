@@ -1,6 +1,7 @@
 export const SAMPLE_APPLICANTS = [
   {
     id: "app_101",
+    isSample: true,
     name: "김민준",
     applyJobId: "tech_backend",
     applyJobTitle: "백엔드 소프트웨어 엔지니어",
@@ -117,6 +118,7 @@ export const SAMPLE_APPLICANTS = [
   },
   {
     id: "app_102",
+    isSample: true,
     name: "이서연",
     applyJobId: "tech_backend",
     applyJobTitle: "백엔드 소프트웨어 엔지니어",
@@ -202,6 +204,7 @@ export const SAMPLE_APPLICANTS = [
   },
   {
     id: "app_103",
+    isSample: true,
     name: "박지훈",
     applyJobId: "tech_backend",
     applyJobTitle: "백엔드 소프트웨어 엔지니어",
@@ -274,6 +277,7 @@ export const SAMPLE_APPLICANTS = [
   },
   {
     id: "app_104",
+    isSample: true,
     name: "최유진",
     applyJobId: "marketing_growth",
     applyJobTitle: "그로스 마케팅 스페셜리스트",

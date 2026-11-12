@@ -8,13 +8,37 @@ const STORE_NAME = 'evaluation_cache';
 const DB_VERSION = 1;
 
 /**
- * Generates a unique cache key based on the FULL (whitespace-normalized) rawText and job ID.
- * Previously only the first 100 chars + length were hashed, so texts sharing a prefix and length collided.
+ * Cache key schema version. Bump whenever the key composition changes so that entries
+ * written under an older schema are never matched again (they are simply ignored).
  */
-export function generateCacheKey(rawText, applyJobId) {
+export const CACHE_KEY_VERSION = 'v2';
+
+/**
+ * Deterministic fingerprint of everything besides the text that changes the evaluation outcome:
+ * - tenantId: 회사(테넌트)별로 캐시 분리
+ * - competencies: [{ id, weight }] — 역량 가중치가 바뀌면 다른 키
+ * - promptAddendum: getActivePromptAddendum() 결과 — Prompt Studio 설정이 바뀌면 다른 키
+ */
+export function buildCacheScopeFingerprint({ tenantId = '', competencies = [], promptAddendum = '' } = {}) {
+  const weights = (competencies || [])
+    .map(c => `${c.id}:${Number(c.weight) || 0}`)
+    .sort()
+    .join(',');
+  const scope = `t=${tenantId || ''}|w=${weights}|p=${(promptAddendum || '').trim()}`;
+  return `${fnv1a(scope, 0x811c9dc5)}${fnv1a(scope, 0x01000193)}`;
+}
+
+/**
+ * Generates a unique cache key from the FULL (whitespace-normalized) rawText, the job ID and the
+ * evaluation scope (tenant + competency weights + Prompt Studio settings).
+ * Without the scope, switching tenant or changing weights/prompt settings returned a stale evaluation.
+ */
+export function generateCacheKey(rawText, applyJobId, scope = {}) {
   if (!rawText) return '';
   const normalized = rawText.trim().replace(/\s+/g, ' ');
-  return `cache_${applyJobId}_${normalized.length}_${fnv1a(normalized, 0x811c9dc5)}${fnv1a(normalized, 0x01000193)}`;
+  const tenantPart = String(scope.tenantId || 'default').replace(/[^A-Za-z0-9_-]/g, '');
+  const scopeHash = buildCacheScopeFingerprint(scope);
+  return `cache_${CACHE_KEY_VERSION}_${tenantPart}_${applyJobId}_${scopeHash}_${normalized.length}_${fnv1a(normalized, 0x811c9dc5)}${fnv1a(normalized, 0x01000193)}`;
 }
 
 /**
@@ -56,8 +80,8 @@ function openDB() {
 /**
  * Gets cached evaluation result by rawText and applyJobId
  */
-export async function getCachedAnalysis(rawText, applyJobId) {
-  const cacheKey = generateCacheKey(rawText, applyJobId);
+export async function getCachedAnalysis(rawText, applyJobId, scope = {}) {
+  const cacheKey = generateCacheKey(rawText, applyJobId, scope);
   if (!cacheKey) return null;
 
   try {
@@ -94,13 +118,14 @@ export async function getCachedAnalysis(rawText, applyJobId) {
 /**
  * Saves evaluation result to IndexedDB cache
  */
-export async function saveAnalysisToCache(rawText, applyJobId, resultData) {
-  const cacheKey = generateCacheKey(rawText, applyJobId);
+export async function saveAnalysisToCache(rawText, applyJobId, resultData, scope = {}) {
+  const cacheKey = generateCacheKey(rawText, applyJobId, scope);
   if (!cacheKey || !resultData) return;
 
   const record = {
     cacheKey,
     applyJobId,
+    tenantId: scope.tenantId || null,
     timestamp: Date.now(),
     data: resultData
   };

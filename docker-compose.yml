@@ -37,7 +37,32 @@ services:
     networks:
       - hr-evaluator-net
 
-  # 3. Enterprise Distributed In-Memory Cache (Redis)
+  # 3. Spring Boot Core API (local 프로필: H2 메모리 DB + 데모 계정 시드)
+  #    운영(prod)에서는 이 compose 를 쓰지 말고 JWT_SECRET / SUPABASE_DB_* 를 설정해 배포하세요.
+  core-api:
+    build:
+      context: ./server-spring
+      dockerfile: Dockerfile
+    container_name: checkmate-core-api
+    ports:
+      - "8081:8080"
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - PORT=8080
+      # JWT_SECRET 을 지정하지 않으면 local 프로필의 개발용 기본 키 사용 (prod 프로필에서는 기동 거부)
+      # 빈 값(JWT_SECRET=)으로 넘기면 기본값이 무시되어 기동 실패하므로, 쓸 때만 아래 줄을 추가하세요.
+      # - JWT_SECRET=<32바이트 이상 임의 문자열>
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
+    networks:
+      - hr-evaluator-net
+
+  # 4. Enterprise Distributed In-Memory Cache (Redis)
   redis-cache:
     image: redis:7-alpine
     container_name: hr-evaluator-redis

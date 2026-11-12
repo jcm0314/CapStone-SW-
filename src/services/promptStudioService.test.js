@@ -7,7 +7,7 @@ import {
   getActivePromptAddendum,
   PROMPT_PRESETS
 } from './promptStudioService';
-import * as geminiClient from './agents/geminiClient';
+import * as claudeClient from './agents/claudeClient';
 import { runGroundingAgent } from './agents/groundingAgent';
 import { JOB_TEMPLATES } from '../data/jobTemplates';
 
@@ -48,7 +48,7 @@ describe('Enterprise Custom HR Prompt Studio Service', () => {
   it('저장된 Prompt Studio 설정(회사명/금기어)이 실제 에이전트 프롬프트에 반영되어야 함', async () => {
     saveCompanyPromptSettings({ companyName: '테스트전자', tabooWords: ['귀사', '열정페이'] });
 
-    const spy = vi.spyOn(geminiClient, 'callGeminiJson').mockResolvedValue({
+    const spy = vi.spyOn(claudeClient, 'callClaudeJson').mockResolvedValue({
       data: { groundingEvidences: [] },
       modelUsed: 'mock-model'
     });
@@ -56,8 +56,7 @@ describe('Enterprise Custom HR Prompt Studio Service', () => {
     await runGroundingAgent({
       name: '김민준',
       jobTemplate: JOB_TEMPLATES[0],
-      rawText: '본문',
-      apiKey: 'test-api-key-12345'
+      rawText: '본문'
     });
 
     const sentPrompt = spy.mock.calls[0][0].prompt;

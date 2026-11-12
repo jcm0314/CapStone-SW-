@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Cpu, Layers, FileText, Sliders, Key, ShieldCheck, Building2, UserCheck, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Cpu, Layers, FileText, Sliders, ShieldCheck, Building2, UserCheck, ChevronDown } from 'lucide-react';
 import { useAuth, ROLES } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 import SSOProfileModal from './SSOProfileModal';
@@ -8,24 +8,12 @@ export default function Header({
   activeTab,
   setActiveTab,
   applicantCount,
-  onOpenPromptStudio,
-  onOpenApiKeyModal
+  onOpenPromptStudio
 }) {
-  const [hasApiKey, setHasApiKey] = useState(false);
   const [showSSOModal, setShowSSOModal] = useState(false);
 
   const { currentUser, hasPermission } = useAuth();
   const { currentTenant } = useTenant();
-
-  useEffect(() => {
-    const checkKey = () => {
-      const k = (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
-      setHasApiKey(Boolean(k && k.trim().length > 5));
-    };
-    checkKey();
-    window.addEventListener('storage', checkKey);
-    return () => window.removeEventListener('storage', checkKey);
-  }, []);
 
   return (
     <>
@@ -67,22 +55,6 @@ export default function Header({
 
           {/* Navigation Tabs & Action Buttons */}
           <div className="flex items-center gap-2 flex-wrap justify-end">
-            {/* B2B Managed Token & BYOK Mode Button */}
-            <button
-              type="button"
-              onClick={onOpenApiKeyModal}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
-                hasApiKey
-                  ? 'bg-purple-500/10 text-purple-300 border-purple-500/30 hover:bg-purple-500/20'
-                  : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
-              }`}
-              title={hasApiKey ? '개별 커스텀 API Key(BYOK) 적용 중' : 'B2B 엔터프라이즈 토큰 일괄 결제 모드 활성화됨'}
-            >
-              <Key className="w-3.5 h-3.5" />
-              <span>{hasApiKey ? '커스텀 Key (BYOK)' : '🏢 B2B 일괄 결제'}</span>
-              <span className={`w-2 h-2 rounded-full ${hasApiKey ? 'bg-purple-400' : 'bg-emerald-400'}`} />
-            </button>
-
             {/* Prompt Studio (Admin & Recruiter Only) */}
             {hasPermission('MANAGE_API_KEYS') && (
               <button
