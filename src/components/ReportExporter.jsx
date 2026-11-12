@@ -136,7 +136,7 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
                   )}
                 </div>
                 <p className="text-xs text-gray-400 print:text-gray-600">
-                  직무: {applyJobTitle} | 평가 엔진: Google Gemini API | 검토 상태: {result.isHumanVerified ? '인간 검토관(HITL) 최종 확정' : 'AI 자동 분석 초안'}
+                  직무: {applyJobTitle} | 평가 엔진: Anthropic Claude API | 검토 상태: {result.isHumanVerified ? '인간 검토관(HITL) 최종 확정' : 'AI 자동 분석 초안'}
                 </p>
               </div>
               <div className="text-right">

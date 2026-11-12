@@ -17,18 +17,13 @@ export const KNOWN_VARS = {
   VITE_API_GATEWAY_URL: { side: 'client', level: 'recommended', desc: 'B2B 게이트웨이 주소(빌드 시 번들에 삽입). 미설정 시 같은 origin의 /api 로 요청 → nginx 정적 서버는 404 반환 (src/services/aiEvaluator.js, shareService.js, enterpriseVertexService.js)' },
   VITE_SUPABASE_URL: { side: 'client', level: 'optional', desc: 'Supabase 프로젝트 URL (미설정 시 Supabase 비활성, src/services/supabaseClient.js)' },
   VITE_SUPABASE_ANON_KEY: { side: 'client', level: 'optional', desc: 'Supabase anon(공개) 키 — service_role 키를 넣으면 절대 안 됨' },
-  VITE_GEMINI_API_KEY: { side: 'client', level: 'discouraged', desc: '브라우저 번들에 평문 삽입됨 — 사용 비권장 (BYOK 모달 또는 서버 GEMINI_API_KEY 사용)' },
-  GEMINI_API_KEY: { side: 'server', level: 'recommended', desc: '게이트웨이 B2B 모드용 Gemini 키. 미설정 시 POST /api/v1/evaluate → 401 SERVER_API_KEY_NOT_CONFIGURED' },
-  VERTEX_API_KEY: { side: 'server', level: 'optional', desc: 'GEMINI_API_KEY 대체 키' },
-  GCP_PROJECT: { side: 'server', level: 'optional', desc: 'server/index.js의 Vertex 엔드포인트 프로젝트 (기본 ai-review-510606)' },
+  ANTHROPIC_API_KEY: { side: 'server', level: 'recommended', desc: '게이트웨이 전용 Claude API 키(브라우저에 두지 않음). 미설정 시 POST /api/v1/evaluate → 503 SERVER_API_KEY_NOT_CONFIGURED' },
+  ANTHROPIC_MODEL: { side: 'server', level: 'optional', desc: 'Claude 모델 ID 오버라이드 (기본 claude-opus-5-5)' },
+  ANTHROPIC_EFFORT: { side: 'server', level: 'optional', desc: 'Claude effort (low|medium|high|xhigh|max, 기본 medium)' },
+  ANTHROPIC_TIMEOUT_MS: { side: 'server', level: 'optional', desc: 'Claude 호출 1회 타임아웃(ms, 기본 120000)' },
   PORT: { side: 'server', level: 'optional', desc: '게이트웨이 포트 (기본 3001, Cloud Run은 8080 주입)' },
   CORS_ALLOWED_ORIGINS: { side: 'server', level: 'recommended', desc: '허용 Origin(쉼표 구분). 미설정 시 모든 Origin 허용(*)' },
   NODE_ENV: { side: 'server', level: 'optional', desc: "'test'이면 서버가 listen하지 않음" },
-  GCP_PROJECT_ID: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 전용 (Vertex SDK/BigQuery)' },
-  GCP_LOCATION: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 전용' },
-  BIGQUERY_DATASET_ID: { side: 'server', level: 'optional', desc: 'server/proxyServer.js 감사 로그 데이터셋' },
-  VITE_GEMINI_MODEL: { side: 'client', level: 'optional', desc: '클라이언트 Gemini 모델 ID 오버라이드 (기본 gemini-2.5-flash)' },
-  GEMINI_MODEL: { side: 'server', level: 'optional', desc: '서버 Gemini 모델 ID 오버라이드 (기본 gemini-2.5-flash)' },
   SSO_TOKEN_SECRET: { side: 'server', level: 'optional', desc: '게이트웨이 SSO 토큰 HMAC-SHA256 서명 시크릿' },
 };
 
@@ -156,7 +151,7 @@ export async function run(ctx, { pass, warn, fail, skip }) {
     }
     if (missingRec.length) {
       return warn(`권장 변수 미설정: ${missingRec.join(', ')} (로컬 데모는 동작하지만 배포/B2B 모드에 영향)`,
-        '루트에 .env.local 생성(커밋 금지) 예: VITE_API_GATEWAY_URL=http://localhost:3001 / 서버: GEMINI_API_KEY=... CORS_ALLOWED_ORIGINS=http://localhost:3000. 배포는 Secret Manager/K8s Secret 사용.', details);
+        '루트에 .env.local 생성(커밋 금지) 예: VITE_API_GATEWAY_URL=http://localhost:3001 / 서버: ANTHROPIC_API_KEY=... CORS_ALLOWED_ORIGINS=http://localhost:3000. 배포는 Secret Manager/K8s Secret 사용.', details);
     }
     return pass('권장 변수 모두 설정됨', details);
   });
@@ -178,11 +173,11 @@ export async function run(ctx, { pass, warn, fail, skip }) {
     }
     if (setRisky.length) {
       return warn(`비밀값으로 보이는 VITE_ 변수에 값이 설정됨 → \`vite build\` 시 JS 번들에 평문 포함: ${setRisky.join(', ')}`,
-        'Gemini 키는 서버 환경변수 GEMINI_API_KEY(게이트웨이)로만 두고 .env*에서 VITE_GEMINI_API_KEY를 삭제하세요. 이미 배포됐다면 키를 즉시 폐기·재발급(aistudio.google.com/apikey).', details);
+        'AI 키는 서버 환경변수 ANTHROPIC_API_KEY(게이트웨이)로만 두고 .env*에서 VITE_* 비밀 변수를 삭제하세요. 이미 배포됐다면 키를 즉시 폐기·재발급하세요.', details);
     }
     if (risky.length) {
       return warn(`코드가 ${risky.join(', ')} 를 읽음 — 값이 설정되면 번들에 노출되는 구조 (현재 미설정)`,
-        'src/App.jsx·src/services/aiEvaluator.js 의 import.meta.env.VITE_GEMINI_API_KEY 폴백 제거를 권장 (BYOK localStorage 또는 서버 키만 사용).', details);
+        '비밀값은 import.meta.env(VITE_*)로 읽지 말고 서버(게이트웨이)에서만 사용하세요.', details);
     }
     return pass('비밀값 성격의 VITE_ 변수 없음');
   });
@@ -221,21 +216,20 @@ export async function run(ctx, { pass, warn, fail, skip }) {
     return pass(`anon JWT 형식 정상 (${mask(s)}, ${v.src})`, details);
   });
 
-  // c.gemini-key
-  await ctx.check({ id: 'c.gemini-key', title: 'Gemini API 키 형식 (GEMINI_API_KEY / VERTEX_API_KEY / VITE_GEMINI_API_KEY)' }, async () => {
-    const names = ['GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY'];
-    const found = names.map((n) => ({ n, v: firstVal(env.lookup(n)) })).filter((x) => x.v);
-    if (!found.length) return skip('키 미설정 — 브라우저 BYOK(API Key 모달, localStorage) 모드만 동작, 게이트웨이 /api/v1/evaluate 는 401', '서버 키를 쓰려면 게이트웨이 실행 환경에 GEMINI_API_KEY 설정 (aistudio.google.com/apikey 에서 발급)');
-    const details = []; const problems = [];
-    for (const { n, v } of found) {
-      const s = v.value;
-      details.push(`${n}: ${mask(s)} ← ${v.src}`);
-      if (s !== s.trim()) problems.push(`${n}: 앞뒤 공백/줄바꿈 포함 → API_KEY_INVALID`);
-      if (!/^AIza[0-9A-Za-z_-]{35}$/.test(s.trim())) problems.push(`${n}: Google API 키 형식(AIza + 35자, 총 39자)이 아님 (길이 ${s.trim().length})`);
-      if (/YOUR_|REPLACE|CHANGE_ME|xxx/i.test(s)) problems.push(`${n}: 플레이스홀더 값`);
-    }
-    if (problems.length) return warn(problems[0], 'aistudio.google.com/apikey 에서 키를 다시 복사하세요 (따옴표·공백 없이).', [...problems.slice(1), ...details]);
-    return pass(`${found.map((x) => x.n).join(', ')} 형식 정상`, details);
+  // c.anthropic-key
+  await ctx.check({ id: 'c.anthropic-key', title: 'Claude API 키 형식 (ANTHROPIC_API_KEY, 서버 전용)' }, async () => {
+    const legacy = ['GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY'].filter((n) => firstVal(env.lookup(n)));
+    const v = firstVal(env.lookup('ANTHROPIC_API_KEY'));
+    const legacyNote = legacy.length ? [`더 이상 사용하지 않는 변수: ${legacy.join(', ')} (삭제 권장)`] : [];
+    if (!v) return skip('키 미설정 — 게이트웨이 /api/v1/evaluate 는 503 SERVER_API_KEY_NOT_CONFIGURED', '게이트웨이 실행 환경(.env)에 ANTHROPIC_API_KEY 설정 (console.anthropic.com 에서 발급)', legacyNote);
+    const s = v.value;
+    const details = [`ANTHROPIC_API_KEY: ${mask(s)} ← ${v.src}`, ...legacyNote];
+    const problems = [];
+    if (s !== s.trim()) problems.push('앞뒤 공백/줄바꿈 포함 → 401 authentication_error');
+    if (!/^sk-ant-/.test(s.trim())) problems.push('Anthropic API 키 형식(sk-ant-...)이 아님');
+    if (/YOUR_|REPLACE|CHANGE_ME|xxx/i.test(s)) problems.push('플레이스홀더 값');
+    if (problems.length) return warn(problems[0], 'console.anthropic.com 에서 키를 다시 복사하세요 (따옴표·공백 없이).', [...problems.slice(1), ...details]);
+    return pass('ANTHROPIC_API_KEY 형식 정상', details);
   });
 
   // c.gitignore-env — .env 가 커밋되지 않도록
@@ -264,7 +258,7 @@ export async function run(ctx, { pass, warn, fail, skip }) {
   await ctx.check({ id: 'c.env-example', title: '.env.example (환경변수 템플릿) 존재' }, async () => {
     const cand = ['.env.example', '.env.sample', '.env.template'].find((f) => exists(path.join(root, f)));
     const need = [...usage.keys()].filter((n) => KNOWN_VARS[n]?.level !== 'optional' || n.startsWith('VITE_')).sort();
-    if (!cand) return warn('.env.example 없음 — 신규 개발자가 필요한 변수(VITE_API_GATEWAY_URL, GEMINI_API_KEY 등)를 알 수 없음', `.env.example 생성 후 키 이름만 기재(값 비움): ${need.join(', ')}`);
+    if (!cand) return warn('.env.example 없음 — 신규 개발자가 필요한 변수(VITE_API_GATEWAY_URL, ANTHROPIC_API_KEY 등)를 알 수 없음', `.env.example 생성 후 키 이름만 기재(값 비움): ${need.join(', ')}`);
     const p = parseEnvFile(readText(path.join(root, cand)) || '');
     const missing = [...usage.keys()].filter((n) => !(n in p.vars) && n !== 'NODE_ENV');
     const realLooking = Object.entries(p.vars).filter(([, v]) => /^AIza[0-9A-Za-z_-]{35}$/.test(v) || /^eyJ[\w-]+\.[\w-]+\.[\w-]+$/.test(v)).map(([k]) => k);

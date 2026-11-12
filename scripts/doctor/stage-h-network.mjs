@@ -9,12 +9,12 @@ export async function run(ctx, { pass, warn, skip }) {
     return;
   }
 
-  await ctx.check({ id: 'h.dns.gemini', title: 'Google Generative Language API DNS/TLS 도달성' }, async () => {
-    const dnsRes = await dnsLookup('generativelanguage.googleapis.com');
+  await ctx.check({ id: 'h.dns.anthropic', title: 'Anthropic Claude API DNS/TLS 도달성' }, async () => {
+    const dnsRes = await dnsLookup('api.anthropic.com');
     if (dnsRes.error) {
       return warn(`DNS 조회 실패: ${dnsRes.error}`, '네트워크 또는 방화벽 설정을 확인하세요.');
     }
-    const res = await httpReq('https://generativelanguage.googleapis.com/', { method: 'GET', timeout: 5000 });
+    const res = await httpReq('https://api.anthropic.com/', { method: 'GET', timeout: 5000 });
     if (res.error) {
       return warn(`HTTPS 연결 실패: ${res.error}`, '프록시 또는 방화벽 설정을 확인하세요.');
     }

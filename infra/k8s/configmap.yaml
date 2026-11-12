@@ -16,5 +16,5 @@ metadata:
   namespace: default
 type: Opaque
 stringData:
-  # Base64 encoded or raw string API keys for GCP Vertex AI / Gemini API
-  GEMINI_API_KEY: "YOUR_ENTERPRISE_GCP_GEMINI_API_KEY_HERE"
+  # Claude API (Anthropic) key for the API gateway (server-side only)
+  ANTHROPIC_API_KEY: "YOUR_ANTHROPIC_API_KEY_HERE"

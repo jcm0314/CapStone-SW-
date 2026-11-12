@@ -1,11 +1,12 @@
-import { callGeminiJson } from './geminiClient.js';
+import { callClaudeJson } from './claudeClient.js';
+import { CRITIC_SCHEMA } from './agentSchemas.js';
 import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 2] Critic Agent
  * 전문 역할: 비판적 2차 감사, 과장/허위 표현 팩트체크, AI 생성 문체 판별 (Red-Teaming)
  */
-export async function runCriticAgent({ name, jobTemplate, rawText, groundingEvidences, apiKey }) {
+export async function runCriticAgent({ jobTemplate, rawText, groundingEvidences, promptAddendum = getActivePromptAddendum() }) {
   const prompt = `
 [역할]: 당신은 엄격하고 날카로운 HR 채용 감사 전문 "Critic Agent (비판적 검증관)"입니다.
 Grounding Agent가 1차 발췌한 근거 문장과 지원자의 자기소개서 원문을 교차 검증하여, 허위/과장 진술, AI 생성 문체 여부, 실현 불가능한 수치 성과를 엄격하게 적발하세요.
@@ -13,7 +14,7 @@ Grounding Agent가 1차 발췌한 근거 문장과 지원자의 자기소개서 
 [지원자 정보]:
 - 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
-${getActivePromptAddendum()}
+${promptAddendum}
 
 [Grounding Agent가 1차 추출한 근거 목록]:
 ${JSON.stringify(groundingEvidences, null, 2)}
@@ -48,7 +49,7 @@ ${rawText}
 }
 `;
 
-  const { data, modelUsed } = await callGeminiJson({ prompt, apiKey, temperature: 0.2 });
+  const { data, modelUsed } = await callClaudeJson({ prompt, schema: CRITIC_SCHEMA });
   return {
     agentName: 'Critic Agent',
     modelUsed,

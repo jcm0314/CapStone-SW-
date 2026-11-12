@@ -99,7 +99,7 @@ export async function run(ctx, { pass, warn, fail, skip }) {
     const args = [bin, 'run', '--reporter=default', '--reporter=json', `--outputFile.json=${outFile}`];
     const env = { ...process.env, CI: '1', FORCE_COLOR: '0', NO_COLOR: '1', BROWSER: 'none' };
     // 게이트웨이 테스트가 실제 키로 외부 호출하지 않도록 키 제거
-    for (const k of ['GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY']) env[k] = '';
+    for (const k of ['ANTHROPIC_API_KEY', 'GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY']) env[k] = '';
     let r = await exec(process.execPath, args, { cwd: root, timeout: 600_000, env });
     let report = readJson(outFile);
     if (!report && /outputFile|Unknown option|unknown/i.test(r.stderr)) {

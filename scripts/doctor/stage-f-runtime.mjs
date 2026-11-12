@@ -1,6 +1,6 @@
 // [f] 런타임 스모크: 포트 점유, Express 게이트웨이 기동 후 엔드포인트/헤더/오류 처리 검사,
 //     proxyServer.js 기동, vite preview 로 빌드 산출물 서빙 확인.
-// 안전: Gemini 키 환경변수를 비운 상태로 기동하며, 외부 AI 호출을 유발하는 요청(name+rawText 포함 evaluate)은 보내지 않는다.
+// 안전: AI 키 환경변수(ANTHROPIC_API_KEY 등)를 비운 상태로 기동하며, 외부 AI 호출을 유발하는 요청(name+rawText 포함 evaluate)은 보내지 않는다.
 import path from 'node:path';
 import {
   startProcess, killTree, getFreePort, portStatus, waitForPort, httpReq, readText, exists,
@@ -9,7 +9,7 @@ import { resolveBin } from './stage-e-tests.mjs';
 
 function safeEnv(extra) {
   const env = { ...process.env, ...extra };
-  for (const k of ['GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY', 'GCP_PROJECT_ID', 'GOOGLE_APPLICATION_CREDENTIALS', 'BIGQUERY_DATASET_ID']) env[k] = '';
+  for (const k of ['ANTHROPIC_API_KEY', 'GEMINI_API_KEY', 'VERTEX_API_KEY', 'VITE_GEMINI_API_KEY', 'GCP_PROJECT_ID', 'GOOGLE_APPLICATION_CREDENTIALS', 'BIGQUERY_DATASET_ID']) env[k] = '';
   env.FORCE_COLOR = '0'; env.NO_COLOR = '1'; env.BROWSER = 'none';
   return env;
 }
@@ -70,7 +70,7 @@ export async function run(ctx, { pass, warn, fail, skip }) {
       }
       gw.base = `http://127.0.0.1:${port}`;
       ctx.setFact('gatewayUp', true);
-      return pass(`포트 ${port}에서 기동 (GEMINI_API_KEY 비운 상태, NODE_ENV=production)`, tailOf(out.text, 5));
+      return pass(`포트 ${port}에서 기동 (ANTHROPIC_API_KEY 비운 상태, NODE_ENV=production)`, tailOf(out.text, 5));
     });
 
     const N = ['gatewayUp'];
