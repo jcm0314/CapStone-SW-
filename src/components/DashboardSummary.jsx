@@ -86,7 +86,6 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
         <div className="px-4 pt-3 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-line">
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-2 flex-wrap">
               <h1 id="result-title" className="text-lg font-semibold text-fg">{result.name}</h1>
               <span className="text-[13px] text-fg-muted">{result.applyJobTitle}</span>
               {isSample && <SampleBadge />}
