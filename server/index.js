@@ -394,7 +394,6 @@ const handleEvaluation = async (req, res) => {
           name,
           jobTemplate,
           cleanText,
-          originalRawText: rawText,
           apiKey
         });
 
@@ -472,7 +471,7 @@ ${cleanText}
         temperature: 0.2
       });
 
-      const enrichedEvidences = enrichEvidencesSync(rawText, parsedAnalysis.groundingEvidences || [], 0.70);
+      const enrichedEvidences = enrichEvidencesSync(cleanText, parsedAnalysis.groundingEvidences || [], 0.70);
       const enrichedQuestions = (parsedAnalysis.interviewQuestions || []).map((iq, idx) => ({
         id: iq.id || `iq_${idx + 1}`,
         basedQuote: iq.basedQuote || '',
@@ -487,7 +486,7 @@ ${cleanText}
         name,
         applyJobId: jobTemplate.id,
         applyJobTitle: jobTemplate.title,
-        rawText,
+        rawText: cleanText,
         analysis: {
           ...parsedAnalysis,
           groundingEvidences: enrichedEvidences,

@@ -83,7 +83,6 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
       name: '김민준',
       jobTemplate: sampleJob,
       cleanText: sampleText,
-      originalRawText: sampleText,
       apiKey: 'test-api-key-12345',
       onProgress: (p) => progressLogs.push(p)
     });
