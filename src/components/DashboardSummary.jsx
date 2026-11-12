@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot, Share2 } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
+import SampleBadge from './SampleBadge';
+import { isSampleResult } from '../utils/sampleResult';
 
 export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback }) {
   const [showAuditModal, setShowAuditModal] = useState(false);
@@ -66,16 +68,19 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
   const badge = getDecisionBadge();
   const isHumanVerified = Boolean(result.isHumanVerified);
   const originalScore = result.originalAnalysis?.summary?.totalScore;
+  const isSample = isSampleResult(result);
 
   return (
     <>
       <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-5">
+        {isSample && <SampleBadge variant="note" />}
         {/* Top Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-gray-800">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
               <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
+              {isSample && <SampleBadge />}
 
               {/* Engine Badge & Audit Log Button */}
               {isMultiAgent ? (
