@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Printer, Copy, Check, X, FileText, Download, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { downloadApplicantsCSV } from '../utils/csvExporter';
+import SampleBadge, { SAMPLE_NOTE } from './SampleBadge';
+import { isSampleResult } from '../utils/sampleResult';
 
 export default function ReportExporter({ result, currentJob, onClose }) {
   const [copied, setCopied] = useState(false);
@@ -20,6 +22,7 @@ export default function ReportExporter({ result, currentJob, onClose }) {
       : {}
   ) || {};
   const groundingEvidences = analysis?.groundingEvidences || [];
+  const isSample = isSampleResult(result);
   const interviewQuestions = analysis?.interviewQuestions || [];
 
   const handlePrint = () => {
@@ -33,7 +36,7 @@ export default function ReportExporter({ result, currentJob, onClose }) {
   const handleCopyText = () => {
     const textReport = `
 ==================================================
-[HR AX 서류 평가 보고서]
+[HR AX 서류 평가 보고서]${isSample ? `\n※ 샘플 데이터 — ${SAMPLE_NOTE}` : ''}
 지원자명: ${name}
 지원직무: ${applyJobTitle}
 평가점수: ${summary.totalScore}점 / 100점
@@ -123,12 +126,15 @@ ${interviewQuestions.map((q, i) => `${i+1}. [${q.category}] ${q.question}\n - �
 
         {/* Printable Report Body */}
         <div className="p-6 overflow-y-auto space-y-6 text-slate-100 font-sans print:p-0 print:text-black">
+          {isSample && <SampleBadge variant="note" />}
+
           {/* Executive Header */}
           <div className="border-b border-gray-800 pb-4 space-y-1">
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-bold text-white print:text-black">{name} 지원자 서류 역량 평가서</h1>
+                  {isSample && <SampleBadge />}
                   {result.isHumanVerified && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 print:bg-amber-100 print:text-amber-800">
                       🧑‍💼 HITL 검토/보정 완료
