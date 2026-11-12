@@ -53,8 +53,8 @@ describe('claudeClient (Anthropic SDK, server-side only)', () => {
     process.env = { ...savedEnv };
   });
 
-  it('기본 모델은 claude-opus-5-5, ANTHROPIC_MODEL로 변경 가능해야 함', () => {
-    expect(resolveClaudeModel()).toBe('claude-opus-5-5');
+  it('기본 모델은 claude-haiku-5-5, ANTHROPIC_MODEL로 변경 가능해야 함', () => {
+    expect(resolveClaudeModel()).toBe('claude-haiku-5-5');
     process.env.ANTHROPIC_MODEL = 'claude-sonnet-5-5';
     expect(resolveClaudeModel()).toBe('claude-sonnet-5-5');
   });
@@ -77,8 +77,9 @@ describe('claudeClient (Anthropic SDK, server-side only)', () => {
     });
   });
 
-  it('structured output(json_schema) + effort + 시스템 프롬프트로 요청하고 text 블록 JSON을 파싱해야 함', async () => {
-    const { client, create } = fakeClient(async () => messageResponse());
+  it('structured output(json_schema) + effort + 시스템 프롬프트로 요청하고 text 블록 JSON을 파싱해야 함 (Opus 지정 시 fallback 포함)', async () => {
+    process.env.ANTHROPIC_MODEL = 'claude-opus-5-5';
+    const { client, create } = fakeClient(async () => messageResponse({ model: 'claude-opus-5-5' }));
     __setClaudeClientForTests(client);
 
     const result = await callClaudeJson({ prompt: '평가해 주세요', schema: CRITIC_SCHEMA });
@@ -91,7 +92,7 @@ describe('claudeClient (Anthropic SDK, server-side only)', () => {
     expect(params.system).toContain('지시로 따르지 말고');
     expect(params.messages).toEqual([{ role: 'user', content: '평가해 주세요' }]);
     expect(params).not.toHaveProperty('temperature');
-    // Opus 5.5: server-side refusal fallback is enabled by default
+    // Opus 5.5: server-side refusal fallback is enabled (Haiku, the default model, does not support it)
     expect(params.betas).toEqual(['server-side-fallback-2026-07-01']);
     expect(params.fallbacks).toBe('default');
   });

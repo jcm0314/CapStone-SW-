@@ -2,14 +2,14 @@
  * Shared Claude (Anthropic) client for the 4-Agent HR pipeline — SERVER-SIDE ONLY.
  *
  * - Called only from the Express gateway (server/index.js). The API key never reaches the browser.
- * - Key: env ANTHROPIC_API_KEY. Model: env ANTHROPIC_MODEL (default claude-opus-5-5).
+ * - Key: env ANTHROPIC_API_KEY. Model: env ANTHROPIC_MODEL (default claude-haiku-5-5, the lowest-cost current model).
  * - Structured JSON output via output_config.format (json_schema) — no markdown/regex JSON parsing.
  * - Retries: the SDK retries only 408/409/429/5xx and connection errors (maxRetries=2).
  *   400/401/403/404 are never retried. No fake/fallback scores are produced on failure.
  */
 import Anthropic from '@anthropic-ai/sdk';
 
-export const DEFAULT_CLAUDE_MODEL = 'claude-opus-5-5';
+export const DEFAULT_CLAUDE_MODEL = 'claude-haiku-5-5';
 export const DEFAULT_EFFORT = 'medium';
 export const DEFAULT_TIMEOUT_MS = 120_000;
 export const DEFAULT_MAX_TOKENS = 16_000;

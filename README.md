@@ -163,7 +163,7 @@ npm run build
 | 결과 캐시 | 브라우저 IndexedDB/localStorage에 FNV-1a 전체 본문 해시 키로 저장합니다. 서버 측 Redis 캐시는 `docker-compose.yml`에만 정의되어 있고 코드에서는 호출되지 않습니다. | `src/services/cacheService.js` · `tasks/08` |
 | SSO | 실제 외부 IdP(Google Workspace/Okta) OAuth 연동이 없는 데모용 시뮬레이션입니다. 게이트웨이가 HMAC-SHA256 서명 토큰(`/api/v1/auth/sso-login`, `/api/v1/auth/verify`)을 발급·검증하지만, 일반 API 엔드포인트 자체에 인증 강제 미들웨어는 걸려 있지 않습니다. | `server/index.js` · `tasks/17` |
 | Web Worker | `src/services/workerService.js`와 `src/workers/evaluatorWorker.js`가 2단계 Fuzzy 오프셋 매칭 및 대용량 PII 마스킹에 연결되어 있습니다(Node/테스트 환경에서는 동기 함수로 자동 폴백). 단, `evaluatorWorker.js` 내부의 구형 휴리스틱 평가 분기(`PARSE_EVALUATION`)는 호출되지 않습니다. | `src/services/workerService.js`, `src/workers/evaluatorWorker.js` · `tasks/18` |
-| AI 모델 | Claude API(Anthropic, 서버 전용). 기본 `claude-opus-5-5`, `ANTHROPIC_MODEL`/`ANTHROPIC_EFFORT`로 변경. 구조화 JSON 출력(`output_config.format`) 사용. | `src/services/agents/claudeClient.js` |
+| AI 모델 | Claude API(Anthropic, 서버 전용). 기본 `claude-haiku-5-5`(최저가), `ANTHROPIC_MODEL`/`ANTHROPIC_EFFORT`로 변경. 구조화 JSON 출력(`output_config.format`) 사용. | `src/services/agents/claudeClient.js` |
 
 전체 작업 단위와 진행 상태: [`tasks/00_INDEX.md`](tasks/00_INDEX.md)
 
