@@ -19,6 +19,14 @@ spring:
       hibernate:
         format_sql: true
 
+checkmate:
+  jwt:
+    # 개발 전용 기본 키. prod 프로필에서 이 값(local-dev-only- 접두어)을 쓰면 기동을 거부합니다.
+    secret: ${JWT_SECRET:local-dev-only-insecure-jwt-secret-change-me-0123456789}
+  seed:
+    # LocalDataSeeder 데모 계정 비밀번호
+    password: ${CHECKMATE_SEED_PASSWORD:checkmate1234!}
+
 logging:
   level:
     kr.co.checkmate: DEBUG
