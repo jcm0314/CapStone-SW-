@@ -1,15 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { executeMultiAgentEvaluation } from './multiAgentEvaluator';
 import { JOB_TEMPLATES } from '../data/jobTemplates';
-import * as geminiClient from './agents/geminiClient';
+import * as claudeClient from './agents/claudeClient';
 
 describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
   const sampleJob = JOB_TEMPLATES[0];
   const sampleText = '응답 속도가 3초로 느린 문제를 발견하고 Redis 캐싱 기법을 도입하여 0.4초로 86.6% 단축시켰습니다. 팀원 간의 소통을 위해 주간 코드 리뷰 문화를 도입했습니다.';
 
   it('4대 에이전트 순차 체이닝 파이프라인이 정상적으로 실행되어 종합 분석 결과를 생성해야 함', async () => {
-    // Mock callGeminiJson for each of the 4 agents
-    const mockCall = vi.spyOn(geminiClient, 'callGeminiJson');
+    // Mock callClaudeJson for each of the 4 agents (no network)
+    const mockCall = vi.spyOn(claudeClient, 'callClaudeJson');
 
     // 1st call: Grounding Agent
     mockCall.mockResolvedValueOnce({
@@ -26,7 +26,7 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
         ],
         agentSummary: '1건의 정량적 근거 발췌 완료'
       },
-      modelUsed: 'gemini-1.5-flash'
+      modelUsed: 'claude-opus-5-5'
     });
 
     // 2nd call: Critic Agent
@@ -38,7 +38,7 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
         flaggedQuotes: [],
         recommendedPenalty: 0
       },
-      modelUsed: 'gemini-1.5-flash'
+      modelUsed: 'claude-opus-5-5'
     });
 
     // 3rd call: Supervisor Agent
@@ -59,7 +59,7 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
         },
         executiveComments: '서류 우수 추천'
       },
-      modelUsed: 'gemini-1.5-flash'
+      modelUsed: 'claude-opus-5-5'
     });
 
     // 4th call: Interviewer Agent
@@ -75,7 +75,7 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
           }
         ]
       },
-      modelUsed: 'gemini-1.5-flash'
+      modelUsed: 'claude-opus-5-5'
     });
 
     const progressLogs = [];
@@ -83,7 +83,7 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
       name: '김민준',
       jobTemplate: sampleJob,
       cleanText: sampleText,
-      apiKey: 'test-api-key-12345',
+      originalRawText: sampleText,
       onProgress: (p) => progressLogs.push(p)
     });
 
@@ -110,6 +110,90 @@ describe('HR Multi-Agent 4-Stage Orchestrator Engine', () => {
     expect(progressLogs.some(p => p.currentAgent === 'Supervisor Agent')).toBe(true);
     expect(progressLogs.some(p => p.currentAgent === 'Interviewer Agent')).toBe(true);
 
+    mockCall.mockRestore();
+  });
+
+  const groundingOk = {
+    data: {
+      groundingEvidences: [{ quote: 'Redis 캐싱 기법을 도입하여 0.4초로 86.6% 단축시켰습니다.', type: 'positive', competencyId: 'problem_solving', scoreImpact: 10, title: 't', explanation: 'e' }],
+      agentSummary: 'ok'
+    },
+    modelUsed: 'claude-opus-5-5'
+  };
+  const criticOk = {
+    data: { aiTextProbability: 10, exaggerationRisk: 'LOW', critiqueNotes: 'ok', flaggedQuotes: [], recommendedPenalty: 0 },
+    modelUsed: 'claude-opus-5-5'
+  };
+
+  it('Supervisor Agent가 실패하면 가짜 점수(78점 등) 없이 평가 자체가 실패해야 함', async () => {
+    const mockCall = vi.spyOn(claudeClient, 'callClaudeJson').mockImplementation(async ({ prompt }) => {
+      if (prompt.includes('Grounding Agent"입니다')) return groundingOk;
+      if (prompt.includes('Critic Agent (비판적 검증관)')) return criticOk;
+      if (prompt.includes('Supervisor Agent (최종 의사결정')) throw new Error('Claude API 오류(500): overloaded');
+      return { data: { interviewQuestions: [] }, modelUsed: 'claude-opus-5-5' };
+    });
+
+    await expect(executeMultiAgentEvaluation({
+      name: '김민준', jobTemplate: sampleJob, cleanText: sampleText, originalRawText: sampleText
+    })).rejects.toThrow(/overloaded/);
+
+    mockCall.mockRestore();
+  });
+
+  it('Interviewer Agent만 실패하면 점수는 유지하고 면접 질문 없이 DEGRADED로 표시해야 함', async () => {
+    const mockCall = vi.spyOn(claudeClient, 'callClaudeJson').mockImplementation(async ({ prompt }) => {
+      if (prompt.includes('Grounding Agent"입니다')) return groundingOk;
+      if (prompt.includes('Critic Agent (비판적 검증관)')) return criticOk;
+      if (prompt.includes('Supervisor Agent (최종 의사결정')) {
+        return {
+          data: {
+            summary: { totalScore: 81, decision: 'INTERVIEW', decisionReason: 'r', aiTextProbability: 10 },
+            competencyScores: { problem_solving: 80, tech_skill: 82, teamwork: 80, growth: 80, ethics: 80 },
+            executiveComments: 'c'
+          },
+          modelUsed: 'claude-opus-5-5'
+        };
+      }
+      throw new Error('interviewer down');
+    });
+
+    const result = await executeMultiAgentEvaluation({
+      name: '김민준', jobTemplate: sampleJob, cleanText: sampleText, originalRawText: sampleText
+    });
+
+    expect(result.analysis.summary.totalScore).toBe(81);
+    expect(result.analysis.interviewQuestions).toEqual([]);
+    expect(result.agentMetadata.executedAgents[3].status).toBe('DEGRADED_FALLBACK');
+    mockCall.mockRestore();
+  });
+
+  it('server에서 전달된 promptAddendum이 4개 에이전트 프롬프트 모두에 들어가야 함', async () => {
+    const mockCall = vi.spyOn(claudeClient, 'callClaudeJson').mockImplementation(async ({ prompt }) => {
+      if (prompt.includes('Grounding Agent"입니다')) return groundingOk;
+      if (prompt.includes('Critic Agent (비판적 검증관)')) return criticOk;
+      if (prompt.includes('Supervisor Agent (최종 의사결정')) {
+        return {
+          data: {
+            summary: { totalScore: 70, decision: 'HOLD', decisionReason: 'r', aiTextProbability: 10 },
+            competencyScores: { problem_solving: 70, tech_skill: 70, teamwork: 70, growth: 70, ethics: 70 },
+            executiveComments: ''
+          },
+          modelUsed: 'claude-opus-5-5'
+        };
+      }
+      return { data: { interviewQuestions: [] }, modelUsed: 'claude-opus-5-5' };
+    });
+
+    await executeMultiAgentEvaluation({
+      name: '김민준', jobTemplate: sampleJob, cleanText: sampleText, originalRawText: sampleText,
+      promptAddendum: '[Enterprise Custom HR Requirements]: 고객집착-테스트'
+    });
+
+    expect(mockCall).toHaveBeenCalledTimes(4);
+    mockCall.mock.calls.forEach(([args]) => {
+      expect(args.prompt).toContain('고객집착-테스트');
+      expect(args.schema).toBeDefined();
+    });
     mockCall.mockRestore();
   });
 });

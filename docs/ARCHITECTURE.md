@@ -6,12 +6,11 @@
 
 ## 1. 아키텍처 개요 (Architecture Overview)
 
-본 시스템은 **React 18 + Vite 싱글 페이지 앱(SPA)**과 **Express 기반 BFF API 게이트웨이(`server/index.js`)**로 구성됩니다. 평가 경로는 두 가지입니다.
+본 시스템은 **React 18 + Vite 싱글 페이지 앱(SPA)**과 **Express 기반 BFF API 게이트웨이(`server/index.js`)**로 구성됩니다. 평가 경로는 하나입니다(브라우저에는 AI API 키가 없습니다).
 
 | 경로 | 조건 | 처리 위치 | 구현 |
 | :--- | :--- | :--- | :--- |
-| **BYOK (사용자 API 키)** | 브라우저에 Gemini API 키가 등록된 경우 | 브라우저 | `src/services/multiAgentEvaluator.js` → 4-에이전트(Grounding → Critic → Supervisor·Interviewer `Promise.allSettled` 병렬) 파이프라인. 실패 시 단일 프롬프트 백업(`aiEvaluator.analyzeWithGeminiAPI`) |
-| **B2B 관리형 (서버 키)** | 브라우저에 키가 없는 경우 | Express 게이트웨이 | `POST /api/v1/evaluate` → 서버 환경변수 `GEMINI_API_KEY`로 `executeMultiAgentEvaluation` 4-에이전트 파이프라인 실행 (실패 시 단일 프롬프트 폴백, `tasks/17`) |
+| **서버 게이트웨이 (Claude API)** | 항상 | Express 게이트웨이 | `POST /api/v1/evaluate` → 서버 환경변수 `ANTHROPIC_API_KEY`로 `executeMultiAgentEvaluation` 4-에이전트 파이프라인을 Claude API(`@anthropic-ai/sdk`, 기본 모델 `claude-haiku-5-5`(최저가), `ANTHROPIC_MODEL`로 변경)에서 실행. 단일 프롬프트 폴백/가짜 점수 없음 — 실패 시 한국어 에러 반환 |
 
 공통 처리 흐름은 다음과 같습니다.
 - 두 경로 모두 전송 전에 PII를 마스킹합니다(`src/utils/piiAnonymizer.js`, 대용량 본문은 `workerService.js` Web Worker 오프로딩). LLM 프롬프트에는 지원자 성명을 넣지 않습니다.

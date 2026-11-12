@@ -1,4 +1,5 @@
-import { callGeminiJson } from './geminiClient.js';
+import { callClaudeJson } from './claudeClient.js';
+import { buildSupervisorSchema } from './agentSchemas.js';
 import { getActivePromptAddendum } from '../promptStudioService.js';
 import { formatCalibrationFewShotAddendum } from '../calibrationService.js';
 
@@ -6,7 +7,7 @@ import { formatCalibrationFewShotAddendum } from '../calibrationService.js';
  * [Agent 3] Scoring & Supervisor Agent
  * 전문 역할: 5대 직무 역량 정량 점수화, 종합 결재 및 최종 인사 판정 (Decision Maker)
  */
-export async function runSupervisorAgent({ name, jobTemplate, rawText, groundingEvidences, criticReport, apiKey, tenantId = 'default' }) {
+export async function runSupervisorAgent({ jobTemplate, groundingEvidences, criticReport, tenantId = 'default', promptAddendum = getActivePromptAddendum() }) {
   const calibrationAddendum = formatCalibrationFewShotAddendum(tenantId, jobTemplate?.id || 'dev');
   const prompt = `
 [역할]: 당신은 최고인사책임자(CHO) 수준의 권한을 가진 "Supervisor Agent (최종 의사결정 수석 에이전트)"입니다.
@@ -17,7 +18,7 @@ ${calibrationAddendum}
 - 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
 - 직무 역량 가중치: ${JSON.stringify(jobTemplate.competencies)}
-${getActivePromptAddendum()}
+${promptAddendum}
 
 [Grounding Agent 수집 근거]:
 ${JSON.stringify(groundingEvidences, null, 2)}
@@ -55,7 +56,7 @@ ${JSON.stringify(criticReport, null, 2)}
 }
 `;
 
-  const { data, modelUsed } = await callGeminiJson({ prompt, apiKey, temperature: 0.1 });
+  const { data, modelUsed } = await callClaudeJson({ prompt, schema: buildSupervisorSchema(jobTemplate) });
   return {
     agentName: 'Supervisor Agent',
     modelUsed,

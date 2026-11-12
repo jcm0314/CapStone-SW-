@@ -1,11 +1,12 @@
-import { callGeminiJson } from './geminiClient.js';
+import { callClaudeJson } from './claudeClient.js';
+import { buildGroundingSchema } from './agentSchemas.js';
 import { getActivePromptAddendum } from '../promptStudioService.js';
 
 /**
  * [Agent 1] Grounding Agent
  * 전문 역할: 자기소개서 본문 텍스트에서 평가의 근거가 되는 실제 문장을 1:1로 발췌 및 역량별 인덱싱
  */
-export async function runGroundingAgent({ name, jobTemplate, rawText, apiKey }) {
+export async function runGroundingAgent({ jobTemplate, rawText, promptAddendum = getActivePromptAddendum() }) {
   const prompt = `
 [역할]: 당신은 HR 채용 전문 "Grounding Agent"입니다.
 지원자의 자기소개서 본문을 면밀히 스캔하여, 평가의 객관적 증거가 되는 실제 핵심 문장들만을 100% 원문 그대로 발췌(Quote)하세요.
@@ -14,7 +15,7 @@ export async function runGroundingAgent({ name, jobTemplate, rawText, apiKey }) 
 - 성명: [익명 지원자] (블라인드 채용 정책상 성명은 전송되지 않습니다)
 - 지원 직무: ${jobTemplate.title}
 - 직무 평가 역량 기준: ${JSON.stringify(jobTemplate.competencies)}
-${getActivePromptAddendum()}
+${promptAddendum}
 
 [자기소개서 본문]:
 """
@@ -47,7 +48,7 @@ ${rawText}
 }
 `;
 
-  const { data, modelUsed } = await callGeminiJson({ prompt, apiKey, temperature: 0.1 });
+  const { data, modelUsed } = await callClaudeJson({ prompt, schema: buildGroundingSchema(jobTemplate) });
   return {
     agentName: 'Grounding Agent',
     modelUsed,

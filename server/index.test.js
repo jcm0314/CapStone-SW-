@@ -1,7 +1,8 @@
 // @vitest-environment node
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest';
 import http from 'http';
-import app from './index.js';
+import app, { buildPromptAddendumFromSettings } from './index.js';
+import { __setClaudeClientForTests, createClaudeClient } from '../src/services/agents/claudeClient.js';
 
 let server;
 let baseUrl;
@@ -150,6 +151,106 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(body.tenantId).toBe('toss-payments');
       expect(body.remainingCredit).toBe(420000); // 500k - 80k
       expect(body.isLocked).toBe(false);
+    });
+  });
+
+  describe('POST /api/v1/evaluate (Claude 4-Agent, SDK 모킹 — 네트워크 없음)', () => {
+    const savedKey = process.env.ANTHROPIC_API_KEY;
+    const sampleBody = {
+      name: '김민준',
+      applyJobId: 'tech_backend',
+      rawText: '연락처 minjun@test.com. Redis 캐싱을 도입하여 응답 시간을 3초에서 0.4초로 단축했습니다.'
+    };
+
+    afterEach(() => {
+      __setClaudeClientForTests(null);
+      if (savedKey === undefined) delete process.env.ANTHROPIC_API_KEY;
+      else process.env.ANTHROPIC_API_KEY = savedKey;
+    });
+
+    const post = (body, headers = {}) => fetch(`${baseUrl}/api/v1/evaluate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...headers },
+      body: JSON.stringify(body)
+    });
+
+    it('ANTHROPIC_API_KEY가 없으면 503과 한국어 안내 메시지를 반환해야 한다 (가짜 점수 없음)', async () => {
+      delete process.env.ANTHROPIC_API_KEY;
+      const res = await post(sampleBody);
+      expect(res.status).toBe(503);
+      const body = await res.json();
+      expect(body.error).toBe('SERVER_API_KEY_NOT_CONFIGURED');
+      expect(body.message).toContain('ANTHROPIC_API_KEY가 설정되지 않았습니다');
+      expect(body.analysis).toBeUndefined();
+    });
+
+    it('4개 에이전트를 Claude로 실행하고, PII가 마스킹된 본문 + Prompt Studio 설정만 전송해야 한다', async () => {
+      process.env.ANTHROPIC_API_KEY = 'test-key-not-real';
+      const create = vi.fn(async (params) => {
+        const prompt = params.messages[0].content;
+        let data;
+        if (prompt.includes('Grounding Agent"입니다')) {
+          data = { groundingEvidences: [{ quote: 'Redis 캐싱을 도입하여 응답 시간을 3초에서 0.4초로 단축했습니다.', type: 'positive', competencyId: 'tech_skill', scoreImpact: 12, title: '정량 성과', explanation: 'e' }], agentSummary: 'ok' };
+        } else if (prompt.includes('Critic Agent (비판적 검증관)')) {
+          data = { aiTextProbability: 8, exaggerationRisk: 'LOW', critiqueNotes: 'ok', flaggedQuotes: [], recommendedPenalty: 0 };
+        } else if (prompt.includes('Supervisor Agent (최종 의사결정')) {
+          data = { summary: { totalScore: 86, decision: 'STRONG_PASS', decisionReason: 'r', aiTextProbability: 8 }, competencyScores: { problem_solving: 85, tech_skill: 90, teamwork: 80, growth: 82, ethics: 84 }, executiveComments: 'c' };
+        } else {
+          data = { interviewQuestions: [{ basedQuote: 'Redis 캐싱을 도입하여', category: '기술적 사실 검증', question: 'q', intent: 'i', checklist: ['a'] }] };
+        }
+        return { model: 'claude-opus-5-5', stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(data) }], usage: {} };
+      });
+      __setClaudeClientForTests({ beta: { messages: { create } } });
+
+      const res = await post({
+        ...sampleBody,
+        promptSettings: { companyName: '테스트전자', coreValues: ['고객 집착'], tabooWords: ['열정페이'], customInstruction: '정직성 검증', injected: 'ignored' }
+      }, { 'X-Tenant-Id': 'daangn' });
+
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(body.mode).toBe('BFF_MULTI_AGENT_GATEWAY');
+      expect(body.modelUsed).toBe('claude-opus-5-5');
+      expect(body.analysis.summary.totalScore).toBe(86);
+      expect(body.analysis.groundingEvidences[0].startIndex).toBeGreaterThanOrEqual(0);
+      expect(create).toHaveBeenCalledTimes(4);
+      for (const [params] of create.mock.calls) {
+        const prompt = params.messages[0].content;
+        expect(prompt).not.toContain('minjun@test.com');
+        expect(prompt).not.toContain('김민준');
+        expect(prompt).toContain('테스트전자');
+        expect(prompt).not.toContain('ignored');
+        expect(params.output_config.format.type).toBe('json_schema');
+      }
+    });
+
+    it('Claude 인증 실패 시 단일 프롬프트 재시도/가짜 점수 없이 502와 한국어 메시지를 반환해야 한다', async () => {
+      process.env.ANTHROPIC_API_KEY = 'test-key-not-real';
+      const fetchMock = vi.fn(async () => new Response(JSON.stringify({ type: 'error', error: { type: 'authentication_error', message: 'invalid x-api-key' } }), { status: 401, headers: { 'content-type': 'application/json' } }));
+      __setClaudeClientForTests(createClaudeClient({ apiKey: 'bad', fetch: fetchMock }));
+
+      const res = await post(sampleBody);
+      expect(res.status).toBe(502);
+      const body = await res.json();
+      expect(body.error).toBe('ANTHROPIC_AUTH_FAILED');
+      expect(body.message).toContain('인증에 실패');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('buildPromptAddendumFromSettings', () => {
+    it('알려진 필드만 허용하고 길이/개수를 제한해야 한다', () => {
+      const addendum = buildPromptAddendumFromSettings({
+        companyName: 'A'.repeat(2000),
+        coreValues: Array.from({ length: 50 }, (_, i) => `v${i}`),
+        tabooWords: ['x'],
+        customInstruction: 'ok'
+      });
+      expect(addendum).toContain('A'.repeat(500));
+      expect(addendum).not.toContain('A'.repeat(501));
+      expect(addendum).toContain('v19');
+      expect(addendum).not.toContain('v20');
+      expect(buildPromptAddendumFromSettings(null)).toBe('');
     });
   });
 });

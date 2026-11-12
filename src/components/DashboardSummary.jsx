@@ -96,7 +96,7 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
                 </button>
               ) : (
                 <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-                  ⚡ Gemini API Engine
+                  ⚡ Claude API Engine
                 </span>
               )}
 

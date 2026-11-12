@@ -8,7 +8,6 @@ import InterviewQuestions from './components/InterviewQuestions';
 import ApplicantComparison from './components/ApplicantComparison';
 import ReportExporter from './components/ReportExporter';
 import PromptStudioModal from './components/PromptStudioModal';
-import ApiKeyModal from './components/ApiKeyModal';
 import HITLEditorModal from './components/HITLEditorModal';
 import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
@@ -38,7 +37,6 @@ export default function App() {
   const [progressState, setProgressState] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPromptStudio, setShowPromptStudio] = useState(false);
-  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [showHITLEditor, setShowHITLEditor] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCandidateFeedback, setShowCandidateFeedback] = useState(false);
@@ -82,32 +80,21 @@ export default function App() {
     }
   }, [currentTenant.id]);
 
-  // Analysis via Google Gemini API Only (No Local Fallbacks)
+  // Analysis via the API gateway (server-side Claude API; no API key in the browser, no local fallbacks)
   const handleAnalyze = async ({ name, rawText }) => {
     if (!hasPermission('RUN_EVALUATION')) {
       alert(`[권한 제한] 현재 계정(${currentUser.roleTitle})은 면접관(Interviewer) 권한으로, 서류 업로드 및 AI 평가 가동 권한이 없습니다. 상단 프로필에서 Recruiter 또는 Admin으로 전환해주세요.`);
       return;
     }
 
-    const currentApiKey = (
-      (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') ||
-      import.meta.env.VITE_GEMINI_API_KEY ||
-      ''
-    ).trim();
-
-    // B2B 일괄 결제 모드: 커스텀 키(BYOK)가 없으면 백엔드 게이트웨이가 기업 공용 토큰으로 일괄 결제/평가
-    const isB2BManagedMode = !currentApiKey || currentApiKey.length < 5;
-    const effectiveApiKey = isB2BManagedMode ? '' : currentApiKey;
-
     setIsAnalyzing(true);
-    setProgressState({ percent: 10, status: 'Google Gemini AI 분석 파이프라인 가동 중...' });
+    setProgressState({ percent: 10, status: 'Claude AI 분석 파이프라인 가동 중...' });
 
     try {
       const newResult = await analyzeApplicant({
         name,
         applyJobId: currentJob.id,
         rawText,
-        apiKey: effectiveApiKey,
         tenantId: currentTenant.id,
         onProgress: (p) => setProgressState(p)
       });
@@ -133,11 +120,8 @@ export default function App() {
         });
       }
     } catch (err) {
-      console.error("Gemini AI Analysis failed:", err);
-      alert(`[Gemini 평가 실패] ${err.message || '서류 분석 도중 오류가 발생했습니다.'}`);
-      if (err.message && (err.message.includes('API 키') || err.message.includes('API_KEY'))) {
-        setShowApiKeyModal(true);
-      }
+      console.error("AI Analysis failed:", err);
+      alert(err.message || '[AI 평가 실패] 서류 분석 도중 오류가 발생했습니다.');
     } finally {
       setIsAnalyzing(false);
       setProgressState(null);
@@ -150,15 +134,6 @@ export default function App() {
       alert(`[권한 제한] 현재 계정(${currentUser.roleTitle})은 서류 업로드 및 AI 평가 가동 권한이 없습니다.`);
       return;
     }
-
-    const currentApiKey = (
-      (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') ||
-      import.meta.env.VITE_GEMINI_API_KEY ||
-      ''
-    ).trim();
-
-    const isB2BManagedMode = !currentApiKey || currentApiKey.length < 5;
-    const effectiveApiKey = isB2BManagedMode ? '' : currentApiKey;
 
     setIsAnalyzing(true);
     const newEvaluatedApplicants = [];
@@ -175,7 +150,6 @@ export default function App() {
           name: c.name,
           applyJobId: currentJob.id,
           rawText: c.rawText,
-          apiKey: effectiveApiKey,
           tenantId: currentTenant.id
         });
 
@@ -280,7 +254,6 @@ export default function App() {
         setActiveTab={setActiveTab}
         applicantCount={applicantList.length}
         onOpenPromptStudio={() => setShowPromptStudio(true)}
-        onOpenApiKeyModal={() => setShowApiKeyModal(true)}
       />
 
       {/* Main Content Area */}
@@ -433,12 +406,6 @@ export default function App() {
           onSaved={() => setShowPromptStudio(false)}
         />
       )}
-
-      {/* Google Gemini API Key Setup Modal */}
-      <ApiKeyModal
-        isOpen={showApiKeyModal}
-        onClose={() => setShowApiKeyModal(false)}
-      />
 
       {/* Human-in-the-Loop (HITL) Calibration Modal */}
       {showHITLEditor && selectedApplicant && (
