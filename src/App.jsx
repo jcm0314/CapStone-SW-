@@ -24,7 +24,12 @@ import { getSharedEvaluation } from './services/shareService';
 import { useTenant } from './contexts/TenantContext';
 import { useAuth } from './contexts/AuthContext';
 import confetti from 'canvas-confetti';
-import { Lock, ShieldAlert, Share2, Link2 } from 'lucide-react';
+import { Lock, Link2, Printer, Info } from 'lucide-react';
+import Hero from './components/Hero';
+import Sidebar from './components/Sidebar';
+import CommandPalette from './components/CommandPalette';
+import { FEATURES, PLANNED_MESSAGE } from './data/featureCatalog';
+import { useTheme } from './hooks/useTheme';
 
 export default function App() {
   const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant } = useTenant();
@@ -270,150 +275,337 @@ export default function App() {
     }
   };
 
+  // ───────────────────────── 화면 이동 · 기능 메뉴 · ⌘K 검색 (UI 전용 상태) ─────────────────────────
+  const { theme, toggleTheme } = useTheme();
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSSOModal, setShowSSOModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [inputTabRequest, setInputTabRequest] = useState(null);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setIsMenuOpen(false);
+        setIsPaletteOpen((open) => !open);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (!toastMessage) return undefined;
+    const id = window.setTimeout(() => setToastMessage(''), 2600);
+    return () => window.clearTimeout(id);
+  }, [toastMessage]);
+
+  const scrollToSection = (sectionId, tab = 'evaluator') => {
+    const run = () => {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    if (activeTab !== tab) {
+      setActiveTab(tab);
+      window.setTimeout(run, 60);
+    } else {
+      run();
+    }
+  };
+
+  const navigateTab = (tab) => {
+    setActiveTab(tab);
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const requireApplicant = (fn) => {
+    if (!selectedApplicant) {
+      setToastMessage('먼저 지원자를 선택하거나 평가를 실행해 주세요.');
+      return;
+    }
+    fn();
+  };
+
+  const handleSelectFeature = (item) => {
+    setIsPaletteOpen(false);
+    setIsMenuOpen(false);
+    if (item.status === 'planned') {
+      setToastMessage(`‘${item.title}’ — ${PLANNED_MESSAGE}`);
+      return;
+    }
+    const action = item.action || {};
+    switch (action.type) {
+      case 'tab':
+        navigateTab(action.tab);
+        break;
+      case 'scroll':
+        requireApplicant(() => scrollToSection(action.target, action.tab));
+        break;
+      case 'upload':
+        setInputTabRequest({ tab: 'FILE', at: Date.now() });
+        scrollToSection('section-input');
+        break;
+      case 'modal':
+        if (action.modal === 'profile') setShowSSOModal(true);
+        if (action.modal === 'hitl') requireApplicant(() => setShowHITLEditor(true));
+        if (action.modal === 'share') requireApplicant(() => setShowShareModal(true));
+        if (action.modal === 'report') requireApplicant(() => setShowExportModal(true));
+        if (action.modal === 'feedback') requireApplicant(() => setShowCandidateFeedback(true));
+        break;
+      case 'theme':
+        toggleTheme();
+        break;
+      case 'prompt':
+        setShowPromptStudio(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const canSeeCredits = hasPermission('MANAGE_CREDITS');
+  const paletteItems = [
+    { id: 'nav-evaluator', group: '화면', icon: 'FileText', title: '서류 평가', desc: '자소서 입력 · 평가 결과', keywords: '홈 메인 평가', action: { type: 'tab', tab: 'evaluator' } },
+    { id: 'nav-comparison', group: '화면', icon: 'Users', title: '지원자 비교', desc: `지원자 ${applicantList.length}명`, keywords: '비교 순위', action: { type: 'tab', tab: 'comparison' } },
+    ...(canSeeCredits
+      ? [{ id: 'nav-credits', group: '화면', icon: 'Gauge', title: '크레딧 관리', desc: '부서별 AI 사용량 · 한도', keywords: '크레딧 비용 사용량 쿼터', action: { type: 'tab', tab: 'credits' } }]
+      : []),
+    ...FEATURES.filter((f) => f.status === 'ready').map((f) => ({ ...f, group: '기능' })),
+    ...FEATURES.filter((f) => f.status === 'planned').map((f) => ({ ...f, group: '준비 중' })),
+    { id: 'set-theme', group: '설정', icon: theme === 'dark' ? 'Sun' : 'Moon', title: theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환', desc: '화면 테마', keywords: '테마 다크 라이트 dark light 모드', action: { type: 'theme' } },
+    ...(hasPermission('MANAGE_API_KEYS')
+      ? [{ id: 'set-prompt', group: '설정', icon: 'SlidersHorizontal', title: '평가 프롬프트 설정', desc: '회사별 평가 기준 문구 편집', keywords: '프롬프트 스튜디오 prompt studio', action: { type: 'prompt' } }]
+      : [])
+  ];
+
+  const sidebarProps = {
+    activeTab,
+    onNavigate: navigateTab,
+    applicantCount: applicantList.length,
+    canSeeCredits,
+    onSelectFeature: handleSelectFeature,
+    onOpenPalette: () => {
+      setIsMenuOpen(false);
+      setIsPaletteOpen(true);
+    },
+    theme,
+    onToggleTheme: toggleTheme
+  };
+
+  const TABS = [
+    { id: 'evaluator', label: '서류 평가' },
+    { id: 'comparison', label: `지원자 비교 ${applicantList.length}` },
+    ...(canSeeCredits ? [{ id: 'credits', label: '크레딧' }] : [])
+  ];
+
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-blue-500 selection:text-white pb-12">
-      {/* Top Navigation Bar */}
+    <div className="min-h-screen bg-canvas text-fg font-sans">
       <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        applicantCount={applicantList.length}
         onOpenPromptStudio={() => setShowPromptStudio(true)}
         onOpenApiKeyModal={() => setShowApiKeyModal(true)}
+        onOpenPalette={() => setIsPaletteOpen(true)}
+        onOpenMenu={() => setIsMenuOpen(true)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        showSSOModal={showSSOModal}
+        setShowSSOModal={setShowSSOModal}
       />
 
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 pt-6 w-full flex-1 space-y-6">
-        {/* Shared Evaluation Alert Banner (if accessed via ?share=...) */}
-        {sharedBannerInfo && (
-          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/60 via-indigo-950/40 to-slate-900 border border-purple-500/40 flex items-center justify-between text-xs text-purple-200 shadow-lg shadow-purple-950/30">
-            <div className="flex items-center gap-2.5">
-              <span className="text-lg">🔗</span>
-              <div>
-                <p className="font-bold text-white flex items-center gap-2">
-                  <span>실시간 동기화된 면접관 평가서 열람 중</span>
-                  <span className="px-2 py-0.2 bg-purple-500/20 text-purple-300 rounded font-mono text-[10px]">
-                    {sharedBannerInfo.shareId}
+      <div className="flex">
+        <Sidebar {...sidebarProps} />
+
+        <main className="flex-1 min-w-0">
+          <div className="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-28 space-y-6">
+            {/* 모바일/태블릿 화면 전환 */}
+            <div className="lg:hidden flex p-1 rounded-xl bg-muted/70 border border-line text-[13px] font-semibold" role="tablist">
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === t.id}
+                  onClick={() => navigateTab(t.id)}
+                  className={`flex-1 py-2 rounded-lg transition-colors ${
+                    activeTab === t.id ? 'bg-surface text-fg shadow-card' : 'text-fg-muted'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {/* 공유 링크(?share=...)로 들어온 경우 */}
+            {sharedBannerInfo && (
+              <div className="card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-brand-line bg-brand-soft">
+                <div className="flex items-start gap-3 min-w-0">
+                  <span className="w-9 h-9 rounded-lg bg-surface border border-brand-line text-brand-fg flex items-center justify-center shrink-0">
+                    <Link2 className="w-4 h-4" />
                   </span>
-                </p>
-                <p className="text-[11px] text-purple-300/80 mt-0.5">
-                  생성자: <strong>{sharedBannerInfo.createdBy}</strong> • 1:1 형광펜 원문 및 맞춤 면접 질문이 실시간 동기화되었습니다.
-                </p>
-                {isSampleResult(selectedApplicant) && (
-                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-amber-200">
-                    <SampleBadge />
-                    <span>공유된 평가서는 AI를 실행하지 않은 예시 결과입니다.</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                setSharedBannerInfo(null);
-                setActiveShareId(null);
-                window.history.replaceState({}, '', window.location.pathname);
-              }}
-              className="px-3 py-1.5 bg-purple-900/50 hover:bg-purple-800 text-purple-200 border border-purple-500/30 rounded-xl text-xs font-semibold transition-colors shrink-0"
-            >
-              일반 목록으로 돌아가기
-            </button>
-          </div>
-        )}
-
-        {activeTab === 'evaluator' && (
-          <div className="space-y-6">
-            {/* Top Row: Criteria Setup & Applicant Input Form */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              <div className="lg:col-span-5">
-                <EvaluationCriteria
-                  currentJob={currentJob}
-                  setCurrentJob={setCurrentJob}
-                  onCriteriaChange={(job) => setCurrentJob(job)}
-                />
-              </div>
-              <div className="lg:col-span-7">
-                {currentUser.role === 'INTERVIEWER' && (
-                  <div className="mb-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-base">🎯</span>
-                      <div>
-                        <p className="font-bold text-white">면접관(Interviewer) 전용 집중 모드 활성화</p>
-                        <p className="text-[11px] text-emerald-400/80">
-                          서류 업로드 및 AI 평가 가동 권한은 제한되며, 지원자 1:1 형광펜 원문 검토 및 압박 면접 질문 확인 전용으로 동작합니다.
-                        </p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-fg flex flex-wrap items-center gap-2">
+                      공유받은 평가서를 보고 있습니다
+                      <span className="chip chip-neutral font-mono">{sharedBannerInfo.shareId}</span>
+                    </p>
+                    <p className="text-[13px] text-fg-muted mt-0.5">
+                      보낸 사람 <strong className="text-fg font-semibold">{sharedBannerInfo.createdBy}</strong> · 형광펜 원문과 면접 질문, 메모가 함께 공유됩니다.
+                    </p>
+                    {isSampleResult(selectedApplicant) && (
+                      <div className="mt-1.5 flex items-center gap-2 text-[12px] text-fg-muted">
+                        <SampleBadge />
+                        <span>공유된 평가서는 AI를 실행하지 않은 예시 결과입니다.</span>
                       </div>
-                    </div>
-                    <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[10px] font-semibold shrink-0">
-                      조회 전용
-                    </span>
+                    )}
                   </div>
-                )}
-                <ApplicantInput
-                  onAnalyze={handleAnalyze}
-                  onBatchAnalyze={handleBatchAnalyze}
-                  isAnalyzing={isAnalyzing}
-                  progressState={progressState}
-                  currentJobId={currentJob.id}
-                />
+                </div>
+                <button
+                  onClick={() => {
+                    setSharedBannerInfo(null);
+                    setActiveShareId(null);
+                    window.history.replaceState({}, '', window.location.pathname);
+                  }}
+                  className="btn btn-secondary btn-md shrink-0"
+                >
+                  내 목록으로 돌아가기
+                </button>
               </div>
-            </div>
+            )}
 
-            {/* Middle Row: Executive Dashboard Summary & Radar Chart */}
-            {selectedApplicant && (
-              <DashboardSummary
-                result={selectedApplicant}
-                currentJob={currentJob}
-                onOpenHITLEditor={() => setShowHITLEditor(true)}
-                onOpenShareModal={() => setShowShareModal(true)}
-                onOpenCandidateFeedback={() => setShowCandidateFeedback(true)}
+            {activeTab === 'evaluator' && (
+              <div className="space-y-6">
+                {!sharedBannerInfo && (
+                  <Hero
+                    onStart={() => scrollToSection('section-input')}
+                    onSeeEvidence={() => requireApplicant(() => scrollToSection('section-evidence'))}
+                  />
+                )}
+
+                {/* 1. 평가 설정 */}
+                <section id="section-input" className="scroll-mt-20 space-y-3">
+                  <SectionHeading
+                    step="1"
+                    title="평가하기"
+                    desc="직무와 역량 가중치를 고르고, 자기소개서를 넣은 뒤 평가를 실행하세요."
+                  />
+                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 items-start">
+                    <div className="xl:col-span-5 order-2 xl:order-1">
+                      <EvaluationCriteria
+                        currentJob={currentJob}
+                        setCurrentJob={setCurrentJob}
+                        onCriteriaChange={(job) => setCurrentJob(job)}
+                      />
+                    </div>
+                    <div className="xl:col-span-7 order-1 xl:order-2 space-y-3">
+                      {currentUser.role === 'INTERVIEWER' && (
+                        <div className="card p-3.5 flex items-start sm:items-center justify-between gap-3 text-[13px]">
+                          <div className="flex items-start gap-2.5">
+                            <Lock className="w-4 h-4 text-fg-subtle mt-0.5 shrink-0" />
+                            <div>
+                              <p className="font-semibold text-fg">면접관 계정은 조회 전용입니다</p>
+                              <p className="text-fg-muted mt-0.5">
+                                서류 업로드와 AI 평가 실행은 채용 담당자·관리자만 할 수 있습니다. 형광펜 원문과 면접 질문은 그대로 볼 수 있어요.
+                              </p>
+                            </div>
+                          </div>
+                          <span className="chip chip-neutral shrink-0">조회 전용</span>
+                        </div>
+                      )}
+                      <ApplicantInput
+                        onAnalyze={handleAnalyze}
+                        onBatchAnalyze={handleBatchAnalyze}
+                        isAnalyzing={isAnalyzing}
+                        progressState={progressState}
+                        currentJobId={currentJob.id}
+                        tabRequest={inputTabRequest}
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                {/* 2. 평가 결과 */}
+                {selectedApplicant && (
+                  <section className="space-y-3">
+                    <SectionHeading
+                      step="2"
+                      title="평가 결과"
+                      desc="형광펜이 칠해진 문장을 누르면 그 문장이 왜 점수에 반영됐는지 근거 카드에서 바로 확인할 수 있습니다."
+                    />
+                    <div id="section-summary" className="scroll-mt-20">
+                      <DashboardSummary
+                        result={selectedApplicant}
+                        currentJob={currentJob}
+                        onOpenHITLEditor={() => setShowHITLEditor(true)}
+                        onOpenShareModal={() => setShowShareModal(true)}
+                        onOpenCandidateFeedback={() => setShowCandidateFeedback(true)}
+                      />
+                    </div>
+                    <div id="section-evidence" className="scroll-mt-20">
+                      <EvidenceViewer result={selectedApplicant} />
+                    </div>
+                    <div id="section-questions" className="scroll-mt-20">
+                      <InterviewQuestions result={selectedApplicant} />
+                    </div>
+                    <div id="section-collab" className="scroll-mt-20">
+                      <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
+                    </div>
+                  </section>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'comparison' && (
+              <ApplicantComparison
+                applicants={applicantList}
+                onSelectApplicant={(app) => {
+                  setSelectedApplicant(app);
+                  setActiveTab('evaluator');
+                }}
+                onOpenExport={(app) => {
+                  setSelectedApplicant(app);
+                  setShowExportModal(true);
+                }}
               />
             )}
 
-            {/* Bottom Row: Interactive Sentence Evidence Viewer, Interview Questions & Collaboration Panel */}
-            {selectedApplicant && (
-              <div className="space-y-6">
-                <EvidenceViewer result={selectedApplicant} />
-                <InterviewQuestions result={selectedApplicant} />
-                <InterviewerCollaborationPanel
-                  applicant={selectedApplicant}
-                  shareId={activeShareId}
-                />
-              </div>
-            )}
+            {activeTab === 'credits' && <DepartmentCreditDashboard />}
           </div>
-        )}
+        </main>
+      </div>
 
-        {activeTab === 'comparison' && (
-          /* Comparison Matrix View */
-          <ApplicantComparison
-            applicants={applicantList}
-            onSelectApplicant={(app) => {
-              setSelectedApplicant(app);
-              setActiveTab('evaluator');
-            }}
-            onOpenExport={(app) => {
-              setSelectedApplicant(app);
-              setShowExportModal(true);
-            }}
-          />
-        )}
-
-        {activeTab === 'credits' && (
-          /* Enterprise 2,000 Users & Department Credit Quota Dashboard */
-          <DepartmentCreditDashboard />
-        )}
-      </main>
-
-      {/* Floating Export Button for Evaluator Tab */}
+      {/* 평가 보고서 출력 (평가 화면) */}
       {selectedApplicant && activeTab === 'evaluator' && (
-        <div className="fixed bottom-6 right-6 z-30">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 no-print">
           <button
             onClick={() => setShowExportModal(true)}
-            className="px-5 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs rounded-2xl shadow-xl shadow-blue-600/40 border border-blue-400/30 flex items-center gap-2 transition-all hover:scale-105"
+            className="btn btn-primary px-4 py-3 rounded-full shadow-pop"
           >
-            <span>📑 HR 서류 평가 보고서 출력</span>
+            <Printer className="w-4 h-4" />
+            <span className="hidden sm:inline">평가 보고서 출력</span>
+            <span className="sm:hidden">보고서</span>
           </button>
         </div>
       )}
+
+      {/* 안내 토스트 (준비 중 기능 등) */}
+      {toastMessage && (
+        <div
+          role="status"
+          className="toast-in fixed left-1/2 -translate-x-1/2 bottom-20 sm:bottom-8 z-[70] max-w-[92vw] px-4 py-2.5 rounded-xl bg-fg text-canvas text-[13px] font-medium shadow-pop flex items-center gap-2"
+        >
+          <Info className="w-4 h-4 shrink-0" />
+          {toastMessage}
+        </div>
+      )}
+
+      {isMenuOpen && <Sidebar variant="drawer" {...sidebarProps} onClose={() => setIsMenuOpen(false)} />}
+
+      <CommandPalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        items={paletteItems}
+        onSelect={handleSelectFeature}
+      />
 
       {/* Report Exporter Modal */}
       {showExportModal && selectedApplicant && (
@@ -466,6 +658,20 @@ export default function App() {
         currentJob={currentJob}
         tenantName={currentTenant?.name}
       />
+    </div>
+  );
+}
+
+function SectionHeading({ step, title, desc }) {
+  return (
+    <div className="flex items-start gap-3 px-1">
+      <span className="mt-0.5 w-6 h-6 rounded-full bg-fg text-canvas text-[12px] font-bold flex items-center justify-center shrink-0">
+        {step}
+      </span>
+      <div>
+        <h2 className="text-[17px] font-bold tracking-[-0.02em] text-fg">{title}</h2>
+        <p className="text-[13px] text-fg-muted mt-0.5 break-keep">{desc}</p>
+      </div>
     </div>
   );
 }

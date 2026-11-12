@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, CheckSquare, Target, MessageSquare, Quote } from 'lucide-react';
+import { CheckSquare, Target, MessagesSquare } from 'lucide-react';
 
 export default function InterviewQuestions({ result }) {
   if (!result || !result.analysis || !result.analysis.interviewQuestions) return null;
@@ -7,64 +7,53 @@ export default function InterviewQuestions({ result }) {
   const { interviewQuestions } = result.analysis;
 
   return (
-    <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-4">
+    <div className="card card-pad space-y-4">
       {/* Title */}
-      <div className="flex items-center justify-between pb-3 border-b border-gray-800">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-purple-400" />
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2.5">
+          <MessagesSquare className="w-[18px] h-[18px] text-fg-subtle mt-0.5" />
           <div>
-            <h2 className="text-sm font-bold text-white">서류 근거 기반 맞춤형 심층 면접 질문 제안 (Interview Kit)</h2>
-            <p className="text-xs text-gray-400">서류상의 약점이나 검증 필요 문장에서 자동 추출된 구조화 면접 질문입니다.</p>
+            <h3 className="section-title">면접 질문</h3>
+            <p className="section-desc">확인이 필요한 문장에서 뽑은 질문입니다. 질문 의도와 체크리스트를 함께 보세요.</p>
           </div>
         </div>
-        <span className="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-300 border border-purple-500/30 text-xs font-bold">
-          총 {interviewQuestions.length}개 핵심 질문
-        </span>
+        <span className="chip chip-neutral shrink-0 tabular-nums">{interviewQuestions.length}개</span>
       </div>
 
       {/* Question Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {interviewQuestions.map((iq, idx) => (
-          <div key={iq.id || idx} className="bg-gray-900/70 border border-gray-800 rounded-xl p-4 space-y-3 hover:border-purple-500/40 transition-all">
-            {/* Header: Category Badge & Quote */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                  질문 {idx + 1} | {iq.category}
-                </span>
-              </div>
-              <div className="text-[11px] text-gray-400 italic bg-black/40 p-2 rounded-lg border border-gray-800 flex items-start gap-1.5 font-mono">
-                <Quote className="w-3 h-3 text-purple-400 shrink-0 mt-0.5" />
-                <span className="line-clamp-2 font-sans">"{iq.basedQuote}"</span>
-              </div>
+          <article key={iq.id || idx} className="rounded-xl border border-line bg-surface p-4 flex flex-col gap-3 hover:border-line-strong transition-colors">
+            <div className="flex items-center gap-2 text-[12px]">
+              <span className="w-6 h-6 rounded-md bg-brand-soft text-brand-fg font-bold flex items-center justify-center tabular-nums">
+                {idx + 1}
+              </span>
+              <span className="chip chip-neutral">{iq.category}</span>
             </div>
 
-            {/* Question Text */}
-            <div className="space-y-1">
-              <h4 className="text-xs font-bold text-white leading-snug flex items-start gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
-                {iq.question}
-              </h4>
-            </div>
+            <h4 className="text-[14px] font-semibold text-fg leading-relaxed break-keep">{iq.question}</h4>
 
-            {/* Intent & Checklist Tabs */}
-            <div className="space-y-2 pt-2 border-t border-gray-800/80">
-              {/* Intent */}
-              <div className="flex items-start gap-1.5 text-[11px]">
-                <Target className="w-3 h-3 text-blue-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-semibold text-blue-300">질문 의도: </span>
-                  <span className="text-gray-300">{iq.intent}</span>
-                </div>
+            {iq.basedQuote && (
+              <p className="text-[12px] text-fg-muted leading-snug border-l-2 border-[rgb(var(--hl-warn))] pl-2.5 line-clamp-2">
+                근거 문장 · “{iq.basedQuote}”
+              </p>
+            )}
+
+            <div className="mt-auto space-y-2 pt-3 border-t border-line">
+              <div className="flex items-start gap-1.5 text-[12px]">
+                <Target className="w-3.5 h-3.5 text-fg-subtle shrink-0 mt-0.5" />
+                <p>
+                  <span className="font-semibold text-fg">질문 의도 </span>
+                  <span className="text-fg-muted">{iq.intent}</span>
+                </p>
               </div>
 
-              {/* Checklist */}
               {iq.checklist && iq.checklist.length > 0 && (
-                <div className="space-y-1 bg-black/20 p-2 rounded-lg border border-gray-800/50">
-                  <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
-                    <CheckSquare className="w-3 h-3 text-emerald-400" /> 면접관 체크리스트:
+                <div className="space-y-1">
+                  <span className="text-[12px] font-semibold text-fg flex items-center gap-1.5">
+                    <CheckSquare className="w-3.5 h-3.5 text-fg-subtle" /> 면접관 체크리스트
                   </span>
-                  <ul className="space-y-0.5 pl-4 list-disc text-[10px] text-gray-300">
+                  <ul className="space-y-0.5 pl-5 list-disc text-[12px] text-fg-muted marker:text-fg-subtle">
                     {iq.checklist.map((item, cIdx) => (
                       <li key={cIdx}>{item}</li>
                     ))}
@@ -72,7 +61,7 @@ export default function InterviewQuestions({ result }) {
                 </div>
               )}
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>

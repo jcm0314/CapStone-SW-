@@ -2,63 +2,238 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * 디자인 토큰 (RGB 채널값). 라이트가 기본, <html class="dark"> 에서 다크.
+ * 브랜드: 차분한 블루 / 중립 회색 / 상태색(ok·warn·bad)은 채도를 낮춰 사용합니다.
+ */
 @layer base {
+  :root {
+    --canvas: 246 247 249;
+    --surface: 255 255 255;
+    --subtle: 243 245 248;
+    --muted: 232 236 241;
+    --line: 228 231 236;
+    --line-strong: 206 212 220;
+    --fg: 17 24 39;
+    --fg-muted: 75 85 99;
+    --fg-subtle: 117 126 140;
+
+    --brand: 37 99 235;
+    --brand-strong: 29 78 216;
+    --brand-soft: 238 243 254;
+    --brand-line: 191 210 250;
+    --brand-fg: 29 78 216;
+
+    --ok: 4 120 87;
+    --ok-solid: 5 150 105;
+    --ok-soft: 236 250 243;
+    --ok-line: 170 228 201;
+    --warn: 161 98 7;
+    --warn-solid: 217 119 6;
+    --warn-soft: 254 248 234;
+    --warn-line: 245 214 150;
+    --bad: 190 18 60;
+    --bad-solid: 225 29 72;
+    --bad-soft: 255 241 243;
+    --bad-line: 251 196 206;
+
+    /* 형광펜 (자소서 근거 문장) */
+    --hl-ok: 190 242 170;
+    --hl-warn: 255 230 128;
+    --hl-bad: 255 196 206;
+
+    color-scheme: light;
+  }
+
+  html.dark {
+    --canvas: 12 15 21;
+    --surface: 21 25 33;
+    --subtle: 27 32 42;
+    --muted: 37 43 55;
+    --line: 41 47 60;
+    --line-strong: 60 68 84;
+    --fg: 236 239 244;
+    --fg-muted: 166 174 188;
+    --fg-subtle: 122 131 148;
+
+    --brand: 79 134 247;
+    --brand-strong: 104 152 250;
+    --brand-soft: 27 39 66;
+    --brand-line: 46 70 122;
+    --brand-fg: 147 181 252;
+
+    --ok: 74 210 158;
+    --ok-solid: 16 150 105;
+    --ok-soft: 17 42 35;
+    --ok-line: 28 84 64;
+    --warn: 245 192 80;
+    --warn-solid: 202 122 12;
+    --warn-soft: 46 36 14;
+    --warn-line: 98 74 22;
+    --bad: 251 120 142;
+    --bad-solid: 214 40 80;
+    --bad-soft: 52 20 28;
+    --bad-line: 108 38 54;
+
+    --hl-ok: 33 92 60;
+    --hl-warn: 104 82 18;
+    --hl-bad: 110 36 52;
+
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    background-color: #0B0F19;
-    color: #F3F4F6;
+    background-color: rgb(var(--canvas));
+    color: rgb(var(--fg));
+    font-family: Pretendard, 'Pretendard Variable', Inter, system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'tnum' 0;
+    letter-spacing: -0.005em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--brand) / 0.18);
+  }
+
+  input[type='range'] {
+    accent-color: rgb(var(--brand));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--brand) / 0.6);
+    outline-offset: 2px;
   }
 }
 
-/* Custom Glassmorphism & Scrollbar Styles */
-.glass-panel {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+@layer components {
+  /* 공통 카드 */
+  .card {
+    @apply bg-surface border border-line rounded-card shadow-card;
+  }
+  .card-pad {
+    @apply p-5 sm:p-6;
+  }
+  .section-title {
+    @apply text-[15px] font-semibold text-fg tracking-[-0.01em];
+  }
+  .section-desc {
+    @apply text-[13px] text-fg-muted leading-relaxed;
+  }
+
+  /* 버튼 */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg text-[13px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap;
+  }
+  .btn-sm {
+    @apply px-2.5 py-1.5 text-xs;
+  }
+  .btn-md {
+    @apply px-3.5 py-2;
+  }
+  .btn-lg {
+    @apply px-5 py-3 text-sm rounded-xl;
+  }
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-strong;
+  }
+  .btn-secondary {
+    @apply bg-surface text-fg border border-line-strong hover:bg-subtle;
+  }
+  .btn-ghost {
+    @apply text-fg-muted hover:text-fg hover:bg-subtle;
+  }
+
+  /* 입력 */
+  .field {
+    @apply w-full bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/15 transition-colors;
+  }
+  .label {
+    @apply text-[13px] font-medium text-fg;
+  }
+
+  /* 배지 */
+  .chip {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border whitespace-nowrap;
+  }
+  .chip-neutral {
+    @apply bg-subtle text-fg-muted border-line;
+  }
+  .chip-brand {
+    @apply bg-brand-soft text-brand-fg border-brand-line;
+  }
+  .chip-ok {
+    @apply bg-ok-soft text-ok border-ok-line;
+  }
+  .chip-warn {
+    @apply bg-warn-soft text-warn border-warn-line;
+  }
+  .chip-bad {
+    @apply bg-bad-soft text-bad border-bad-line;
+  }
+
+  /* 모달 */
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-3 sm:p-4;
+  }
+  .modal-panel {
+    @apply bg-surface border border-line rounded-2xl shadow-pop w-full max-h-[92vh] flex flex-col overflow-hidden;
+  }
+
+  /* 형광펜 */
+  .hl {
+    @apply rounded-[3px] px-0.5 -mx-0.5 cursor-pointer transition-shadow;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hl-ok {
+    background: linear-gradient(transparent 12%, rgb(var(--hl-ok)) 12%, rgb(var(--hl-ok)) 92%, transparent 92%);
+  }
+  .hl-warn {
+    background: linear-gradient(transparent 12%, rgb(var(--hl-warn)) 12%, rgb(var(--hl-warn)) 92%, transparent 92%);
+  }
+  .hl-bad {
+    background: linear-gradient(transparent 12%, rgb(var(--hl-bad)) 12%, rgb(var(--hl-bad)) 92%, transparent 92%);
+  }
 }
 
-.glass-card {
-  background: rgba(31, 41, 55, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card-hover:hover {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Custom Scrollbar */
+/* 스크롤바 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0F172A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: rgb(var(--line-strong));
   border-radius: 9999px;
+  border: 2px solid rgb(var(--canvas));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: rgb(var(--fg-subtle));
 }
 
-/* Pulse Glow Animation */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
-  }
+/* 기존 클래스 호환 (다른 브랜치에서 남아 있을 수 있는 클래스명) */
+.glass-panel,
+.glass-card {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
 }
 
-.glow-active {
-  animation: pulseGlow 3s infinite ease-in-out;
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.toast-in {
+  animation: toastIn 160ms ease-out;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
