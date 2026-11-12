@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { Award, AlertTriangle, ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sparkles, UserCheck, Bot, Share2 } from 'lucide-react';
+import { ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sprout, Workflow, Share2, Printer } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
 import SampleBadge from './SampleBadge';
 import { isSampleResult } from '../utils/sampleResult';
 
-export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback }) {
+export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback, onOpenReport }) {
   const [showAuditModal, setShowAuditModal] = useState(false);
 
   if (!result || !result.analysis) return null;
@@ -39,28 +38,28 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
     switch (decision) {
       case 'STRONG_PASS':
         return {
-          label: '서류 통과 (우수 추천)',
-          bgColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-          icon: <CheckCircle className="w-4 h-4 text-emerald-400" />
+          label: '통과 추천',
+          bgColor: 'bg-ok-soft text-ok border-ok-line',
+          icon: <CheckCircle className="w-4 h-4 text-ok" />
         };
       case 'INTERVIEW':
         return {
-          label: '면접 진행 추천',
-          bgColor: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-          icon: <ShieldCheck className="w-4 h-4 text-blue-400" />
+          label: '면접 추천',
+          bgColor: 'bg-brand-soft text-brand-fg border-brand-line',
+          icon: <ShieldCheck className="w-4 h-4 text-brand-fg" />
         };
       case 'HOLD':
         return {
-          label: '추가 검증 보류',
-          bgColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-          icon: <HelpCircle className="w-4 h-4 text-amber-400" />
+          label: '보류',
+          bgColor: 'bg-warn-soft text-warn border-warn-line',
+          icon: <HelpCircle className="w-4 h-4 text-warn" />
         };
       case 'REJECT':
       default:
         return {
-          label: '서류 부적합 (탈락 권장)',
-          bgColor: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
-          icon: <XCircle className="w-4 h-4 text-rose-400" />
+          label: '탈락 권장',
+          bgColor: 'bg-bad-soft text-bad border-bad-line',
+          icon: <XCircle className="w-4 h-4 text-bad" />
         };
     }
   };
@@ -70,191 +69,121 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
   const originalScore = result.originalAnalysis?.summary?.totalScore;
   const isSample = isSampleResult(result);
 
+  const aiTone = aiTextProbability > 60 ? 'text-bad' : aiTextProbability > 30 ? 'text-warn' : 'text-fg';
+  const decisionDot = { STRONG_PASS: 'bg-ok-solid', INTERVIEW: 'bg-fg', HOLD: 'bg-warn-solid', REJECT: 'bg-bad-solid' }[decision] || 'bg-bad-solid';
+  const decisionText = { STRONG_PASS: 'text-ok', INTERVIEW: 'text-fg', HOLD: 'text-warn', REJECT: 'text-bad' }[decision] || 'text-bad';
+
   return (
     <>
-      <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-5">
-        {isSample && <SampleBadge variant="note" />}
-        {/* Top Header */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-gray-800">
-          <div className="space-y-1">
+      <section className="card" aria-labelledby="result-title">
+        {isSample && (
+          <div className="px-4 pt-3">
+            <SampleBadge variant="note" />
+          </div>
+        )}
+
+        {/* 이름 + 작업 버튼 */}
+        <div className="px-4 pt-3 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-line">
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-base font-bold text-white">{result.name} 지원자 서류 종합 평가</h2>
-              <span className="text-xs text-gray-400 font-medium">[{result.applyJobTitle}]</span>
+              <h1 id="result-title" className="text-lg font-semibold text-fg">{result.name}</h1>
+              <span className="text-[13px] text-fg-muted">{result.applyJobTitle}</span>
               {isSample && <SampleBadge />}
-
-              {/* Engine Badge & Audit Log Button */}
-              {isMultiAgent ? (
-                <button
-                  type="button"
-                  onClick={() => setShowAuditModal(true)}
-                  className="px-2.5 py-1 bg-gradient-to-r from-blue-600/30 to-purple-600/30 hover:from-blue-600/40 hover:to-purple-600/40 text-blue-200 border border-blue-500/40 rounded-lg text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
-                  title="4대 멀티 에이전트 상세 감사 로그 열기"
-                >
-                  <Bot className="w-3.5 h-3.5 text-blue-400" />
-                  <span>🤖 4-Stage Multi-Agent 앙상블</span>
-                  <span className="text-[10px] text-blue-300 underline font-normal ml-0.5">감사로그 ↗</span>
-                </button>
-              ) : (
-                <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-                  ⚡ Claude API Engine
-                </span>
-              )}
-
-              {/* HITL Verification Badge */}
               {isHumanVerified ? (
-                <span className="px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
-                  <UserCheck className="w-3 h-3 text-amber-400" />
-                  Human-Verified (HITL 보정 완료)
+                <span className="badge badge-warn">
+                  <UserCheck className="w-3 h-3" /> 사람 검토 완료
                 </span>
               ) : (
-                <span className="px-2.5 py-0.5 bg-gray-800 text-gray-400 border border-gray-700 rounded-full text-[10px] font-medium flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-gray-400" />
-                  AI Generated (검토 대기)
-                </span>
-              )}
-
-              {/* Score Calibration Differential Pill */}
-              {isHumanVerified && originalScore !== undefined && originalScore !== totalScore && (
-                <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-mono font-semibold">
-                  AI 초안 {originalScore}점 ➔ HR 보정 {totalScore}점
-                </span>
+                <span className="badge badge-subtle">검토 대기</span>
               )}
             </div>
-            <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">{decisionReason}</p>
           </div>
-
-          {/* Right Action & Decision Badge */}
-          <div className="flex items-center gap-2.5 self-end lg:self-center shrink-0 flex-wrap">
-            {/* Candidate Growth Feedback Button (B2B2C / ESG) */}
-            {onOpenCandidateFeedback && (
-              <button
-                type="button"
-                onClick={onOpenCandidateFeedback}
-                className="px-3 py-2 bg-gradient-to-r from-emerald-600/30 to-teal-600/30 hover:from-emerald-600/40 hover:to-teal-600/40 text-emerald-200 border border-emerald-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
-                title="지원자 맞춤형 AI 성장 피드백 리포트 생성"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>지원자 피드백 리포트</span>
-              </button>
-            )}
-
-            {/* Share Link Button */}
-            {onOpenShareModal && (
-              <button
-                type="button"
-                onClick={onOpenShareModal}
-                className="px-3 py-2 bg-gradient-to-r from-indigo-600/30 to-purple-600/30 hover:from-indigo-600/40 hover:to-purple-600/40 text-indigo-200 border border-indigo-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105"
-                title="면접관 원클릭 공유 링크 생성"
-              >
-                <Share2 className="w-3.5 h-3.5 text-indigo-400" />
-                <span>면접관 공유</span>
-              </button>
-            )}
-
-            {/* Multi-Agent Audit Button (if available) */}
-            {isMultiAgent && (
-              <button
-                type="button"
-                onClick={() => setShowAuditModal(true)}
-                className="px-3 py-2 bg-gray-900/90 hover:bg-gray-800 text-gray-200 border border-gray-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-              >
-                <Bot className="w-3.5 h-3.5 text-purple-400" />
-                <span>에이전트 감사 보고서</span>
-              </button>
-            )}
-
-            {/* HITL Calibration Button */}
+          <div className="flex flex-wrap gap-1.5">
             {onOpenHITLEditor && (
-              <button
-                type="button"
-                onClick={onOpenHITLEditor}
-                className="px-3.5 py-2 bg-gradient-to-r from-amber-600/30 to-amber-500/20 hover:from-amber-600/40 hover:to-amber-500/30 text-amber-200 border border-amber-500/50 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-950/40 transition-all hover:scale-105"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
-                <span>🛠️ HITL 환각 교정 & 보정</span>
+              <button type="button" onClick={onOpenHITLEditor} className="btn btn-secondary btn-md">
+                <SlidersHorizontal className="w-3.5 h-3.5" /> 사람 검토(HITL) 보정
               </button>
             )}
+            {onOpenShareModal && (
+              <button type="button" onClick={onOpenShareModal} className="btn btn-secondary btn-md">
+                <Share2 className="w-3.5 h-3.5" /> 면접관 공유
+              </button>
+            )}
+            {onOpenCandidateFeedback && (
+              <button type="button" onClick={onOpenCandidateFeedback} className="btn btn-secondary btn-md">
+                <Sprout className="w-3.5 h-3.5" /> 지원자 피드백
+              </button>
+            )}
+            {onOpenReport && (
+              <button type="button" onClick={onOpenReport} className="btn btn-primary btn-md">
+                <Printer className="w-3.5 h-3.5" /> 보고서
+              </button>
+            )}
+          </div>
+        </div>
 
-            {/* HR Decision Badge */}
-            <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 shadow-md ${badge.bgColor}`}>
-              {badge.icon}
+        {/* 핵심 수치 */}
+        <dl className="grid grid-cols-2 md:grid-cols-4 border-b border-line text-[13px]">
+          <div className="px-4 py-3 border-r border-line">
+            <dt className="text-xs text-fg-subtle">점수</dt>
+            <dd className="mt-0.5 flex items-baseline gap-1">
+              <span className="text-2xl font-semibold tabular-nums text-fg">{totalScore}</span>
+              <span className="text-xs text-fg-subtle">/ 100점</span>
+            </dd>
+            {isHumanVerified && originalScore !== undefined && originalScore !== totalScore && (
+              <dd className="text-xs text-fg-subtle tabular-nums">AI {originalScore}점에서 보정</dd>
+            )}
+          </div>
+          <div className="px-4 py-3 md:border-r border-line">
+            <dt className="text-xs text-fg-subtle">판정</dt>
+            <dd className={`mt-1.5 inline-flex items-center gap-1.5 font-medium ${decisionText}`}>
+              <span className={`dot ${decisionDot}`} />
               {badge.label}
-            </div>
+            </dd>
           </div>
-        </div>
-
-      {/* Main Grid: Gauge & Radar Chart */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-        {/* Left: Overall Score Card */}
-        <div className="md:col-span-5 bg-gray-900/60 rounded-xl p-4 border border-gray-800 flex flex-col items-center justify-center space-y-3">
-          <div className="relative flex items-center justify-center w-32 h-32">
-            {/* SVG Score Gauge Circle */}
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-              <path
-                className="text-gray-800"
-                strokeWidth="3.5"
-                stroke="currentColor"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-              <path
-                className={totalScore >= 85 ? 'text-blue-500' : totalScore >= 70 ? 'text-amber-500' : 'text-rose-500'}
-                strokeDasharray={`${totalScore}, 100`}
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                stroke="currentColor"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-            </svg>
-            <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white font-mono">{totalScore}</span>
-              <span className="text-[10px] text-gray-400 uppercase font-semibold">/ 100점</span>
-            </div>
-          </div>
-
-          {/* AI Risk Meter */}
-          <div className="w-full space-y-1 pt-1">
-            <div className="flex justify-between items-center text-[11px]">
-              <span className="text-gray-400 flex items-center gap-1">
-                <AlertTriangle className="w-3 h-3 text-amber-400" /> AI 생성/과장 확률
+          <div className="px-4 py-3 border-r border-t md:border-t-0 border-line">
+            <dt className="text-xs text-fg-subtle">AI 대필·과장 가능성</dt>
+            <dd className="mt-1.5 flex items-center gap-2">
+              <span className={`font-medium tabular-nums ${aiTone}`}>{aiTextProbability}%</span>
+              <span className="flex-1 h-1 bg-muted rounded-full overflow-hidden max-w-[120px]">
+                <span className="block h-full bg-fg-subtle" style={{ width: `${aiTextProbability}%` }} />
               </span>
-              <span className={`font-mono font-bold ${aiTextProbability > 60 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                {aiTextProbability}%
-              </span>
-            </div>
-            <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className={`h-full transition-all ${
-                  aiTextProbability > 60 ? 'bg-rose-500' : aiTextProbability > 30 ? 'bg-amber-500' : 'bg-emerald-500'
-                }`}
-                style={{ width: `${aiTextProbability}%` }}
-              />
-            </div>
+            </dd>
           </div>
-        </div>
+          <div className="px-4 py-3 border-t md:border-t-0 border-line">
+            <dt className="text-xs text-fg-subtle">상태</dt>
+            <dd className="mt-1.5 text-fg">{isHumanVerified ? '사람 검토 완료' : 'AI 초안'}</dd>
+          </div>
+        </dl>
 
-        {/* Right: Competency Radar Chart */}
-        <div className="md:col-span-7 bg-gray-900/60 rounded-xl p-3 border border-gray-800 h-56 flex flex-col items-center justify-center">
-          <span className="text-xs font-semibold text-gray-300 self-start px-2">5대 역량 항목별 시각화 (vs 벤치마크)</span>
-          <div className="w-full h-44">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                <PolarGrid stroke="#374151" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#9CA3AF', fontSize: 11 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#4B5563" tick={false} />
-                <Radar name="지원자 역량" dataKey="score" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.4} />
-                <Radar name="직무 벤치마크" dataKey="benchmark" stroke="#6B7280" fill="#6B7280" fillOpacity={0.15} strokeDasharray="3 3" />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', fontSize: '11px' }}
-                  itemStyle={{ color: '#F3F4F6' }}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+        {/* 판정 사유 + 역량별 점수 */}
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="px-4 py-3 md:border-r border-line">
+            <p className="text-xs text-fg-subtle">판정 사유</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-fg">{decisionReason || '-'}</p>
+            {isMultiAgent && (
+              <button type="button" onClick={() => setShowAuditModal(true)} className="mt-2 inline-flex items-center gap-1 text-xs text-fg-muted hover:text-fg underline-offset-2 hover:underline">
+                <Workflow className="w-3.5 h-3.5" /> AI 판단 과정
+              </button>
+            )}
+          </div>
+          <div className="px-4 py-3 border-t md:border-t-0 border-line">
+            <p className="text-xs text-fg-subtle mb-2">역량별 점수</p>
+            <ul className="space-y-1.5">
+              {radarData.map((d) => (
+                <li key={d.subject} className="grid grid-cols-[64px_1fr_28px] items-center gap-2 text-xs">
+                  <span className="text-fg-muted truncate">{d.subject}</span>
+                  <span className="relative h-1.5 bg-muted rounded-full overflow-hidden">
+                    <span className="absolute inset-y-0 left-0 bg-fg rounded-full" style={{ width: `${d.score}%` }} />
+                    <span className="absolute inset-y-[-2px] w-px bg-fg-subtle" style={{ left: `${d.benchmark}%` }} title="직무 기준 75점" />
+                  </span>
+                  <span className="text-right tabular-nums text-fg">{d.score}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
-      </div>
+      </section>
 
       {/* Multi-Agent Collaboration Audit Modal */}
       <MultiAgentAuditModal

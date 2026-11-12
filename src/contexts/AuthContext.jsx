@@ -6,25 +6,25 @@ export const ROLES = {
   ADMIN: {
     key: 'ADMIN',
     label: '최고 관리자 (Admin)',
-    badgeColor: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+    badgeColor: 'bg-brand-soft text-brand-fg border-brand-line',
     description: '전사 AI 크레딧 통제, 부서별 쿼터 설정, API Key 관리 및 전 계정 열람 권한'
   },
   RECRUITER: {
     key: 'RECRUITER',
     label: '채용 담당자 (Recruiter)',
-    badgeColor: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
+    badgeColor: 'bg-brand-soft text-brand-fg border-brand-line',
     description: '서류 일괄 업로드, PII 마스킹 검증, AI 4대 에이전트 평가 가동, HITL 결과 보정'
   },
   INTERVIEWER: {
     key: 'INTERVIEWER',
     label: '면접관 (Interviewer)',
-    badgeColor: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
+    badgeColor: 'bg-ok-soft text-ok border-ok-line',
     description: '배정된 지원자 평가서 열람, 1:1 형광펜 원문 확인, 실시간 면접 질문 및 코멘트 작성'
   },
   CANDIDATE: {
     key: 'CANDIDATE',
     label: '구직자 셀프 진단 (Candidate B2C)',
-    badgeColor: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
+    badgeColor: 'bg-warn-soft text-warn border-warn-line',
     description: '청년 구직자 자소서 셀프 팩트체크, 약점 문장 보완 코칭 및 예상 압박 면접 연습 모드'
   }
 };

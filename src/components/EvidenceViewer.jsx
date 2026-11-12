@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Search, CheckCircle2, AlertTriangle, HelpCircle, ArrowRight, Quote, Zap, Sparkles, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
 import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
@@ -9,22 +9,22 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
   if (!ev) return null;
 
   const isSelected = activeQuoteId === ev.id;
-  let borderClass = 'border-gray-800';
+  let borderClass = 'border-line';
   let badgeColor = '';
   let icon = null;
 
   if (ev.type === 'positive') {
-    borderClass = isSelected ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-500/10' : 'hover:border-emerald-500/50 bg-gray-900/60';
-    badgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-    icon = <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />;
+    borderClass = isSelected ? 'border-ok ring-2 ring-ok/20 bg-surface' : 'border-line bg-surface hover:border-ok-line';
+    badgeColor = 'bg-ok-soft text-ok border-ok-line';
+    icon = <CheckCircle2 className="w-4 h-4 text-ok shrink-0" />;
   } else if (ev.type === 'risk') {
-    borderClass = isSelected ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-500/10' : 'hover:border-rose-500/50 bg-gray-900/60';
-    badgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
-    icon = <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />;
+    borderClass = isSelected ? 'border-bad ring-2 ring-bad/20 bg-surface' : 'border-line bg-surface hover:border-bad-line';
+    badgeColor = 'bg-bad-soft text-bad border-bad-line';
+    icon = <AlertTriangle className="w-4 h-4 text-bad shrink-0" />;
   } else {
-    borderClass = isSelected ? 'border-amber-400 ring-1 ring-amber-400 bg-amber-500/10' : 'hover:border-amber-500/50 bg-gray-900/60';
-    badgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-    icon = <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />;
+    borderClass = isSelected ? 'border-warn ring-2 ring-warn/20 bg-surface' : 'border-line bg-surface hover:border-warn-line';
+    badgeColor = 'bg-warn-soft text-warn border-warn-line';
+    icon = <HelpCircle className="w-4 h-4 text-warn shrink-0" />;
   }
 
   return (
@@ -32,12 +32,12 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
       <div
         onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
         onMouseEnter={() => setActiveQuoteId(ev.id)}
-        className={`p-3 rounded-xl border transition-all cursor-pointer space-y-2 h-[135px] flex flex-col justify-between ${borderClass}`}
+        className={`p-3 rounded-md border transition-colors cursor-pointer h-[128px] flex flex-col justify-between gap-1.5 ${borderClass}`}
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 overflow-hidden">
             {icon}
-            <h4 className="text-xs font-bold text-white truncate">{ev.title}</h4>
+            <h4 className="text-[13px] font-semibold text-fg truncate">{ev.title}</h4>
           </div>
           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border shrink-0 ${badgeColor}`}>
             {ev.matched === false
@@ -46,12 +46,9 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
           </span>
         </div>
 
-        <div className="bg-black/40 rounded-lg p-2 border border-gray-800 text-[11px] text-gray-300 italic font-mono flex gap-2 overflow-hidden">
-          <Quote className="w-3.5 h-3.5 text-gray-500 shrink-0 mt-0.5" />
-          <span className="line-clamp-2">"{ev.quote}"</span>
-        </div>
+        <p className="text-[12px] leading-snug text-fg border-l-2 border-line-strong pl-2.5 line-clamp-2">“{ev.quote}”</p>
 
-        <p className="text-[11px] text-gray-400 leading-snug line-clamp-1">{ev.explanation}</p>
+        <p className="text-[12px] text-fg-muted leading-snug line-clamp-1">{ev.explanation}</p>
       </div>
     </div>
   );
@@ -164,33 +161,18 @@ function EvidenceViewerContent({ result }) {
       // Highlighted match span
       const ev = m.evidence;
       const isSelected = activeQuoteId === ev.id;
-      let badgeStyle = '';
-
-      if (ev.type === 'positive') {
-        badgeStyle = isSelected
-          ? 'bg-emerald-500/40 text-emerald-200 border-emerald-400 font-semibold ring-2 ring-emerald-400'
-          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30';
-      } else if (ev.type === 'risk') {
-        badgeStyle = isSelected
-          ? 'bg-rose-500/40 text-rose-200 border-rose-400 font-semibold ring-2 ring-rose-400'
-          : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30';
-      } else {
-        badgeStyle = isSelected
-          ? 'bg-amber-500/40 text-amber-200 border-amber-400 font-semibold ring-2 ring-amber-400'
-          : 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30';
-      }
+      const hlTone = ev.type === 'positive' ? 'hl-ok' : ev.type === 'risk' ? 'hl-bad' : 'hl-warn';
+      const typeLabel = ev.type === 'positive' ? '긍정 근거' : ev.type === 'risk' ? '리스크' : '면접 확인';
 
       elements.push(
         <mark
           key={`mark_${ev.id}_${m.start}`}
           onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
           onMouseEnter={() => setActiveQuoteId(ev.id)}
-          className={`cursor-pointer px-1 py-0.5 rounded transition-all border ${badgeStyle} mx-0.5 inline-block`}
+          title={`${typeLabel} · ${ev.title || ''}`}
+          className={`hl ${hlTone} ${isSelected ? 'hl-active' : ''}`}
         >
           {text.slice(m.start, m.end)}
-          <span className="ml-1 text-[10px] uppercase font-bold opacity-80">
-            {ev.type === 'positive' ? '🟢 긍정근거' : ev.type === 'risk' ? '🔴 리스크' : '🟡 검증필요'}
-          </span>
         </mark>
       );
 
@@ -204,51 +186,46 @@ function EvidenceViewerContent({ result }) {
     return elements;
   };
 
-  return (
-    <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-4">
-      {/* Title & Filter Tabs */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-blue-400" />
-            <h2 className="text-sm font-bold text-white">서류 본문 문장별 근거(Grounding) 캡처 검증</h2>
-            <span className="px-2 py-0.5 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              <Zap className="w-3 h-3 text-blue-400" /> Virtualized
-            </span>
-            <span className="px-2 py-0.5 bg-purple-500/10 text-purple-300 border border-purple-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-purple-400" /> PII Masked (Blind Recruitment)
-            </span>
-          </div>
-          <p className="text-xs text-gray-400">문장을 클릭하거나 마우스를 올리면 가상 스크롤 목록이 해당 위치로 자동 이동합니다.</p>
-        </div>
+  const FILTERS = [
+    { id: 'ALL', label: '전체' },
+    { id: 'POSITIVE', label: '긍정 근거', hl: 'hl-ok' },
+    { id: 'VERIFY', label: '면접 확인', hl: 'hl-warn' },
+    { id: 'RISK', label: '리스크', hl: 'hl-bad' }
+  ];
 
-        {/* Filter Buttons */}
-        <div className="flex items-center gap-1 bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-[11px]">
-          {['ALL', 'POSITIVE', 'RISK', 'VERIFY'].map(type => (
+  return (
+    <section className="card" aria-labelledby="evidence-title">
+      {/* Title & Filter Tabs */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 px-4 pt-3 pb-2 border-b border-line">
+        <h2 id="evidence-title" className="section-title">근거 문장</h2>
+
+        <div className="flex items-center gap-0.5 text-[12px] max-w-full overflow-x-auto -mx-1" role="tablist" aria-label="근거 유형">
+          {FILTERS.map((f) => (
             <button
-              key={type}
-              onClick={() => setFilterType(type)}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                filterType === type
-                  ? 'bg-blue-600 text-white font-semibold'
-                  : 'text-gray-400 hover:text-white'
+              key={f.id}
+              type="button"
+              role="tab"
+              aria-selected={filterType === f.id}
+              onClick={() => setFilterType(f.id)}
+              className={`px-2 h-7 rounded inline-flex items-center whitespace-nowrap transition-colors ${
+                filterType === f.id ? 'bg-muted text-fg font-medium' : 'text-fg-muted hover:text-fg'
               }`}
             >
-              {type === 'ALL' ? '전체 보기' : type === 'POSITIVE' ? '🟢 긍정근거' : type === 'RISK' ? '🔴 리스크' : '🟡 검증필요'}
+              {f.hl ? <span className={`hl ${f.hl} cursor-pointer`}>{f.label}</span> : f.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Main Split View: Left Document View vs Right Evidence Drawer */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-3">
         {/* Left: Document View */}
-        <div className="lg:col-span-7 bg-gray-900/70 rounded-xl p-4 border border-gray-800 space-y-2">
-          <div className="flex justify-between items-center text-xs font-semibold text-gray-400 border-b border-gray-800 pb-2">
-            <span>지원서 본문 텍스트 (태그 캡처)</span>
-            <span>총 {groundingEvidences.length}개 근거 포착</span>
+        <div className="lg:col-span-7">
+          <div className="flex justify-between items-center text-xs text-fg-subtle px-1 pb-1.5">
+            <span>자기소개서 원문 · 개인정보 가림</span>
+            <span className="tabular-nums">근거 {groundingEvidences.length}</span>
           </div>
-          <div className="text-xs text-slate-200 leading-relaxed font-mono whitespace-pre-wrap max-h-[460px] overflow-y-auto pr-2">
+          <div className="px-1 text-[14px] text-fg leading-[1.95] whitespace-pre-wrap break-keep max-h-[430px] overflow-y-auto">
             {renderHighlightedText()}
           </div>
         </div>
@@ -256,15 +233,15 @@ function EvidenceViewerContent({ result }) {
         {/* Right: Virtualized Evidence Cards List */}
         <div className="lg:col-span-5 h-[460px]">
           {filteredEvidences.length === 0 ? (
-            <div className="bg-gray-900/40 rounded-xl p-6 text-center text-xs text-gray-500 border border-gray-800">
-              해당 유형의 근거 문장이 탐지되지 않았습니다.
+            <div className="h-full rounded-md border border-dashed border-line-strong flex items-center justify-center p-6 text-center text-[13px] text-fg-subtle">
+              이 유형의 근거 문장이 없습니다.
             </div>
           ) : List ? (
             <List
               listRef={listRef}
               rowComponent={EvidenceCardRow}
               rowCount={filteredEvidences.length}
-              rowHeight={145}
+              rowHeight={138}
               rowProps={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
               style={{ height: 460, width: '100%' }}
             />
@@ -277,6 +254,6 @@ function EvidenceViewerContent({ result }) {
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

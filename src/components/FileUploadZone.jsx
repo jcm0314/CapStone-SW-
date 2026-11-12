@@ -100,19 +100,19 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2 ${
           isDragging
-            ? 'border-blue-400 bg-blue-500/10 scale-[1.01]'
-            : 'border-gray-800 bg-gray-900/60 hover:border-gray-700 hover:bg-gray-900/80'
+            ? 'border-brand bg-brand-soft scale-[1.01]'
+            : 'border-line bg-subtle hover:border-line-strong hover:bg-subtle'
         }`}
       >
-        <div className="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+        <div className="w-10 h-10 rounded-full bg-brand-soft border border-brand-line flex items-center justify-center text-brand-fg">
           <UploadCloud className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-xs font-bold text-white">
-            {isLoading ? '서류 텍스트 추출 중...' : '지원서 파일 Drag & Drop 또는 클릭하여 업로드'}
+          <p className="text-xs font-bold text-fg">
+            {isLoading ? '서류 텍스트 추출 중...' : '파일을 끌어다 놓거나 눌러서 선택하세요'}
           </p>
-          <p className="text-[11px] text-gray-400 mt-0.5">
-            지원 가능 확장자: <span className="text-blue-300 font-mono font-semibold">.PDF, .TXT, .DOCX</span> (다중 일괄 선택 가능)
+          <p className="text-[11px] text-fg-muted mt-0.5">
+            <span className="text-brand-fg font-mono font-semibold">.PDF, .TXT, .DOCX</span> · 여러 개 한 번에 가능
           </p>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
       {/* Uploaded File List Preview */}
       {parsedFiles.length > 0 && (
         <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 text-[11px] font-bold text-gray-400 px-1">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 text-[11px] font-bold text-fg-muted px-1">
             <span>업로드된 서류 목록 ({parsedFiles.length}건)</span>
             {parsedFiles.length > 1 && onBatchAnalyze && (
               <button
@@ -133,9 +133,9 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
                   });
                   onBatchAnalyze(candidateBatch);
                 }}
-                className="px-2.5 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg text-xs font-bold shadow-md shadow-blue-600/30 flex items-center gap-1.5 transition-all disabled:opacity-50"
+                className="bg-brand hover:bg-brand-strong px-2.5 py-1 text-on-brand rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
               >
-                <span>🚀 전체 {parsedFiles.length}건 일괄 AI 심사 가동</span>
+                <span>{parsedFiles.length}건 한 번에 평가</span>
               </button>
             )}
           </div>
@@ -148,21 +148,21 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
                 onClick={() => handleSelectParsedFile(idx)}
                 className={`p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between text-xs ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-500/15 ring-1 ring-blue-500/40 text-white font-semibold'
-                    : 'border-gray-800 bg-gray-900/70 text-gray-300 hover:border-gray-700'
+                    ? 'border-brand bg-brand-soft ring-1 ring-brand/30 text-fg font-semibold'
+                    : 'border-line bg-subtle text-fg-muted hover:border-line-strong'
                 }`}
               >
                 <div className="flex items-center gap-2 overflow-hidden">
                   {file.filetype === 'PDF' ? (
-                    <FileText className="w-4 h-4 text-rose-400 shrink-0" />
+                    <FileText className="w-4 h-4 text-bad shrink-0" />
                   ) : file.filetype === 'TXT' ? (
-                    <FileCode className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <FileCode className="w-4 h-4 text-ok shrink-0" />
                   ) : (
-                    <FileCheck className="w-4 h-4 text-blue-400 shrink-0" />
+                    <FileCheck className="w-4 h-4 text-brand-fg shrink-0" />
                   )}
                   <div className="truncate">
                     <p className="truncate font-mono text-[11px]">{file.filename}</p>
-                    <p className="text-[10px] text-gray-400 font-normal">
+                    <p className="text-[10px] text-fg-muted font-normal">
                       {(file.filesize / 1024).toFixed(1)} KB • {file.filetype}
                     </p>
                   </div>
@@ -170,14 +170,14 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
 
                 <div className="flex items-center gap-2 shrink-0">
                   {isSelected && (
-                    <span className="px-2 py-0.5 rounded text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-bold">
-                      <CheckCircle2 className="w-3 h-3 text-blue-400" /> 선택됨
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-brand-soft text-brand-fg border border-brand-line flex items-center gap-1 font-bold">
+                      <CheckCircle2 className="w-3 h-3 text-brand-fg" /> 선택됨
                     </span>
                   )}
                   <button
                     type="button"
                     onClick={(e) => handleRemoveFile(idx, e)}
-                    className="p-1 rounded text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+                    className="p-1 rounded text-fg-subtle hover:text-bad hover:bg-bad-soft transition-all"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

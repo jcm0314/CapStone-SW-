@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Send, User, PlusCircle, ShieldCheck, ThumbsUp, ThumbsDown, CheckCircle } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { addCollaborativeNote, getSharedEvaluation } from '../services/shareService';
 import { isSupabaseConfigured, subscribeCollaborationNotes } from '../services/supabaseClient';
@@ -136,84 +136,53 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
     }
   };
 
+  const ROLE_LABEL = { ADMIN: '관리자', RECRUITER: '채용 담당자', INTERVIEWER: '면접관', SYSTEM: '안내' };
+  const VERDICTS = [
+    { label: '검증 통과', delta: 3, text: '검증 통과 (+3)', on: 'bg-ok-solid text-white border-ok-solid', off: 'bg-surface text-ok border-ok-line hover:bg-ok-soft' },
+    { label: '보완 필요', delta: 0, text: '보완 필요 (0)', on: 'bg-warn-solid text-white border-warn-solid', off: 'bg-surface text-warn border-warn-line hover:bg-warn-soft' },
+    { label: '과장 확인', delta: -5, text: '과장 확인 (-5)', on: 'bg-bad-solid text-white border-bad-solid', off: 'bg-surface text-bad border-bad-line hover:bg-bad-soft' }
+  ];
+
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+    <div className="card card-pad space-y-4">
       {/* Panel Header */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center">
-            <MessageSquare className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              다인 면접관 실시간 협업 메모
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">
-                Live Sync
-              </span>
-            </h3>
-            <p className="text-[11px] text-slate-400">
-              면접관들이 실시간으로 질의 결과 및 추가 검증 의견을 기록하고 점수를 보정합니다.
-            </p>
-          </div>
-        </div>
-        <span className="text-xs text-slate-400 font-medium">
-          총 {notes.length}건의 기록
-        </span>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="section-title">
+          면접관 메모 <span className="ml-1 text-xs font-normal text-fg-subtle tabular-nums">{notes.length}</span>
+        </h2>
+        {shareId && <span className="text-xs text-ok">공유 중</span>}
       </div>
 
       {/* 1-Click Live Interview Scorecard */}
       {Array.isArray(applicant?.analysis?.interviewQuestions) && applicant.analysis.interviewQuestions.length > 0 && (
-        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-indigo-500/20 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-              <CheckCircle className="w-3.5 h-3.5 text-indigo-400" />
-              실전 면접관용 1-Click 팩트체크 채점표 (타이핑 없이 즉시 기록)
-            </span>
-            <span className="text-[10px] text-slate-400">질문별 원클릭 판정</span>
+        <div className="rounded-md border border-line overflow-hidden">
+          <div className="flex items-center justify-between gap-2 px-3 py-2 bg-subtle border-b border-line">
+            <span className="text-xs font-medium text-fg">질문별 판정</span>
+            <span className="text-xs text-fg-subtle">누르면 메모로 기록</span>
           </div>
-          <div className="space-y-2">
+          <div className="divide-y divide-line">
             {applicant.analysis.interviewQuestions.map((iq, qIdx) => {
               const currentVerdict = questionRatings[qIdx];
               return (
-                <div key={iq.id || qIdx} className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="text-xs text-slate-200 flex-1 pr-2">
-                    <span className="font-mono font-bold text-indigo-400 mr-1.5">Q{qIdx + 1}.</span>
-                    <span>{iq.question}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '검증 통과', 3)}
-                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
-                        currentVerdict === '검증 통과'
-                          ? 'bg-emerald-600 text-white border-emerald-400'
-                          : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
-                      }`}
-                    >
-                      ✅ 검증 통과 (+3)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '보완 필요', 0)}
-                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
-                        currentVerdict === '보완 필요'
-                          ? 'bg-amber-600 text-white border-amber-400'
-                          : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
-                      }`}
-                    >
-                      ⚠️ 보완 필요 (0)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickScorecardClick(qIdx, iq.question, '과장 확인', -5)}
-                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
-                        currentVerdict === '과장 확인'
-                          ? 'bg-rose-600 text-white border-rose-400'
-                          : 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
-                      }`}
-                    >
-                      ❌ 과장 확인 (-5)
-                    </button>
+                <div key={iq.id || qIdx} className="px-3 py-2.5 flex flex-col gap-2">
+                  <p className="text-[13px] text-fg flex-1 min-w-0 break-keep">
+                    <span className="font-semibold text-brand-fg mr-1.5 tabular-nums">Q{qIdx + 1}</span>
+                    {iq.question}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                    {VERDICTS.map((v) => (
+                      <button
+                        key={v.label}
+                        type="button"
+                        onClick={() => handleQuickScorecardClick(qIdx, iq.question, v.label, v.delta)}
+                        aria-pressed={currentVerdict === v.label}
+                        className={`px-2.5 py-1 rounded-md text-[12px] font-semibold border transition-colors ${
+                          currentVerdict === v.label ? v.on : v.off
+                        }`}
+                      >
+                        {v.text}
+                      </button>
+                    ))}
                   </div>
                 </div>
               );
@@ -223,65 +192,51 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
       )}
 
       {/* Notes Timeline List */}
-      <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+      <ul className="space-y-2 max-h-64 overflow-y-auto pr-1">
         {notes.map((note) => (
-          <div
-            key={note.id}
-            className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5 transition-all hover:border-slate-700"
-          >
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-white">{note.author}</span>
-                <span className={`px-1.5 py-0.2 text-[9px] rounded font-semibold ${
-                  note.role === 'ADMIN' ? 'bg-purple-500/20 text-purple-300' :
-                  note.role === 'RECRUITER' ? 'bg-blue-500/20 text-blue-300' :
-                  'bg-emerald-500/20 text-emerald-300'
-                }`}>
-                  {note.role}
-                </span>
+          <li key={note.id} className="border-l-2 border-line-strong pl-3 py-1 space-y-0.5">
+            <div className="flex items-center justify-between gap-2 text-[12px]">
+              <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                <span className="font-semibold text-fg">{note.author}</span>
+                <span className="chip chip-neutral !py-0">{ROLE_LABEL[note.role] || note.role}</span>
                 {note.scoreAdjustment !== 0 && (
-                  <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded ${
-                    note.scoreAdjustment > 0 
-                      ? 'bg-emerald-500/20 text-emerald-300' 
-                      : 'bg-rose-500/20 text-rose-300'
-                  }`}>
+                  <span className={`chip !py-0 ${note.scoreAdjustment > 0 ? 'chip-ok' : 'chip-bad'}`}>
                     {note.scoreAdjustment > 0 ? `+${note.scoreAdjustment}점 보정` : `${note.scoreAdjustment}점 감점`}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] text-slate-500">
+              <span className="text-fg-subtle shrink-0 tabular-nums">
                 {new Date(note.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <p className="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed">
-              {note.content}
-            </p>
-          </div>
+            <p className="text-[13px] text-fg-muted whitespace-pre-wrap leading-relaxed break-keep">{note.content}</p>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {/* New Note Form */}
-      <form onSubmit={handleAddNote} className="space-y-2 pt-2 border-t border-slate-800/80">
-        <div className="flex items-center justify-between text-xs text-slate-400">
-          <span>작성자: <strong className="text-white">{currentUser?.name}</strong> ({currentUser?.roleTitle})</span>
-          
-          {/* Quick Score Adjustment Buttons */}
+      <form onSubmit={handleAddNote} className="space-y-2.5 pt-4 border-t border-line">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[12px] text-fg-muted">
+          <span>
+            작성자 <strong className="text-fg font-semibold">{currentUser?.name}</strong> · {currentUser?.roleTitle}
+          </span>
           <div className="flex items-center gap-1.5">
-            <span className="text-[11px]">점수 가감:</span>
-            {[-5, 0, 5].map(v => (
-              <button
-                type="button"
-                key={v}
-                onClick={() => setScoreAdj(v)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition-all ${
-                  scoreAdj === v
-                    ? 'bg-blue-600 text-white border-blue-500'
-                    : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
-                }`}
-              >
-                {v > 0 ? `+${v}점` : v < 0 ? `${v}점` : '변동없음'}
-              </button>
-            ))}
+            <span>점수 가감</span>
+            <div className="flex p-0.5 rounded-md bg-muted/70 border border-line">
+              {[-5, 0, 5].map(v => (
+                <button
+                  type="button"
+                  key={v}
+                  onClick={() => setScoreAdj(v)}
+                  aria-pressed={scoreAdj === v}
+                  className={`px-2.5 py-0.5 rounded text-[12px] font-semibold transition-colors ${
+                    scoreAdj === v ? 'bg-surface text-fg shadow-card' : 'text-fg-muted hover:text-fg'
+                  }`}
+                >
+                  {v > 0 ? `+${v}점` : v < 0 ? `${v}점` : '변동없음'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -290,15 +245,16 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="면접 질문에 대한 지원자의 답변 내용 및 기술 역량 코멘트를 입력하세요..."
-            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            placeholder="면접 질문에 대한 지원자의 답변과 의견을 적어 주세요"
+            className="field flex-1 min-w-0"
+            aria-label="면접관 메모"
           />
           <button
             type="submit"
             disabled={!newComment.trim() || isSubmitting}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-600/30 transition-all shrink-0"
+            className="btn btn-primary btn-md shrink-0"
           >
-            <Send className="w-3.5 h-3.5" />
+            <Send className="w-4 h-4" />
             <span>등록</span>
           </button>
         </div>
