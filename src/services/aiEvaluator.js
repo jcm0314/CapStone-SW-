@@ -12,8 +12,11 @@ import { anonymizePIIInWorker, enrichEvidencesInWorker } from './workerService';
  * Evaluation relies on the Google Gemini 4-Agent pipeline while offloading
  * heavy PII regex masking and 2-Stage Fuzzy substring matching to Web Workers.
  */
-export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: providedApiKey, onProgress }) {
+export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: providedApiKey, tenantId, onProgress }) {
   const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
+
+  // Cache scope: tenant + competency weights + active Prompt Studio settings (see cacheService.generateCacheKey)
+  const cacheScope = buildEvaluationCacheScope(jobTemplate, tenantId);
 
   // Step 1: Resolve Gemini API Key (Parameter -> localStorage -> Environment Variable)
   const apiKey = (
@@ -27,7 +30,7 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
   const isB2BManagedMode = !apiKey || apiKey.length < 5;
 
   // Step 2: IndexedDB Local Cache Lookup (Strictly cached Gemini results)
-  const cachedResult = await getCachedAnalysis(rawText, jobTemplate.id);
+  const cachedResult = await getCachedAnalysis(rawText, jobTemplate.id, cacheScope);
   if (cachedResult && cachedResult.mode !== 'LOCAL_FALLBACK') {
     if (onProgress) {
       onProgress({
@@ -65,6 +68,7 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
       cleanText,
       rawText,
       piiResult,
+      cacheScope,
       onProgress
     });
     return gatewayResult;
@@ -109,10 +113,30 @@ export async function analyzeApplicant({ name, applyJobId, rawText, apiKey: prov
 
   if (finalResult) {
     finalResult.piiMeta = piiResult;
-    await saveAnalysisToCache(rawText, jobTemplate.id, finalResult);
+    await saveAnalysisToCache(rawText, jobTemplate.id, finalResult, cacheScope);
   }
 
   return finalResult;
+}
+
+/**
+ * Builds the evaluation cache scope: current tenant (explicit arg -> TenantContext's localStorage key),
+ * the job's competency weights and the active Prompt Studio addendum.
+ */
+export function buildEvaluationCacheScope(jobTemplate, tenantId) {
+  let resolvedTenantId = tenantId || '';
+  if (!resolvedTenantId) {
+    try {
+      resolvedTenantId = (typeof localStorage !== 'undefined' && localStorage.getItem('checkmate_current_tenant_id')) || '';
+    } catch {
+      resolvedTenantId = '';
+    }
+  }
+  return {
+    tenantId: resolvedTenantId,
+    competencies: (jobTemplate?.competencies || []).map(c => ({ id: c.id, weight: c.weight })),
+    promptAddendum: getActivePromptAddendum()
+  };
 }
 
 /**
@@ -323,7 +347,7 @@ function getApiBaseUrl() {
  * Analyzes candidate via Central Enterprise B2B Gateway (Managed Token Mode)
  * Server holds the enterprise Gemini API Key, eliminating the need for client API keys.
  */
-async function analyzeWithBffGateway({ name, applyJobId, jobTemplate, cleanText, rawText, piiResult, onProgress }) {
+async function analyzeWithBffGateway({ name, applyJobId, jobTemplate, cleanText, rawText, piiResult, cacheScope, onProgress }) {
   const apiBase = getApiBaseUrl();
 
   try {
@@ -364,7 +388,7 @@ async function analyzeWithBffGateway({ name, applyJobId, jobTemplate, cleanText,
       onProgress({ percent: 100, status: '🏢 B2B 일괄 결제 엔진 평가 완료 (토큰 비용: 전사 통합 결제)' });
     }
 
-    await saveAnalysisToCache(rawText, jobTemplate.id, gatewayResult);
+    await saveAnalysisToCache(rawText, jobTemplate.id, gatewayResult, cacheScope);
     return gatewayResult;
   } catch (err) {
     console.error('B2B Gateway evaluation error:', err);

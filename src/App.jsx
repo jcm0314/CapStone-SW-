@@ -106,6 +106,7 @@ export default function App() {
         applyJobId: currentJob.id,
         rawText,
         apiKey: effectiveApiKey,
+        tenantId: currentTenant.id,
         onProgress: (p) => setProgressState(p)
       });
 
@@ -172,7 +173,8 @@ export default function App() {
           name: c.name,
           applyJobId: currentJob.id,
           rawText: c.rawText,
-          apiKey: effectiveApiKey
+          apiKey: effectiveApiKey,
+          tenantId: currentTenant.id
         });
 
         const tenantBound = {

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { analyzeApplicant } from './aiEvaluator';
+import { analyzeApplicant, buildEvaluationCacheScope } from './aiEvaluator';
 import { JOB_TEMPLATES } from '../data/jobTemplates';
+import { saveCompanyPromptSettings } from './promptStudioService';
 
 describe('AI Grounding Evaluator Core Engine (Gemini API Only)', () => {
   beforeEach(() => {
@@ -65,5 +66,29 @@ describe('AI Grounding Evaluator Core Engine (Gemini API Only)', () => {
     expect(result.mode).toBe('B2B_MANAGED_TOKEN');
     expect(result.rawText).toBe(rawText);
     expect(result.analysis.summary.totalScore).toBe(84);
+  });
+});
+
+describe('buildEvaluationCacheScope (캐시 키 범위)', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('명시적 tenantId, 직무 가중치, Prompt Studio addendum을 모두 포함해야 함', () => {
+    const job = JOB_TEMPLATES.find(j => j.id === 'tech_backend');
+    const scope = buildEvaluationCacheScope(job, 'daangn');
+
+    expect(scope.tenantId).toBe('daangn');
+    expect(scope.competencies).toEqual(job.competencies.map(c => ({ id: c.id, weight: c.weight })));
+    expect(scope.promptAddendum).toBe('');
+  });
+
+  it('tenantId 미지정 시 TenantContext가 저장한 테넌트를 쓰고, Prompt Studio 저장 내용이 반영되어야 함', () => {
+    localStorage.setItem('checkmate_current_tenant_id', 'toss-payments');
+    saveCompanyPromptSettings({ coreValues: ['고객 집착'] });
+
+    const scope = buildEvaluationCacheScope(JOB_TEMPLATES[0]);
+    expect(scope.tenantId).toBe('toss-payments');
+    expect(scope.promptAddendum).toContain('고객 집착');
   });
 });
