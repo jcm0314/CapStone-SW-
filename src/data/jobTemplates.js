@@ -1,8 +1,7 @@
 export const JOB_TEMPLATES = [
   {
     id: "tech_backend",
-    title: "백엔드 소프트웨어 엔지니어",
-    category: "IT / 개발",
+    title: "소프트웨어 엔지니어",
     description: "대용량 트래픽 처리, DB 최적화 및 안정적 아키텍처 설계 역량이 핵심인 직무",
     competencies: [
       { id: "problem_solving", name: "문제 해결력 & 논리성", weight: 30, color: "#3B82F6" },
@@ -14,8 +13,7 @@ export const JOB_TEMPLATES = [
   },
   {
     id: "marketing_growth",
-    title: "그로스 마케팅 스페셜리스트",
-    category: "마케팅 / 기획",
+    title: "그로스 마케팅",
     description: "데이터 기반 퍼널 분석, CAC/LTV 최적화 및 ROAS 극대화 경험이 중요한 직무",
     competencies: [
       { id: "tech_skill", name: "데이터 분석 & 툴 활용력", weight: 30, color: "#8B5CF6" },
@@ -27,8 +25,7 @@ export const JOB_TEMPLATES = [
   },
   {
     id: "sales_account",
-    title: "B2B 영업 & 아카운트 매니저",
-    category: "영업 / 사업개발",
+    title: "B2B 영업 & 사업개발",
     description: "엔터프라이즈 고객 설득, 딜 클로징, 목표 매출 달성 및 파이프라인 관리가 핵심인 직무",
     competencies: [
       { id: "teamwork", name: "고객 설득 & 커뮤니케이션", weight: 35, color: "#10B981" },
@@ -40,8 +37,7 @@ export const JOB_TEMPLATES = [
   },
   {
     id: "hr_recruiter",
-    title: "HR 리크루터 & 인사담당자",
-    category: "인사 / 경영지원",
+    title: "인사 & 리크루터",
     description: "우수 인재 발굴, 객관적 서류/면접 평가 및 조직 문화 이해가 요구되는 직무",
     competencies: [
       { id: "ethics", name: "인재 검증력 & 윤리 의식", weight: 30, color: "#EC4899" },
