@@ -1,0 +1,62 @@
+# GCP VM 한 대 + Cloudflare Tunnel 배포
+#   cd deploy/vm && cp env.example .env && (값 채우기) && docker compose up -d --build
+# 들어오는 포트는 하나도 열지 않습니다. 외부 접속은 tunnel 컨테이너가 Cloudflare 쪽으로 나가는 연결로만 받습니다.
+name: checkmate
+
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        VITE_API_GATEWAY_URL: ${PUBLIC_URL:?PUBLIC_URL 을 .env 에 설정하세요}/gw
+        VITE_SPRING_API_URL: ${SPRING_PUBLIC_URL:-}
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:${WEB_LOCAL_PORT:-8080}:8080"   # VM 안에서 점검용 (외부 노출 아님)
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
+    mem_limit: 128m
+
+  api-gateway:
+    build:
+      context: ../..
+      dockerfile: server/Dockerfile
+    environment:
+      PORT: "3001"
+      NODE_ENV: production
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ANTHROPIC_API_KEY 를 .env 에 설정하세요}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-5-5}
+      SSO_TOKEN_SECRET: ${SSO_TOKEN_SECRET:?SSO_TOKEN_SECRET 을 .env 에 설정하세요}
+      CORS_ALLOWED_ORIGINS: ${PUBLIC_URL}
+    restart: unless-stopped
+    mem_limit: 384m
+
+  # 선택: Spring 코어 API. 지금 운영 빌드에는 Spring 로그인 화면이 없어서 켜도 화면에서 쓰이지 않습니다.
+  #   켜기: docker compose --profile core up -d --build
+  core-api:
+    profiles: ["core"]
+    build:
+      context: ../../server-spring
+      dockerfile: Dockerfile
+    environment:
+      # local 프로필: H2 메모리 DB(재시작하면 데이터 초기화) + 데모 계정 시드
+      SPRING_PROFILES_ACTIVE: local
+      PORT: "8080"
+      JWT_SECRET: ${JWT_SECRET:-}            # 비어 있으면 Spring 이 기동을 거부함 (안전)
+      CHECKMATE_SEED_PASSWORD: ${CHECKMATE_SEED_PASSWORD:-}  # core 프로필을 켤 때 반드시 설정
+      JAVA_TOOL_OPTIONS: -Xmx512m
+    restart: unless-stopped
+    mem_limit: 768m
+
+  tunnel:
+    image: cloudflare/cloudflared:2026.9.3
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?TUNNEL_TOKEN 을 .env 에 설정하세요}
+    depends_on:
+      - web
+    restart: unless-stopped
+    mem_limit: 128m

@@ -12,6 +12,9 @@ RUN if [ -z "$VITE_API_GATEWAY_URL" ]; then \
       exit 1; \
     fi
 ENV VITE_API_GATEWAY_URL=${VITE_API_GATEWAY_URL}
+# 선택: Spring 코어 API 주소. 비우면 Spring 연동이 꺼진 빌드가 됩니다.
+ARG VITE_SPRING_API_URL=
+ENV VITE_SPRING_API_URL=${VITE_SPRING_API_URL}
 
 # Copy package manifests first for efficient Docker layer caching
 COPY package.json package-lock.json ./
