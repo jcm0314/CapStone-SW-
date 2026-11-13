@@ -1,24 +1,15 @@
 import React, { useState } from 'react';
 import { Sparkles, FileText, Cpu, UploadCloud, Edit3 } from 'lucide-react';
-import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import FileUploadZone from './FileUploadZone';
 
 export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing, currentJobId, progressState }) {
   const [inputTab, setInputTab] = useState('TEXT'); // 'TEXT' | 'FILE'
-  const [name, setName] = useState('김민준');
-  const [rawText, setRawText] = useState(SAMPLE_APPLICANTS[0].rawText);
-  const [selectedSampleId, setSelectedSampleId] = useState(SAMPLE_APPLICANTS[0].id);
-
-  const handleSelectSample = (sample) => {
-    setName(sample.name);
-    setRawText(sample.rawText);
-    setSelectedSampleId(sample.id);
-  };
+  const [name, setName] = useState('');
+  const [rawText, setRawText] = useState('');
 
   const handleOnFileSelected = (extractedText, filename) => {
     if (extractedText) {
       setRawText(extractedText);
-      setSelectedSampleId('');
       if (filename) {
         const cleanName = filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '');
         if (cleanName && cleanName.length >= 2) {
@@ -38,32 +29,11 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
 
   return (
     <div className="glass-panel rounded-2xl p-5 border border-gray-800 space-y-4">
-      {/* Header & Sample Selector Buttons */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-gray-800/80">
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-blue-400" />
           <h2 className="text-sm font-bold text-white">지원서 서류 입력</h2>
-        </div>
-
-        {/* Quick Sample Selector */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] text-gray-400 font-medium mr-1">테스트 샘플:</span>
-          {SAMPLE_APPLICANTS.map((sample) => (
-            <button
-              key={sample.id}
-              onClick={() => {
-                setInputTab('TEXT');
-                handleSelectSample(sample);
-              }}
-              className={`px-2.5 py-1 text-[11px] rounded-lg border transition-all ${
-                selectedSampleId === sample.id && inputTab === 'TEXT'
-                  ? 'bg-blue-600/20 text-blue-300 border-blue-500/50 font-semibold'
-                  : 'bg-gray-900/60 text-gray-400 border-gray-800 hover:text-white hover:bg-gray-800'
-              }`}
-            >
-              {sample.name} ({sample.analysis.summary.decision === 'STRONG_PASS' ? '🟢 우수' : sample.analysis.summary.decision === 'REJECT' ? '🔴 과장/AI의심' : '🟡 검증필요'})
-            </button>
-          ))}
         </div>
       </div>
 
@@ -123,7 +93,6 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
             value={rawText}
             onChange={(e) => {
               setRawText(e.target.value);
-              setSelectedSampleId('');
             }}
             placeholder="자기소개서 및 경력기술서 본문을 붙여넣으세요..."
             className="w-full bg-gray-900/90 border border-gray-700/80 rounded-xl p-3.5 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-blue-500 font-mono resize-none"
