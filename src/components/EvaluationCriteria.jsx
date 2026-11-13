@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { Sliders, CheckCircle2, RotateCcw, ShieldAlert } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { JOB_TEMPLATES } from '../data/jobTemplates';
 
 export default function EvaluationCriteria({ currentJob, setCurrentJob, onCriteriaChange }) {
   const [competencies, setCompetencies] = useState(currentJob.competencies);
+
+  const handleTitleChange = (e) => {
+    const updatedJob = { ...currentJob, title: e.target.value };
+    setCurrentJob(updatedJob);
+    onCriteriaChange(updatedJob);
+  };
 
   const handleTemplateChange = (e) => {
     const selected = JOB_TEMPLATES.find(j => j.id === e.target.value) || JOB_TEMPLATES[0];
@@ -36,17 +42,37 @@ export default function EvaluationCriteria({ currentJob, setCurrentJob, onCriter
         </button>
       </div>
 
-      {/* Select Job Template */}
-      <div className="space-y-1.5">
-        <label htmlFor="job-template" className="label">채용 직무</label>
-        <select id="job-template" value={currentJob.id} onChange={handleTemplateChange} className="field">
-          {JOB_TEMPLATES.map(job => (
-            <option key={job.id} value={job.id}>
-              [{job.category}] {job.title}
-            </option>
-          ))}
-        </select>
-        <p className="text-[12px] text-fg-subtle leading-snug">{currentJob.description}</p>
+      {/* Job Title & Preset Selection */}
+      <div className="space-y-2">
+        <label htmlFor="job-title" className="label">채용 직무</label>
+        <input
+          id="job-title"
+          type="text"
+          value={currentJob.title || ''}
+          onChange={handleTitleChange}
+          placeholder="채용 직무명 입력 (예: 소프트웨어 엔지니어, 마케터)"
+          className="field"
+        />
+        <div className="flex items-center gap-2 pt-0.5">
+          <label htmlFor="job-template-select" className="text-[11px] text-fg-subtle shrink-0">
+            기준 프리셋:
+          </label>
+          <select
+            id="job-template-select"
+            value={currentJob.id}
+            onChange={handleTemplateChange}
+            className="field !py-0.5 text-xs h-7"
+          >
+            {JOB_TEMPLATES.map(job => (
+              <option key={job.id} value={job.id}>
+                {job.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        {currentJob.description && (
+          <p className="text-[12px] text-fg-subtle leading-snug">{currentJob.description}</p>
+        )}
       </div>
 
       {/* Competency Weight Sliders */}

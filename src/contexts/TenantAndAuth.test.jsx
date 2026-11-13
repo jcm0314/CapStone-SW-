@@ -60,7 +60,7 @@ describe('TenantContext & Multi-Tenancy Isolation', () => {
     expect(result.current.currentTenant.name).toBe('토스페이먼츠');
   });
 
-  it('당근(daangn)으로 테넌트 전환 시 당근 전용 지원자 데이터가 로드되어야 한다', () => {
+  it('당근(daangn)으로 테넌트 전환 시 기본 지원자 목록은 비어 있어야 한다', () => {
     const { result } = renderHook(() => useTenant(), { wrapper });
 
     act(() => {
@@ -68,10 +68,7 @@ describe('TenantContext & Multi-Tenancy Isolation', () => {
     });
 
     expect(result.current.currentTenant.id).toBe('daangn');
-    const daangnApplicants = result.current.getTenantApplicants();
-    expect(daangnApplicants.length).toBeGreaterThan(0);
-    expect(daangnApplicants[0].orgId).toBe('daangn');
-    expect(daangnApplicants[0].name).toContain('정지훈');
+    expect(result.current.getTenantApplicants()).toEqual([]);
   });
 
   it('지원자 저장 시 현재 테넌트의 orgId가 강제 바인딩(RLS)되어야 한다', () => {

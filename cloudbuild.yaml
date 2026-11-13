@@ -4,14 +4,11 @@
 #   --substitutions=_VITE_API_GATEWAY_URL=https://<게이트웨이 Cloud Run URL>,_CORS_ALLOWED_ORIGINS=https://<프론트 Cloud Run URL>
 #
 # 순서: 게이트웨이 빌드·배포 → (게이트웨이 주소를 넣어) 프론트 빌드·배포
-# _VITE_API_GATEWAY_URL 이 비어 있으면 프론트 Docker 빌드가 즉시 실패합니다 (#24).
 
 substitutions:
   _REGION: asia-northeast3
-  _VITE_API_GATEWAY_URL: ''
-  _CORS_ALLOWED_ORIGINS: ''
-  # Secret Manager 에 미리 만든 시크릿을 게이트웨이 환경변수로 연결 (ENV=시크릿이름:버전, 여러 개는 쉼표)
-  _GATEWAY_SECRETS: 'ANTHROPIC_API_KEY=anthropic-api-key:latest'
+  _VITE_API_GATEWAY_URL: 'https://hr-evaluator-api-gateway-pt3ki5ggua-du.a.run.app'
+  _CORS_ALLOWED_ORIGINS: 'https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app'
 
 steps:
   # Step 1: Build & push Express API Gateway image
@@ -23,7 +20,7 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/hr-evaluator-api-gateway:latest']
 
-  # Step 2: Deploy gateway (AI 키는 Secret Manager, CORS 는 프론트 주소만 허용)
+  # Step 2: Deploy gateway
   - id: deploy-gateway
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
@@ -35,8 +32,7 @@ steps:
       - '--region=${_REGION}'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars=^@^NODE_ENV=production@CORS_ALLOWED_ORIGINS=${_CORS_ALLOWED_ORIGINS}'
-      - '--set-secrets=${_GATEWAY_SECRETS}'
+      - '--update-env-vars=NODE_ENV=production,CORS_ALLOWED_ORIGINS=${_CORS_ALLOWED_ORIGINS}'
 
   # Step 3: Build & push frontend with the gateway URL baked in (필수 build-arg)
   - id: build-frontend

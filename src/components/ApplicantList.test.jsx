@@ -2,25 +2,37 @@ import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import ApplicantList from './ApplicantList';
-import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+
+const applicants = [
+  {
+    id: 'candidate-a',
+    name: '지원자 A',
+    analysis: { summary: { totalScore: 80, decision: 'STRONG_PASS' } }
+  },
+  {
+    id: 'candidate-b',
+    name: '지원자 B',
+    analysis: { summary: { totalScore: 40, decision: 'REJECT' } }
+  }
+];
 
 describe('ApplicantList (첫 화면 지원자 목록)', () => {
   it('지원자 행을 누르면 해당 지원자로 결과 화면을 연다', () => {
     const onOpen = vi.fn();
     const { getByLabelText } = render(
-      <ApplicantList applicants={SAMPLE_APPLICANTS} selectedId={null} onOpen={onOpen} onNew={() => {}} />
+      <ApplicantList applicants={applicants} selectedId={null} onOpen={onOpen} onNew={() => {}} />
     );
-    fireEvent.click(getByLabelText('이서연 평가 결과 열기'));
-    expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ name: '이서연' }));
+    fireEvent.click(getByLabelText('지원자 B 평가 결과 열기'));
+    expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ name: '지원자 B' }));
   });
 
   it('판정 탭으로 걸러 본다', () => {
     const { getByRole, queryByLabelText } = render(
-      <ApplicantList applicants={SAMPLE_APPLICANTS} selectedId={null} onOpen={() => {}} onNew={() => {}} />
+      <ApplicantList applicants={applicants} selectedId={null} onOpen={() => {}} onNew={() => {}} />
     );
     fireEvent.click(getByRole('tab', { name: /탈락 권장/ }));
-    expect(queryByLabelText('이서연 평가 결과 열기')).toBeTruthy();
-    expect(queryByLabelText('김민준 평가 결과 열기')).toBeNull();
+    expect(queryByLabelText('지원자 B 평가 결과 열기')).toBeTruthy();
+    expect(queryByLabelText('지원자 A 평가 결과 열기')).toBeNull();
   });
 
   it('지원자가 없으면 새 평가 안내를 보여 준다', () => {

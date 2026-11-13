@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Sparkles, FileText, Loader2, UploadCloud, PenLine } from 'lucide-react';
-import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
+import { Loader2, UploadCloud, PenLine } from 'lucide-react';
 import FileUploadZone from './FileUploadZone';
-
-const DECISION_TONE = {
-  STRONG_PASS: { label: '우수', dot: 'bg-ok-solid' },
-  REJECT: { label: '과장 의심', dot: 'bg-bad-solid' },
-  DEFAULT: { label: '검증 필요', dot: 'bg-warn-solid' }
-};
 
 const PIPELINE_STEPS = [
   { id: 1, name: '근거 문장 찾기', threshold: 25 },
@@ -18,25 +11,17 @@ const PIPELINE_STEPS = [
 
 export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing, currentJobId, progressState, tabRequest }) {
   const [inputTab, setInputTab] = useState('TEXT'); // 'TEXT' | 'FILE'
-  const [name, setName] = useState('김민준');
-  const [rawText, setRawText] = useState(SAMPLE_APPLICANTS[0].rawText);
-  const [selectedSampleId, setSelectedSampleId] = useState(SAMPLE_APPLICANTS[0].id);
+  const [name, setName] = useState('');
+  const [rawText, setRawText] = useState('');
 
   // 메뉴/검색에서 "PDF / TXT 업로드"를 고르면 파일 탭으로 전환
   useEffect(() => {
     if (tabRequest?.tab) setInputTab(tabRequest.tab);
   }, [tabRequest]);
 
-  const handleSelectSample = (sample) => {
-    setName(sample.name);
-    setRawText(sample.rawText);
-    setSelectedSampleId(sample.id);
-  };
-
   const handleOnFileSelected = (extractedText, filename) => {
     if (extractedText) {
       setRawText(extractedText);
-      setSelectedSampleId('');
       if (filename) {
         const cleanName = filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '');
         if (cleanName && cleanName.length >= 2) {
@@ -63,37 +48,6 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
     <div className="card card-pad space-y-4">
       {/* Header */}
       <h2 className="section-title">자기소개서</h2>
-
-      {/* Quick samples */}
-      <div className="space-y-2">
-        <p className="label">예시 자소서</p>
-        <div className="flex flex-wrap gap-1.5">
-          {SAMPLE_APPLICANTS.map((sample) => {
-            const tone = DECISION_TONE[sample.analysis.summary.decision] || DECISION_TONE.DEFAULT;
-            const active = selectedSampleId === sample.id && inputTab === 'TEXT';
-            return (
-              <button
-                key={sample.id}
-                type="button"
-                onClick={() => {
-                  setInputTab('TEXT');
-                  handleSelectSample(sample);
-                }}
-                aria-pressed={active}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[12px] rounded-lg border transition-colors ${
-                  active
-                    ? 'bg-brand-soft text-brand-fg border-brand-line font-semibold'
-                    : 'bg-surface text-fg-muted border-line hover:text-fg hover:border-line-strong'
-                }`}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${tone.dot}`} />
-                {sample.name}
-                <span className="text-fg-subtle font-normal">· {tone.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Input method */}
       <div className="flex gap-4 border-b border-line" role="tablist" aria-label="입력 방식">
@@ -136,7 +90,6 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
             value={rawText}
             onChange={(e) => {
               setRawText(e.target.value);
-              setSelectedSampleId('');
             }}
             placeholder="자기소개서나 경력기술서 본문을 붙여 넣으세요."
             className="field leading-[1.75] resize-y min-h-[220px]"

@@ -38,6 +38,8 @@ jobs:
   spring-tests:
     name: ☕ Spring Boot Gradle Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: server-spring

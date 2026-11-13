@@ -18,19 +18,18 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { INITIAL_DEPARTMENTS, generate2000Users } from '../data/mockCreditData';
 
 export default function DepartmentCreditDashboard() {
   // Department quotas state
   const [departments, setDepartments] = useState(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('dku_departments_quota') : null;
-    return saved ? JSON.parse(saved) : INITIAL_DEPARTMENTS;
+    return saved ? JSON.parse(saved) : [];
   });
 
-  // 2,000 users state
+  // Users state
   const [users, setUsers] = useState(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('dku_users_list') : null;
-    return saved ? JSON.parse(saved) : generate2000Users();
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Filters & Pagination
@@ -206,7 +205,7 @@ export default function DepartmentCreditDashboard() {
             </div>
             <div className="text-xs text-fg-muted mt-1 flex items-center gap-1.5">
               <span>진척률:</span>
-              <span className="text-warn font-bold">{((totalUsed / totalAllocated) * 100).toFixed(1)}% 소진</span>
+              <span className="text-warn font-bold">{(totalAllocated > 0 ? (totalUsed / totalAllocated) * 100 : 0).toFixed(1)}% 소진</span>
             </div>
           </div>
         </div>
