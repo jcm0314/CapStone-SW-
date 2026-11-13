@@ -9,6 +9,7 @@ import kr.co.checkmate.server.domain.feedback.dto.FeedbackReportCreateRequest;
 import kr.co.checkmate.server.domain.feedback.dto.FeedbackReportResponse;
 import kr.co.checkmate.server.domain.feedback.dto.PublicFeedbackReportResponse;
 import kr.co.checkmate.server.domain.feedback.service.FeedbackService;
+import kr.co.checkmate.server.support.TestAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,7 @@ class FeedbackControllerTest {
 
         // when & then
         mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants/{applicantId}/feedback", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -105,7 +107,8 @@ class FeedbackControllerTest {
                 .willReturn(response);
 
         // when & then
-        mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants/{applicantId}/feedback/send", tenantId, applicantId))
+        mockMvc.perform(post("/api/v1/tenants/{tenantId}/applicants/{applicantId}/feedback/send", tenantId, applicantId)
+                        .with(TestAuth.recruiter(tenantId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.isSent").value(true));

@@ -27,6 +27,25 @@
 | 18 | 미사용(dead) 코드 정리 여부 결정 | P3 | 완료 | [18_dead-code-cleanup.md](18_dead-code-cleanup.md) |
 | 19 | Gemini 모델명/엔드포인트 실사용 검증 | P1 | 완료 | [19_gemini-model-validation.md](19_gemini-model-validation.md) |
 
+## 2차 큐 (2026-11-12 사용자 시나리오 트러블슈팅)
+
+> 근거: [docs/troubleshooting/2026-11-12_user-scenario-report.md](../docs/troubleshooting/2026-11-12_user-scenario-report.md)
+> 위에서부터 순서대로 진행합니다. AI 실연동(28)은 신뢰성 결함(20·21)을 먼저 고친 뒤 진행하는 후순위 작업입니다.
+
+| ID | 제목 | 우선순위 | 상태 | 파일 |
+| :-: | :--- | :-: | :-: | :--- |
+| 20 | 환각 인용(원문 매칭 실패) → verify 강제 전환 | P0 | 대기 | [20_hallucinated-quote-verify.md](20_hallucinated-quote-verify.md) |
+| 21 | 화면 본문 PII 원본 노출 수정 (#37-2) | P0 | 대기 | [21_pii-masked-view.md](21_pii-masked-view.md) |
+| 22 | 캐시 키에 테넌트·Prompt Studio 설정 포함 (#37-4) | P1 | 대기 | [22_cache-key-scope.md](22_cache-key-scope.md) |
+| 23 | Spring API 인증 + 테넌트 격리 | P0 | 대기 | [23_spring-auth-tenant-isolation.md](23_spring-auth-tenant-isolation.md) |
+| 24 | 프론트 API 주소 빌드 설정 강제 + 라이브 재배포 | P0 | 대기 | [24_api-base-url-and-redeploy.md](24_api-base-url-and-redeploy.md) |
+| 25 | BYOK(개인 키) 모드 개선 | P2 | 대기 | [25_byok-hardening.md](25_byok-hardening.md) |
+| 26 | 첫 화면 샘플 결과에 "샘플" 표시 | P2 | 대기 | [26_sample-result-badge.md](26_sample-result-badge.md) |
+| 27 | #21~#23 Spring 기준 갱신 + 프론트 ↔ Spring 연결 | P1 | 대기 | [27_spring-integration-docs.md](27_spring-integration-docs.md) |
+| 28 | AI 실연동 (서버측 Gemini API) | 후순위 | 대기 | [28_ai-live-integration.md](28_ai-live-integration.md) |
+| 29 | 메인 화면 디자인 개편 (밝은 테마 · 검색/메뉴로 기능 탐색) | 후순위 | 대기 | [29_ui-redesign-light-theme.md](29_ui-redesign-light-theme.md) |
+| 30 | 카페 피드백(#47) 미구현 기능 백로그 | 후순위 | 대기 | [30_cafe-feedback-backlog.md](30_cafe-feedback-backlog.md) |
+
 ## 핵심 격차 요약
 
 - **실행 검증 불가**: 이 PC에는 Node/npm이 설치되어 있지 않습니다. 그래서 "51 tests 100% passed"를 직접 재현하지 못했습니다(01, 15 참고).

@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html lang="ko" class="dark">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HR AX Smart Evaluator - 근거 기반 자기소개서 AI 역량 평가 시스템</title>
-    <!-- Google Fonts: Inter & Pretendard -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#F6F7F9" />
+    <title>Check-Mate · 자기소개서 근거 기반 서류 평가</title>
+    <meta name="description" content="자기소개서를 붙여 넣으면 AI가 평가 근거가 된 문장에 형광펜을 칠해 주고, 면접 질문까지 만들어 줍니다." />
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script>
+      // 첫 렌더 전에 테마를 적용해 깜빡임을 막습니다. (기본: 라이트)
+      (function () {
+        try {
+          if (localStorage.getItem('checkmate_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          /* 저장소 접근 불가 시 라이트 유지 */
+        }
+      })();
+    </script>
   </head>
-  <body class="bg-[#0B0F19] text-slate-100 font-sans antialiased min-h-screen selection:bg-blue-500 selection:text-white">
+  <body class="font-sans antialiased min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -3,6 +3,16 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Build-time public config (Vite inlines VITE_* at build time; .env files are excluded by .dockerignore)
+# 필수: docker build --build-arg VITE_API_GATEWAY_URL=https://<gateway-host> .
+# 없으면 프론트가 자기 nginx 의 /api 를 호출해 "Unexpected token '<'" 가 나므로 의존성 설치 전에 바로 실패합니다 (#24, docs/DEPLOY.md)
+ARG VITE_API_GATEWAY_URL
+RUN if [ -z "$VITE_API_GATEWAY_URL" ]; then \
+      echo "❌ VITE_API_GATEWAY_URL build-arg 가 필요합니다. 예: docker build --build-arg VITE_API_GATEWAY_URL=https://<gateway-host> ." >&2; \
+      exit 1; \
+    fi
+ENV VITE_API_GATEWAY_URL=${VITE_API_GATEWAY_URL}
+
 # Copy package manifests first for efficient Docker layer caching
 COPY package.json package-lock.json ./
 
@@ -11,11 +21,6 @@ RUN npm ci
 
 # Copy full application source code
 COPY . .
-
-# Build-time public config (Vite inlines VITE_* at build time; .env files are excluded by .dockerignore)
-# e.g. docker build --build-arg VITE_API_GATEWAY_URL=https://<gateway-host> .
-ARG VITE_API_GATEWAY_URL=""
-ENV VITE_API_GATEWAY_URL=${VITE_API_GATEWAY_URL}
 
 # Run production build
 RUN npm run build

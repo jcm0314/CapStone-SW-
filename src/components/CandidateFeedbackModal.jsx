@@ -42,39 +42,39 @@ ${tenantName} 인재영입팀 드림`;
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#111827] border border-emerald-500/30 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-surface border border-ok-line rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-pop overflow-hidden">
         {/* Header */}
-        <div className="p-4 bg-gray-900 border-b border-gray-800 flex items-center justify-between">
+        <div className="p-4 bg-surface border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
+            <div className="w-8 h-8 rounded-xl bg-ok-soft border border-ok-line flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-ok" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                지원자 맞춤형 AI 성장 피드백 리포트 (Candidate Experience)
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  ESG 공정채용 · 구직자 코칭
+              <h3 className="text-sm font-bold text-fg flex items-center gap-2">
+                지원자 피드백 리포트
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-ok-soft text-ok border border-ok-line">
+                  지원자 발송용
                 </span>
               </h3>
-              <p className="text-[11px] text-gray-400">
+              <p className="text-[11px] text-fg-muted">
                 깜깜이 불합격 통보 대신, 지원자의 강점과 보완점을 따뜻한 코칭 리포트로 구성하여 기업 브랜딩과 구직자 성장을 돕습니다.
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white rounded-lg">
+          <button onClick={onClose} className="p-1.5 text-fg-muted hover:text-fg rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-5 overflow-y-auto space-y-4 text-xs text-slate-200">
+        <div className="p-5 overflow-y-auto space-y-4 text-xs text-fg">
           {/* Blind Fairness Certification */}
-          <div className="p-3.5 rounded-xl bg-indigo-950/30 border border-indigo-500/30 flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 text-indigo-400 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-brand-soft border border-brand-line flex items-center gap-3">
+            <ShieldCheck className="w-5 h-5 text-brand-fg shrink-0" />
             <div>
-              <p className="font-bold text-indigo-200">블라인드 공정 심사 인증 (Blind Recruitment Verified)</p>
-              <p className="text-[11px] text-indigo-300/80 mt-0.5">
+              <p className="font-bold text-brand-fg">블라인드 평가</p>
+              <p className="text-[11px] text-brand-fg mt-0.5">
                 지원서 내 학력·연령·성별·연락처 등 개인식별정보(PII)를 100% 비식별화한 상태에서 직무 역량 근거만으로 공정하게 평가되었습니다.
               </p>
             </div>
@@ -82,15 +82,15 @@ ${tenantName} 인재영입팀 드림`;
 
           {/* Strengths */}
           <div className="space-y-2">
-            <h4 className="font-bold text-emerald-400 flex items-center gap-1.5">
+            <h4 className="font-bold text-ok flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> 발견된 직무 핵심 강점 ({strengths.length}건)
             </h4>
             <div className="space-y-2">
               {strengths.map((s, idx) => (
-                <div key={s.id || idx} className="p-3 rounded-xl bg-gray-900/70 border border-gray-800 space-y-1">
-                  <p className="font-bold text-white">{s.title}</p>
-                  <p className="font-mono text-[11px] text-emerald-300/90 italic">"{s.quote}"</p>
-                  <p className="text-gray-400 text-[11px]">{s.explanation || s.rationale}</p>
+                <div key={s.id || idx} className="p-3 rounded-xl bg-subtle border border-line space-y-1">
+                  <p className="font-bold text-fg">{s.title}</p>
+                  <p className="font-mono text-[11px] text-ok italic">"{s.quote}"</p>
+                  <p className="text-fg-muted text-[11px]">{s.explanation || s.rationale}</p>
                 </div>
               ))}
             </div>
@@ -98,15 +98,15 @@ ${tenantName} 인재영입팀 드림`;
 
           {/* Growth Points */}
           <div className="space-y-2">
-            <h4 className="font-bold text-amber-400 flex items-center gap-1.5">
+            <h4 className="font-bold text-warn flex items-center gap-1.5">
               <Lightbulb className="w-4 h-4" /> 자소서 설득력을 높이는 보완 코칭 ({growthPoints.length}건)
             </h4>
             <div className="space-y-2">
               {growthPoints.map((g, idx) => (
-                <div key={g.id || idx} className="p-3 rounded-xl bg-gray-900/70 border border-gray-800 space-y-1">
-                  <p className="font-mono text-[11px] text-amber-300/90 italic">"{g.quote}"</p>
-                  <p className="text-gray-300 text-[11px]">
-                    <strong className="text-amber-300">코칭 포인트:</strong> {g.explanation || g.rationale} — 본인의 실질적 기여 비중(%)과 개선 전/후 수치 지표를 구체화해 보세요.
+                <div key={g.id || idx} className="p-3 rounded-xl bg-subtle border border-line space-y-1">
+                  <p className="font-mono text-[11px] text-warn italic">"{g.quote}"</p>
+                  <p className="text-fg-muted text-[11px]">
+                    <strong className="text-warn">코칭 포인트:</strong> {g.explanation || g.rationale} 본인의 실질적 기여 비중(%)과 개선 전/후 수치 지표를 구체화해 보세요.
                   </p>
                 </div>
               ))}
@@ -115,34 +115,34 @@ ${tenantName} 인재영입팀 드림`;
 
           {/* Copyable Email Preview */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-gray-400 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-blue-400" /> 지원자 발송용 피드백 전문 미리보기
+            <label className="text-[11px] font-bold text-fg-muted flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-brand-fg" /> 지원자 발송용 피드백 전문 미리보기
             </label>
             <textarea
               readOnly
               rows={7}
               value={feedbackText}
-              className="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-[11px] text-slate-300 font-mono leading-relaxed focus:outline-none"
+              className="w-full bg-surface border border-line rounded-xl p-3 text-[11px] text-fg-muted font-mono leading-relaxed focus:outline-none"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-gray-900 border-t border-gray-800 flex items-center justify-end gap-2">
+        <div className="p-4 bg-surface border-t border-line flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-3.5 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold"
+            className="px-3.5 py-2 bg-muted hover:bg-muted text-fg-muted rounded-xl text-xs font-semibold"
           >
             닫기
           </button>
           <button
             type="button"
             onClick={handleCopy}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all"
+            className="px-4 py-2 bg-ok-solid hover:bg-ok-solid text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? '피드백 리포트 복사 완료!' : '1-Click 지원자 피드백 복사'}</span>
+            <span>{copied ? '피드백 리포트 복사 완료!' : '피드백 복사'}</span>
           </button>
         </div>
       </div>

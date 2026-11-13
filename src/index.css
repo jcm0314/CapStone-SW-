@@ -2,63 +2,284 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * 디자인 토큰 (RGB 채널값). 라이트가 기본, <html class="dark"> 에서 다크.
+ * - UI는 무채색: 먹색 버튼, 회색 1px 선
+ * - 강조색은 형광펜 노랑(accent) 하나
+ * - 근거 문장 형광펜: 긍정=초록, 면접 확인=주황(+점선 밑줄), 리스크=분홍(+물결 밑줄)
+ */
 @layer base {
+  :root {
+    --canvas: 250 250 249;
+    --surface: 255 255 255;
+    --subtle: 245 245 244;
+    --muted: 236 236 234;
+    --line: 230 230 227;
+    --line-strong: 212 212 208;
+    --fg: 23 23 23;
+    --fg-muted: 82 82 82;
+    --fg-subtle: 128 128 126;
+
+    --brand: 23 23 23;
+    --brand-strong: 0 0 0;
+    --brand-soft: 243 243 241;
+    --brand-line: 212 212 208;
+    --brand-fg: 23 23 23;
+    --on-brand: 255 255 255;
+
+    --accent: 255 226 77;
+    --accent-ink: 23 23 23;
+
+    --ok: 21 128 61;
+    --ok-solid: 22 150 70;
+    --ok-soft: 240 249 243;
+    --ok-line: 190 228 202;
+    --warn: 176 84 10;
+    --warn-solid: 214 114 10;
+    --warn-soft: 255 247 237;
+    --warn-line: 250 210 168;
+    --bad: 185 28 28;
+    --bad-solid: 214 40 40;
+    --bad-soft: 254 242 242;
+    --bad-line: 250 204 204;
+
+    /* 형광펜 잉크 */
+    --hl-ok: 150 236 150;
+    --hl-warn: 255 184 96;
+    --hl-bad: 255 158 182;
+    --hl-a: 0.78;
+
+    color-scheme: light;
+  }
+
+  html.dark {
+    --canvas: 15 15 16;
+    --surface: 22 22 24;
+    --subtle: 29 29 32;
+    --muted: 39 39 43;
+    --line: 42 42 46;
+    --line-strong: 62 62 68;
+    --fg: 236 236 236;
+    --fg-muted: 168 168 168;
+    --fg-subtle: 122 122 128;
+
+    --brand: 236 236 236;
+    --brand-strong: 255 255 255;
+    --brand-soft: 36 36 40;
+    --brand-line: 70 70 76;
+    --brand-fg: 236 236 236;
+    --on-brand: 20 20 22;
+
+    --accent: 255 226 77;
+    --accent-ink: 20 20 22;
+
+    --ok: 110 220 150;
+    --ok-solid: 22 150 70;
+    --ok-soft: 20 38 27;
+    --ok-line: 34 78 50;
+    --warn: 250 180 100;
+    --warn-solid: 214 114 10;
+    --warn-soft: 44 30 14;
+    --warn-line: 96 64 24;
+    --bad: 248 128 128;
+    --bad-solid: 214 40 40;
+    --bad-soft: 46 18 20;
+    --bad-line: 100 36 40;
+
+    --hl-ok: 120 220 120;
+    --hl-warn: 255 170 70;
+    --hl-bad: 255 120 150;
+    --hl-a: 0.34;
+
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    background-color: #0B0F19;
-    color: #F3F4F6;
+    background-color: rgb(var(--canvas));
+    color: rgb(var(--fg));
+    font-family: Pretendard, 'Pretendard Variable', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.003em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.7);
+    color: rgb(var(--accent-ink));
+  }
+
+  input[type='range'] {
+    accent-color: rgb(var(--fg));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--fg) / 0.55);
+    outline-offset: 1px;
   }
 }
 
-/* Custom Glassmorphism & Scrollbar Styles */
-.glass-panel {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-md;
+  }
+  .card-pad {
+    @apply p-4;
+  }
+  .section-title {
+    @apply text-sm font-semibold text-fg;
+  }
+  .section-desc {
+    @apply text-xs text-fg-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded text-[13px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap;
+  }
+  .btn-sm {
+    @apply px-2 py-1 text-xs;
+  }
+  .btn-md {
+    @apply px-3 h-8;
+  }
+  .btn-lg {
+    @apply px-4 h-10 text-sm;
+  }
+  .btn-primary {
+    @apply bg-brand text-on-brand hover:bg-brand-strong;
+  }
+  .btn-secondary {
+    @apply bg-surface text-fg border border-line-strong hover:bg-subtle;
+  }
+  .btn-ghost {
+    @apply text-fg-muted hover:text-fg hover:bg-subtle;
+  }
+
+  .field {
+    @apply w-full bg-surface border border-line-strong rounded px-2.5 py-1.5 text-[13px] text-fg placeholder:text-fg-subtle focus:outline-none focus:border-fg transition-colors;
+  }
+  .label {
+    @apply text-xs font-medium text-fg-muted;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 px-1.5 py-px rounded-sm text-[11px] font-medium border whitespace-nowrap;
+  }
+  .chip-neutral {
+    @apply bg-subtle text-fg-muted border-line;
+  }
+  .chip-brand {
+    @apply bg-subtle text-fg border-line-strong;
+  }
+  .chip-ok {
+    @apply bg-ok-soft text-ok border-ok-line;
+  }
+  .chip-warn {
+    @apply bg-warn-soft text-warn border-warn-line;
+  }
+  .chip-bad {
+    @apply bg-bad-soft text-bad border-bad-line;
+  }
+
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-3 sm:p-4;
+  }
+
+  /* 상태 점 (판정 등) */
+  .dot {
+    @apply inline-block w-1.5 h-1.5 rounded-full;
+  }
+
+  /* 형광펜: 손으로 그은 듯 비스듬한 양 끝, 고르지 않은 농도 */
+  .hl {
+    --hl: var(--hl-warn);
+    background-color: transparent;
+    background-image: linear-gradient(
+      100deg,
+      rgb(var(--hl) / 0) 0.3%,
+      rgb(var(--hl) / var(--hl-a)) 1.6%,
+      rgb(var(--hl) / calc(var(--hl-a) * 0.7)) 38%,
+      rgb(var(--hl) / calc(var(--hl-a) * 0.9)) 72%,
+      rgb(var(--hl) / var(--hl-a)) 96%,
+      rgb(var(--hl) / 0) 99.4%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 74%;
+    background-position: 0 64%;
+    border-radius: 0.8em 0.2em 0.65em 0.25em / 0.3em 0.75em 0.35em 0.7em;
+    padding: 0 0.18em;
+    margin: 0 -0.06em;
+    color: inherit;
+    cursor: pointer;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 120ms ease;
+  }
+  .hl-ok {
+    --hl: var(--hl-ok);
+  }
+  .hl-warn {
+    --hl: var(--hl-warn);
+    text-decoration: underline dotted rgb(var(--warn));
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+  .hl-bad {
+    --hl: var(--hl-bad);
+    text-decoration: underline wavy rgb(var(--bad) / 0.8);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .hl-accent {
+    --hl: var(--accent);
+    --hl-a: 0.9;
+    cursor: inherit;
+  }
+  .hl-active {
+    background-size: 100% 96%;
+    background-position: 0 55%;
+    outline: 1.5px solid rgb(var(--fg) / 0.7);
+    outline-offset: 1px;
+  }
+
+  /* 범례 견본 */
+  .swatch {
+    @apply inline-block w-3 h-2 rounded-sm;
+    background: rgb(var(--sw) / 0.85);
+  }
 }
 
-.glass-card {
-  background: rgba(31, 41, 55, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card-hover:hover {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0F172A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: rgb(var(--line-strong));
   border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  border: 2px solid rgb(var(--canvas));
 }
 
-/* Pulse Glow Animation */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
-  }
+.glass-panel,
+.glass-card {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
 }
 
-.glow-active {
-  animation: pulseGlow 3s infinite ease-in-out;
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.toast-in {
+  animation: toastIn 140ms ease-out;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }

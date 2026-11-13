@@ -1,86 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { Cpu, Layers, FileText, Sliders, Key, ShieldCheck, Building2, UserCheck, ChevronDown } from 'lucide-react';
-import { useAuth, ROLES } from '../contexts/AuthContext';
+import React, { useState } from 'react';
+import { Search, SlidersHorizontal, Building2, ChevronDown, Menu, Moon, Sun, Check } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 import SSOProfileModal from './SSOProfileModal';
+import { SHORTCUT_LABEL } from './Sidebar';
+
+const ROLE_LABEL = {
+  ADMIN: '관리자',
+  RECRUITER: '채용 담당자',
+  INTERVIEWER: '면접관',
+  CANDIDATE: '구직자'
+};
 
 export default function Header({
-  activeTab,
-  setActiveTab,
-  applicantCount,
   onOpenPromptStudio,
-  onOpenApiKeyModal
+  onOpenPalette,
+  onOpenMenu,
+  theme,
+  onToggleTheme,
+  showSSOModal,
+  setShowSSOModal
 }) {
-  const [hasApiKey, setHasApiKey] = useState(false);
-  const [showSSOModal, setShowSSOModal] = useState(false);
-
   const { currentUser, hasPermission } = useAuth();
   const { currentTenant } = useTenant();
 
-  useEffect(() => {
-    const checkKey = () => {
-      const k = (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
-      setHasApiKey(Boolean(k && k.trim().length > 5));
-    };
-    checkKey();
-    window.addEventListener('storage', checkKey);
-    return () => window.removeEventListener('storage', checkKey);
-  }, []);
+  const roleKey = currentUser?.role;
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#0B0F19]/90 backdrop-blur-md border-b border-gray-800/80 px-4 lg:px-8 py-3">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Brand & Multi-Tenancy Info */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center">
-              <div className="w-full h-full bg-[#0B0F19] rounded-[10px] flex items-center justify-center">
-                <Cpu className="w-5 h-5 text-blue-400" />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-base lg:text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-blue-300">
-                  Check-Mate
-                </h1>
-                
-                {/* Active Tenant Badge (Clickable for quick switch) */}
-                <button
-                  type="button"
-                  onClick={() => setShowSSOModal(true)}
-                  className="px-2 py-0.5 text-[10px] font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full flex items-center gap-1 transition-colors"
-                  title="클릭하여 소속 기업 및 권한 변경"
-                >
-                  <Building2 className="w-3 h-3 text-blue-400" />
-                  <span>{currentTenant.name}</span>
-                  <ChevronDown className="w-2.5 h-2.5 opacity-60" />
-                </button>
+      <header className="sticky top-0 z-40 h-12 bg-surface border-b border-line">
+        <div className="h-full px-3 sm:px-5 flex items-center gap-2 sm:gap-4">
+          {/* Mobile menu */}
+          <button
+            type="button"
+            onClick={onOpenMenu}
+            className="lg:hidden btn btn-ghost p-2 -ml-1"
+            aria-label="메뉴 열기"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
 
-                {/* Role Badge */}
-                <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${ROLES[currentUser?.role]?.badgeColor || 'bg-slate-800 text-slate-300'}`}>
-                  {currentUser?.role === 'ADMIN' ? '👑 Admin' : currentUser?.role === 'RECRUITER' ? '📋 Recruiter' : '🎯 Interviewer'}
-                </span>
-              </div>
-              <p className="text-[11px] text-gray-400 hidden sm:block">4대 멀티에이전트 AI 서류 심사관 & B2B 멀티테넌시 RLS 플랫폼</p>
-            </div>
-          </div>
+          {/* Brand */}
+          <a href="/" className="flex items-center gap-2 shrink-0" aria-label="Check-Mate 홈">
+            <span className="w-6 h-6 rounded bg-accent text-accent-ink flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" strokeWidth={3} />
+            </span>
+            <span className="text-sm font-semibold text-fg">Check-Mate</span>
+          </a>
 
-          {/* Navigation Tabs & Action Buttons */}
-          <div className="flex items-center gap-2 flex-wrap justify-end">
-            {/* B2B Managed Token & BYOK Mode Button */}
+          {/* Search (opens command palette) */}
+          <div className="flex-1 flex justify-center min-w-0">
             <button
               type="button"
-              onClick={onOpenApiKeyModal}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
-                hasApiKey
-                  ? 'bg-purple-500/10 text-purple-300 border-purple-500/30 hover:bg-purple-500/20'
-                  : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
-              }`}
-              title={hasApiKey ? '개별 커스텀 API Key(BYOK) 적용 중' : 'B2B 엔터프라이즈 토큰 일괄 결제 모드 활성화됨'}
+              onClick={onOpenPalette}
+              className="hidden md:flex w-full max-w-sm items-center gap-2 h-8 px-2.5 rounded border border-line bg-subtle hover:border-line-strong text-[13px] text-fg-subtle transition-colors"
+              aria-label={`기능 검색 (${SHORTCUT_LABEL})`}
             >
-              <Key className="w-3.5 h-3.5" />
-              <span>{hasApiKey ? '커스텀 Key (BYOK)' : '🏢 B2B 일괄 결제'}</span>
-              <span className={`w-2 h-2 rounded-full ${hasApiKey ? 'bg-purple-400' : 'bg-emerald-400'}`} />
+              <Search className="w-4 h-4 shrink-0" />
+              <span className="flex-1 text-left truncate">검색</span>
+              <kbd className="text-[11px] border border-line rounded-sm px-1 bg-surface">{SHORTCUT_LABEL}</kbd>
+            </button>
+          </div>
+
+          {/* Right actions */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={onOpenPalette}
+              className="md:hidden btn btn-ghost p-2"
+              aria-label="기능 검색"
+            >
+              <Search className="w-[18px] h-[18px]" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowSSOModal(true)}
+              className="hidden sm:inline-flex btn btn-ghost btn-sm text-fg"
+              title="회사(테넌트) · 계정 전환"
+            >
+              <Building2 className="w-4 h-4 text-fg-subtle" />
+              <span className="max-w-[120px] truncate">{currentTenant.name}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-fg-subtle" />
             </button>
 
             {/* Prompt Studio (Admin & Recruiter Only) */}
@@ -88,80 +89,48 @@ export default function Header({
               <button
                 type="button"
                 onClick={onOpenPromptStudio}
-                className="px-2.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                className="hidden lg:inline-flex btn btn-ghost p-2"
+                title="평가 프롬프트 설정"
+                aria-label="평가 프롬프트 설정"
               >
-                <Sliders className="w-3.5 h-3.5 text-purple-400" /> Prompt Studio
+                <SlidersHorizontal className="w-[18px] h-[18px]" />
               </button>
             )}
 
-            {/* View Nav Tabs */}
-            <nav className="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800 text-xs font-medium">
-              <button
-                onClick={() => setActiveTab('evaluator')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                  activeTab === 'evaluator'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5" /> 서류 평가 & 검증
-              </button>
-              <button
-                onClick={() => setActiveTab('comparison')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                  activeTab === 'comparison'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" /> 지원자 비교
-                {applicantCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-blue-400/20 text-blue-300 text-[10px] flex items-center justify-center font-bold">
-                    {applicantCount}
-                  </span>
-                )}
-              </button>
-              
-              {/* FinOps Credit Dashboard Tab (Admin/Recruiter only) */}
-              {hasPermission('MANAGE_CREDITS') && (
-                <button
-                  onClick={() => setActiveTab('credits')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    activeTab === 'credits'
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold'
-                      : 'text-indigo-400/80 hover:text-white'
-                  }`}
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-300" /> 크레딧 거버넌스
-                </button>
-              )}
-            </nav>
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="btn btn-ghost p-2"
+              title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+              aria-label="화면 테마 전환"
+            >
+              {theme === 'dark' ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+            </button>
 
-            {/* SSO Profile & Switcher Avatar Button */}
             <button
               type="button"
               onClick={() => setShowSSOModal(true)}
-              className="flex items-center gap-2 p-1 pl-2 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 rounded-xl transition-all"
-              title="기업 SSO 계정 및 테넌트 관리"
+              className="flex items-center gap-2 pl-1.5 pr-1 py-1 rounded-lg hover:bg-subtle transition-colors"
+              title="계정 · 역할 · 회사 전환"
             >
-              <span className="text-xs font-semibold text-slate-200 hidden lg:inline">
-                {currentUser?.name?.split(' ')[0]}
+              <span className="hidden lg:flex flex-col items-end leading-tight">
+                <span className="text-[13px] font-semibold text-fg">{currentUser?.name?.split(' ')[0]}</span>
+                <span className="text-[11px] text-fg-subtle">
+                  {ROLE_LABEL[roleKey] || roleKey}
+                </span>
               </span>
               <img
                 src={currentUser?.avatar}
                 alt={currentUser?.name}
-                className="w-7 h-7 rounded-lg object-cover ring-1 ring-blue-500/40"
+                className="w-7 h-7 rounded-full object-cover border border-line"
               />
             </button>
           </div>
         </div>
       </header>
 
-      {/* SSO & Multi-Tenancy Management Modal */}
-      <SSOProfileModal
-        isOpen={showSSOModal}
-        onClose={() => setShowSSOModal(false)}
-      />
+      {/* 회사 · 계정 · 역할 전환 */}
+      <SSOProfileModal isOpen={showSSOModal} onClose={() => setShowSSOModal(false)} />
     </>
   );
 }

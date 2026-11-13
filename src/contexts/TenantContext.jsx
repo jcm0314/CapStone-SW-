@@ -4,6 +4,12 @@ import {
   fetchTenantApplicantsFromSupabase,
   syncTenantApplicantsToSupabase
 } from '../services/supabaseClient';
+import {
+  isSpringApiEnabled,
+  fetchSpringApplicants,
+  mergeSpringApplicants,
+  syncApplicantsToSpring
+} from '../services/springApplicantService';
 
 const TenantContext = createContext(null);
 
@@ -33,6 +39,7 @@ export const TENANTS = [
     description: '로컬 커뮤니티 & 하이퍼로컬 AI 피드 추천 채용 전형',
     industry: 'Hyperlocal Commerce / AI Feed',
     defaultApplicants: []
+
   },
   {
     id: 'woowa',
@@ -46,6 +53,7 @@ export const TENANTS = [
     description: '배민라이더스 실시간 배차 라우팅 & 대규모 트래픽 채용 전형',
     industry: 'Food Delivery / Mobility Tech',
     defaultApplicants: []
+
   }
 ];
 
@@ -58,6 +66,8 @@ export function TenantProvider({ children }) {
     }
     return TENANTS[0]; // Default: Toss Payments
   });
+  // Spring 서버 목록을 불러와 localStorage 가 갱신되면 증가 → App 이 목록을 다시 읽음
+  const [applicantsVersion, setApplicantsVersion] = useState(0);
 
   // Switch Active Tenant
   const switchTenant = (tenantId) => {
@@ -99,7 +109,36 @@ export function TenantProvider({ children }) {
     if (isSupabaseConfigured) {
       syncTenantApplicantsToSupabase(currentTenant.id, securedApplicants);
     }
+    if (isSpringApiEnabled()) {
+      // non-blocking: 실패해도 localStorage 동작은 그대로. 데모 기본 지원자는 서버로 보내지 않음
+      const demoIds = new Set((currentTenant.defaultApplicants || []).map((a) => a.id));
+      const realApplicants = securedApplicants.filter((a) => !demoIds.has(a.id));
+      syncApplicantsToSpring(currentTenant.id, realApplicants).catch((err) =>
+        console.warn('[Spring 동기화] 지원자 등록 실패:', err.message)
+      );
+    }
   };
+
+  // Spring 코어 API 에서 지원자 목록 불러오기 (VITE_SPRING_API_URL 설정 시에만)
+  useEffect(() => {
+    if (!isSpringApiEnabled() || typeof window === 'undefined') return;
+    let active = true;
+    const tenantId = currentTenant.id;
+    fetchSpringApplicants(tenantId)
+      .then((springList) => {
+        if (!active || !springList) return;
+        const localList = getTenantApplicants();
+        const merged = mergeSpringApplicants(localList, springList, tenantId);
+        if (merged !== localList) {
+          localStorage.setItem(`checkmate_applicants_${tenantId}`, JSON.stringify(merged));
+          setApplicantsVersion((v) => v + 1);
+        }
+      })
+      .catch((err) => console.warn('[Spring 동기화] 지원자 목록 조회 실패:', err.message));
+    return () => {
+      active = false;
+    };
+  }, [currentTenant.id]);
 
   // Hydrate tenant applicants from Supabase if configured
   useEffect(() => {
@@ -123,7 +162,8 @@ export function TenantProvider({ children }) {
         allTenants: TENANTS,
         switchTenant,
         getTenantApplicants,
-        saveTenantApplicants
+        saveTenantApplicants,
+        applicantsVersion
       }}
     >
       {children}
