@@ -44,3 +44,23 @@ describe('Client-side File Parser Engine (.txt, .pdf, .docx)', () => {
     expect(result.extractedText).toBe('');
   });
 });
+
+describe('joinPdfTextItems (pdf.js 텍스트 조각 합치기)', () => {
+  it('글자 단위로 쪼개진 한글 조각 사이에 공백을 넣지 않아야 함', async () => {
+    const { joinPdfTextItems } = await import('./fileParser');
+    const items = [{ str: '자' }, { str: '기' }, { str: '소개서' }, { str: '', hasEOL: true }, { str: '백엔드 개발' }];
+    expect(joinPdfTextItems(items)).toBe('자기소개서\n백엔드 개발');
+  });
+
+  it('줄바꿈(hasEOL)과 문단은 유지하고 연속 공백은 하나로 줄여야 함', async () => {
+    const { joinPdfTextItems } = await import('./fileParser');
+    const items = [
+      { str: 'Redis   캐싱으로', hasEOL: true },
+      { str: '', hasEOL: true },
+      { str: '', hasEOL: true },
+      { str: '', hasEOL: true },
+      { str: 'Type 과 Length 단어도 남아야 함' }
+    ];
+    expect(joinPdfTextItems(items)).toBe('Redis 캐싱으로\n\nType 과 Length 단어도 남아야 함');
+  });
+});

@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, Building2, UserCheck, ShieldCheck, CheckCircle2, RefreshCw, KeyRound, Lock, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Building2, UserCheck, ShieldCheck, CheckCircle2, Info, Pencil, Check } from 'lucide-react';
 import { useAuth, ROLES } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 
@@ -10,7 +10,21 @@ export default function SSOProfileModal({ isOpen, onClose }) {
 }
 
 function SSOProfileModalContent({ onClose }) {
-  const { currentUser, switchRole } = useAuth();
+  const { currentUser, switchRole, updateProfile } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState({ name: '', roleTitle: '', email: '' });
+
+  const startEdit = () => {
+    setDraft({ name: currentUser.name || '', roleTitle: currentUser.roleTitle || '', email: currentUser.email || '' });
+    setEditing(true);
+  };
+
+  const saveEdit = (e) => {
+    e.preventDefault();
+    if (!draft.name.trim()) return;
+    updateProfile(draft);
+    setEditing(false);
+  };
   const { currentTenant, allTenants, switchTenant } = useTenant();
 
   return (
@@ -46,6 +60,28 @@ function SSOProfileModalContent({ onClose }) {
         {/* Modal Body */}
         <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar">
           {/* Section 1: Current SSO Account Status */}
+          {editing ? (
+            <form onSubmit={saveEdit} className="p-4 rounded-xl bg-subtle border border-line-strong space-y-3" aria-label="프로필 수정">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <label className="space-y-1">
+                  <span className="label">이름</span>
+                  <input className="field" value={draft.name} maxLength={30} required onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
+                </label>
+                <label className="space-y-1">
+                  <span className="label">직함</span>
+                  <input className="field" value={draft.roleTitle} maxLength={40} onChange={(e) => setDraft({ ...draft, roleTitle: e.target.value })} />
+                </label>
+                <label className="space-y-1">
+                  <span className="label">이메일</span>
+                  <input className="field" type="email" value={draft.email} maxLength={254} onChange={(e) => setDraft({ ...draft, email: e.target.value })} />
+                </label>
+              </div>
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={() => setEditing(false)} className="btn btn-secondary btn-md">취소</button>
+                <button type="submit" className="btn btn-primary btn-md"><Check className="w-3.5 h-3.5" /> 저장</button>
+              </div>
+            </form>
+          ) : (
           <div className="p-4 rounded-xl bg-subtle border border-line-strong flex items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
               <img
@@ -64,12 +100,16 @@ function SSOProfileModalContent({ onClose }) {
                   </span>
                 </div>
                 <p className="text-xs text-fg-muted mt-0.5">{currentUser.roleTitle} • {currentUser.email}</p>
-                <p className="text-[11px] text-brand-fg mt-1 flex items-center gap-1">
-                  <Lock className="w-3 h-3" /> SAML 2.0 / OIDC 인증 세션 활성화됨
+                <p className="text-[11px] text-fg-subtle mt-1 flex items-center gap-1">
+                  <Info className="w-3 h-3" /> 데모 계정입니다. 실제 로그인 없이 이 브라우저에만 저장됩니다.
                 </p>
               </div>
             </div>
+            <button type="button" onClick={startEdit} className="btn btn-secondary btn-md shrink-0">
+              <Pencil className="w-3.5 h-3.5" /> 프로필 수정
+            </button>
           </div>
+          )}
 
           {/* Section 2: Multi-Tenancy Enterprise Switcher */}
           <div>

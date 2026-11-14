@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sprout, Workflow, Share2, Printer } from 'lucide-react';
+import { ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sprout, Workflow, Share2, Printer, Mail } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
 import SampleBadge from './SampleBadge';
 import { isSampleResult } from '../utils/sampleResult';
 
-export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback, onOpenReport }) {
+export default function DashboardSummary({ result, currentJob, onOpenHITLEditor, onOpenShareModal, onOpenCandidateFeedback, onOpenReport, onOpenMail }) {
   const [showAuditModal, setShowAuditModal] = useState(false);
 
   if (!result || !result.analysis) return null;
@@ -112,6 +112,11 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
             {onOpenCandidateFeedback && (
               <button type="button" onClick={onOpenCandidateFeedback} className="btn btn-secondary btn-md">
                 <Sprout className="w-3.5 h-3.5" /> 지원자 피드백
+              </button>
+            )}
+            {onOpenMail && (
+              <button type="button" onClick={onOpenMail} className="btn btn-secondary btn-md">
+                <Mail className="w-3.5 h-3.5" /> 결과 메일
               </button>
             )}
             {onOpenReport && (

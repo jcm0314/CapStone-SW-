@@ -3,10 +3,34 @@
  */
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+import pdfWorkerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
-// Configure worker for PDF.js if running in browser window
+// 워커·한글 CMap·표준 폰트는 CDN 이 아니라 앱과 같이 배포합니다.
+// (cdnjs 에는 cmaps 가 없어 한글 PDF 가 깨졌음. public/pdfjs 는 scripts/copyPdfAssets.js 가 채움)
+const PDF_ASSET_BASE = `${import.meta.env?.BASE_URL || '/'}pdfjs/`;
+
 if (typeof window !== 'undefined' && pdfjsLib.GlobalWorkerOptions) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+}
+
+/**
+ * pdf.js textContent.items 를 사람이 읽는 본문으로 합칩니다.
+ * 조각 사이에 공백을 끼워 넣지 않고(글자 단위로 쪼개진 한글이 "자 기 소 개"가 되는 문제),
+ * hasEOL 이 있는 곳에서만 줄을 바꿉니다.
+ */
+export function joinPdfTextItems(items = []) {
+  let out = '';
+  for (const item of items) {
+    if (typeof item?.str !== 'string') continue;
+    out += item.str;
+    if (item.hasEOL) out += '\n';
+  }
+  return out
+    .split('\n')
+    .map((line) => line.replace(/[ \t ]+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 /**
@@ -76,6 +100,9 @@ export async function parsePdfFile(arrayBuffer) {
   try {
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(arrayBuffer),
+      cMapUrl: `${PDF_ASSET_BASE}cmaps/`,
+      cMapPacked: true,
+      standardFontDataUrl: `${PDF_ASSET_BASE}standard_fonts/`,
       useSystemFonts: true,
       isEvalSupported: false,
     });
@@ -85,26 +112,19 @@ export async function parsePdfFile(arrayBuffer) {
     for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
       const page = await pdfDocument.getPage(pageNum);
       const textContent = await page.getTextContent();
-      const pageStrings = textContent.items
-        .map((item) => (item.str ? item.str.trim() : ''))
-        .filter((str) => str.length > 0);
-
-      if (pageStrings.length > 0) {
-        pageTexts.push(pageStrings.join(' '));
-      }
+      const pageText = joinPdfTextItems(textContent.items);
+      if (pageText) pageTexts.push(pageText);
     }
 
     const fullText = pageTexts.join('\n\n').trim();
-    const sanitized = cleanPdfBinaryNoise(fullText);
-    if (sanitized && sanitized.length > 15) {
-      return sanitized;
-    }
+    if (fullText.length > 15) return fullText;
   } catch (err) {
-    console.warn('pdfjs-dist PDF 파싱 경고, fallback 추출기로 전환합니다:', err);
+    console.warn('pdfjs-dist PDF 파싱 실패:', err);
   }
 
-  // Fallback to purified binary text extraction
-  return parseBinaryTextFallback(arrayBuffer);
+  // 압축된 PDF 바이트를 글자로 해석하면 깨진 글자만 나오므로 바이너리 추출로 넘어가지 않습니다.
+  // 빈 문자열을 돌려주면 parseCandidateFile 이 "텍스트 레이어 없음" 안내를 보여줍니다.
+  return '';
 }
 
 /**

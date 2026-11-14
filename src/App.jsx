@@ -13,6 +13,9 @@ import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
 import CandidateFeedbackModal from './components/CandidateFeedbackModal';
+import MailModal from './components/MailModal';
+import Footer from './components/Footer';
+import { suggestTemplateId } from './services/notificationService';
 import SampleBadge from './components/SampleBadge';
 import { isSampleResult } from './utils/sampleResult';
 
@@ -52,6 +55,7 @@ export default function App() {
   const [showHITLEditor, setShowHITLEditor] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCandidateFeedback, setShowCandidateFeedback] = useState(false);
+  const [mailTarget, setMailTarget] = useState(null); // { applicant, templateId }
   const [activeShareId, setActiveShareId] = useState(null);
   const [sharedBannerInfo, setSharedBannerInfo] = useState(null);
 
@@ -281,6 +285,23 @@ export default function App() {
     }
   };
 
+  // 결과 메일: 보낸 기록을 지원자에 남김 (브라우저 저장)
+  const openMail = (applicant, opts) => {
+    if (!applicant) return;
+    setMailTarget({ applicant, templateId: suggestTemplateId(applicant, opts) });
+  };
+
+  const handleMailSent = ({ applicantId, templateId, to, sentAt }) => {
+    const updatedList = applicantList.map((app) =>
+      app.id === applicantId ? { ...app, contactEmail: app.contactEmail || to, lastMail: { templateId, to, sentAt } } : app
+    );
+    setApplicantList(updatedList);
+    saveTenantApplicants(updatedList);
+    if (selectedApplicant?.id === applicantId) {
+      setSelectedApplicant(updatedList.find((a) => a.id === applicantId) || selectedApplicant);
+    }
+  };
+
   // ───────────────────────── 화면 이동 · 메뉴 · ⌘K 검색 (UI 전용 상태) ─────────────────────────
   const { theme, toggleTheme } = useTheme();
   const [evalView, setEvalView] = useState('list'); // 'list' | 'result' | 'new' (activeTab === 'evaluator' 일 때)
@@ -409,7 +430,7 @@ export default function App() {
   const paletteItems = [
     { id: 'nav-list', group: '화면', icon: 'Users', title: '지원자', desc: `${applicantList.length}명`, keywords: '홈 목록 지원자 리스트', action: { type: 'view', view: 'list' } },
     { id: 'nav-new', group: '화면', icon: 'Plus', title: '새 평가', desc: '자기소개서 입력', keywords: '평가 실행 입력 새로', action: { type: 'view', view: 'new' } },
-    { id: 'nav-comparison', group: '화면', icon: 'Columns3', title: '비교', desc: '순위, 표절 매트릭스', keywords: '비교 순위 지원자 비교', action: { type: 'tab', tab: 'comparison' } },
+    { id: 'nav-comparison', group: '화면', icon: 'Columns3', title: '평가 결과', desc: '순위, 컷오프, 표절, 결과 메일', keywords: '평가 결과 비교 순위 컷오프 표절 메일 발송', action: { type: 'tab', tab: 'comparison' } },
     ...(canSeeCredits
       ? [{ id: 'nav-credits', group: '화면', icon: 'Gauge', title: '크레딧', desc: '부서별 AI 사용량', keywords: '크레딧 비용 사용량 쿼터', action: { type: 'tab', tab: 'credits' } }]
       : []),
@@ -438,7 +459,7 @@ export default function App() {
   const MOBILE_TABS = [
     { id: 'list', label: '지원자' },
     { id: 'new', label: '새 평가' },
-    { id: 'comparison', label: '비교' },
+    { id: 'comparison', label: '평가 결과' },
     ...(canSeeCredits ? [{ id: 'credits', label: '크레딧' }] : [])
   ];
 
@@ -539,6 +560,18 @@ export default function App() {
                 onOpen={openApplicant}
                 onNew={() => goView('new')}
                 tenantName={currentTenant?.name}
+                onUpload={() => {
+                  setInputTabRequest({ tab: 'FILE', at: Date.now() });
+                  goView('new');
+                }}
+                onPaste={() => {
+                  setInputTabRequest({ tab: 'TEXT', at: Date.now() });
+                  goView('new');
+                }}
+                onOpenReport={(app) => {
+                  setSelectedApplicant(app);
+                  setShowExportModal(true);
+                }}
               />
             )}
 
@@ -598,18 +631,18 @@ export default function App() {
                     onOpenShareModal={() => setShowShareModal(true)}
                     onOpenCandidateFeedback={() => setShowCandidateFeedback(true)}
                     onOpenReport={() => setShowExportModal(true)}
+                    onOpenMail={() => openMail(selectedApplicant)}
                   />
+                </div>
+                {/* 순서: 요약 → 면접 질문 → 근거 문장(자소서 전문은 접힘) → 면접관 메모 */}
+                <div id="section-questions" className="scroll-mt-16">
+                  <InterviewQuestions result={selectedApplicant} />
                 </div>
                 <div id="section-evidence" className="scroll-mt-16">
                   <EvidenceViewer result={selectedApplicant} />
                 </div>
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4 items-start">
-                  <div id="section-questions" className="scroll-mt-16">
-                    <InterviewQuestions result={selectedApplicant} />
-                  </div>
-                  <div id="section-collab" className="scroll-mt-16">
-                    <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
-                  </div>
+                <div id="section-collab" className="scroll-mt-16">
+                  <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
                 </div>
               </div>
             )}
@@ -622,11 +655,13 @@ export default function App() {
                   setSelectedApplicant(app);
                   setShowExportModal(true);
                 }}
+                onSendMail={(app, opts) => openMail(app, opts)}
               />
             )}
 
             {activeTab === 'credits' && <DepartmentCreditDashboard />}
           </div>
+          <Footer />
         </main>
       </div>
 
@@ -688,6 +723,16 @@ export default function App() {
       />
 
       {/* Candidate Growth Feedback Modal (ESG / B2B2C) */}
+      {/* 지원자 결과 메일 (Resend) */}
+      <MailModal
+        isOpen={Boolean(mailTarget)}
+        onClose={() => setMailTarget(null)}
+        applicant={mailTarget?.applicant}
+        initialTemplateId={mailTarget?.templateId}
+        companyName={currentTenant?.name}
+        onSent={handleMailSent}
+      />
+
       <CandidateFeedbackModal
         isOpen={showCandidateFeedback}
         onClose={() => setShowCandidateFeedback(false)}

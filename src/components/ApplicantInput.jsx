@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Loader2, UploadCloud, PenLine } from 'lucide-react';
 import FileUploadZone from './FileUploadZone';
 
+const CONSENT_KEY = 'checkmate_pii_consent_confirmed';
+
 const PIPELINE_STEPS = [
   { id: 1, name: '근거 문장 찾기', threshold: 25 },
   { id: 2, name: '과장·대필 점검', threshold: 50 },
@@ -10,9 +12,40 @@ const PIPELINE_STEPS = [
 ];
 
 export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing, currentJobId, progressState, tabRequest }) {
-  const [inputTab, setInputTab] = useState('TEXT'); // 'TEXT' | 'FILE'
+  const [inputTab, setInputTab] = useState('FILE'); // 'FILE' | 'TEXT' (파일 업로드가 기본)
   const [name, setName] = useState('');
   const [rawText, setRawText] = useState('');
+  // 지원자 개인정보 수집·이용 동의 확인 (이 브라우저 세션 동안 기억)
+  const [consent, setConsent] = useState(() => {
+    try {
+      return sessionStorage.getItem(CONSENT_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const [consentMissing, setConsentMissing] = useState(false);
+
+  const updateConsent = (checked) => {
+    setConsent(checked);
+    setConsentMissing(false);
+    try {
+      if (checked) sessionStorage.setItem(CONSENT_KEY, '1');
+      else sessionStorage.removeItem(CONSENT_KEY);
+    } catch {
+      // 저장소를 못 쓰면 이번 화면에서만 유지
+    }
+  };
+
+  const requireConsent = () => {
+    if (consent) return true;
+    setConsentMissing(true);
+    return false;
+  };
+
+  const guardedBatchAnalyze = (candidates) => {
+    if (!requireConsent()) return;
+    onBatchAnalyze(candidates);
+  };
 
   // 메뉴/검색에서 "PDF / TXT 업로드"를 고르면 파일 탭으로 전환
   useEffect(() => {
@@ -33,6 +66,7 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
 
   const handleRun = () => {
     if (!rawText.trim()) return;
+    if (!requireConsent()) return;
     onAnalyze({ name, rawText });
   };
 
@@ -51,11 +85,11 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
 
       {/* Input method */}
       <div className="flex gap-4 border-b border-line" role="tablist" aria-label="입력 방식">
-        <button type="button" role="tab" aria-selected={inputTab === 'TEXT'} onClick={() => setInputTab('TEXT')} className={tabClass(inputTab === 'TEXT')}>
-          <PenLine className="w-3.5 h-3.5" /> 직접 입력
-        </button>
         <button type="button" role="tab" aria-selected={inputTab === 'FILE'} onClick={() => setInputTab('FILE')} className={tabClass(inputTab === 'FILE')}>
           <UploadCloud className="w-3.5 h-3.5" /> PDF · TXT 파일
+        </button>
+        <button type="button" role="tab" aria-selected={inputTab === 'TEXT'} onClick={() => setInputTab('TEXT')} className={tabClass(inputTab === 'TEXT')}>
+          <PenLine className="w-3.5 h-3.5" /> 직접 입력
         </button>
       </div>
 
@@ -75,7 +109,7 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
       {inputTab === 'FILE' ? (
         <FileUploadZone
           onFileSelected={handleOnFileSelected}
-          onBatchAnalyze={onBatchAnalyze}
+          onBatchAnalyze={guardedBatchAnalyze}
           isAnalyzing={isAnalyzing}
         />
       ) : (
@@ -96,6 +130,28 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
           />
         </div>
       )}
+
+      {/* 개인정보 수집·이용 동의 확인 */}
+      <label
+        className={`flex items-start gap-2 px-3 py-2.5 rounded-md border text-[13px] cursor-pointer ${
+          consentMissing ? 'border-bad-line bg-bad-soft' : 'border-line bg-subtle/60'
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => updateConsent(e.target.checked)}
+          className="mt-0.5 accent-brand"
+          aria-describedby="consent-help"
+        />
+        <span>
+          <span className="text-fg">지원자에게 개인정보 수집·이용 동의를 받았습니다.</span>
+          <span id="consent-help" className="block text-xs text-fg-muted mt-0.5">
+            이름·연락처·학교 등은 AI로 보내기 전에 가려집니다. 자세한 내용은 하단 개인정보 처리방침을 확인하세요.
+          </span>
+          {consentMissing && <span role="alert" className="block text-xs text-bad mt-1">동의 확인 후 평가할 수 있습니다.</span>}
+        </span>
+      </label>
 
       {/* Progress */}
       {isAnalyzing && (
