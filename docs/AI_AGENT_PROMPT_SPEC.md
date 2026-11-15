@@ -354,6 +354,6 @@ class InterviewerAgentOutput(BaseModel):
 ## 🔗 연관 이슈 및 의사결정 (Relationships)
 - **할 일 세분화 및 마일스톤 (Phase 2-1 직결)**: #23
 - **REST API 명세서 v0.1 (`POST/GET /evaluations` 스펙)**: #21
-- **2인 R&R 분업 계획 (AI 실행 파이프라인 서버 이전)**: #22
+- **아키텍처 고도화 계획 (AI 실행 파이프라인 서버 이전)**: #22
 - **현재 구현 진행도 점검**: #20
 - **선행 아키텍처 의사결정 (gRPC vs REST)**: #19

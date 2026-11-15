@@ -1,83 +1,55 @@
-# 🤝 Check-Mate 팀 협업 가이드 (CONTRIBUTING.md)
+# 🛠️ Check-Mate 엔지니어링 및 기여 가이드 (CONTRIBUTING.md)
 
-환영합니다! Check-Mate 프로젝트의 2인 협업(천명, 상윤) 그라운드 룰입니다.  
-충돌(Conflict)을 방지하고 빠르고 즐겁게 개발할 수 있도록 아래 규칙을 함께 준수합니다.
+본 문서는 **Check-Mate (4대 멀티에이전트 교차 검증 기반 AI 채용 서류 팩트체크 및 면접 질문·평가 코파일럿)** 프로젝트의 코드 품질, 아키텍처 무결성, 테스트 및 배포 표준을 정의합니다.
 
 ---
 
-## 1. 역할 분담 가이드 (Domain Ownership)
+## 1. 아키텍트 및 엔지니어링 책임 (Lead Architect)
 
-현재는 신규 팀원 온보딩 및 전체 코드베이스 파악 단계입니다.  
-프로젝트의 전체 아키텍처와 흐름을 함께 파악한 후 상호 논의를 거쳐 역할을 구체적으로 확정할 예정입니다.
-
-- **장천명**: (전체 파악 후 상호 협의하여 역할 확정 예정 / TBD)
-- **이상윤**: (전체 파악 후 상호 협의하여 역할 확정 예정 / TBD)
-
-> 💡 **협업 팁**: 역할 확정 후 실제 작업에 착수할 때 GitHub Issue의 `Assignees`에 담당자를 지정하고, 서로 작업할 파일이 겹치지 않도록 사전 소통합니다.
+- **장천명 (32203919)** — **1인 풀스택 AI 아키텍트 (기획 · AI 파이프라인 · 프론트엔드 · 백엔드 · 클라우드 인프라 단독 수행)**
+  - **AI 오케스트레이션**: Anthropic Claude Haiku 5.5 (`claude-haiku-5-5`) 기반 4-Agent 적대적 교차 검증 DAG 설계
+  - **핵심 알고리즘**: 7종 개인정보(PII) 이중 비식별화(`piiAnonymizer.js`), 3단계 퍼지 원문 오프셋 바인딩(`fuzzyMatcher.js` — Exact IndexOf → Word Anchor & Jaccard N-gram → Dynamic Sliding Window + Levenshtein DP), N-gram 자소서 표절 매트릭스(`plagiarismEngine.js`)
+  - **풀스택 & DB**: React 18 + Vite + Tailwind CSS, Web Worker 비동기 스레드, Express 5 BFF 게이트웨이, Spring Boot 3 엔터프라이즈 백엔드, Supabase PostgreSQL 7-Table RLS 스키마
+  - **CI/CD & 배포**: Docker 멀티스테이지 빌드 및 Google Cloud Run 서버리스 프로덕션 무중단 배포
 
 ---
 
 ## 2. 브랜치 전략 (GitHub-Flow)
 
-`main` 브랜치는 항상 프로덕션 배포가 가능한 안정적인 상태로 유지합니다. **`main`에 직접 푸시(push)하지 않습니다.**
+`main` 브랜치는 항상 Google Cloud Run 프로덕션 배포가 가능한 안정적인 상태를 유지합니다.
 
 ### 브랜치 명명 규칙
 - **신규 기능**: `feat/<이슈번호>-<기능명>` (예: `feat/17-top50-cutoff`)
 - **버그 수정**: `fix/<이슈번호>-<버그명>` (예: `fix/18-modal-overflow`)
-- **문서 및 발표**: `docs/<작업명>` (예: `docs/collab-guide`)
-- **리팩토링**: `refactor/<대상명>` (예: `refactor/applicant-comparison`)
-
-### 작업 시작 루틴
-```bash
-# 1. main 브랜치 최신화
-git checkout main
-git pull origin main
-
-# 2. 내 작업 브랜치 생성 및 이동
-git checkout -b feat/17-top50-cutoff
-```
+- **문서 및 발표자료**: `docs/<작업명>` (예: `docs/capstone-poster-slides`)
+- **리팩토링**: `refactor/<대상명>` (예: `refactor/fuzzy-matcher-worker`)
 
 ---
 
-## 3. 커밋 및 PR 메시지 규칙 (직관적인 한글 표기 권장)
+## 3. 커밋 메시지 규칙
 
-누가 무엇을 했는지 1초 만에 알 수 있도록 **직관적인 한글 메시지** 작성을 권장합니다.  
-커밋 끝에 `(#이슈번호)`를 적어주면 GitHub 이슈 타임라인에 자동 연결됩니다.
+누가 보더라도 변경 의도를 즉시 파악할 수 있도록 직관적인 커밋 메시지를 작성합니다.
 
-- `기능(feat):` 새로운 기능 추가 (`feat: 지원자 테이블 상단에 Top-50 컷오프 슬라이더 추가 (#17)`)
-- `수정(fix):` 버그 수정 (`fix: 컷오프 모달 닫기 시 잔여 상태 초기화 오류 해결 (#17)`)
-- `개선(refactor):` 코드 구조 개선 (`refactor: 컷오프 점수 계산 함수 분리 및 가독성 개선`)
-- `문서(docs):` 문서 및 발표자료 수정 (`docs: 팀 협업 온보딩 가이드 최신화`)
-- `테스트(test):` 테스트 코드 추가 및 수정 (`test: 컷오프 필터링 로직 단위 테스트 추가`)
-
-> 💡 **PR 제목 예시 (직관적인 한글로 작성)**:  
-> `[기능] 대량 지원서 Top-N 컷오프 슬라이더 및 1-Click 알림 모달 구현 (#17)`  
-> `[문서] 팀 온보딩 가이드 및 기능 기획서 추가 (#18)`
+- `feat:` 새로운 기능 및 에이전트 파이프라인 추가
+- `fix:` 버그 및 예외 처리 수정
+- `refactor:` 코드 구조 개선 및 알고리즘 최적화
+- `docs:` 포스터, 발표 자료, 결과보고서 및 아키텍처 문서 갱신
+- `test:` Vitest 단위 테스트 및 Playwright E2E 검증 추가
 
 ---
 
-## 4. PR 및 머지(Merge) 규칙
+## 4. 핵심 엔지니어링 원칙 (Definition of Done)
 
-1. 작업 완료 후 본인 브랜치에서 `main` 브랜치로 **Pull Request(PR)**를 생성합니다.
-2. PR 생성 시 미리 마련된 템플릿의 항목(작업 내용, 의사결정 근거, 테스트 결과)을 채웁니다.
-3. PR 본문에 `Closes #17`과 같이 적으면, PR이 머지될 때 해당 이슈가 자동으로 닫힙니다.
-4. 상대방의 코드 리뷰 후 **`Approve`**를 받습니다.
-5. 머지 방식은 반드시 **`Squash and merge`**를 선택하여 커밋 이력을 1개로 깔끔하게 정리합니다.
-
----
-
-## 5. 핵심 엔지니어링 원칙 (Definition of Done)
-
-- **가짜 Fallback 금지**: 
-  - API 키 누락이나 에러 발생 시 임의의 가짜 점수로 채우는 코드는 금지하며, 정직한 에러를 표출해야 합니다.
-- **테스트 무결성 필수**: 
-  - 커밋이나 PR 생성 전 반드시 로컬에서 `npm test`를 실행하여 단위 테스트가 정상 동작하는지 확인합니다.
-- **자소서 본문 RAG 청킹 금지**: 
-  - 자소서는 문맥 보존을 위해 Full-Context(1M 토큰 윈도우)로 다루며, 청킹하지 않습니다.
+1. **가짜 점수 폴백(Fake Fallback) 전면 금지**
+   - API 키 누락이나 추론 오류 발생 시 임의의 난수·가짜 점수로 화면을 채우는 코드는 엄격히 금지하며, `output_config.format` JSON Schema 검증과 정직한 에러 핸들링을 수행합니다.
+2. **이중 방어선 7종 PII 비식별화 보장**
+   - 자기소개서 원문이 외부 LLM으로 전송되기 전 클라이언트 브라우저(1차)와 BFF 보안 게이트웨이(2차)에서 7종 개인정보(성명·학교명·연락처·이메일·주민번호·주소·학번)가 반드시 마스킹되어야 합니다.
+3. **테스트 무결성 필수**
+   - 커밋 전 반드시 `npm test` (Vitest) 및 `npm run build`를 실행하여 테스트 통과와 프로덕션 번들 무결성을 검증합니다.
 
 ---
 
-## 6. 개발 및 검증 명령어
+## 5. 개발 및 검증 명령어
 
 ```bash
 # 의존성 설치
@@ -86,7 +58,7 @@ npm install
 # 로컬 개발 서버 실행 (http://localhost:3000)
 npm run dev
 
-# 전체 단위 테스트 실행 (Vitest, Node 22.12 이상 필요)
+# 전체 단위 테스트 실행 (Vitest, Node 22.12 이상 권장)
 npm test
 
 # 프로덕션 빌드 번들 검증
