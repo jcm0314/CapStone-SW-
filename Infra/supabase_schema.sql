@@ -116,10 +116,19 @@ ALTER TABLE evaluations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE share_links ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interview_collaborations ENABLE ROW LEVEL SECURITY;
 
--- Helper Function: Get Current Session's Tenant ID from JWT claims
+-- Helper Function: Get Current Session's Tenant ID from JWT claims or x-tenant-id header
 CREATE OR REPLACE FUNCTION current_tenant_id() RETURNS VARCHAR AS $$
-    SELECT NULLIF(current_setting('request.jwt.claims', true)::json->>'tenant_id', '')::VARCHAR;
+    SELECT COALESCE(
+        NULLIF(current_setting('request.jwt.claims', true)::json->>'tenant_id', ''),
+        NULLIF(current_setting('request.headers', true)::json->>'x-tenant-id', '')
+    )::VARCHAR;
 $$ LANGUAGE sql STABLE;
+
+-- 0. Job Postings RLS Policy
+CREATE POLICY tenant_isolation_job_postings ON job_postings
+    FOR ALL
+    USING (tenant_id = current_tenant_id() OR current_setting('role', true) = 'service_role')
+    WITH CHECK (tenant_id = current_tenant_id() OR current_setting('role', true) = 'service_role');
 
 -- 1. Applicants RLS Policy
 CREATE POLICY tenant_isolation_applicants ON applicants
@@ -162,6 +171,19 @@ VALUES
     ('woowa', '우아한형제들', 'woowahan.com', 'Enterprise Ultimate', 1000000, 250000, 'Food Delivery / Mobility Tech')
 ON CONFLICT (id) DO UPDATE 
 SET name = EXCLUDED.name, plan = EXCLUDED.plan, industry = EXCLUDED.industry;
+
+-- Seed Default Job Postings (4 templates x 3 tenants)
+INSERT INTO job_postings (id, tenant_id, title, target_team, competencies)
+SELECT j.id, t.id, j.title, j.target_team, j.competencies::jsonb
+FROM (VALUES ('toss-payments'), ('daangn'), ('woowa')) AS t(id)
+CROSS JOIN (VALUES
+    ('tech_backend', '소프트웨어 엔지니어', 'Platform Engineering', '[{"id":"problem_solving","name":"문제 해결력 & 논리성","weight":30},{"id":"tech_skill","name":"직무 전문성 & 기술력","weight":30},{"id":"teamwork","name":"협업 & 커뮤니케이션","weight":20},{"id":"growth","name":"성장 가능성 & 주도성","weight":10},{"id":"ethics","name":"책임감 & 조직 적합성","weight":10}]'),
+    ('marketing_growth', '그로스 마케팅', 'Growth Marketing', '[{"id":"tech_skill","name":"데이터 분석 & 툴 활용력","weight":30},{"id":"problem_solving","name":"성과 창출 & 가설 검증력","weight":30},{"id":"growth","name":"기획력 & 도메인 이해도","weight":20},{"id":"teamwork","name":"소통 & 협업 능률","weight":10},{"id":"ethics","name":"도전 정신 & 열정","weight":10}]'),
+    ('sales_account', 'B2B 영업 & 사업개발', 'Enterprise Sales', '[{"id":"teamwork","name":"고객 설득 & 커뮤니케이션","weight":35},{"id":"problem_solving","name":"목표 달성력 & 딜 실행력","weight":30},{"id":"growth","name":"시장 분석 & 기획력","weight":15},{"id":"tech_skill","name":"제품 이해도 & 기술 소통","weight":10},{"id":"ethics","name":"회복 탄력성 & 관계 구축","weight":10}]'),
+    ('hr_recruiter', '인사 & 리크루터', 'Talent Acquisition', '[{"id":"ethics","name":"인재 검증력 & 윤리 의식","weight":30},{"id":"teamwork","name":"공감 & 조직 소통 역량","weight":25},{"id":"growth","name":"채용 브랜딩 & 기획력","weight":20},{"id":"problem_solving","name":"전략적 문제 해결력","weight":15},{"id":"tech_skill","name":"HR 테크 & 데이터 활용력","weight":10}]')
+) AS j(id, title, target_team, competencies)
+ON CONFLICT (id, tenant_id) DO UPDATE
+SET title = EXCLUDED.title, target_team = EXCLUDED.target_team, competencies = EXCLUDED.competencies;
 
 -- Index Optimization for Sub-second Query Speed
 CREATE INDEX IF NOT EXISTS idx_applicants_tenant ON applicants(tenant_id);

@@ -9,8 +9,8 @@ substitutions:
   _REGION: asia-northeast3
   _VITE_API_GATEWAY_URL: 'https://hr-evaluator-api-gateway-pt3ki5ggua-du.a.run.app'
   _CORS_ALLOWED_ORIGINS: 'https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app'
-  _VITE_SUPABASE_URL: ''
-  _VITE_SUPABASE_ANON_KEY: ''
+  _VITE_SUPABASE_URL: 'https://armqdmxzhnimjpnvoqin.supabase.co'
+  _VITE_SUPABASE_ANON_KEY: 'sb_publishable_X6wi3MjbGcglyIK-rOWflw_1nufAlaM'
 
 steps:
   # Step 1: Build & push Express API Gateway image
