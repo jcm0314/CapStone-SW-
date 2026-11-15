@@ -29,11 +29,17 @@ import Sidebar from './components/Sidebar';
 import CommandPalette from './components/CommandPalette';
 import { FEATURES, PLANNED_MESSAGE } from './data/featureCatalog';
 import { useTheme } from './hooks/useTheme';
+import LandingPage from './components/LandingPage';
 
 export default function App() {
   const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant, applicantsVersion } = useTenant();
   const { currentUser, hasPermission } = useAuth();
 
+  const [showLanding, setShowLanding] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const params = new URLSearchParams(window.location.search);
+    return !params.get('share');
+  });
   const [activeTab, setActiveTab] = useState('evaluator');
   const [currentJob, setCurrentJob] = useState(JOB_TEMPLATES[0]);
   const [applicantList, setApplicantList] = useState(() => getTenantApplicants());
@@ -413,6 +419,25 @@ export default function App() {
   ];
 
   const showResult = activeTab === 'evaluator' && evalView === 'result' && selectedApplicant;
+
+  if (showLanding && !sharedBannerInfo) {
+    return (
+      <LandingPage
+        onEnterWorkspace={(tab = 'evaluator') => {
+          setActiveTab(tab);
+          setShowLanding(false);
+          window.scrollTo({ top: 0 });
+        }}
+        onSelectApplicant={(index) => {
+          const target = applicantList[index] || applicantList[0];
+          if (target) {
+            setSelectedApplicant(target);
+            setEvalView('result');
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-canvas text-fg font-sans">
