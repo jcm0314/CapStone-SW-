@@ -38,7 +38,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 22px;
+      gap: 16px;
       margin: 0 auto;
       overflow: hidden;
     }
@@ -66,7 +66,7 @@
       background: #FFFFFF;
       border: 2px solid #CBD5E1;
       border-radius: 24px;
-      padding: 24px 28px;
+      padding: 20px 26px;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
     }
 
@@ -109,7 +109,7 @@
     <!-- =========================================================================
          [HEADER] 시선을 사로잡는 대형 타이틀 & QR 코드
          ========================================================================= -->
-    <header class="bg-slate-950 text-white rounded-3xl px-9 py-7 shadow-xl flex items-center justify-between gap-8 shrink-0">
+    <header class="bg-slate-950 text-white rounded-3xl px-9 py-5 shadow-xl flex items-center justify-between gap-8 shrink-0">
       <div class="space-y-3 flex-1">
         <div class="flex items-center gap-4 text-lg font-bold text-slate-300">
           <span class="px-4 py-1 rounded-full bg-blue-600 text-white font-black text-sm tracking-wide">
@@ -164,7 +164,7 @@
         <img 
           src="./docs/assets/kim_manager_4cut_comic.jpg" 
           alt="스타트업 김과장 4컷 웹툰" 
-          class="w-full h-[235px] object-cover object-center"
+          class="w-full h-[200px] object-cover object-center"
         />
         <!-- 4컷 자막 그리드 -->
         <div class="grid grid-cols-4 gap-3 bg-slate-900 text-white px-4 py-2.5 text-center">
@@ -476,91 +476,129 @@
     </div>
 
     <!-- =========================================================================
-         [SECTION 3-B] 핵심 엔지니어링 기술 4대 파이프라인
+         [SECTION 3-B] 핵심 엔지니어링 알고리즘 & 보안 파이프라인 (2x2 심층 기술 명세)
          ========================================================================= -->
-    <section class="card-box border-t-8 border-t-slate-800 space-y-2.5 shrink-0 py-4">
+    <section class="card-box border-t-8 border-t-slate-800 space-y-3 shrink-0 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2.5">
           <span class="px-3 py-1 rounded-xl bg-slate-800 text-white text-sm font-black font-mono">TECH</span>
-          <h2 class="text-[22px] font-black text-slate-900">핵심 엔지니어링 알고리즘 &amp; 보안 파이프라인</h2>
+          <h2 class="text-[24px] font-black text-slate-900">핵심 엔지니어링 알고리즘 &amp; 보안 파이프라인 상세</h2>
         </div>
-        <span class="text-sm font-bold text-slate-700 bg-slate-100 px-3.5 py-1 rounded-full border border-slate-300">
-          정밀 매칭 · 로컬 비식별화 · 논리적 테넌트 격리 · 다중 에이전트 감사
+        <span class="text-sm font-bold text-slate-700 bg-slate-100 px-4 py-1 rounded-full border border-slate-300">
+          실제 구현 코드 기반 (Web Worker · Regex · PostgreSQL RLS · DAG Pipeline)
         </span>
       </div>
 
-      <div class="grid grid-cols-4 gap-3.5">
+      <div class="grid grid-cols-2 gap-4">
         <!-- 1. Fuzzy 오프셋 매칭 엔진 -->
-        <div class="bg-blue-50/50 p-3 rounded-xl border-2 border-blue-200 space-y-1.5">
+        <div class="bg-blue-50/40 p-3.5 rounded-2xl border-2 border-blue-200 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded font-mono">01. ALGORITHM</span>
-            <span class="text-[11px] font-bold text-blue-600">fuzzyMatcher.js</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white bg-blue-600 px-2.5 py-0.5 rounded-md font-mono">01. ALGORITHM</span>
+              <h3 class="text-[18px] font-black text-slate-900">Fuzzy 오프셋 매칭 엔진</h3>
+            </div>
+            <span class="text-xs font-bold font-mono text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200">fuzzyMatcher.js · Web Worker</span>
           </div>
-          <div class="text-[17px] font-black text-slate-900">Fuzzy 오프셋 매칭 엔진</div>
           <p class="text-[13px] text-slate-700 leading-snug">
-            LLM 인용문의 줄바꿈·공백 오차를 <strong>3단계 파이프라인</strong>으로 보정해 원문 좌표(<code class="font-mono text-xs bg-white px-1 rounded">start, end</code>)를 정밀 탐색합니다.
+            LLM이 인용한 문장(<code class="font-mono text-xs bg-white px-1 rounded">targetQuote</code>)은 줄바꿈(<code class="font-mono text-xs bg-white px-1 rounded">\n</code>)·다중 공백·미세 오탈자로 단순 <code class="font-mono text-xs bg-white px-1 rounded">indexOf()</code> 매칭이 실패합니다. 이를 해결하기 위해 <strong>3단계 하이브리드 탐색</strong>을 Web Worker 별도 스레드에서 비동기 실행해 UI 블로킹 없이 원문 좌표(<code class="font-mono text-xs bg-white px-1 rounded">start, end</code>)를 산출합니다.
           </p>
-          <div class="bg-white rounded-lg p-2 border border-blue-200 text-[12px] font-bold text-slate-800 flex items-center justify-between">
-            <span>Exact 일치</span>
-            <span class="text-blue-500">→</span>
-            <span>공백 정규화</span>
-            <span class="text-blue-500">→</span>
-            <span>Levenshtein ≥0.85</span>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-white rounded-lg p-2 border border-blue-200">
+              <div class="text-[11px] font-black text-blue-700 font-mono">STAGE 1 (Fast-Path)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">Exact indexOf O(N)</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-blue-200">
+              <div class="text-[11px] font-black text-blue-700 font-mono">STAGE 2 (공백 정규화)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">첫·끝 토큰 경계 역추적</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-blue-200">
+              <div class="text-[11px] font-black text-blue-700 font-mono">STAGE 3 (DP Window)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">±20% 가변창 Levenshtein ≥0.85</div>
+            </div>
           </div>
         </div>
 
         <!-- 2. PII 마스킹 파이프라인 -->
-        <div class="bg-indigo-50/50 p-3 rounded-xl border-2 border-indigo-200 space-y-1.5">
+        <div class="bg-indigo-50/40 p-3.5 rounded-2xl border-2 border-indigo-200 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded font-mono">02. PRIVACY</span>
-            <span class="text-[11px] font-bold text-indigo-600">piiAnonymizer.js</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white bg-indigo-600 px-2.5 py-0.5 rounded-md font-mono">02. PRIVACY</span>
+              <h3 class="text-[18px] font-black text-slate-900">7종 PII 로컬 마스킹 파이프라인</h3>
+            </div>
+            <span class="text-xs font-bold font-mono text-indigo-700 bg-white px-2 py-0.5 rounded border border-indigo-200">piiAnonymizer.js</span>
           </div>
-          <div class="text-[17px] font-black text-slate-900">7종 PII 마스킹 파이프라인</div>
           <p class="text-[13px] text-slate-700 leading-snug">
-            AI 서버 전송 전 <strong>클라이언트 로컬</strong>에서 성명 변형 이스케이프 및 6대 정규식 규칙으로 즉각 비식별화합니다.
+            외부 LLM 전송 전 <strong>브라우저 로컬 메모리</strong>에서 개인식별정보를 선제 비식별화합니다. 지원자 성명의 변형(<code class="font-mono text-xs bg-white px-1 rounded">괄호 제거</code>)을 <code class="font-mono text-xs bg-white px-1 rounded">escapeRegExp</code>로 안전하게 치환한 뒤, 부정형 전방탐색(<code class="font-mono text-xs bg-white px-1 rounded">(?!사내|시민대학)</code>)과 전역 플래그 <code class="font-mono text-xs bg-white px-1 rounded">lastIndex=0</code> 초기화로 오탐·누락 없이 7종을 마스킹합니다.
           </p>
-          <div class="bg-white rounded-lg p-2 border border-indigo-200 text-[12px] font-bold text-slate-800 flex items-center justify-between">
-            <span>성명·이메일·연락처</span>
-            <span class="text-indigo-500">+</span>
-            <span>주민번호·학교·지역</span>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-white rounded-lg p-2 border border-indigo-200">
+              <div class="text-[11px] font-black text-indigo-700 font-mono">STEP 1 (성명 변형)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">이스케이프 후 [성명 익명화]</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-indigo-200">
+              <div class="text-[11px] font-black text-indigo-700 font-mono">STEP 2 (6대 정규식)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">연락처·주민·학교·지역 치환</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-indigo-200">
+              <div class="text-[11px] font-black text-indigo-700 font-mono">SAFETY (무상태 검증)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">lastIndex=0 리셋 · 오탐 방어</div>
+            </div>
           </div>
         </div>
 
         <!-- 3. PostgreSQL RLS 멀티테넌시 -->
-        <div class="bg-emerald-50/50 p-3 rounded-xl border-2 border-emerald-200 space-y-1.5">
+        <div class="bg-emerald-50/40 p-3.5 rounded-2xl border-2 border-emerald-200 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded font-mono">03. ISOLATION</span>
-            <span class="text-[11px] font-bold text-emerald-600">Supabase RLS</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white bg-emerald-600 px-2.5 py-0.5 rounded-md font-mono">03. ISOLATION</span>
+              <h3 class="text-[18px] font-black text-slate-900">PostgreSQL RLS 멀티테넌시</h3>
+            </div>
+            <span class="text-xs font-bold font-mono text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200">supabase_schema.sql</span>
           </div>
-          <div class="text-[17px] font-black text-slate-900">PostgreSQL RLS 멀티테넌시</div>
           <p class="text-[13px] text-slate-700 leading-snug">
-            JWT 클레임 기반 <code class="font-mono text-xs bg-white px-1 rounded">current_tenant_id()</code> 정책으로 7개 핵심 테이블의 <strong>기업별 데이터 교차 접근을 DB 단에서 차단</strong>합니다.
+            애플리케이션 쿼리 실수로 인한 타 기업 데이터 노출을 막기 위해 <strong>DB 엔진 레벨 Row-Level Security(RLS)</strong>를 강제합니다. <code class="font-mono text-xs bg-white px-1 rounded">current_tenant_id()</code>가 JWT 클레임을 파싱해 7개 핵심 테이블의 행 단위 접근을 통제하며, 복합 PK(<code class="font-mono text-xs bg-white px-1 rounded">id, tenant_id</code>)와 복합 인덱스로 조회 성능을 최적화했습니다.
           </p>
-          <div class="bg-white rounded-lg p-2 border border-emerald-200 text-[12px] font-bold text-slate-800 flex items-center justify-between">
-            <span>JWT Claim</span>
-            <span class="text-emerald-500">→</span>
-            <span>RLS Policy</span>
-            <span class="text-emerald-500">→</span>
-            <span>테넌트 완전 격리</span>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-white rounded-lg p-2 border border-emerald-200">
+              <div class="text-[11px] font-black text-emerald-700 font-mono">JWT CLAIM</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">request.jwt.claims->>tenant_id</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-emerald-200">
+              <div class="text-[11px] font-black text-emerald-700 font-mono">RLS POLICY (7 Tables)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">USING &amp; WITH CHECK 격리</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-emerald-200">
+              <div class="text-[11px] font-black text-emerald-700 font-mono">SHARE TTL &amp; INDEX</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">expires_at&gt;NOW() · 복합 인덱스</div>
+            </div>
           </div>
         </div>
 
-        <!-- 4. 4대 멀티에이전트 오케스트레이션 -->
-        <div class="bg-purple-50/50 p-3 rounded-xl border-2 border-purple-200 space-y-1.5">
+        <!-- 4. 4대 멀티에이전트 파이프라인 -->
+        <div class="bg-purple-50/40 p-3.5 rounded-2xl border-2 border-purple-200 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-purple-800 bg-purple-100 px-2 py-0.5 rounded font-mono">04. MULTI-AGENT</span>
-            <span class="text-[11px] font-bold text-purple-600">Claude 4-Agent</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white bg-purple-600 px-2.5 py-0.5 rounded-md font-mono">04. MULTI-AGENT</span>
+              <h3 class="text-[18px] font-black text-slate-900">4대 멀티에이전트 DAG 파이프라인</h3>
+            </div>
+            <span class="text-xs font-bold font-mono text-purple-700 bg-white px-2 py-0.5 rounded border border-purple-200">multiAgentEvaluator.js</span>
           </div>
-          <div class="text-[17px] font-black text-slate-900">4대 멀티에이전트 파이프라인</div>
           <p class="text-[13px] text-slate-700 leading-snug">
-            단일 프롬프트 편향을 막기 위해 <strong>발췌·적대적 반박·정규화 채점·면접 질문</strong> 에이전트를 순차 오케스트레이션합니다.
+            단일 LLM 프롬프트의 확증 편향과 환각을 억제하기 위해 <strong>방향성 비순환 그래프(DAG)</strong>로 역할을 분리했습니다. 마스킹된 <code class="font-mono text-xs bg-white px-1 rounded">cleanText</code>만 입력으로 받아 근거 발췌 및 적대적 반박을 수행한 뒤, 채점과 질문 생성을 <strong>병렬 실행(<code class="font-mono text-xs bg-white px-1 rounded">Promise.allSettled</code>)</strong>해 지연을 줄이고 부분 장애를 격리합니다.
           </p>
-          <div class="bg-white rounded-lg p-2 border border-purple-200 text-[12px] font-bold text-slate-800 flex items-center justify-between">
-            <span>Grounding</span>
-            <span class="text-purple-500">→</span>
-            <span>Critic</span>
-            <span class="text-purple-500">→</span>
-            <span>Supervisor·질문</span>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-white rounded-lg p-2 border border-purple-200">
+              <div class="text-[11px] font-black text-purple-700 font-mono">STAGE 1 → 2 (순차)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">Grounding → Critic 교차감사</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-purple-200">
+              <div class="text-[11px] font-black text-purple-700 font-mono">STAGE 3∥4 (병렬)</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">Supervisor ∥ Interviewer</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-purple-200">
+              <div class="text-[11px] font-black text-purple-700 font-mono">FAULT ISOLATION</div>
+              <div class="text-[12px] font-bold text-slate-800 mt-0.5">부분 실패 시 점수 무결성 보존</div>
+            </div>
           </div>
         </div>
       </div>
@@ -587,7 +625,7 @@
             <img 
               src="./docs/assets/redesign/29v2-after-result.png" 
               alt="AI 기반 채용 평가 및 근거 검증 실제 화면" 
-              class="w-full h-[355px] object-cover object-top"
+              class="w-full h-[275px] object-cover object-top"
             />
           </div>
           <div class="grid grid-cols-3 gap-3 text-center">
@@ -604,28 +642,28 @@
         </div>
 
         <!-- 우측 5 Cols: 4대 핵심 실서비스 화면 2x2 그리드 -->
-        <div class="col-span-5 grid grid-cols-2 gap-3">
-          <div class="bg-white p-2.5 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
-            <div class="text-[14px] font-black text-blue-700 mb-1">01. 지원자 대시보드 &amp; 빠른 검색</div>
-            <div class="rounded-xl overflow-hidden border border-slate-300 h-[145px]">
+        <div class="col-span-5 grid grid-cols-2 gap-2.5">
+          <div class="bg-white p-2 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
+            <div class="text-[13px] font-black text-blue-700 mb-1">01. 지원자 대시보드 &amp; 빠른 검색</div>
+            <div class="rounded-xl overflow-hidden border border-slate-300 h-[112px]">
               <img src="./docs/assets/live/01_live_applicant_list.png" class="w-full h-full object-cover object-top" />
             </div>
           </div>
-          <div class="bg-white p-2.5 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
-            <div class="text-[14px] font-black text-indigo-700 mb-1">02. 7종 PII 자동 마스킹</div>
-            <div class="rounded-xl overflow-hidden border border-slate-300 h-[145px]">
+          <div class="bg-white p-2 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
+            <div class="text-[13px] font-black text-indigo-700 mb-1">02. 7종 PII 자동 마스킹</div>
+            <div class="rounded-xl overflow-hidden border border-slate-300 h-[112px]">
               <img src="./docs/assets/live/04_live_pii_masking.png" class="w-full h-full object-cover object-top" />
             </div>
           </div>
-          <div class="bg-white p-2.5 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
-            <div class="text-[14px] font-black text-purple-700 mb-1">03. HITL 점수 보정 모달</div>
-            <div class="rounded-xl overflow-hidden border border-slate-300 h-[145px]">
+          <div class="bg-white p-2 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
+            <div class="text-[13px] font-black text-purple-700 mb-1">03. HITL 점수 보정 모달</div>
+            <div class="rounded-xl overflow-hidden border border-slate-300 h-[112px]">
               <img src="./docs/assets/live/07_live_hitl_modal.png" class="w-full h-full object-cover object-top" />
             </div>
           </div>
-          <div class="bg-white p-2.5 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
-            <div class="text-[14px] font-black text-emerald-700 mb-1">04. 1-Click 실시간 공유</div>
-            <div class="rounded-xl overflow-hidden border border-slate-300 h-[145px]">
+          <div class="bg-white p-2 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
+            <div class="text-[13px] font-black text-emerald-700 mb-1">04. 1-Click 실시간 공유</div>
+            <div class="rounded-xl overflow-hidden border border-slate-300 h-[112px]">
               <img src="./docs/assets/live/08_live_share_modal.png" class="w-full h-full object-cover object-top" />
             </div>
           </div>
