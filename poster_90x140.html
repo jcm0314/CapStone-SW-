@@ -41,11 +41,11 @@
       min-height: 1400mm;
       background: #FFFFFF;
       position: relative;
-      padding: 30mm 35mm;
+      padding: 26mm 30mm;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 20px;
+      gap: 16px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
       overflow: hidden;
     }
@@ -71,12 +71,40 @@
       }
     }
 
-    .section-box {
+    .section-card {
       background: #FFFFFF;
-      border: 3px solid #E2E8F0;
-      border-radius: 32px;
-      padding: 32px 40px;
-      box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.05);
+      border: 2.5px solid #E2E8F0;
+      border-radius: 24px;
+      padding: 22px 28px;
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Styled Tables */
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 13.5px;
+    }
+    table.custom-table th {
+      background-color: #F8FAFC;
+      color: #1E293B;
+      font-weight: 800;
+      padding: 10px 14px;
+      border: 1.5px solid #CBD5E1;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+    table.custom-table td {
+      padding: 9px 14px;
+      border: 1.5px solid #E2E8F0;
+      color: #334155;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    table.custom-table tr:nth-child(even) {
+      background-color: #F8FAFC;
     }
   </style>
 </head>
@@ -100,446 +128,575 @@
   <div class="poster-canvas">
 
     <!-- =========================================================================
-         [HEADER] 대형 헤더 및 프로젝트 한 줄 소개
+         [HEADER] 대형 헤더 및 메타 테이블
          ========================================================================= -->
-    <header class="border-b-4 border-slate-900 pb-7 space-y-5 shrink-0">
+    <header class="border-b-4 border-slate-900 pb-5 space-y-4 shrink-0">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <span class="px-6 py-2.5 rounded-full bg-blue-600 text-white font-black text-xl tracking-wide shadow-md">
+          <span class="px-5 py-2 rounded-full bg-blue-600 text-white font-black text-lg tracking-wide shadow-md">
             2026 단국대학교 캡스톤 페스티벌 &amp; 졸업작품전시회
           </span>
-          <span class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-800 font-bold text-lg border border-slate-300 font-mono">
+          <span class="px-4 py-2 rounded-full bg-slate-100 text-slate-800 font-bold text-base border border-slate-300 font-mono">
             소프트웨어 ICT관
           </span>
         </div>
         
-        <div class="flex items-center gap-8 text-2xl text-slate-600 font-semibold">
+        <div class="flex items-center gap-8 text-xl text-slate-700 font-semibold">
           <div>팀명: <strong class="text-slate-950 font-black">Check_Mate</strong></div>
           <div>지도교수: <strong class="text-slate-950 font-black">단국대학교 컴퓨터공학과</strong></div>
           <div>팀원: <strong class="text-slate-950 font-black">장천명 (32203919, 팀장) · 박상윤 (32201633)</strong></div>
         </div>
       </div>
 
-      <div class="flex items-end justify-between pt-2">
-        <div class="space-y-4">
-          <div class="flex items-center gap-6">
-            <h1 class="text-9xl font-black text-slate-950 tracking-tight">
+      <div class="flex items-end justify-between pt-1">
+        <div class="space-y-3">
+          <div class="flex items-center gap-5">
+            <h1 class="text-8xl font-black text-slate-950 tracking-tight">
               Check-Mate
             </h1>
-            <span class="text-3xl font-black text-blue-600 bg-blue-50 border-3 border-blue-200 px-6 py-2.5 rounded-3xl">
+            <span class="text-2xl font-black text-blue-600 bg-blue-50 border-2 border-blue-200 px-5 py-2 rounded-2xl">
               B2B HR AX All-in-One Copilot
             </span>
           </div>
 
-          <!-- 포스터 필수 내용 ① 프로젝트 한 줄 소개 (큼직하고 명쾌하게) -->
-          <div class="flex items-center gap-5 bg-slate-950 text-white px-8 py-5 rounded-3xl shadow-xl">
-            <span class="px-4 py-2 rounded-xl bg-blue-500 text-white font-mono text-base font-black shrink-0 tracking-wider">
+          <!-- 프로젝트 한 줄 소개 (상단 강조 배너) -->
+          <div class="flex items-center gap-4 bg-slate-950 text-white px-7 py-3.5 rounded-2xl shadow-xl">
+            <span class="px-3 py-1 rounded-lg bg-blue-500 text-white font-mono text-sm font-black shrink-0 tracking-wider">
               한 줄 소개
             </span>
-            <p class="text-2xl font-bold tracking-tight text-slate-100">
+            <p class="text-xl font-bold tracking-tight text-slate-100">
               "파편화된 채용 도구들을 하나로 통합하고, 1:1 원문 형광펜 팩트체크로 서류 검토 90%를 단축하는 올인원 HR AX 플랫폼"
             </p>
           </div>
         </div>
 
-        <div class="text-right space-y-2.5 font-mono text-base text-slate-500 pb-1 shrink-0">
+        <div class="text-right space-y-1.5 font-mono text-sm text-slate-500 pb-1 shrink-0">
           <div>GitHub: <strong class="text-slate-900 font-bold">github.com/jcm0314/CapStone-SW-</strong></div>
-          <div class="text-emerald-700 font-black text-lg flex items-center justify-end gap-2.5">
-            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Production Live: checkmate.psyrod.dev</span>
+          <div class="text-emerald-700 font-black text-base flex items-center justify-end gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Live: checkmate.psyrod.dev</span>
           </div>
         </div>
       </div>
     </header>
 
     <!-- =========================================================================
-         [ROW 1] 3대 핵심 임팩트 수치 대형 배너 (여백 없이 시원한 볼륨감)
+         [ROW 1] Ⅰ. 작품 개요 : [그림 1] 유저 플로우 & [표 1] AS-IS vs TO-BE 비교 표
          ========================================================================= -->
-    <div class="grid grid-cols-3 gap-8 shrink-0">
-      <!-- 지표 1 -->
-      <div class="p-8 rounded-3xl bg-blue-50 border-3 border-blue-300 flex items-center gap-7 shadow-sm">
-        <div class="w-24 h-24 rounded-3xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xl shadow-blue-600/30">
-          <i data-lucide="clock" class="w-12 h-12"></i>
+    <section class="section-card border-t-8 border-t-blue-600 space-y-3 shrink-0">
+      <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-blue-600 text-white text-base flex items-center justify-center font-black">Ⅰ</span>
+          <h2 class="text-2xl font-black text-slate-900">작품 개요 : 엔드투엔드 유저 플로우 &amp; AS-IS vs TO-BE 비교</h2>
         </div>
-        <div>
-          <span class="text-lg text-blue-900 font-bold block">서류 1건 검토 시간 단축</span>
-          <div class="flex items-baseline gap-4 mt-1.5">
-            <span class="text-6xl font-black text-blue-950 tracking-tight">15분 ➔ 1.5분</span>
-            <span class="text-2xl font-black text-blue-600 bg-white px-4 py-1.5 rounded-2xl border-2 border-blue-300">90% 절감</span>
-          </div>
-        </div>
+        <span class="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-3.5 py-1 rounded-full border border-blue-200">
+          심사기준 1. 창의성 및 문제해결력 (25점)
+        </span>
       </div>
 
-      <!-- 지표 2 -->
-      <div class="p-8 rounded-3xl bg-amber-50 border-3 border-amber-300 flex items-center gap-7 shadow-sm">
-        <div class="w-24 h-24 rounded-3xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xl shadow-amber-500/30">
-          <i data-lucide="highlighter" class="w-12 h-12"></i>
-        </div>
-        <div>
-          <span class="text-lg text-amber-900 font-bold block">1:1 원문 형광펜 매핑 응답속도</span>
-          <div class="flex items-baseline gap-4 mt-1.5">
-            <span class="text-6xl font-black text-amber-950 tracking-tight">&lt; 0.05초</span>
-            <span class="text-2xl font-black text-amber-700 bg-white px-4 py-1.5 rounded-2xl border-2 border-amber-300">실시간 스크롤</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 지표 3 -->
-      <div class="p-8 rounded-3xl bg-emerald-50 border-3 border-emerald-300 flex items-center gap-7 shadow-sm">
-        <div class="w-24 h-24 rounded-3xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xl shadow-emerald-600/30">
-          <i data-lucide="trending-up" class="w-12 h-12"></i>
-        </div>
-        <div>
-          <span class="text-lg text-emerald-900 font-bold block">B2B SaaS 마진 구조</span>
-          <div class="flex items-baseline gap-4 mt-1.5">
-            <span class="text-6xl font-black text-emerald-950 tracking-tight">원가 4원 vs 과금 300원</span>
-            <span class="text-2xl font-black text-emerald-700 bg-white px-4 py-1.5 rounded-2xl border-2 border-emerald-300">마진 98.7%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- =========================================================================
-         [ROW 2] Ⅰ. 작품 개요 : [AS-IS vs TO-BE] 채용 워크플로우 대혁신 (풍성한 볼륨)
-         ========================================================================= -->
-    <div class="grid grid-cols-2 gap-8 shrink-0">
-      <!-- AS-IS -->
-      <div class="section-box border-l-8 border-l-rose-500 bg-rose-50/30 space-y-5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <span class="w-12 h-12 rounded-2xl bg-rose-500 text-white text-lg flex items-center justify-center font-black shadow-md shadow-rose-500/20">
-              AS-IS
-            </span>
-            <div>
-              <h2 class="text-3xl font-black text-slate-900">기존 파편화된 수작업 채용 프로세스</h2>
-              <span class="text-sm text-rose-700 font-bold">도구 전환 5회 이상 · 100건당 25시간 야근 · 블랙박스 채점</span>
-            </div>
-          </div>
-          <span class="px-4 py-2 rounded-full bg-rose-100 text-rose-800 text-sm font-black font-mono">
-            Fragmented
-          </span>
+      <!-- 그림 1: 엔드투엔드 5단계 유저 플로우 파이프라인 (그림/인포그래픽) -->
+      <div class="space-y-1.5">
+        <div class="text-xs font-black text-slate-700 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+          <span>[그림 1] Check-Mate All-in-One 채용 워크플로우 파이프라인 (Zero-Tool-Switching 단일 창 종결)</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-5 pt-1">
+        <div class="grid grid-cols-5 gap-3 p-3 bg-slate-50 rounded-2xl border-2 border-slate-200">
           <!-- Step 1 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-rose-200 space-y-2 shadow-sm">
-            <div class="text-rose-600 font-black text-lg flex items-center gap-2">
-              <i data-lucide="layers" class="w-5 h-5"></i>
-              <span>1. 파편화된 접수</span>
+          <div class="bg-white p-3 rounded-xl border border-slate-300 text-center space-y-1 shadow-sm">
+            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[11px] font-mono font-bold block">STEP 01</span>
+            <div class="font-bold text-slate-900 text-sm flex items-center justify-center gap-1">
+              <i data-lucide="file-up" class="w-4 h-4 text-blue-600"></i>
+              <span>단일 접수</span>
             </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              이메일·노션·구글 드라이브 분산, 수작업 블라인드 마스킹으로 개인정보 유출 위험
-            </p>
+            <p class="text-[11px] text-slate-500">PDF/TXT 드래그앤드롭<br/>⌘K 단축키 실시간 탐색</p>
           </div>
 
           <!-- Step 2 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-rose-200 space-y-2 shadow-sm">
-            <div class="text-rose-600 font-black text-lg flex items-center gap-2">
-              <i data-lucide="eye-off" class="w-5 h-5"></i>
-              <span>2. 근거 없는 검토</span>
+          <div class="bg-white p-3 rounded-xl border border-slate-300 text-center space-y-1 shadow-sm">
+            <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[11px] font-mono font-bold block">STEP 02</span>
+            <div class="font-bold text-slate-900 text-sm flex items-center justify-center gap-1">
+              <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i>
+              <span>7종 PII 마스킹</span>
             </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              ChatGPT 복붙 과장에 속아 서류당 15분 낭비 &amp; 원문 근거 없는 단순 점수화
-            </p>
+            <p class="text-[11px] text-slate-500">브라우저 로컬 즉시 가명화<br/>100% 블라인드 공정 평가</p>
           </div>
 
-          <!-- Step 3 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-rose-200 space-y-2 shadow-sm">
-            <div class="text-rose-600 font-black text-lg flex items-center gap-2">
-              <i data-lucide="file-text" class="w-5 h-5"></i>
-              <span>3. 종이 면접 &amp; 취합</span>
+          <!-- Step 3 (핵심) -->
+          <div class="bg-amber-50 p-3 rounded-xl border-2 border-amber-400 text-center space-y-1 shadow-sm">
+            <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-900 text-[11px] font-mono font-extrabold block">STEP 03 (특허)</span>
+            <div class="font-extrabold text-amber-950 text-sm flex items-center justify-center gap-1">
+              <i data-lucide="highlighter" class="w-4 h-4 text-amber-600"></i>
+              <span>1:1 원문 형광펜</span>
             </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              면접 전날 질문지 수기 작성, 종이 인쇄 후 볼펜 채점 ➔ 엑셀 취합 지연
-            </p>
+            <p class="text-[11px] text-amber-900 font-semibold">4대 에이전트 감사<br/>&lt; 0.05초 즉각 스크롤</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-white p-3 rounded-xl border border-slate-300 text-center space-y-1 shadow-sm">
+            <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[11px] font-mono font-bold block">STEP 04</span>
+            <div class="font-bold text-slate-900 text-sm flex items-center justify-center gap-1">
+              <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
+              <span>HITL 인간 결재</span>
+            </div>
+            <p class="text-[11px] text-slate-500">채용관 직접 점수 재조정<br/>과장 타깃 압박질문 3종</p>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="bg-white p-3 rounded-xl border border-slate-300 text-center space-y-1 shadow-sm">
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-mono font-bold block">STEP 05</span>
+            <div class="font-bold text-slate-900 text-sm flex items-center justify-center gap-1">
+              <i data-lucide="share-2" class="w-4 h-4 text-emerald-600"></i>
+              <span>실시간 면접 공유</span>
+            </div>
+            <p class="text-[11px] text-slate-500">1-Click 암호화 Share ID<br/>무지연 동기화 (&lt; 50ms)</p>
           </div>
         </div>
       </div>
 
-      <!-- TO-BE -->
-      <div class="section-box border-l-8 border-l-blue-600 bg-blue-50/30 space-y-5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <span class="w-12 h-12 rounded-2xl bg-blue-600 text-white text-lg flex items-center justify-center font-black shadow-md shadow-blue-600/20">
-              TO-BE
-            </span>
-            <div>
-              <h2 class="text-3xl font-black text-slate-900">Check-Mate 올인원 채용 플랫폼</h2>
-              <span class="text-sm text-blue-700 font-bold">Zero-Tool-Switching · 건당 1.5분 원스톱 종결 · 1:1 형광펜 바인딩</span>
-            </div>
-          </div>
-          <span class="px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-black font-mono">
-            All-in-One OS
+      <!-- 표 1: AS-IS vs TO-BE 워크플로우 비교 표 -->
+      <div class="space-y-1.5 pt-1">
+        <div class="text-xs font-black text-slate-700 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            <span>[표 1] 기존 수작업 채용 프로세스 (AS-IS) vs Check-Mate 올인원 플랫폼 (TO-BE) 비교</span>
           </span>
+          <span class="text-[11px] font-mono font-bold text-blue-700">Zero-Tool-Switching Workflow</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-5 pt-1">
-          <!-- Step 1 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-blue-200 space-y-2 shadow-sm">
-            <div class="text-blue-700 font-black text-lg flex items-center gap-2">
-              <i data-lucide="shield-check" class="w-5 h-5"></i>
-              <span>1. 자동 블라인드 접수</span>
-            </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              단일 대시보드 드래그앤드롭 즉시 브라우저 7종 PII 자동 마스킹 및 ⌘K 빠른 탐색
-            </p>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-blue-200 space-y-2 shadow-sm">
-            <div class="text-blue-700 font-black text-lg flex items-center gap-2">
-              <i data-lucide="highlighter" class="w-5 h-5"></i>
-              <span>2. 1:1 형광펜 팩트체크</span>
-            </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              4대 멀티에이전트가 1.5분 내 원문 줄번호 바인딩 리포트 완성 (< 0.05초 즉시 스크롤)
-            </p>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="p-5 rounded-2xl bg-white border-2 border-blue-200 space-y-2 shadow-sm">
-            <div class="text-blue-700 font-black text-lg flex items-center gap-2">
-              <i data-lucide="users" class="w-5 h-5"></i>
-              <span>3. 실시간 협업 질문키트</span>
-            </div>
-            <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              과장 타깃 압박 질문 3종 자동 생성 &amp; 암호화 링크로 실시간 채점 동기화 (< 50ms)
-            </p>
-          </div>
-        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th class="w-[14%]">채용 단계</th>
+              <th class="w-[38%] bg-rose-50/70 text-rose-900">🛑 기존 수작업 프로세스 (AS-IS)</th>
+              <th class="w-[38%] bg-blue-50/70 text-blue-900">✨ Check-Mate 올인원 플랫폼 (TO-BE)</th>
+              <th class="w-[10%] bg-emerald-50/70 text-emerald-900">개선 효과</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-center">1. 서류 접수 &amp; 관리</td>
+              <td class="text-slate-600">이메일 수신 ➔ 노션/구글 드라이브 파일 다운로드 및 폴더 수기 정리</td>
+              <td class="font-bold text-blue-700">단일 대시보드 드래그앤드롭 접수 &amp; ⌘K 커맨드 팔레트 즉시 탐색</td>
+              <td class="font-bold text-emerald-600 text-center">도구 0초 일원화</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-center">2. 개인정보 보호</td>
+              <td class="text-slate-600">인사담당자가 수작업으로 이름·출신교 마스킹 (개인정보 노출 위험)</td>
+              <td class="font-bold text-blue-700">브라우저 로컬 정규식으로 7종 PII 즉시 자동 가명화 (블라인드 채용)</td>
+              <td class="font-bold text-emerald-600 text-center">100% 자동 차단</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-center">3. 서류 팩트체크</td>
+              <td class="text-slate-600">1건당 15분 정독, ChatGPT 복붙 과장에 속아 조기퇴사(38%) 초래</td>
+              <td class="font-bold text-blue-700">4대 멀티에이전트가 1.5분 만에 1:1 형광펜 바인딩 검증 리포트 완성</td>
+              <td class="font-bold text-emerald-600 text-center">90% 시간 절감</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-center">4. 면접 질문지 준비</td>
+              <td class="text-slate-600">면접 전날 밤샘 야근하며 자소서 재정독 및 면접 질문 수기 작성</td>
+              <td class="font-bold text-blue-700">Critic 감사 결과 기반 과장 의심 타깃 실전 압박 질문 3종 자동 도출</td>
+              <td class="font-bold text-emerald-600 text-center">질문지 즉시 생성</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-center">5. 면접장 채점 &amp; 협업</td>
+              <td class="text-slate-600">종이 서류 인쇄 ➔ 볼펜 수기 채점 ➔ 엑셀 수동 취합 (30분~1시간 지연)</td>
+              <td class="font-bold text-blue-700">1-Click 암호화 Share ID 링크로 면접관 전원 실시간 채점 동기화 (&lt; 50ms)</td>
+              <td class="font-bold text-emerald-600 text-center">취합 지연 0초</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </section>
 
     <!-- =========================================================================
-         [ROW 3] Ⅱ. 개발 세부 내용 & Ⅲ. 핵심 구현 쇼케이스 (초대형 이미지로 꽉 채움!)
+         [ROW 2] Ⅱ. 개발 세부 내용 : [그림 2 & 표 2] 시스템 아키텍처 + [그림 3 & 표 3] 4-Agent 파이프라인
          ========================================================================= -->
-    <div class="grid grid-cols-12 gap-8 items-stretch flex-1 min-h-[560px]">
+    <div class="grid grid-cols-12 gap-5 shrink-0">
       
-      <!-- 좌측 5 Cols: 아키텍처 및 4대 멀티에이전트 파이프라인 다이어그램 -->
-      <div class="col-span-5 section-box space-y-6 border-t-8 border-t-indigo-600 flex flex-col justify-between">
-        <div class="space-y-5">
-          <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
-            <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-              <span class="w-10 h-10 rounded-2xl bg-indigo-600 text-white text-lg flex items-center justify-center font-bold">Ⅱ</span>
-              개발 세부 내용 (Architecture &amp; Agent)
-            </h2>
-            <span class="text-sm font-mono font-bold text-indigo-700 bg-indigo-50 px-4 py-1.5 rounded-full border border-indigo-200">
-              기술성/완성도 (25점)
-            </span>
+      <!-- 좌측 6 Cols: 4-Tier 시스템 아키텍처 다이어그램 & 기술 스택 표 -->
+      <section class="col-span-6 section-card border-t-8 border-t-indigo-600 space-y-3">
+        <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-base flex items-center justify-center font-black">Ⅱ-A</span>
+            <h2 class="text-xl font-black text-slate-900">시스템 소프트웨어 아키텍처 (4-Tier)</h2>
           </div>
-
-          <!-- 4대 멀티에이전트 플로우 다이어그램 (확대) -->
-          <div class="space-y-2.5">
-            <span class="text-base font-black text-slate-900 block">4대 멀티에이전트 적대적 교차 감사 메커니즘 (SRP 원칙)</span>
-            <div class="p-4 bg-slate-50 rounded-3xl border-2 border-slate-200 flex items-center justify-center bg-white shadow-sm">
-              <img 
-                src="./docs/assets/multi_agent_flowchart_light.png" 
-                alt="4대 멀티에이전트 파이프라인 플로우차트" 
-                class="w-full h-48 object-contain"
-              />
-            </div>
-          </div>
-
-          <!-- 4대 에이전트 역할 카드 -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 rounded-2xl bg-blue-50/70 border-2 border-blue-200">
-              <strong class="text-blue-900 block text-base font-black">1. Grounding Agent</strong>
-              <span class="text-slate-600 text-sm">원문 수치·성과 문장 1:1 발췌 매핑</span>
-            </div>
-            <div class="p-4 rounded-2xl bg-rose-50/70 border-2 border-rose-200">
-              <strong class="text-rose-900 block text-base font-black">2. Critic Agent</strong>
-              <span class="text-slate-600 text-sm">과장·모순 의심 문장 적대적 감사</span>
-            </div>
-            <div class="p-4 rounded-2xl bg-indigo-50/70 border-2 border-indigo-200">
-              <strong class="text-indigo-900 block text-base font-black">3. Supervisor Agent</strong>
-              <span class="text-slate-600 text-sm">5대 핵심역량 신뢰도 정규화 채점</span>
-            </div>
-            <div class="p-4 rounded-2xl bg-purple-50/70 border-2 border-purple-200">
-              <strong class="text-purple-900 block text-base font-black">4. Interviewer Agent</strong>
-              <span class="text-slate-600 text-sm">약점 타깃 압박 면접 질문 3종 도출</span>
-            </div>
-          </div>
+          <span class="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-3 py-0.5 rounded-full border border-indigo-200">
+            기술성/완성도 (25점)
+          </span>
         </div>
 
-        <!-- 4-Tier Full-Stack 요약 뱃지 바 -->
-        <div class="p-4 bg-slate-900 text-white rounded-2xl flex items-center justify-between text-sm font-mono">
-          <div class="text-slate-400">Stack:</div>
-          <span class="text-blue-400 font-bold">Next.js 15</span>
-          <span class="text-slate-600">➔</span>
-          <span class="text-emerald-400 font-bold">Cloudflare Edge</span>
-          <span class="text-slate-600">➔</span>
-          <span class="text-yellow-400 font-bold">Spring Boot 3</span>
-          <span class="text-slate-600">➔</span>
-          <span class="text-purple-400 font-bold">Claude 3.5 &amp; Supabase</span>
-        </div>
-      </div>
-
-      <!-- 우측 7 Cols: 핵심 기능 대형 쇼케이스 (초대형 이미지 460px 이상) -->
-      <div class="col-span-7 section-box space-y-5 border-t-8 border-t-amber-500 bg-amber-50/10 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
-            <div class="flex items-center gap-4">
-              <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                <span class="w-10 h-10 rounded-2xl bg-amber-500 text-white text-lg flex items-center justify-center font-bold">Ⅲ</span>
-                핵심 구현 쇼케이스 (1:1 원문 형광펜 팩트체크)
-              </h2>
-              <span class="px-4 py-1.5 rounded-full bg-amber-100 text-amber-900 text-sm font-bold font-mono">
-                핵심 특허 기능
-              </span>
-            </div>
-            <span class="text-sm font-mono font-bold text-amber-800 bg-amber-50 px-4 py-1.5 rounded-full border border-amber-200">
-              실현 가능성 (20점)
-            </span>
+        <!-- 그림 2: 시스템 아키텍처 다이어그램 -->
+        <div class="space-y-1">
+          <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+            <span>[그림 2] 엔드투엔드 4-Tier 클라우드 네이티브 아키텍처</span>
           </div>
-
-          <!-- 실제 1:1 형광펜 화면 초대형 캡처 (h-[440px] 이상) -->
-          <div class="mt-4 rounded-2xl overflow-hidden border-3 border-slate-300 shadow-2xl bg-white">
+          <div class="p-2 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center bg-white shadow-sm">
             <img 
-              src="./docs/assets/live/06_live_evaluation_result.png" 
-              alt="1:1 원문 형광펜 팩트체크 실제 결과 화면" 
-              class="w-full h-[440px] object-cover object-top"
+              src="./docs/assets/system_architecture_mermaid_light.png" 
+              alt="4-Tier 시스템 아키텍처 다이어그램" 
+              class="w-full h-32 object-contain"
             />
           </div>
         </div>
 
-        <!-- 3개 하이라이트 설명 바 -->
-        <div class="grid grid-cols-3 gap-4 pt-1">
-          <div class="p-4 rounded-2xl bg-white border-2 border-amber-200 text-center shadow-sm">
-            <strong class="text-amber-900 block font-black text-base">① 좌측 원문 뷰어</strong>
-            <span class="text-slate-600 text-sm mt-0.5 block">줄번호 인덱싱 &amp; 형광펜 하이라이트</span>
+        <!-- 표 2: 시스템 아키텍처 기술 스택 및 엔지니어링 표 -->
+        <div class="space-y-1">
+          <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+            <span>[표 2] 4-Tier 계층별 기술 스택 및 핵심 엔지니어링 스펙</span>
           </div>
-          <div class="p-4 rounded-2xl bg-white border-2 border-amber-200 text-center shadow-sm">
-            <strong class="text-blue-900 block font-black text-base">② 우측 AI 평가 리포트</strong>
-            <span class="text-slate-600 text-sm mt-0.5 block">클릭 즉시 좌측 해당 줄로 0.05초 스크롤</span>
+          <table class="custom-table text-xs">
+            <thead>
+              <tr>
+                <th class="w-[20%]">계층</th>
+                <th class="w-[28%]">핵심 기술</th>
+                <th class="w-[36%]">주요 역할 및 메커니즘</th>
+                <th class="w-[16%]">실측 지표</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold text-blue-700 text-center">Tier 1. Client</td>
+                <td>Next.js 15, React 19, Tailwind</td>
+                <td>DOM 가상화 줄번호 바인딩, 7종 PII 로컬 가명화</td>
+                <td class="font-bold text-emerald-600 text-center">&lt; 0.05초 스크롤</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-indigo-700 text-center">Tier 2. Gateway</td>
+                <td>Cloudflare Tunnel, Edge SSL</td>
+                <td>무인증 외부 접근 차단, SSL 자동 종단, 테넌트 헤더 주입</td>
+                <td class="font-bold text-emerald-600 text-center">DDoS 방어</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-amber-700 text-center">Tier 3. Core API</td>
+                <td>Spring Boot 3, JPA/H2, JWT</td>
+                <td><code>TenantContextHolder</code> 기반 테넌트 격리 및 불변 감사로그</td>
+                <td class="font-bold text-emerald-600 text-center">데이터 완전 격리</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-purple-700 text-center">Tier 4. AI &amp; Sync</td>
+                <td>Claude 3.5 Sonnet/Haiku, Supabase</td>
+                <td>4대 멀티에이전트 적대적 파이프라인 &amp; 실시간 WebSocket 동기화</td>
+                <td class="font-bold text-emerald-600 text-center">&lt; 50ms 동기화</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 우측 6 Cols: 4대 멀티에이전트 다이어그램 & 역할 표 -->
+      <section class="col-span-6 section-card border-t-8 border-t-purple-600 space-y-3">
+        <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-purple-600 text-white text-base flex items-center justify-center font-black">Ⅱ-B</span>
+            <h2 class="text-xl font-black text-slate-900">4대 멀티에이전트 적대적 교차 감사</h2>
           </div>
-          <div class="p-4 rounded-2xl bg-white border-2 border-amber-200 text-center shadow-sm">
-            <strong class="text-purple-900 block font-black text-base">③ 타깃 면접 질문</strong>
-            <span class="text-slate-600 text-sm mt-0.5 block">과장 의심 문장 기반 실전 검증 질문</span>
+          <span class="text-xs font-mono font-bold text-purple-700 bg-purple-50 px-3.5 py-0.5 rounded-full border border-purple-200">
+            단일 책임 원칙 (SRP)
+          </span>
+        </div>
+
+        <!-- 그림 3: 멀티에이전트 플로우차트 -->
+        <div class="space-y-1">
+          <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+            <span>[그림 3] Grounding vs Critic 상호 감사 및 점수 정규화 흐름</span>
+          </div>
+          <div class="p-2 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center bg-white shadow-sm">
+            <img 
+              src="./docs/assets/multi_agent_flowchart_light.png" 
+              alt="4대 멀티에이전트 파이프라인 플로우차트" 
+              class="w-full h-32 object-contain"
+            />
           </div>
         </div>
-      </div>
+
+        <!-- 표 3: 4대 멀티에이전트 역할 및 책임 표 -->
+        <div class="space-y-1">
+          <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+            <span>[표 3] 4대 특화 에이전트 분업 및 적대적 감사 동작 정의</span>
+          </div>
+          <table class="custom-table text-xs">
+            <thead>
+              <tr>
+                <th class="w-[22%]">에이전트명</th>
+                <th class="w-[38%]">단일 책임 (SRP) 및 감사 동작</th>
+                <th class="w-[25%]">출력 DTO 데이터</th>
+                <th class="w-[15%]">모델</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold text-blue-700">1. Grounding</td>
+                <td>지원서 원문에서 프로젝트 성과·기술 스택 1:1 문장 단위 발췌</td>
+                <td><code>quotes[]</code> (원문 줄번호)</td>
+                <td class="text-center font-mono">Haiku 3.5</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-rose-700">2. Critic (감사)</td>
+                <td>기여도 100% 과장, 기술 모순, 논리 비약 문장 적대적 반박</td>
+                <td><code>critiques[]</code> (지적 근거)</td>
+                <td class="text-center font-mono">Sonnet 3.5</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-indigo-700">3. Supervisor</td>
+                <td>Grounding vs Critic 대조하여 5대 역량 신뢰도 가중 정규화</td>
+                <td><code>scores{}</code> (정규화 점수)</td>
+                <td class="text-center font-mono">Sonnet 3.5</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-purple-700">4. Interviewer</td>
+                <td>Critic이 지적한 과장 문장 타깃 실전 압박 면접 질문 3종 생성</td>
+                <td><code>questions[]</code> (검증 키트)</td>
+                <td class="text-center font-mono">Haiku 3.5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
     </div>
 
     <!-- =========================================================================
-         [ROW 4] 4단계 실서비스 엔드투엔드 여정 (라이브 UI 카드 4종 - 시원한 볼륨)
+         [ROW 3] Ⅲ. 구현 결과 : [그림 4] 1:1 형광펜 대형 쇼케이스 & [그림 5] 4대 라이브 UI 갤러리
          ========================================================================= -->
-    <section class="section-box border-t-8 border-t-slate-900 space-y-5 shrink-0">
-      <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
-        <h3 class="text-2xl font-black text-slate-900 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-xl bg-slate-900 text-white text-base flex items-center justify-center font-bold">Ⅳ</span>
-          <span>실제 상용 서비스 4단계 사용자 여정 (Live Service Walkthrough)</span>
-        </h3>
-        <span class="text-sm font-mono text-emerald-600 font-bold flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
-          Live 배포 완료 : checkmate.psyrod.dev
-        </span>
+    <section class="section-card border-t-8 border-t-amber-500 bg-amber-50/10 space-y-3 shrink-0">
+      <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-amber-500 text-white text-base flex items-center justify-center font-black">Ⅲ</span>
+          <h2 class="text-2xl font-black text-slate-900">구현 결과 : 1:1 원문 형광펜 팩트체크 &amp; 실서비스 라이브 화면</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold font-mono">
+            핵심 특허 기능
+          </span>
+          <span class="text-xs font-mono font-bold text-amber-800 bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+            심사기준 3. 실현 가능성 (20점) · checkmate.psyrod.dev
+          </span>
+        </div>
       </div>
 
-      <div class="grid grid-cols-4 gap-6">
-        <!-- Step 1 -->
-        <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2.5">
-          <div class="flex items-center justify-between text-sm font-black">
-            <span class="px-2.5 py-1 rounded-lg bg-blue-100 text-blue-700 font-mono">STEP 01</span>
-            <span class="text-slate-500">후보자 탐색</span>
+      <div class="grid grid-cols-12 gap-5 items-stretch">
+        <!-- 좌측 7 Cols: [그림 4] 1:1 형광펜 대형 스크린샷 -->
+        <div class="col-span-7 space-y-1.5 flex flex-col justify-between">
+          <div class="text-xs font-black text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>[그림 4] 1:1 원문 형광펜 팩트체크 리포트 (평가 문장 클릭 시 해당 줄로 0.05초 즉각 스크롤 동기화)</span>
+            </span>
+            <span class="text-[11px] font-mono text-emerald-600 font-bold">Latency &lt; 0.05s</span>
           </div>
-          <div class="font-bold text-slate-900 text-base">지원자 대시보드 &amp; ⌘K</div>
-          <div class="rounded-xl overflow-hidden border-2 border-slate-300 aspect-video bg-white shadow-sm">
-            <img src="./docs/assets/live/01_live_applicant_list.png" class="w-full h-full object-cover object-top" />
+
+          <div class="rounded-2xl overflow-hidden border-2 border-slate-300 shadow-md bg-white">
+            <img 
+              src="./docs/assets/live/06_live_evaluation_result.png" 
+              alt="1:1 원문 형광펜 팩트체크 실제 결과 화면" 
+              class="w-full h-56 object-cover object-top"
+            />
           </div>
-          <p class="text-sm text-slate-600 leading-snug">실시간 상태 배지 및 키보드 단축키 탐색</p>
+
+          <div class="grid grid-cols-3 gap-2.5 pt-1 text-center text-xs">
+            <div class="p-2 bg-white rounded-xl border border-amber-300 shadow-sm">
+              <strong class="text-amber-900 block font-bold text-xs">① 좌측 원문 뷰어</strong>
+              <span class="text-slate-500 text-[11px]">줄번호 인덱싱 &amp; 노란색 하이라이트</span>
+            </div>
+            <div class="p-2 bg-white rounded-xl border border-amber-300 shadow-sm">
+              <strong class="text-blue-900 block font-bold text-xs">② 우측 AI 평가 리포트</strong>
+              <span class="text-slate-500 text-[11px]">클릭 즉시 좌측 줄번호로 0.05초 포커싱</span>
+            </div>
+            <div class="p-2 bg-white rounded-xl border border-amber-300 shadow-sm">
+              <strong class="text-purple-900 block font-bold text-xs">③ 타깃 면접 질문</strong>
+              <span class="text-slate-500 text-[11px]">과장 의심 문장 기반 실전 검증 질문</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Step 2 -->
-        <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2.5">
-          <div class="flex items-center justify-between text-sm font-black">
-            <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-700 font-mono">STEP 02</span>
-            <span class="text-slate-500">개인정보 보호</span>
+        <!-- 우측 5 Cols: [그림 5] 실제 상용 서비스 4대 기능 화면 갤러리 -->
+        <div class="col-span-5 space-y-1.5 flex flex-col justify-between">
+          <div class="text-xs font-black text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-slate-900"></span>
+              <span>[그림 5] 프로덕션 라이브 4단계 기능 화면 갤러리</span>
+            </span>
+            <span class="text-[11px] font-mono text-slate-500">Live Production UI</span>
           </div>
-          <div class="font-bold text-slate-900 text-base">7종 PII 자동 마스킹</div>
-          <div class="rounded-xl overflow-hidden border-2 border-slate-300 aspect-video bg-white shadow-sm">
-            <img src="./docs/assets/live/04_live_pii_masking.png" class="w-full h-full object-cover object-top" />
-          </div>
-          <p class="text-sm text-slate-600 leading-snug">브라우저 로컬에서 이름·연락처 즉시 가명화</p>
-        </div>
 
-        <!-- Step 3 -->
-        <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2.5">
-          <div class="flex items-center justify-between text-sm font-black">
-            <span class="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-700 font-mono">STEP 03</span>
-            <span class="text-slate-500">인간 결재</span>
-          </div>
-          <div class="font-bold text-slate-900 text-base">HITL 점수 보정 모달</div>
-          <div class="rounded-xl overflow-hidden border-2 border-slate-300 aspect-video bg-white shadow-sm">
-            <img src="./docs/assets/live/07_live_hitl_modal.png" class="w-full h-full object-cover object-top" />
-          </div>
-          <p class="text-sm text-slate-600 leading-snug">채용관이 직접 점수 튜닝 및 최종 결재</p>
-        </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- 01 -->
+            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-bold">
+                <span class="text-blue-700 font-mono">01. 지원자 대시보드</span>
+                <span class="text-slate-400">⌘K 탐색</span>
+              </div>
+              <div class="rounded-lg overflow-hidden border border-slate-300 aspect-video bg-white">
+                <img src="./docs/assets/live/01_live_applicant_list.png" class="w-full h-full object-cover object-top" />
+              </div>
+            </div>
 
-        <!-- Step 4 -->
-        <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2.5">
-          <div class="flex items-center justify-between text-sm font-black">
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-mono">STEP 04</span>
-            <span class="text-slate-500">면접장 협업</span>
+            <!-- 02 -->
+            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-bold">
+                <span class="text-indigo-700 font-mono">02. 7종 PII 마스킹</span>
+                <span class="text-slate-400">로컬 가명화</span>
+              </div>
+              <div class="rounded-lg overflow-hidden border border-slate-300 aspect-video bg-white">
+                <img src="./docs/assets/live/04_live_pii_masking.png" class="w-full h-full object-cover object-top" />
+              </div>
+            </div>
+
+            <!-- 03 -->
+            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-bold">
+                <span class="text-purple-700 font-mono">03. HITL 점수 보정</span>
+                <span class="text-slate-400">인간 결재</span>
+              </div>
+              <div class="rounded-lg overflow-hidden border border-slate-300 aspect-video bg-white">
+                <img src="./docs/assets/live/07_live_hitl_modal.png" class="w-full h-full object-cover object-top" />
+              </div>
+            </div>
+
+            <!-- 04 -->
+            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between text-[11px] font-bold">
+                <span class="text-emerald-700 font-mono">04. 실시간 면접 공유</span>
+                <span class="text-slate-400">&lt; 50ms</span>
+              </div>
+              <div class="rounded-lg overflow-hidden border border-slate-300 aspect-video bg-white">
+                <img src="./docs/assets/live/08_live_share_modal.png" class="w-full h-full object-cover object-top" />
+              </div>
+            </div>
           </div>
-          <div class="font-bold text-slate-900 text-base">1-Click 실시간 공유</div>
-          <div class="rounded-xl overflow-hidden border-2 border-slate-300 aspect-video bg-white shadow-sm">
-            <img src="./docs/assets/live/08_live_share_modal.png" class="w-full h-full object-cover object-top" />
-          </div>
-          <p class="text-sm text-slate-600 leading-snug">암호화 Share ID 링크로 무지연 채점 동기화</p>
         </div>
       </div>
     </section>
 
     <!-- =========================================================================
-         [ROW 5] Ⅴ. 기대효과 및 비즈니스 가치 (3개 카드 + 바닥 푸터)
+         [ROW 4] Ⅳ. 기대효과 : [표 4] 실측 성능 지표 비교 표 & [표 5] 3대 기대효과 표
          ========================================================================= -->
-    <footer class="space-y-5 shrink-0">
-      <div class="grid grid-cols-3 gap-8">
-        <!-- 1. 기업 -->
-        <div class="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-2.5 shadow-sm">
-          <div class="flex items-center gap-3 text-lg font-black text-blue-900">
-            <i data-lucide="building-2" class="w-6 h-6 text-blue-600"></i>
-            <span>1. 기업(채용팀) 관점 효과</span>
+    <div class="grid grid-cols-12 gap-5 shrink-0">
+      
+      <!-- 좌측 6 Cols: [표 4] 정량 실측 성능 지표 비교 표 -->
+      <section class="col-span-6 section-card border-t-8 border-t-emerald-600 space-y-2.5">
+        <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white text-base flex items-center justify-center font-black">Ⅳ-A</span>
+            <h2 class="text-xl font-black text-slate-900">정량적 실측 성능 지표 비교</h2>
           </div>
-          <p class="text-sm text-slate-600 leading-relaxed font-medium">
-            • <strong>서류 검토 시간 90% 절감</strong> (야근 없는 스마트 채용 정착)<br />
-            • <strong>과장·허위 지원자 사전 필터링</strong>으로 조기퇴사(38%) 방지
-          </p>
+          <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200">
+            심사기준 2. 시장성 (20점)
+          </span>
         </div>
 
-        <!-- 2. 구직자 -->
-        <div class="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-2.5 shadow-sm">
-          <div class="flex items-center gap-3 text-lg font-black text-emerald-900">
-            <i data-lucide="user-check" class="w-6 h-6 text-emerald-600"></i>
-            <span>2. 청년 구직자 관점 효과</span>
-          </div>
-          <p class="text-sm text-slate-600 leading-relaxed font-medium">
-            • <strong>100% 블라인드 공정 평가</strong> (학벌·나이 스펙 편향 탈피)<br />
-            • <strong>깜깜이 탈락 방지</strong> (취약점을 짚어주는 맞춤 성장 피드백)
-          </p>
+        <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+          <span>[표 4] 도입 전 vs Check-Mate 도입 후 실측 정량 성능 지표</span>
         </div>
 
-        <!-- 3. 시장성 -->
-        <div class="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-2.5 shadow-sm">
-          <div class="flex items-center gap-3 text-lg font-black text-purple-900">
-            <i data-lucide="badge-dollar-sign" class="w-6 h-6 text-purple-600"></i>
-            <span>3. 시장성 및 단위 경제학</span>
-          </div>
-          <p class="text-sm text-slate-600 leading-relaxed font-medium">
-            • <strong>초기 타깃</strong>: 전담 HR이 부족한 10~50인 IT 스타트업 실무팀<br />
-            • <strong>압도적 수익성</strong>: 건당 원가 4원 vs 과금 300원 (마진율 98.7%)
-          </p>
-        </div>
-      </div>
+        <table class="custom-table text-xs">
+          <thead>
+            <tr>
+              <th class="w-[28%]">핵심 평가지표</th>
+              <th class="w-[24%] bg-slate-100">도입 전 (수작업)</th>
+              <th class="w-[28%] bg-blue-50 text-blue-900">Check-Mate 도입 후</th>
+              <th class="w-[20%] bg-emerald-50 text-emerald-900">개선 효과</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold">서류 1건 검토 시간</td>
+              <td class="text-center text-slate-500">15분 ~ 20분</td>
+              <td class="text-center font-bold text-blue-700">1.5분 이내</td>
+              <td class="text-center font-bold text-emerald-600">90% 업무 단축</td>
+            </tr>
+            <tr>
+              <td class="font-bold">원문 매칭 응답속도</td>
+              <td class="text-center text-slate-500">1~2분 수기 탐색</td>
+              <td class="text-center font-bold text-blue-700">&lt; 0.05초 (50ms)</td>
+              <td class="text-center font-bold text-emerald-600">실시간 즉시 스크롤</td>
+            </tr>
+            <tr>
+              <td class="font-bold">실시간 협업 동기화</td>
+              <td class="text-center text-slate-500">30분 수기 취합</td>
+              <td class="text-center font-bold text-blue-700">&lt; 50ms WebSocket</td>
+              <td class="text-center font-bold text-emerald-600">취합 지연 0초</td>
+            </tr>
+            <tr>
+              <td class="font-bold">건당 AI 서빙 원가</td>
+              <td class="text-center text-slate-500">수십 원 (비효율)</td>
+              <td class="text-center font-bold text-blue-700">건당 4.0원 (캐싱)</td>
+              <td class="text-center font-bold text-emerald-600">원가 90% 절감</td>
+            </tr>
+            <tr>
+              <td class="font-bold">B2B SaaS 마진 구조</td>
+              <td class="text-center text-slate-500">-</td>
+              <td class="text-center font-bold text-blue-700">원가 4원 vs 과금 300원</td>
+              <td class="text-center font-bold text-emerald-600">영업이익률 98.7%</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-      <!-- 바닥 정보 -->
-      <div class="border-t-2 border-slate-200 pt-5 flex items-center justify-between text-sm text-slate-500 font-mono">
+      <!-- 우측 6 Cols: [표 5] 3대 이해관계자 기대효과 표 -->
+      <section class="col-span-6 section-card border-t-8 border-t-purple-600 space-y-2.5">
+        <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-purple-600 text-white text-base flex items-center justify-center font-black">Ⅳ-B</span>
+            <h2 class="text-xl font-black text-slate-900">이해관계자별 기대효과 및 비즈니스 가치</h2>
+          </div>
+          <span class="text-xs font-mono font-bold text-purple-700 bg-purple-50 px-3 py-0.5 rounded-full border border-purple-200">
+            ESG &amp; Business
+          </span>
+        </div>
+
+        <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+          <span>[표 5] 기업 · 구직자 · B2B SaaS 관점 3대 기대효과 및 활용 방안</span>
+        </div>
+
+        <table class="custom-table text-xs">
+          <thead>
+            <tr>
+              <th class="w-[20%]">구분</th>
+              <th class="w-[45%]">핵심 기대효과</th>
+              <th class="w-[35%]">구체적 활용 방안</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-blue-900 text-center">1. 기업 채용팀</td>
+              <td>• <strong>서류 검토 시간 90% 절감</strong> (야근 병목 해소)<br/>• <strong>과장 지원자 사전 적발</strong>로 조기퇴사(38%) 방지</td>
+              <td>10~50인 IT 스타트업 개발팀장 및 PO 실무 투입 지원</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-emerald-900 text-center">2. 청년 구직자</td>
+              <td>• <strong>100% 블라인드 공정 평가</strong> (학벌·스펙 편향 탈피)<br/>• <strong>깜깜이 탈락 방지</strong> (취약점 맞춤 성장 피드백)</td>
+              <td>비수도권·비전공 실무 코딩 역량자 역차별 해소</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-purple-900 text-center">3. B2B SaaS 사업화</td>
+              <td>• <strong>영업이익률 98.7%</strong>의 압도적 단위 경제학<br/>• 월정액 구독(Starter 9.9만 / Pro 29만 원)</td>
+              <td>초기 스타트업 공급 ➔ 채용 인재풀 플랫폼 확장</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+
+    <!-- =========================================================================
+         [FOOTER] 공식 제출 정보 & 마무리 바닥글
+         ========================================================================= -->
+    <footer class="border-t-2 border-slate-200 pt-3 flex items-center justify-between text-xs text-slate-500 font-mono shrink-0">
+      <div class="flex items-center gap-6">
         <div>단국대학교 소프트웨어학과 / 2026 캡스톤 페스티벌 &amp; 졸업작품전시회 제출본</div>
-        <div class="flex items-center gap-8">
-          <span>GitHub: github.com/jcm0314/CapStone-SW-</span>
-          <span>Contact: 장천명 (010-7399-4118 / jcm03141@gmail.com)</span>
-        </div>
+        <div class="text-emerald-700 font-bold">● Production Server Live : checkmate.psyrod.dev</div>
+      </div>
+      <div class="flex items-center gap-8">
+        <span>GitHub: <strong>github.com/jcm0314/CapStone-SW-</strong></span>
+        <span>Contact: <strong>장천명 (010-7399-4118 / jcm03141@gmail.com)</strong></span>
       </div>
     </footer>
 
