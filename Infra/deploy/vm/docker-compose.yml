@@ -6,7 +6,7 @@ name: checkmate
 services:
   web:
     build:
-      context: ../..
+      context: ../../..
       dockerfile: Dockerfile
       args:
         VITE_API_GATEWAY_URL: ${PUBLIC_URL:?PUBLIC_URL 을 .env 에 설정하세요}/gw
@@ -22,8 +22,8 @@ services:
 
   api-gateway:
     build:
-      context: ../..
-      dockerfile: server/Dockerfile
+      context: ../../..
+      dockerfile: Backend/gateway/Dockerfile
     environment:
       PORT: "3001"
       NODE_ENV: production
@@ -39,7 +39,7 @@ services:
   core-api:
     profiles: ["core"]
     build:
-      context: ../../server-spring
+      context: ../../../Backend/spring
       dockerfile: Dockerfile
     environment:
       # local 프로필: H2 메모리 DB(재시작하면 데이터 초기화) + 데모 계정 시드

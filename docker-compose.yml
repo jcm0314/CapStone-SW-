@@ -25,7 +25,7 @@ services:
   api-gateway:
     build:
       context: .
-      dockerfile: server/Dockerfile
+      dockerfile: Backend/gateway/Dockerfile
     container_name: hr-evaluator-api-gateway
     ports:
       - "3001:3001"
@@ -41,7 +41,7 @@ services:
   #    운영(prod)에서는 이 compose 를 쓰지 말고 JWT_SECRET / SUPABASE_DB_* 를 설정해 배포하세요.
   core-api:
     build:
-      context: ./server-spring
+      context: ./Backend/spring
       dockerfile: Dockerfile
     container_name: checkmate-core-api
     ports:

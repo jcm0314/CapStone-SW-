@@ -92,7 +92,7 @@
 
 ## 🧠 4. 핵심 엔지니어링 및 알고리즘 설계
 
-### ① 4대 멀티에이전트 적대적 교차 검증(DAG) 파이프라인 (`src/services/multiAgentEvaluator.js`)
+### ① 4대 멀티에이전트 적대적 교차 검증(DAG) 파이프라인 (`Front/services/multiAgentEvaluator.js`)
 단일 프롬프트 LLM의 '무비판적 긍정 요약'과 '원문 없는 점수 날조(할루시네이션)'를 방지하기 위해 **단일 책임 원칙(SRP)**에 따라 4개의 에이전트로 역할을 분리하고 **2-Stage 순차 감사 후 병렬 합성(DAG)**으로 오케스트레이션합니다.
 
 | 에이전트 | 실행 단계 | 핵심 책임 | 핵심 구조화 출력 (`output_config.format`) |
@@ -104,7 +104,7 @@
 
 ---
 
-### ② 이중 방어선 7종 개인정보(PII) 비식별화 (`src/utils/piiAnonymizer.js`)
+### ② 이중 방어선 7종 개인정보(PII) 비식별화 (`Front/utils/piiAnonymizer.js`)
 외부 LLM 서버로 지원자 개인정보가 유출되거나 출신 학교에 따른 학벌 편향이 발생하는 것을 원천 차단하기 위해 **클라이언트 브라우저(1차)**와 **Cloud Run BFF 게이트웨이(2차)**에서 7종 개인정보를 강제 치환합니다.
 
 - **7종 마스킹 대상**: `1. 성명` (`[성명 익명화]`), `2. 출신 학교명` (`[학교명 익명화]`), `3. 전화번호` (`[전화번호 익명화]`), `4. 이메일` (`[이메일 익명화]`), `5. 주민등록번호` (`[주민번호 익명화]`), `6. 도로명·지번 주소` (`[주소 익명화]`), `7. 학번·사번 ID` (`[ID 익명화]`)
@@ -112,7 +112,7 @@
 
 ---
 
-### ③ 3단계 퍼지(Fuzzy) 원문 오프셋 바인딩 알고리즘 (`src/utils/fuzzyMatcher.js`)
+### ③ 3단계 퍼지(Fuzzy) 원문 오프셋 바인딩 알고리즘 (`Front/utils/fuzzyMatcher.js`)
 PDF 파싱 과정에서 발생한 줄바꿈(`\n`)·다중 공백이나 LLM 인용구의 미세한 조사 변형에도 원문 내 정확한 형광펜 좌표(`[start, end]`)를 복원하기 위해 **Web Worker 백그라운드 스레드**에서 3단계 매칭을 수행합니다.
 
 1. **Stage 1 — Exact IndexOf 완전 일치 탐색 (`O(N)`)**
@@ -125,7 +125,7 @@ PDF 파싱 과정에서 발생한 줄바꿈(`\n`)·다중 공백이나 LLM 인�
 
 ---
 
-### ④ Supabase PostgreSQL 7-Table 멀티테넌트 DB 스키마 및 RLS 격리 (`infra/supabase_schema.sql`)
+### ④ Supabase PostgreSQL 7-Table 멀티테넌트 DB 스키마 및 RLS 격리 (`Infra/supabase_schema.sql`)
 
 <p align="center">
   <img src="./docs/assets/poster_fresh/09_supabase_schema_clean.png" alt="Supabase PostgreSQL 7-Table ERD" width="88%" />
@@ -152,14 +152,7 @@ PDF 파싱 과정에서 발생한 줄바꿈(`\n`)·다중 공백이나 LLM 인�
 
 ```text
 CapStone-SW-/
-├── poster_90x140.pdf                # 캡스톤 디자인 경진대회 포스터 (90x140cm 인쇄용 PDF)
-├── poster_90x140.png                # 캡스톤 디자인 경진대회 포스터 (고해상도 PNG)
-├── poster_90x140.html               # 캡스톤 디자인 포스터 원본 HTML/CSS
-├── presentation_slides.pdf          # 경진대회 발표 자료 (16:9 와이드 14장 PDF)
-├── presentation_slides.html         # 경진대회 발표 자료 원본 HTML (방향키 네비게이션 지원)
-├── Check-Mate_IR_시연영상.mp4        # 내레이션 및 자막 포함 전체 작동 시연 영상 (MP4)
-├── FINAL_GRADUATION_REPORT.pdf      # 캡스톤 디자인 최종 결과보고서 (A4 7페이지 PDF)
-├── src/                             # React 18 프론트엔드 및 핵심 알고리즘 모듈
+├── Front/                           # React 18 프론트엔드 및 핵심 알고리즘 모듈
 │   ├── services/
 │   │   ├── multiAgentEvaluator.js   # 4대 멀티에이전트 적대적 교차 검증(DAG) 오케스트레이터
 │   │   └── agents/                  # Grounding, Critic, Supervisor, Interviewer 에이전트 프롬프트·스키마
@@ -171,14 +164,25 @@ CapStone-SW-/
 │   │   └── evaluatorWorker.js       # Web Worker 백그라운드 비동기 퍼지 매칭 스레드
 │   ├── contexts/                    # Multi-Tenancy 테넌트 분리 및 4단계 RBAC 권한 컨텍스트
 │   └── components/                  # 3색 형광펜 뷰어, 압박 질문 키트, HITL 보정 모달, 역량 비교 대시보드
-├── server/                          # Express 5 보안 BFF 게이트웨이 (2차 PII 검증 및 Claude API 연동)
-├── server-spring/                   # Spring Boot 3 엔터프라이즈 백엔드 모듈
-├── infra/
-│   └── supabase_schema.sql          # Supabase PostgreSQL 7-Table 멀티테넌트 DDL 및 RLS 정책
-└── docs/
-    ├── PRESENTATION_SCRIPT.md       # 14장 슬라이드별 상세 발표 대본 및 심사위원 Q&A 방어 스크립트
-    ├── FINAL_GRADUATION_REPORT.html # 최종 결과보고서 원본 HTML
-    └── assets/                      # 포스터·슬라이드·프로덕션 캡처 이미지 에셋
+├── Backend/                         # 백엔드 API 게이트웨이 및 코어 서버
+│   ├── gateway/                     # Express 5 보안 BFF 게이트웨이 (2차 PII 검증 및 Claude API 연동)
+│   └── spring/                      # Spring Boot 3 엔터프라이즈 코어 백엔드
+├── Infra/                           # 클라우드 인프라 · DB 스키마 · 배포 구성
+│   ├── supabase_schema.sql          # Supabase PostgreSQL 7-Table 멀티테넌트 DDL 및 RLS 정책
+│   ├── k8s/                         # Kubernetes 배포 매니페스트
+│   ├── terraform/                   # Terraform 클라우드 프로비저닝 코드
+│   └── deploy/                      # VM + Cloudflare Tunnel 배포 구성
+├── docs/
+│   ├── PRESENTATION_SCRIPT.md       # 14장 슬라이드별 상세 발표 대본 및 심사위원 Q&A 방어 스크립트
+│   ├── FINAL_GRADUATION_REPORT.html # 최종 결과보고서 원본 HTML
+│   └── assets/                      # 포스터·슬라이드·프로덕션 캡처 이미지 에셋
+├── poster_90x140.pdf                # 캡스톤 디자인 경진대회 포스터 (90x140cm 인쇄용 PDF)
+├── poster_90x140.png                # 캡스톤 디자인 경진대회 포스터 (고해상도 PNG)
+├── poster_90x140.html               # 캡스톤 디자인 포스터 원본 HTML/CSS
+├── presentation_slides.pdf          # 경진대회 발표 자료 (16:9 와이드 14장 PDF)
+├── presentation_slides.html         # 경진대회 발표 자료 원본 HTML (방향키 네비게이션 지원)
+├── Check-Mate_IR_시연영상.mp4        # 내레이션 및 자막 포함 전체 작동 시연 영상 (MP4)
+└── FINAL_GRADUATION_REPORT.pdf      # 캡스톤 디자인 최종 결과보고서 (A4 7페이지 PDF)
 ```
 
 ---
