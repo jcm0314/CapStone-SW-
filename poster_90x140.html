@@ -107,45 +107,40 @@
   <div class="poster-canvas">
 
     <!-- =========================================================================
-         [HEADER] 시선을 사로잡는 대형 타이틀 & 메타 정보
+         [HEADER] 시선을 사로잡는 대형 타이틀 & QR 코드
          ========================================================================= -->
-    <header class="bg-slate-950 text-white rounded-3xl px-9 py-7 shadow-xl flex flex-col gap-4 shrink-0">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="px-4 py-1.5 rounded-full bg-blue-600 text-white font-black text-base tracking-wide">
-            2026 단국대학교 소프트웨어학과 캡스톤 페스티벌 &amp; 졸업작품전시회
+    <header class="bg-slate-950 text-white rounded-3xl px-9 py-7 shadow-xl flex items-center justify-between gap-8 shrink-0">
+      <div class="space-y-3 flex-1">
+        <div class="flex items-center gap-4 text-lg font-bold text-slate-300">
+          <span class="px-4 py-1 rounded-full bg-blue-600 text-white font-black text-sm tracking-wide">
+            Check_Mate Team
           </span>
-          <span class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-200 font-bold text-base border border-slate-700">
-            소프트웨어 ICT관 · 컴퓨터공학과
+          <span>개발자: <strong class="text-white">장천명 (32203919)</strong></span>
+        </div>
+
+        <div class="flex items-center gap-5">
+          <h1 class="text-[72px] font-black tracking-tight leading-none text-white">
+            Check-Mate
+          </h1>
+          <span class="text-2xl font-black text-amber-300 bg-amber-500/20 border-2 border-amber-400/50 px-5 py-2 rounded-2xl">
+            올인원 HR AX 채용 코파일럿
           </span>
         </div>
-        <div class="flex items-center gap-6 text-lg font-bold text-slate-300">
-          <span>팀명: <strong class="text-white">Check_Mate</strong></span>
-          <span>팀원: <strong class="text-white">장천명 (32203919, 팀장) · 박상윤 (32201633)</strong></span>
-        </div>
+
+        <p class="text-[22px] font-bold text-blue-200">
+          "파편화된 채용 도구를 하나로 통합하고, 1:1 원문 형광펜 팩트체크로 서류 검토 90%를 단축하는 AI 채용 플랫폼"
+        </p>
       </div>
 
-      <div class="flex items-center justify-between gap-6">
-        <div class="space-y-2.5">
-          <div class="flex items-center gap-5">
-            <h1 class="text-[68px] font-black tracking-tight leading-none text-white">
-              Check-Mate
-            </h1>
-            <span class="text-2xl font-black text-amber-300 bg-amber-500/20 border-2 border-amber-400/50 px-5 py-2 rounded-2xl">
-              올인원 HR AX 채용 코파일럿
-            </span>
-          </div>
-          <p class="text-[22px] font-bold text-blue-200">
-            "파편화된 채용 도구를 하나로 통합하고, 1:1 원문 형광펜 팩트체크로 서류 검토 90%를 단축하는 AI 채용 플랫폼"
-          </p>
+      <!-- 우측: Live 서비스 & GitHub QR 코드 2종 -->
+      <div class="flex items-center gap-5 shrink-0">
+        <div class="bg-white p-3 rounded-2xl text-center shadow-lg">
+          <img src="./docs/assets/qr_live.svg" alt="Live Service QR" class="w-28 h-28 mx-auto" />
+          <div class="text-xs font-black text-slate-900 mt-1.5 tracking-tight">Live Service</div>
         </div>
-
-        <div class="text-right space-y-1.5 font-mono text-base text-slate-300 shrink-0 bg-slate-900 px-5 py-3.5 rounded-2xl border border-slate-800">
-          <div class="text-emerald-400 font-black flex items-center justify-end gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-            <span>Live: checkmate.psyrod.dev</span>
-          </div>
-          <div class="text-sm text-slate-400">github.com/jcm0314/CapStone-SW-</div>
+        <div class="bg-white p-3 rounded-2xl text-center shadow-lg">
+          <img src="./docs/assets/qr_github.svg" alt="GitHub QR" class="w-28 h-28 mx-auto" />
+          <div class="text-xs font-black text-slate-900 mt-1.5 tracking-tight">GitHub Repo</div>
         </div>
       </div>
     </header>
@@ -156,37 +151,37 @@
     <section class="card-box border-t-8 border-t-rose-500 space-y-3 shrink-0">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="px-3.5 py-1 rounded-xl bg-rose-500 text-white font-black text-lg">WHY?</span>
+          <span class="px-3.5 py-1 rounded-xl bg-rose-500 text-white font-black text-lg">WHY</span>
           <h2 class="text-[26px] font-black text-slate-900">스타트업 개발팀 김과장의 야근 탈출기 (도입 배경)</h2>
         </div>
         <span class="text-base font-bold text-rose-600 bg-rose-50 px-4 py-1 rounded-full border border-rose-200">
-          서류 100건당 25시간 야근 ➔ 1.5분 팩트체크!
+          서류 100건당 25시간 야근에서 1.5분 팩트체크로 혁신
         </span>
       </div>
 
-      <!-- 4컷 웹툰 이미지 + 각 컷 위/아래 선명한 말풍선 오버레이 -->
+      <!-- 4컷 웹툰 이미지 + 각 컷 하단 선명한 자막 -->
       <div class="relative rounded-2xl overflow-hidden border-2 border-slate-300 bg-white">
         <img 
           src="./docs/assets/kim_manager_4cut_comic.jpg" 
           alt="스타트업 김과장 4컷 웹툰" 
           class="w-full h-[310px] object-cover object-center"
         />
-        <!-- 4컷 상단 말풍선 및 자막 그리드 (글자 깨짐 0% 벡터 자막) -->
+        <!-- 4컷 자막 그리드 -->
         <div class="grid grid-cols-4 gap-3 bg-slate-900 text-white px-4 py-3 text-center">
           <div class="bg-slate-800 rounded-xl px-3 py-2 border border-slate-700">
-            <span class="text-xs font-black text-rose-400 block mb-0.5">① 밤 11시, 서류 지옥</span>
-            <p class="text-[15px] font-bold leading-snug">"ChatGPT 복붙 자소서 300장... 언제 다 읽고 검증해 ㅠㅠ"</p>
+            <span class="text-xs font-black text-rose-400 block mb-0.5">1. 밤 11시, 서류 지옥</span>
+            <p class="text-[15px] font-bold leading-snug">"ChatGPT 복붙 자소서 300장... 언제 다 읽고 검증하지?"</p>
           </div>
           <div class="bg-slate-800 rounded-xl px-3 py-2 border border-slate-700">
-            <span class="text-xs font-black text-amber-400 block mb-0.5">② 면접장, 허위 스펙 적발</span>
-            <p class="text-[15px] font-bold leading-snug">"100% 개발했다더니 막상 물어보니 아무것도 모르네?!"</p>
+            <span class="text-xs font-black text-amber-400 block mb-0.5">2. 면접장, 허위 스펙 적발</span>
+            <p class="text-[15px] font-bold leading-snug">"100% 개발했다더니 막상 물어보니 아무것도 모르네?"</p>
           </div>
           <div class="bg-blue-950 rounded-xl px-3 py-2 border border-blue-500">
-            <span class="text-xs font-black text-blue-300 block mb-0.5">③ Check-Mate 구원 등판</span>
+            <span class="text-xs font-black text-blue-300 block mb-0.5">3. Check-Mate 구원 등판</span>
             <p class="text-[15px] font-bold leading-snug">"김과장! 여기 넣으면 1.5분 만에 1:1 형광펜 팩트체크 끝이야!"</p>
           </div>
           <div class="bg-emerald-950 rounded-xl px-3 py-2 border border-emerald-500">
-            <span class="text-xs font-black text-emerald-300 block mb-0.5">④ 오후 6시, 정시 칼퇴!</span>
+            <span class="text-xs font-black text-emerald-300 block mb-0.5">4. 오후 6시, 정시 칼퇴</span>
             <p class="text-[15px] font-bold leading-snug">"서류 검토 90% 단축! 면접 질문까지 한 방에 해결!"</p>
           </div>
         </div>
@@ -215,28 +210,28 @@
           <div class="text-base font-black text-slate-900 mt-0.5">단일 접수</div>
           <div class="text-xs text-slate-500 mt-0.5">PDF·TXT 업로드</div>
         </div>
-        <div class="flex justify-center text-blue-500 font-black text-2xl">➔</div>
+        <div class="flex justify-center text-blue-500"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
         <!-- 2 -->
         <div class="col-span-1 bg-white p-3 rounded-xl border-2 border-indigo-200 text-center shadow-sm">
           <span class="text-xs font-black text-indigo-600 block">STEP 02</span>
           <div class="text-base font-black text-slate-900 mt-0.5">PII 가명화</div>
           <div class="text-xs text-slate-500 mt-0.5">7종 개인정보 보호</div>
         </div>
-        <div class="flex justify-center text-indigo-500 font-black text-2xl">➔</div>
+        <div class="flex justify-center text-indigo-500"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
         <!-- 3 -->
         <div class="col-span-1 bg-amber-50 p-3 rounded-xl border-2 border-amber-400 text-center shadow-sm">
-          <span class="text-xs font-black text-amber-800 block">STEP 03 ★</span>
+          <span class="text-xs font-black text-amber-800 block">STEP 03 (핵심)</span>
           <div class="text-base font-black text-amber-950 mt-0.5">1:1 형광펜</div>
           <div class="text-xs text-amber-800 font-bold mt-0.5">4-Agent 팩트체크</div>
         </div>
-        <div class="flex justify-center text-amber-500 font-black text-2xl">➔</div>
+        <div class="flex justify-center text-amber-500"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
         <!-- 4 -->
         <div class="col-span-1 bg-white p-3 rounded-xl border-2 border-purple-200 text-center shadow-sm">
           <span class="text-xs font-black text-purple-600 block">STEP 04</span>
           <div class="text-base font-black text-slate-900 mt-0.5">HITL 결재</div>
           <div class="text-xs text-slate-500 mt-0.5">점수보정·압박질문</div>
         </div>
-        <div class="flex justify-center text-purple-500 font-black text-2xl">➔</div>
+        <div class="flex justify-center text-purple-500"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
         <!-- 5 -->
         <div class="col-span-1 bg-white p-3 rounded-xl border-2 border-emerald-300 text-center shadow-sm">
           <span class="text-xs font-black text-emerald-700 block">STEP 05</span>
@@ -250,8 +245,8 @@
         <thead>
           <tr>
             <th class="w-[16%]">채용 단계</th>
-            <th class="w-[36%] bg-rose-900">🛑 AS-IS (기존 파편화 수작업)</th>
-            <th class="w-[36%] bg-blue-800">✨ TO-BE (Check-Mate 올인원)</th>
+            <th class="w-[36%] bg-rose-900">AS-IS (기존 파편화 수작업)</th>
+            <th class="w-[36%] bg-blue-800">TO-BE (Check-Mate 올인원)</th>
             <th class="w-[12%] bg-emerald-800">혁신 결과</th>
           </tr>
         </thead>
@@ -304,7 +299,7 @@
               <div class="text-lg font-black text-slate-900">Next.js 15 / React 19</div>
               <div class="text-sm text-slate-600 mt-1">• 7종 PII 로컬 마스킹<br/>• 0.05초 DOM 가상 스크롤</div>
             </div>
-            <div class="col-span-1 text-center text-2xl font-black text-slate-400">➔</div>
+            <div class="col-span-1 flex justify-center text-slate-400"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
             <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-emerald-400 shadow-sm">
               <div class="text-xs font-black text-emerald-600 font-mono">TIER 2. GATEWAY</div>
               <div class="text-lg font-black text-slate-900">Cloudflare Tunnel</div>
@@ -312,7 +307,7 @@
             </div>
           </div>
 
-          <div class="text-center text-xl font-black text-slate-400 leading-none">⬇</div>
+          <div class="flex justify-center text-slate-400 py-0.5"><i data-lucide="arrow-down" class="w-6 h-6"></i></div>
 
           <!-- Tier 3 & 4 -->
           <div class="grid grid-cols-11 items-center gap-2">
@@ -321,7 +316,7 @@
               <div class="text-lg font-black text-slate-900">Spring Boot 3 / JPA</div>
               <div class="text-sm text-slate-600 mt-1">• TenantContext 완전 격리<br/>• 불변 감사로그(Audit Trail)</div>
             </div>
-            <div class="col-span-1 text-center text-2xl font-black text-slate-400">⇄</div>
+            <div class="col-span-1 flex justify-center text-slate-400"><i data-lucide="arrow-left-right" class="w-6 h-6"></i></div>
             <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-purple-400 shadow-sm">
               <div class="text-xs font-black text-purple-700 font-mono">TIER 4. AI &amp; SYNC</div>
               <div class="text-lg font-black text-slate-900">Claude 3.5 &amp; Supabase</div>
@@ -335,7 +330,7 @@
       <section class="col-span-6 card-box border-t-8 border-t-purple-600 space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-xl bg-purple-600 text-white text-base flex items-center justify-center font-black">⚙</span>
+            <span class="w-8 h-8 rounded-xl bg-purple-600 text-white text-sm flex items-center justify-center font-black">AI</span>
             <h2 class="text-[24px] font-black text-slate-900">4대 멀티에이전트 교차 감사 (표)</h2>
           </div>
           <span class="text-sm font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
@@ -388,7 +383,7 @@
           <h2 class="text-[26px] font-black text-slate-900">구현 결과 : 1:1 원문 형광펜 &amp; 프로덕션 라이브 UI</h2>
         </div>
         <span class="text-base font-bold text-amber-800 bg-amber-100 px-4 py-1 rounded-full border border-amber-300">
-          실현 가능성 (20점) · checkmate.psyrod.dev 라이브 운영
+          실현 가능성 (20점) · 실시간 라이브 서비스 운영
         </span>
       </div>
 
@@ -404,13 +399,13 @@
           </div>
           <div class="grid grid-cols-3 gap-3 text-center">
             <div class="bg-white py-2.5 px-3 rounded-xl border border-amber-300 font-bold text-[15px] text-amber-950">
-              ① 좌측 원문 1:1 형광펜
+              1. 좌측 원문 1:1 형광펜
             </div>
             <div class="bg-white py-2.5 px-3 rounded-xl border border-blue-300 font-bold text-[15px] text-blue-950">
-              ② 클릭 시 0.05초 스크롤
+              2. 클릭 시 0.05초 스크롤
             </div>
             <div class="bg-white py-2.5 px-3 rounded-xl border border-purple-300 font-bold text-[15px] text-purple-950">
-              ③ 과장 타깃 압박 질문
+              3. 과장 타깃 압박 질문
             </div>
           </div>
         </div>
@@ -418,7 +413,7 @@
         <!-- 우측 5 Cols: 4대 핵심 실서비스 화면 2x2 그리드 -->
         <div class="col-span-5 grid grid-cols-2 gap-3.5">
           <div class="bg-white p-3 rounded-2xl border-2 border-slate-200 flex flex-col justify-between shadow-sm">
-            <div class="text-[15px] font-black text-blue-700 mb-1.5">01. 지원자 대시보드 &amp; ⌘K</div>
+            <div class="text-[15px] font-black text-blue-700 mb-1.5">01. 지원자 대시보드 &amp; 빠른 검색</div>
             <div class="rounded-xl overflow-hidden border border-slate-300 h-[195px]">
               <img src="./docs/assets/live/01_live_applicant_list.png" class="w-full h-full object-cover object-top" />
             </div>
@@ -526,9 +521,8 @@
          [FOOTER] 공식 제출 정보
          ========================================================================= -->
     <footer class="flex items-center justify-between text-base text-slate-600 font-mono px-2 pt-1 shrink-0">
-      <div>단국대학교 소프트웨어학과 / 컴퓨터공학과 · 2026 캡스톤 페스티벌 &amp; 졸업작품전시회</div>
+      <div>Check-Mate · B2B HR AX All-in-One Copilot</div>
       <div class="flex items-center gap-8 font-bold text-slate-800">
-        <span>GitHub: github.com/jcm0314/CapStone-SW-</span>
         <span>Contact: 장천명 (010-7399-4118 / jcm03141@gmail.com)</span>
       </div>
     </footer>
