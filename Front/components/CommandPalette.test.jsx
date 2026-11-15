@@ -8,11 +8,11 @@ import { useTheme, THEME_STORAGE_KEY } from '../hooks/useTheme';
 const items = FEATURES.map((f) => ({ ...f, group: f.status === 'ready' ? '기능' : '준비 중' }));
 
 describe('기능 목록 (#29)', () => {
-  it('구현됨 7개, 준비 중 4개이며 구현된 기능은 모두 이동 동작을 가진다', () => {
+  it('구현됨 11개, 준비 중 0개이며 구현된 기능은 모두 이동 동작을 가진다', () => {
     const ready = FEATURES.filter((f) => f.status === 'ready');
     const planned = FEATURES.filter((f) => f.status === 'planned');
-    expect(ready).toHaveLength(7);
-    expect(planned).toHaveLength(4);
+    expect(ready).toHaveLength(11);
+    expect(planned).toHaveLength(0);
     ready.forEach((f) => expect(f.action).toBeTruthy());
     planned.forEach((f) => expect(f.action).toBeUndefined());
   });
@@ -33,7 +33,7 @@ describe('CommandPalette', () => {
     fireEvent.change(input, { target: { value: 'ATS' } });
     expect(queryByText('면접 질문 생성')).toBeNull();
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'ats', status: 'planned' }));
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'ats', status: 'ready' }));
   });
 
   it('결과가 없으면 안내 문구를 보여 주고, Esc 로 닫힌다', () => {

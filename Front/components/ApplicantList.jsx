@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Search, ChevronRight, Printer, UploadCloud, PenLine, Sparkles, FileSearch, MessagesSquare } from 'lucide-react';
+import { Plus, Search, ChevronRight, Printer, Trash2, UploadCloud, PenLine, Sparkles, FileSearch, MessagesSquare } from 'lucide-react';
 import { isSampleResult } from '../utils/sampleResult';
 
 export const DECISION = {
@@ -30,7 +30,7 @@ function rowData(app) {
 }
 
 /** 첫 화면: 지원자 목록 (행을 누르면 평가 결과로 이동) */
-export default function ApplicantList({ applicants, selectedId, onOpen, onNew, onUpload, onPaste, onOpenReport, tenantName }) {
+export default function ApplicantList({ applicants, selectedId, onOpen, onNew, onUpload, onPaste, onOpenReport, onDelete, tenantName }) {
   const [query, setQuery] = useState('');
   const [decisionFilter, setDecisionFilter] = useState('ALL');
 
@@ -124,7 +124,7 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, o
                 <th className="font-medium py-2 px-2 text-right">리스크</th>
                 <th className="font-medium py-2 px-2">상태</th>
                 <th className="font-medium py-2 pl-2 pr-4 text-right">평가일</th>
-                {onOpenReport && <th className="font-medium py-2 pr-4"><span className="sr-only">보고서</span></th>}
+                {(onOpenReport || onDelete) && <th className="font-medium py-2 pr-4"><span className="sr-only">작업</span></th>}
               </tr>
             </thead>
             <tbody>
@@ -163,9 +163,10 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, o
                       <span className="group-hover:hidden">{date || '-'}</span>
                       <ChevronRight className="w-4 h-4 hidden group-hover:inline text-fg-muted" />
                     </td>
-                    {onOpenReport && (
-                      <td className="py-1.5 pr-4 text-right">
-                        <ReportButton onClick={() => onOpenReport(app)} name={app.name} />
+                    {(onOpenReport || onDelete) && (
+                      <td className="py-1.5 pr-4 text-right whitespace-nowrap space-x-1">
+                        {onOpenReport && <ReportButton onClick={() => onOpenReport(app)} name={app.name} />}
+                        {onDelete && <DeleteButton onClick={() => onDelete(app)} name={app.name} />}
                       </td>
                     )}
                   </tr>
@@ -202,9 +203,10 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, o
                   <span className="text-lg font-semibold tabular-nums text-fg">{score ?? '-'}</span>
                   <ChevronRight className="w-4 h-4 text-fg-subtle" />
                 </button>
-                {onOpenReport && (
-                  <div className="flex items-center pr-2">
-                    <ReportButton onClick={() => onOpenReport(app)} name={app.name} compact />
+                {(onOpenReport || onDelete) && (
+                  <div className="flex items-center pr-2 gap-1">
+                    {onOpenReport && <ReportButton onClick={() => onOpenReport(app)} name={app.name} compact />}
+                    {onDelete && <DeleteButton onClick={() => onDelete(app)} name={app.name} />}
                   </div>
                 )}
               </li>
@@ -232,6 +234,24 @@ function ReportButton({ onClick, name, compact = false }) {
     >
       <Printer className="w-3.5 h-3.5" />
       {!compact && '보고서'}
+    </button>
+  );
+}
+
+function DeleteButton({ onClick, name }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      onKeyDown={(e) => e.stopPropagation()}
+      className="btn btn-ghost btn-sm text-fg-subtle hover:text-bad"
+      aria-label={`${name} 지원자 삭제`}
+      title="지원자 삭제"
+    >
+      <Trash2 className="w-3.5 h-3.5" />
     </button>
   );
 }
