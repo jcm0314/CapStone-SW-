@@ -6,11 +6,11 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { executeMultiAgentEvaluation } from '../src/services/multiAgentEvaluator.js';
-import { resolveClaudeModel, isClaudeConfigured } from '../src/services/agents/claudeClient.js';
-import { formatCustomPromptAddendum } from '../src/services/promptStudioService.js';
-import { JOB_TEMPLATES } from '../src/data/jobTemplates.js';
-import { anonymizePII } from '../src/utils/piiAnonymizer.js';
+import { executeMultiAgentEvaluation } from '../../Front/services/multiAgentEvaluator.js';
+import { resolveClaudeModel, isClaudeConfigured } from '../../Front/services/agents/claudeClient.js';
+import { formatCustomPromptAddendum } from '../../Front/services/promptStudioService.js';
+import { JOB_TEMPLATES } from '../../Front/data/jobTemplates.js';
+import { anonymizePII } from '../../Front/utils/piiAnonymizer.js';
 import { isMailConfigured, validateMailRequest, sendMail } from './mailer.js';
 
 dotenv.config();

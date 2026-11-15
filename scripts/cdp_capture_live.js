@@ -9,7 +9,7 @@ if (!fs.existsSync(OUT_DIR)) {
 async function getPageTarget() {
   const res = await fetch('http://127.0.0.1:9222/json');
   const targets = await res.json();
-  const pageTarget = targets.find(t => t.type === 'page' && t.url.includes('checkmate.psyrod.dev'));
+  const pageTarget = targets.find(t => t.type === 'page' && t.url.includes('hr-evaluator-frontend-pt3ki5ggua-du.a.run.app'));
   if (!pageTarget) {
     throw new Error('Check-Mate page target not found');
   }
@@ -92,7 +92,7 @@ async function main() {
   });
 
   // 먼저 사이트 새로고침 및 라이트 모드 리셋
-  await cdp.send('Page.navigate', { url: 'https://checkmate.psyrod.dev/' });
+  await cdp.send('Page.navigate', { url: 'https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/' });
   await cdp.wait(2500);
 
   // 1. 지원자 목록 첫 화면

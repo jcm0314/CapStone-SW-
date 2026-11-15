@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest';
 import http from 'http';
 import app, { buildPromptAddendumFromSettings } from './index.js';
-import { __setClaudeClientForTests, createClaudeClient } from '../src/services/agents/claudeClient.js';
+import { __setClaudeClientForTests, createClaudeClient } from '../../Front/services/agents/claudeClient.js';
 
 let server;
 let baseUrl;

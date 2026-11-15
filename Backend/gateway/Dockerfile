@@ -9,8 +9,8 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
 
 # Copy shared agent/utility modules and server code
-COPY src/ ./src/
-COPY server/ ./server/
+COPY Front/ ./Front/
+COPY Backend/gateway/ ./Backend/gateway/
 
 EXPOSE 8080 3001
 
@@ -18,4 +18,4 @@ EXPOSE 8080 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:8080/health || wget --quiet --tries=1 --spider http://localhost:3001/health || exit 1
 
-CMD ["node", "server/index.js"]
+CMD ["node", "Backend/gateway/index.js"]

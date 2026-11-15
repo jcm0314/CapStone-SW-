@@ -135,12 +135,12 @@
             </tr>
             <tr>
               <th>소속</th>
-              <td>단국대학교 소프트웨어융합대학 컴퓨터공학과</td>
+              <td>단국대학교</td>
             </tr>
             <tr>
               <th>수행자 정보</th>
               <td>
-                <strong>장천명</strong> (학번: 32203919 / 5학년) &nbsp;|&nbsp; 010-7399-4118 &nbsp;|&nbsp; jcm03141@gmail.com
+                <strong>장천명</strong> (학번: 32203919) &nbsp;|&nbsp; 010-7399-4118 &nbsp;|&nbsp; jcm03141@gmail.com
               </td>
             </tr>
             <tr>
@@ -393,8 +393,8 @@
           <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
             <strong class="text-slate-900 block mb-0.5">① 3단계 하이브리드 Fuzzy Matching 엔진 (<code>fuzzyMatcher.js</code>)</strong>
             <p class="leading-relaxed">
-              LLM이 인용한 근거 문장(<code>targetQuote</code>)은 줄바꿈(<code>\n</code>), 다중 공백, 미세한 오탈자로 인해 단순 문자열 일치(<code>indexOf</code>)가 자주 실패합니다. 이를 해결하기 위해
-              <strong>[1단계] Exact Match Fast-Path</strong> → <strong>[2단계] 개행·공백 정규화 매칭(<code>normalizeText</code>)</strong> → <strong>[3단계] Levenshtein 편집 거리 기반 정규화 유사도(<code>1 - distance / maxLen ≥ 0.85</code>)</strong> 슬라이딩 탐색을 순차 수행하여, 원문의 정확한 시작·종료 오프셋(<code>start, end</code>)을 복원하고 형광펜 하이라이트를 정밀 바인딩합니다.
+              LLM이 인용한 근거 문장(<code>targetQuote</code>)은 줄바꿈(<code>\n</code>), 다중 공백, 미세한 조사 변형으로 인해 단순 문자열 일치(<code>indexOf</code>)가 실패할 수 있습니다. 이를 해결하기 위해
+              <strong>[1단계] Exact IndexOf Fast-Path</strong> → <strong>[2단계] Word Anchor(<code>firstWord</code>~<code>lastWord</code> 경계 고정) &amp; Jaccard N-gram 토큰 교집합 후보 필터링</strong> → <strong>[3단계] Dynamic Sliding Window(&plusmn;20%, <code>stride=3, winStep=5</code>) + Levenshtein DP 편집 거리 기반 정규화 유사도(<code>1 - distance / maxLen ≥ 0.85</code>)</strong> 탐색을 순차 수행하여, 원문의 정확한 시작·종료 오프셋(<code>start, end</code>)을 복원하고 형광펜 하이라이트를 정밀 바인딩합니다.
             </p>
           </div>
           <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
@@ -464,14 +464,14 @@
             <p class="text-[9.5px] text-slate-500">평가관 직접 점수 재조정 및 최종 결재</p>
           </div>
           <div class="p-2 bg-slate-50 rounded border border-slate-200 space-y-1">
-            <span class="font-bold text-[11px] text-emerald-700 block">Step 5. 1-Click 실시간 공유</span>
+            <span class="font-bold text-[11px] text-emerald-700 block">Step 5. 1-Click 면접관 보안 공유</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/08_live_share_modal.png" class="w-full h-full object-cover object-top" />
             </div>
             <p class="text-[9.5px] text-slate-500">암호화 Share 링크로 면접관 즉시 공유</p>
           </div>
           <div class="p-2 bg-blue-50/50 rounded border border-blue-200 space-y-1">
-            <span class="font-bold text-[11px] text-blue-900 block">Step 6. 실시간 에이전트 분석</span>
+            <span class="font-bold text-[11px] text-blue-900 block">Step 6. 4대 에이전트 교차 검증</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/05_live_evaluating_progress.png" class="w-full h-full object-cover object-top" />
             </div>
@@ -547,7 +547,7 @@
           </div>
           <div class="p-3 bg-blue-50/50 rounded-lg border border-blue-200">
             <strong class="text-blue-900 block mb-1">Pro (월 290,000원) - 메인</strong>
-            <span class="text-[11px] text-blue-800">월 200건 크레딧, 실시간 협업 채점표, 타깃 압박 면접 질문 키트, HITL 점수 보정.</span>
+            <span class="text-[11px] text-blue-800">월 200건 크레딧, 면접관 보안 공유 링크, 타깃 압박 면접 질문 키트, HITL 점수 보정.</span>
           </div>
           <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
             <strong class="text-slate-900 block mb-1">Enterprise (별도 협의)</strong>

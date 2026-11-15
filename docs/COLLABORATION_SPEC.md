@@ -1,99 +1,60 @@
-# 📋 [Check-Mate] 팀 협업 및 기능 개발 기획서 (COLLABORATION_SPEC)
+# 📋 [Check-Mate] 핵심 기능 개발 및 모듈 명세서 (COLLABORATION_SPEC.md)
 
-팀원(상윤 님)과 AI 어시스턴트(Claude)가 프로젝트의 맥락을 즉시 파악하고, 전체 구조 파악 후 상호 협업할 수 있도록 정리한 실전 기능 명세서입니다.
-
----
-
-## 1. 프로젝트 핵심 요약 & 현재 상태
-
-- **서비스 정의**: 50~300인 성장기 IT 스타트업을 위한 **1:1 형광펜 매칭 AI 서류 평가 & 면접 연계 플랫폼**
-- **현재 구현 완료(Phase 1)**:
-  - 7종 PII 실시간 마스킹 (블라인드 채용)
-  - 1:1 형광펜 Evidence Grounding 및 Levenshtein 퓨지 매칭 (초록/빨강 시각화)
-  - Gemini 2.5 Flash 4대 멀티에이전트 병렬 감사 파이프라인
-  - Supabase Realtime / 게이트웨이 폴링 기반 1-Click Share ID 다인 면접관 협업
-  - Cloud Run 프로덕션 배포 및 Vitest 단위 테스트 스위트 구축
+프로젝트의 전체 아키텍처와 주요 컴포넌트, 핵심 알고리즘 모듈의 구조를 한눈에 파악할 수 있도록 정리한 기술 명세서입니다.
 
 ---
 
-## 2. 향후 협업 스프린트 과제 상세 스펙 (Sprint Backlog - 역할 분담: 논의 후 확정 예정)
+## 1. 프로젝트 핵심 요약 & 구현 완료 현황
 
-> **관련 GitHub 이슈**: [Issue #15 (Feature Proposal & Scale-Up Roadmap)](https://github.com/jcm0314/CapStone-SW-/issues/15)  
-> *※ 아래 과제들은 전체 코드베이스를 파악한 후, 상호 협의하여 역할을 구체적으로 나눈 뒤 순차적으로 진행합니다.*
-
-### 🎯 Task 1. 대량 지원서 랭킹 Top-N 컷오프 슬라이더 (UI)
-- **대상 컴포넌트**: `src/components/ApplicantComparison.jsx` 및 `src/components/DashboardSummary.jsx`
-- **구현 내용**:
-  1. 지원자 리스트 상단에 **'합격 커트라인(Cut-off) 슬라이더'** 제공 (예: `Top 10명`, `Top 30명`, `Top 50명`, `점수 80점 이상` 등).
-  2. 슬라이더를 움직이면 테이블 내 지원자들의 상태가 실시간으로 **[합격권(PASS: 초록 뱃지)]**과 **[탈락권(CUT: 회색/빨간 뱃지)]**으로 즉각 분류됨.
-  3. 테이블 상단에 통계 요약 표시:
-     - 예: `"전체 지원자 120명 중 상위 30명 선발 (합격선: 82.5점 / 컷오프 탈락: 90명)"`
-
----
-
-### 🎯 Task 2. 1-Click 일괄 합불 통보 모달 UI (Notification Workflow)
-- **신규 컴포넌트**: `src/components/BatchNotificationModal.jsx` (신규 생성 추천)
-- **구현 내용**:
-  1. Task 1의 컷오프 테이블 상단에 `[1-Click 합불 결과 통보]` 버튼 배치.
-  2. 버튼 클릭 시 모달 팝업 오픈:
-     - **발송 대상 요약**: "합격 안내 대상: 30명 / 불합격(탈락) 안내 대상: 90명"
-     - **발송 채널 선택 탭**: `이메일(Email)` / `문자메시지(SMS/알림톡)`
-     - **메시지 템플릿 프리뷰**:
-       - 합격자용: `"안녕하세요 {지원자명}님, Check-Mate 1차 서류 전형에 합격하셨습니다..."`
-       - 불합격자용: `"귀하의 뛰어난 역량에도 불구하고 한정된 인원으로 인해..."`
-     - **발송 시뮬레이션 및 발송 버튼**: 클릭 시 발송 프로그레스 바(0% ➔ 100%) 및 완료 토스트 알림 표시. (실제 백엔드 웹훅 연동 전 모의 시뮬레이션 인터랙션 완성)
+- **서비스 정의**: **4대 멀티에이전트 교차 검증 기반 AI 채용 서류 팩트체크 및 면접 질문·평가 코파일럿**
+- **핵심 구현 완료 내역**:
+  1. **이중 방어선 7종 PII 비식별화 (`Front/utils/piiAnonymizer.js`)**: 브라우저 로컬 파싱 직후 및 BFF 서버 게이트웨이에서 성명·출신학교·전화번호·이메일·주민번호·주소·학번을 정규식으로 즉시 익명화
+  2. **4대 멀티에이전트 적대적 교차 검증 DAG (`Front/services/multiAgentEvaluator.js`)**:
+     - `Stage 1 (순차)`: **1. Grounding Agent** — 원문 내 정량 성과·경험 문장 1:1 발췌 (`targetQuote`)
+     - `Stage 2 (순차)`: **2. Critic Agent** — 기여도 부풀리기·수치 비약·논리 모순 적대적 반박 감사 (`riskFlags`)
+     - `Stage 3 & 4 (Promise.all 병렬)`: **3. Supervisor Agent** (5대 역량 가중치 채점) + **4. Interviewer Agent** (맞춤형 압박 면접 질문 3종 도출)
+  3. **3단계 퍼지(Fuzzy) 원문 오프셋 바인딩 (`Front/utils/fuzzyMatcher.js`)**:
+     - `Stage 1`: Exact `indexOf` 완전 일치 탐색 (`O(N)`)
+     - `Stage 2`: **Word Anchor (`firstWord` ~ `lastWord`) & Jaccard N-gram** 토큰 교집합 후보 구간 압축
+     - `Stage 3`: **Dynamic Sliding Window ($\pm 20\%$) + Levenshtein DP** (`Sim ≥ 0.85`) 정밀 좌표 복원 및 Web Worker 비동기 처리
+  4. **멀티테넌트 RBAC & Supabase PostgreSQL 7-Table RLS (`Infra/supabase_schema.sql`)**:
+     - 기업별(토스페이먼츠·당근·우아한형제들) 데이터 분리 및 4단계 역할(`Admin`, `Recruiter`, `Interviewer`, `Candidate B2C`) 원클릭 전환
+  5. **사람 검토(HITL) 점수 보정, 면접관 1-Click 보안 공유 링크 & 다차원 비교 대시보드**
 
 ---
 
-### 🎯 Task 3. 서류 평가 ↔ 면접 현장 2-Track 뷰 분리 & 태그형 가중치
-- **대상 컴포넌트**: `src/components/HITLEditorModal.jsx`, `src/components/EvaluationCriteria.jsx`, 메인 뷰
-- **구현 내용**:
-  1. **2-Track 토글 탭**:
-     - `[📑 서류 정밀 검토 뷰]`: 자소서 원문 + 1:1 형광펜 + 4대 에이전트 상세 보고서 표시
-     - `[🎙️ 면접관 라이브 뷰]`: 긴 자소서는 접고, **핵심 압박 질문 3종 + 답변 체크리스트 + 실시간 채점 슬라이더**만 집중 배치하여 면접관의 인지 과부하 제거
-  2. **태그(Badge/Chip) 기반 직무 가중치 제어**:
-     - 복잡한 숫자 입력 대신 직무별 핵심 역량 태그 클릭(On/Off)으로 가중치 반영
+## 2. 주요 프론트엔드 워크스페이스 모듈 (`Front/components/`)
+
+### 🎯 1) 기업별 데이터 격리(Multi-Tenancy) & RBAC 스위처
+- **대상 파일**: `Front/contexts/TenantContext.jsx`, `Front/contexts/AuthContext.jsx`
+- **핵심 동작**:
+  - 테넌트 전환 시 해당 기업의 지원서 DB와 크레딧 잔액(`total_credits`, `used_credits`)만 즉시 로드
+  - 역할 전환(`Admin` / `Recruiter` / `Interviewer` / `Candidate B2C`)에 따른 세분화된 권한 제어
+
+### 🎯 2) 원문 3색 형광펜 팩트체크 뷰어 & 압박 면접 질문 키트
+- **대상 파일**: `Front/components/EvidenceViewer.jsx`, `Front/components/InterviewQuestionKit.jsx`
+- **핵심 동작**:
+  - 비식별화된 자기소개서 본문 위에 AI가 발췌한 긍정 근거(녹색), 확인 필요(황색), 과장 리스크(적색) 문장을 1:1 형광펜으로 하이라이팅
+  - Critic 에이전트가 지적한 의심 구간을 검증할 맞춤형 압박 면접 질문 3종 제시 및 질문별 판정(`검증 통과 +3`, `보완 필요 0`, `과장 확인 -5`) 메모 기록
+
+### 🎯 3) 사람 검토(HITL) 점수 보정 & 다차원 역량 비교 대시보드
+- **대상 파일**: `Front/components/HITLEditorModal.jsx`, `Front/components/ApplicantComparison.jsx`
+- **핵심 동작**:
+  - 채용 담당자가 AI 초안 점수와 판정 사유를 직접 검토·보정하고 불변 감사 로그에 기록
+  - 직무 역량 가중치 슬라이더 조절 시 AI 재호출 없이 즉시 순위 재계산 및 N-gram 자소서 표절 매트릭스 경고 표시
 
 ---
 
-## 3. 상윤 님이 본인의 Claude에게 전달할 온보딩 프롬프트 템플릿
-
-상윤 님께서 본인의 Claude에게 아래 프롬프트를 전달하시면, 프로젝트 구조 파악 및 논의를 바로 시작할 수 있습니다:
-
-```text
-안녕 Claude! 나는 캡스톤 디자인 프로젝트 'Check-Mate'의 협업 팀원이야.
-우리 프로젝트는 50~300인 IT 스타트업을 위한 '1:1 형광펜 AI 서류 평가 및 면접 연계 플랫폼'이야.
-
-저장소: https://github.com/jcm0314/CapStone-SW-
-CONTRIBUTING.md와 docs/COLLABORATION_SPEC.md 문서를 참고해서 전체 프로젝트 구조를 먼저 파악하려고 해.
-
-현재 상태:
-1. React 18 + Vite + Tailwind CSS 프론트엔드
-2. Gemini 2.5 Flash 4대 멀티에이전트 파이프라인 (src/services/agents/)
-3. Supabase RLS 브릿지 & 게이트웨이 기반 협업 시스템
-4. Vitest 단위 테스트(npm test) 구성 완료
-
-먼저 프로젝트의 전체 아키텍처와 주요 컴포넌트(src/components/), 서비스 흐름을 분석하고 내가 어떤 영역부터 파악하면 좋을지 가이드해줘!
-```
-
----
-
-## 4. 로컬 테스트 및 커밋 가이드
+## 3. 로컬 검증 및 빌드 가이드
 
 ```bash
-# 1. 브랜치 생성
-git checkout main
-git pull origin main
-git checkout -b feat/17-batch-cutoff
+# 1. 의존성 설치 및 개발 서버 구동
+npm install
+npm run dev     # http://localhost:3000
 
-# 2. 코드 작업 및 로컬 테스트
-npm run dev     # 화면 확인
-npm test        # 전체 테스트 통과 확인 필수! (Node 22.12 이상)
+# 2. 단위 테스트 실행 (Vitest)
+npm test
 
-# 3. 커밋 및 푸시
-git add .
-git commit -m "feat: implement top-N cutoff slider and batch notification modal (#17)"
-git push origin feat/17-batch-cutoff
-
-# 4. GitHub 웹에서 main을 향해 PR 생성!
+# 3. 프로덕션 빌드 검증
+npm run build
 ```
