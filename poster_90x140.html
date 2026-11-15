@@ -278,51 +278,153 @@
          ========================================================================= -->
     <div class="grid grid-cols-12 gap-5 shrink-0">
       
-      <!-- 좌측 6 Cols: 4-Tier 시스템 아키텍처 (직접 그린 고선명 블록 다이어그램!) -->
-      <section class="col-span-6 card-box border-t-8 border-t-indigo-600 space-y-4">
+      <!-- 좌측 6 Cols: 시스템 아키텍처 & 기술 스택 다이어그램 (그림) -->
+      <section class="col-span-6 card-box border-t-8 border-t-indigo-600 space-y-3 flex flex-col justify-between">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-base flex items-center justify-center font-black">Ⅱ</span>
-            <h2 class="text-[24px] font-black text-slate-900">4-Tier 시스템 아키텍처 (그림)</h2>
+            <h2 class="text-[24px] font-black text-slate-900">시스템 아키텍처 &amp; 기술 스택</h2>
           </div>
           <span class="text-sm font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
             기술성/완성도 (25점)
           </span>
         </div>
 
-        <!-- 4-Tier 시각적 아키텍처 다이어그램 -->
-        <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 space-y-3">
-          <!-- Tier 1 & 2 -->
-          <div class="grid grid-cols-11 items-center gap-2">
-            <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-blue-400 shadow-sm">
-              <div class="text-xs font-black text-blue-600 font-mono">TIER 1. CLIENT</div>
-              <div class="text-lg font-black text-slate-900">Next.js 15 / React 19</div>
-              <div class="text-sm text-slate-600 mt-1">• 7종 PII 로컬 마스킹<br/>• 0.05초 DOM 가상 스크롤</div>
+        <!-- 직관적 기술 스택 아키텍처 다이어그램 (레이어 + 벡터 로고 + 데이터 흐름선) -->
+        <div class="relative bg-gradient-to-br from-slate-50 to-indigo-50/30 p-3.5 rounded-2xl border-2 border-slate-200 flex-1 flex flex-col justify-between gap-2.5">
+          
+          <!-- 상단 Row: CLIENT -> GATEWAY -->
+          <div class="grid grid-cols-12 items-center gap-1.5">
+            <!-- 1. CLIENT -->
+            <div class="col-span-5 bg-white p-3 rounded-xl border-2 border-blue-400 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-mono">01. CLIENT</span>
+                <span class="text-[11px] font-bold text-slate-400">Browser</span>
+              </div>
+              <!-- Tech Stack Icons -->
+              <div class="flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-50 border border-sky-200 text-xs font-extrabold text-sky-900">
+                  <svg class="w-3.5 h-3.5 text-sky-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(90 12 12)"/></svg>
+                  React 18
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-violet-50 border border-violet-200 text-xs font-extrabold text-violet-900">
+                  <svg class="w-3.5 h-3.5 text-violet-600" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+                  Vite
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-cyan-50 border border-cyan-200 text-xs font-extrabold text-cyan-900">
+                  <svg class="w-3.5 h-3.5 text-cyan-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35C13.4 10.84 14.53 12 17 12c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.31-.74-1.91-1.35C15.6 7.16 14.47 6 12 6zm-5 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35C8.4 16.84 9.53 18 12 18c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.31-.74-1.91-1.35C10.6 13.16 9.47 12 7 12z"/></svg>
+                  Tailwind
+                </span>
+              </div>
+              <div class="text-[12px] font-bold text-slate-600 leading-snug border-t border-slate-100 pt-1.5">
+                7종 PII 로컬 마스킹 · 0.05초 원문 포커싱
+              </div>
             </div>
-            <div class="col-span-1 flex justify-center text-slate-400"><i data-lucide="arrow-right" class="w-6 h-6"></i></div>
-            <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-emerald-400 shadow-sm">
-              <div class="text-xs font-black text-emerald-600 font-mono">TIER 2. GATEWAY</div>
-              <div class="text-lg font-black text-slate-900">Cloudflare Tunnel</div>
-              <div class="text-sm text-slate-600 mt-1">• Zero-Trust SSL 종단<br/>• 테넌트 라우팅·보안 검증</div>
+
+            <!-- Connector 1 -> 2 -->
+            <div class="col-span-2 flex flex-col items-center justify-center">
+              <span class="text-[10px] font-black font-mono text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-300 mb-1">HTTPS</span>
+              <svg class="w-full h-5 text-slate-500" viewBox="0 0 80 20" fill="none">
+                <line x1="2" y1="10" x2="72" y2="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 3"/>
+                <path d="M66 4 L76 10 L66 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <!-- 2. GATEWAY -->
+            <div class="col-span-5 bg-white p-3 rounded-xl border-2 border-orange-400 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-black text-orange-700 bg-orange-50 px-2 py-0.5 rounded font-mono">02. EDGE GATEWAY</span>
+                <span class="text-[11px] font-bold text-slate-400">Zero-Trust</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-50 border border-orange-200 text-xs font-extrabold text-orange-950">
+                  <svg class="w-4 h-4 text-orange-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                  Cloudflare Tunnel
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 border border-slate-300 text-xs font-extrabold text-slate-800">
+                  SSL / WAF
+                </span>
+              </div>
+              <div class="text-[12px] font-bold text-slate-600 leading-snug border-t border-slate-100 pt-1.5">
+                SSL 암호화 종단 · 테넌트 보안 라우팅
+              </div>
             </div>
           </div>
 
-          <div class="flex justify-center text-slate-400 py-0.5"><i data-lucide="arrow-down" class="w-6 h-6"></i></div>
-
-          <!-- Tier 3 & 4 -->
-          <div class="grid grid-cols-11 items-center gap-2">
-            <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-amber-400 shadow-sm">
-              <div class="text-xs font-black text-amber-700 font-mono">TIER 3. CORE API</div>
-              <div class="text-lg font-black text-slate-900">Spring Boot 3 / JPA</div>
-              <div class="text-sm text-slate-600 mt-1">• TenantContext 완전 격리<br/>• 불변 감사로그(Audit Trail)</div>
+          <!-- 중간 연결선 (시계방향: 우측 2 -> 우측 3, 좌측 1 <-> 4 응답/실시간) -->
+          <div class="grid grid-cols-12 items-center">
+            <div class="col-span-5 flex justify-center items-center gap-1.5">
+              <svg class="w-5 h-6 text-blue-400" viewBox="0 0 20 24" fill="none">
+                <line x1="10" y1="2" x2="10" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>
+                <path d="M5 7 L10 2 L15 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="text-[10px] font-black font-mono text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">Realtime Sync</span>
             </div>
-            <div class="col-span-1 flex justify-center text-slate-400"><i data-lucide="arrow-left-right" class="w-6 h-6"></i></div>
-            <div class="col-span-5 bg-white p-3.5 rounded-xl border-2 border-purple-400 shadow-sm">
-              <div class="text-xs font-black text-purple-700 font-mono">TIER 4. AI &amp; SYNC</div>
-              <div class="text-lg font-black text-slate-900">Claude 3.5 &amp; Supabase</div>
-              <div class="text-sm text-slate-600 mt-1">• 4대 멀티에이전트 오케스트라<br/>• &lt;50ms 실시간 협업 동기화</div>
+            <div class="col-span-2"></div>
+            <div class="col-span-5 flex justify-center items-center gap-1.5">
+              <svg class="w-5 h-6 text-slate-500" viewBox="0 0 20 24" fill="none">
+                <line x1="10" y1="2" x2="10" y2="19" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M5 14 L10 21 L15 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="text-[10px] font-black font-mono text-slate-700 bg-slate-200 px-1.5 py-0.5 rounded">REST / JWT</span>
             </div>
           </div>
+
+          <!-- 하단 Row: AI & DATA (좌) <-> CORE & BFF (우) -->
+          <div class="grid grid-cols-12 items-center gap-1.5">
+            <!-- 4. AI & REALTIME DB -->
+            <div class="col-span-5 bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-black text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-mono">04. AI &amp; DATA</span>
+                <span class="text-[11px] font-bold text-slate-400">Engine &amp; DB</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-50 border border-amber-200 text-xs font-extrabold text-amber-950">
+                  <svg class="w-3.5 h-3.5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/></svg>
+                  Claude AI
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-extrabold text-emerald-950">
+                  <svg class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+                  Supabase
+                </span>
+              </div>
+              <div class="text-[12px] font-bold text-slate-600 leading-snug border-t border-slate-100 pt-1.5">
+                4대 멀티에이전트 · &lt;50ms 실시간 동기화
+              </div>
+            </div>
+
+            <!-- Connector 4 <-> 3 -->
+            <div class="col-span-2 flex flex-col items-center justify-center">
+              <span class="text-[10px] font-black font-mono text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded border border-purple-300 mb-1">Orchestrate</span>
+              <svg class="w-full h-5 text-slate-500" viewBox="0 0 80 20" fill="none">
+                <line x1="8" y1="10" x2="72" y2="10" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M14 4 L4 10 L14 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M66 4 L76 10 L66 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <!-- 3. CORE API & BFF -->
+            <div class="col-span-5 bg-white p-3 rounded-xl border-2 border-emerald-500 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-mono">03. CORE &amp; BFF</span>
+                <span class="text-[11px] font-bold text-slate-400">API Server</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-extrabold text-emerald-950">
+                  <svg class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3C11 3 5.5 7.5 4.2 14.2c-.3 1.5.9 2.8 2.4 2.8 4.4 0 8.8-2.3 11.4-6.4 1.3-2 2-4.6 2-7.6 0 0-1.3 0-3 0zm-9.5 11.5c1.8-3.3 5-5.8 8.7-6.7-2.6 2.8-5.6 5.2-8.7 6.7z"/></svg>
+                  Spring Boot 3
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 border border-slate-300 text-xs font-extrabold text-slate-800">
+                  <svg class="w-3.5 h-3.5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg>
+                  Express
+                </span>
+              </div>
+              <div class="text-[12px] font-bold text-slate-600 leading-snug border-t border-slate-100 pt-1.5">
+                TenantContext 격리 · 불변 감사로그
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
