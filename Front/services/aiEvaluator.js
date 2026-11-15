@@ -2,6 +2,7 @@ import { JOB_TEMPLATES } from '../data/jobTemplates';
 import { getCachedAnalysis, saveAnalysisToCache } from './cacheService';
 import { getActivePromptAddendum, getCompanyPromptSettings, hasCustomPromptSettings } from './promptStudioService';
 import { anonymizePIIInWorker } from './workerService';
+import { extractContactEmail } from '../utils/contactExtractor';
 
 /**
  * AI Grounding Evaluation Coordinator (browser side).
@@ -9,7 +10,14 @@ import { anonymizePIIInWorker } from './workerService';
  * checks the local cache, then delegates to the API gateway (POST /api/v1/evaluate),
  * which runs the 4-Agent pipeline on the Claude API with the server's ANTHROPIC_API_KEY.
  */
-export async function analyzeApplicant({ name, applyJobId, rawText, tenantId, onProgress }) {
+export async function analyzeApplicant(params) {
+  const result = await runAnalysis(params);
+  // 결과 메일용 연락처: 마스킹 전 원문에서 뽑아 브라우저에만 보관 (서버로 보내지 않음)
+  const contactEmail = extractContactEmail(params.rawText);
+  return contactEmail ? { ...result, contactEmail } : result;
+}
+
+async function runAnalysis({ name, applyJobId, rawText, tenantId, onProgress }) {
   const jobTemplate = JOB_TEMPLATES.find(j => j.id === applyJobId) || JOB_TEMPLATES[0];
 
   // Remove any key left over from the removed browser BYOK mode (never sent anywhere)

@@ -35,13 +35,27 @@ describe('ApplicantList (첫 화면 지원자 목록)', () => {
     expect(queryByLabelText('지원자 A 평가 결과 열기')).toBeNull();
   });
 
-  it('지원자가 없으면 새 평가 안내를 보여 준다', () => {
-    const onNew = vi.fn();
-    const { getByText, getAllByRole } = render(
-      <ApplicantList applicants={[]} selectedId={null} onOpen={() => {}} onNew={onNew} />
+  it('지원자가 없으면 시작 안내를 보여 주고, 업로드·붙여넣기로 시작한다', () => {
+    const onPaste = vi.fn();
+    const onUpload = vi.fn();
+    const { getByText, getByRole } = render(
+      <ApplicantList applicants={[]} selectedId={null} onOpen={() => {}} onNew={() => {}} onUpload={onUpload} onPaste={onPaste} />
     );
-    expect(getByText('아직 평가한 지원자가 없습니다.')).toBeTruthy();
-    fireEvent.click(getAllByRole('button', { name: /새 평가/ })[1]);
-    expect(onNew).toHaveBeenCalled();
+    expect(getByText(/AI가 점수와 근거 문장을 보여줍니다/)).toBeTruthy();
+    fireEvent.click(getByRole('button', { name: /PDF · TXT 올리기/ }));
+    expect(onUpload).toHaveBeenCalled();
+    fireEvent.click(getByRole('button', { name: /직접 붙여넣기/ }));
+    expect(onPaste).toHaveBeenCalled();
+  });
+
+  it('보고서 버튼은 결과 화면을 열지 않고 보고서만 연다', () => {
+    const onOpen = vi.fn();
+    const onOpenReport = vi.fn();
+    const { getAllByLabelText } = render(
+      <ApplicantList applicants={applicants} selectedId={null} onOpen={onOpen} onNew={() => {}} onOpenReport={onOpenReport} />
+    );
+    fireEvent.click(getAllByLabelText('지원자 A 평가 보고서')[0]);
+    expect(onOpenReport).toHaveBeenCalledWith(expect.objectContaining({ name: '지원자 A' }));
+    expect(onOpen).not.toHaveBeenCalled();
   });
 });

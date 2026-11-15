@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Layers, CheckCircle2, AlertTriangle, ShieldCheck, XCircle, FileText, Download, ShieldAlert, Sparkles, Sliders, RotateCcw } from 'lucide-react';
+import { Mail, Layers, CheckCircle2, AlertTriangle, ShieldCheck, XCircle, FileText, Download, ShieldAlert, Sparkles, Sliders, RotateCcw } from 'lucide-react';
 import { generatePlagiarismMatrix } from '../utils/plagiarismEngine';
 import SampleBadge from './SampleBadge';
 import { isSampleResult } from '../utils/sampleResult';
@@ -20,7 +20,7 @@ const COMPETENCY_LABELS = [
   { id: 'ethics', label: '직업 윤리/진실성' }
 ];
 
-export default function ApplicantComparison({ applicants, onSelectApplicant, onOpenExport }) {
+export default function ApplicantComparison({ applicants, onSelectApplicant, onOpenExport, onSendMail }) {
   const [weights, setWeights] = useState(DEFAULT_WEIGHTS);
   const [topNCutoff, setTopNCutoff] = useState(() => Math.max(1, Math.min(3, applicants?.length || 1)));
   const [maxAiRiskFilter, setMaxAiRiskFilter] = useState(100);
@@ -62,8 +62,8 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
     return (
       <div className="glass-panel rounded-2xl p-8 border border-line text-center space-y-3">
         <Layers className="w-10 h-10 text-fg-subtle mx-auto" />
-        <h3 className="text-sm font-semibold text-fg-muted">비교할 지원자 분석 데이터가 없습니다.</h3>
-        <p className="text-xs text-fg-subtle">서류 평가 탭에서 자기소개서를 분석하거나 샘플 데이터를 선택해 주세요.</p>
+        <h3 className="text-sm font-semibold text-fg-muted">아직 평가 결과가 없습니다.</h3>
+        <p className="text-xs text-fg-subtle">새 평가에서 자기소개서를 평가하면 이곳에서 순위를 보고 결과 메일을 보낼 수 있습니다.</p>
       </div>
     );
   }
@@ -236,7 +236,19 @@ export default function ApplicantComparison({ applicants, onSelectApplicant, onO
                       <span className="text-fg-subtle mx-1">|</span>
                       <span className="text-bad font-semibold">{riskCount}개</span>
                     </td>
-                    <td className="py-2.5 px-3 text-right">
+                    <td className="py-2.5 px-3 text-right whitespace-nowrap">
+                      {onSendMail && (
+                        <button
+                          type="button"
+                          onClick={() => onSendMail(app, { isTopN })}
+                          title={app.lastMail ? `${new Date(app.lastMail.sentAt).toLocaleString('ko-KR')} ${app.lastMail.to} 에 보냄` : '결과 메일 보내기'}
+                          aria-label={`${app.name} 결과 메일`}
+                          className="mr-1.5 px-2.5 py-1 inline-flex items-center gap-1 bg-surface hover:bg-subtle text-fg-muted rounded-lg text-xs font-semibold border border-line-strong transition-all"
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                          {app.lastMail ? '보냄' : '메일'}
+                        </button>
+                      )}
                       <button
                         onClick={() => onSelectApplicant(app)}
                         className="px-3 py-1 bg-muted hover:bg-brand-strong hover:text-white text-fg-muted rounded-lg text-xs font-semibold border border-line-strong transition-all"

@@ -22,3 +22,9 @@ server/data/
 .vscode/
 
 
+
+# pdf.js 한글 CMap/폰트 (scripts/copyPdfAssets.js 가 생성)
+public/pdfjs/
+
+# GCP 서비스 계정 키 등 (실수로 커밋 방지)
+*-key.json

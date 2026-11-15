@@ -3,24 +3,6 @@
 
 export const FEATURES = [
   {
-    id: 'evidence',
-    status: 'ready',
-    icon: 'Highlighter',
-    title: '근거 문장 형광펜',
-    desc: '점수 근거가 된 문장을 원문에 표시',
-    keywords: '평가 근거 형광펜 하이라이트 자소서 서류 grounding',
-    action: { type: 'result', target: 'section-evidence' }
-  },
-  {
-    id: 'questions',
-    status: 'ready',
-    icon: 'MessagesSquare',
-    title: '면접 질문',
-    desc: '확인이 필요한 문장에서 만든 질문',
-    keywords: '면접 질문 생성 인터뷰 interview',
-    action: { type: 'result', target: 'section-questions' }
-  },
-  {
     id: 'hitl',
     status: 'ready',
     icon: 'UserCheck',
@@ -39,12 +21,12 @@ export const FEATURES = [
     action: { type: 'modal', modal: 'share' }
   },
   {
-    id: 'compare',
+    id: 'notify',
     status: 'ready',
-    icon: 'Columns3',
-    title: '비교 · 표절 · 컷오프',
-    desc: '가중치 조절, 상위 N명, 자소서 유사도',
-    keywords: '비교 표절 유사도 컷오프 순위 top-n 랭킹 지원자 비교',
+    icon: 'Send',
+    title: '결과 메일 발송',
+    desc: '평가 결과 화면에서 지원자별 합격·불합격·면접 메일',
+    keywords: '통보 메일 이메일 발송 알림 합격 불합격 면접 resend',
     action: { type: 'tab', tab: 'comparison' }
   },
   {
@@ -55,15 +37,6 @@ export const FEATURES = [
     desc: '인쇄, PDF, CSV, 텍스트 복사',
     keywords: '보고서 출력 인쇄 pdf csv 엑셀 report',
     action: { type: 'modal', modal: 'report' }
-  },
-  {
-    id: 'upload',
-    status: 'ready',
-    icon: 'Upload',
-    title: 'PDF · TXT 업로드',
-    desc: '파일 여러 개 한 번에 평가',
-    keywords: '업로드 파일 pdf txt docx 일괄',
-    action: { type: 'upload' }
   },
   {
     id: 'feedback',
@@ -82,14 +55,6 @@ export const FEATURES = [
     desc: '회사(테넌트)별 지원자 목록 전환',
     keywords: '회사 테넌트 전환 계정 역할 sso',
     action: { type: 'modal', modal: 'profile' }
-  },
-  {
-    id: 'notify',
-    status: 'planned',
-    icon: 'Send',
-    title: '합격·불합격 일괄 통보',
-    desc: '메일, 문자',
-    keywords: '통보 메일 문자 알림 합격 불합격'
   },
   {
     id: 'two-track',

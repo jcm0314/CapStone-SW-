@@ -72,7 +72,7 @@ export default function Sidebar({
         <div className="space-y-px">
           <NavItem active={activeView === 'list'} icon={Users} label="지원자" count={applicantCount} onClick={() => onNavigate('list')} />
           <NavItem active={activeView === 'new'} icon={Plus} label="새 평가" onClick={() => onNavigate('new')} />
-          <NavItem active={activeView === 'comparison'} icon={Columns3} label="비교" onClick={() => onNavigate('comparison')} />
+          <NavItem active={activeView === 'comparison'} icon={Columns3} label="평가 결과" onClick={() => onNavigate('comparison')} />
           {canSeeCredits && <NavItem active={activeView === 'credits'} icon={Gauge} label="크레딧" onClick={() => onNavigate('credits')} />}
         </div>
 

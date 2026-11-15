@@ -111,6 +111,16 @@ export function AuthProvider({ children }) {
     setIsAuthenticated(true);
   };
 
+  // 프로필 수정 (데모 계정이라 이 브라우저에만 저장)
+  const updateProfile = ({ name, roleTitle, email }) => {
+    setCurrentUser((prev) => ({
+      ...prev,
+      ...(typeof name === 'string' && name.trim() ? { name: name.trim().slice(0, 30) } : {}),
+      ...(typeof roleTitle === 'string' ? { roleTitle: roleTitle.trim().slice(0, 40) } : {}),
+      ...(typeof email === 'string' ? { email: email.trim().slice(0, 254) } : {})
+    }));
+  };
+
   const logout = () => {
     setIsAuthenticated(false);
   };
@@ -153,6 +163,7 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         switchRole,
         loginWithSSO,
+        updateProfile,
         logout,
         hasPermission,
         roles: ROLES

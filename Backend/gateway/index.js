@@ -11,6 +11,7 @@ import { resolveClaudeModel, isClaudeConfigured } from '../../Front/services/age
 import { formatCustomPromptAddendum } from '../../Front/services/promptStudioService.js';
 import { JOB_TEMPLATES } from '../../Front/data/jobTemplates.js';
 import { anonymizePII } from '../../Front/utils/piiAnonymizer.js';
+import { isMailConfigured, validateMailRequest, sendMail } from './mailer.js';
 
 dotenv.config();
 
@@ -461,6 +462,35 @@ const handleEvaluation = async (req, res) => {
 
 app.post('/api/v1/evaluate', handleEvaluation);
 app.post('/api/v1/enterprise/vertex-evaluator', handleEvaluation);
+
+// -------------------------------------------------------------
+// [5] 지원자 결과 메일 발송 (Resend)
+// -------------------------------------------------------------
+// 스팸 중계 방지: 전체 API 제한(15분 200회)과 별도로 IP 당 1시간 30통
+const mailLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'MAIL_RATE_LIMITED', message: '메일은 1시간에 30통까지 보낼 수 있습니다. 잠시 후 다시 시도하세요.' }
+});
+
+app.get('/api/v1/notifications/status', (req, res) => {
+  res.json({ emailEnabled: isMailConfigured() });
+});
+
+app.post('/api/v1/notifications/email', mailLimiter, async (req, res) => {
+  const { value, error } = validateMailRequest(req.body);
+  if (error) return res.status(400).json({ error: 'INVALID_MAIL_REQUEST', message: error });
+
+  try {
+    const { id } = await sendMail(value);
+    return res.status(201).json({ success: true, id });
+  } catch (err) {
+    console.warn('[메일 발송 실패]', err.message);
+    return res.status(err.status || 500).json({ error: 'MAIL_SEND_FAILED', message: err.message });
+  }
+});
 
 // Only start server if not in test environment
 if (process.env.NODE_ENV !== 'test') {

@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, HelpCircle, ChevronDown, FileText } from 'lucide-react';
 import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
 
 // react-window v2 rowComponent signature: ({ index, style, ariaAttributes, ...rowProps })
-const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setActiveQuoteId }) => {
+const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setActiveQuoteId, onCardClick }) => {
   const ev = filteredEvidences[index];
   if (!ev) return null;
 
@@ -30,7 +30,7 @@ const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setAc
   return (
     <div style={{ ...style, paddingBottom: '10px' }}>
       <div
-        onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
+        onClick={() => (onCardClick ? onCardClick(ev) : setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id))}
         onMouseEnter={() => setActiveQuoteId(ev.id)}
         className={`p-3 rounded-md border transition-colors cursor-pointer h-[128px] flex flex-col justify-between gap-1.5 ${borderClass}`}
       >
@@ -65,7 +65,29 @@ function EvidenceViewerContent({ result }) {
   const groundingEvidences = result.analysis.groundingEvidences || [];
   const [activeQuoteId, setActiveQuoteId] = useState(null);
   const [filterType, setFilterType] = useState('ALL');
+  const [showFullText, setShowFullText] = useState(false);
+  const [jumpTarget, setJumpTarget] = useState(null);
   const listRef = useRef(null);
+  const textRef = useRef(null);
+
+  // 근거 카드를 누르면 자소서 전문을 펼치고 그 문장으로 이동
+  const handleCardClick = (ev) => {
+    setActiveQuoteId(ev.id);
+    setShowFullText(true);
+    setJumpTarget({ id: ev.id, at: Date.now() });
+  };
+
+  useEffect(() => {
+    if (!jumpTarget || !showFullText || !textRef.current) return undefined;
+    // 펼침 애니메이션(300ms)이 끝난 뒤 스크롤
+    const t = window.setTimeout(() => {
+      const mark = textRef.current?.querySelector(`[data-ev-id="${CSS.escape(jumpTarget.id)}"]`);
+      if (mark && typeof mark.scrollIntoView === 'function') {
+        mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 320);
+    return () => window.clearTimeout(t);
+  }, [jumpTarget, showFullText]);
 
   // Filtered evidences
   const filteredEvidences = groundingEvidences.filter(ev => {
@@ -167,6 +189,7 @@ function EvidenceViewerContent({ result }) {
       elements.push(
         <mark
           key={`mark_${ev.id}_${m.start}`}
+          data-ev-id={ev.id}
           onClick={() => setActiveQuoteId(activeQuoteId === ev.id ? null : ev.id)}
           onMouseEnter={() => setActiveQuoteId(ev.id)}
           title={`${typeLabel} · ${ev.title || ''}`}
@@ -217,41 +240,62 @@ function EvidenceViewerContent({ result }) {
         </div>
       </div>
 
-      {/* Main Split View: Left Document View vs Right Evidence Drawer */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-3">
-        {/* Left: Document View */}
-        <div className="lg:col-span-7">
-          <div className="flex justify-between items-center text-xs text-fg-subtle px-1 pb-1.5">
-            <span>자기소개서 원문 · 개인정보 가림</span>
-            <span className="tabular-nums">근거 {groundingEvidences.length}</span>
+      {/* 근거 카드 (기본) */}
+      <div className="p-3">
+        {filteredEvidences.length === 0 ? (
+          <div className="rounded-md border border-dashed border-line-strong flex items-center justify-center p-6 text-center text-[13px] text-fg-subtle">
+            이 유형의 근거 문장이 없습니다.
           </div>
-          <div className="px-1 text-[14px] text-fg leading-[1.95] whitespace-pre-wrap break-keep max-h-[430px] overflow-y-auto">
-            {renderHighlightedText()}
+        ) : List ? (
+          <List
+            listRef={listRef}
+            rowComponent={EvidenceCardRow}
+            rowCount={filteredEvidences.length}
+            rowHeight={138}
+            rowProps={{ filteredEvidences, activeQuoteId, setActiveQuoteId, onCardClick: handleCardClick }}
+            style={{ height: Math.min(460, filteredEvidences.length * 138), width: '100%' }}
+          />
+        ) : (
+          <div className="space-y-2 overflow-y-auto max-h-[460px]">
+            {filteredEvidences.map((ev, idx) => (
+              <EvidenceCardRow key={ev.id || idx} index={idx} style={{}} filteredEvidences={filteredEvidences} activeQuoteId={activeQuoteId} setActiveQuoteId={setActiveQuoteId} onCardClick={handleCardClick} />
+            ))}
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Right: Virtualized Evidence Cards List */}
-        <div className="lg:col-span-5 h-[460px]">
-          {filteredEvidences.length === 0 ? (
-            <div className="h-full rounded-md border border-dashed border-line-strong flex items-center justify-center p-6 text-center text-[13px] text-fg-subtle">
-              이 유형의 근거 문장이 없습니다.
+      {/* 자소서 전문: 버튼을 누르면 펼쳐짐 */}
+      <div className="border-t border-line">
+        <button
+          type="button"
+          onClick={() => setShowFullText((v) => !v)}
+          aria-expanded={showFullText}
+          aria-controls="evidence-fulltext"
+          className="w-full flex items-center justify-center gap-1.5 h-10 text-[13px] text-fg-muted hover:text-fg hover:bg-subtle transition-colors"
+        >
+          <FileText className="w-4 h-4" />
+          {showFullText ? '자소서 전문 접기' : '자소서 전문 보기'}
+          <span className="text-xs text-fg-subtle">· 근거 {groundingEvidences.length}곳 표시</span>
+          <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showFullText ? 'rotate-180' : ''}`} />
+        </button>
+        <div
+          id="evidence-fulltext"
+          aria-hidden={!showFullText}
+          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+            showFullText ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="px-4 pb-4">
+              <p className="text-xs text-fg-subtle pb-1.5">자기소개서 원문 · 개인정보 가림</p>
+              <div
+                ref={textRef}
+                className="text-[14px] text-fg leading-[1.95] whitespace-pre-wrap break-keep max-h-[430px] overflow-y-auto"
+              >
+                {renderHighlightedText()}
+              </div>
             </div>
-          ) : List ? (
-            <List
-              listRef={listRef}
-              rowComponent={EvidenceCardRow}
-              rowCount={filteredEvidences.length}
-              rowHeight={138}
-              rowProps={{ filteredEvidences, activeQuoteId, setActiveQuoteId }}
-              style={{ height: 460, width: '100%' }}
-            />
-          ) : (
-            <div className="space-y-2 overflow-y-auto max-h-[460px]">
-              {filteredEvidences.map((ev, idx) => (
-                <EvidenceCardRow key={ev.id || idx} index={idx} style={{}} filteredEvidences={filteredEvidences} activeQuoteId={activeQuoteId} setActiveQuoteId={setActiveQuoteId} />
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </section>
