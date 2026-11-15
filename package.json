@@ -8,16 +8,16 @@
   },
   "scripts": {
     "predev": "node scripts/copyPdfAssets.js",
-    "dev": "vite",
+    "dev": "vite --config config/vite.config.js",
     "prebuild": "node scripts/copyPdfAssets.js",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
+    "build": "vite build --config config/vite.config.js",
+    "preview": "vite preview --config config/vite.config.js",
+    "test": "vitest run --config config/vite.config.js",
     "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx}": [
-      "vitest related --run"
+      "vitest related --run --config config/vite.config.js"
     ]
   },
   "dependencies": {

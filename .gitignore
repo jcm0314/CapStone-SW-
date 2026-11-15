@@ -28,3 +28,8 @@ public/pdfjs/
 
 # GCP 서비스 계정 키 등 (실수로 커밋 방지)
 *-key.json
+
+# Dotfolders hidden from GitHub repository root
+.agents/
+.github/
+.husky/
