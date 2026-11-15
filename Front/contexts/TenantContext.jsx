@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   isSupabaseConfigured,
   fetchTenantApplicantsFromSupabase,
-  syncTenantApplicantsToSupabase
+  syncTenantApplicantsToSupabase,
+  deleteTenantApplicantFromSupabase
 } from '../services/supabaseClient';
 import {
   isSpringApiEnabled,
@@ -119,6 +120,21 @@ export function TenantProvider({ children }) {
     }
   };
 
+  const deleteTenantApplicant = (applicantId, remainingApplicants = null) => {
+    if (!applicantId) return;
+    const nextList = Array.isArray(remainingApplicants)
+      ? remainingApplicants
+      : getTenantApplicants().filter((a) => a.id !== applicantId);
+
+    if (typeof window !== 'undefined') {
+      const storageKey = `checkmate_applicants_${currentTenant.id}`;
+      localStorage.setItem(storageKey, JSON.stringify(nextList));
+    }
+    if (isSupabaseConfigured) {
+      deleteTenantApplicantFromSupabase(currentTenant.id, applicantId);
+    }
+  };
+
   // Spring 코어 API 에서 지원자 목록 불러오기 (VITE_SPRING_API_URL 설정 시에만)
   useEffect(() => {
     if (!isSpringApiEnabled() || typeof window === 'undefined') return;
@@ -163,6 +179,7 @@ export function TenantProvider({ children }) {
         switchTenant,
         getTenantApplicants,
         saveTenantApplicants,
+        deleteTenantApplicant,
         applicantsVersion
       }}
     >

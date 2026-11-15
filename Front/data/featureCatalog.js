@@ -67,35 +67,39 @@ export const FEATURES = [
   },
   {
     id: 'tag-weights',
-    status: 'planned',
+    status: 'ready',
     icon: 'Tags',
     title: '태그형 가중치',
     desc: '역량 태그로 가중치 지정',
-    keywords: '태그 가중치 설정'
+    keywords: '태그 가중치 설정',
+    action: { type: 'view', view: 'new', target: 'section-tag-weights' }
   },
   {
     id: 'per-question',
-    status: 'planned',
+    status: 'ready',
     icon: 'ListOrdered',
     title: '문항별 평가',
     desc: '자소서 문항마다 점수와 근거',
-    keywords: '문항 문항별 평가 자소서'
+    keywords: '문항 문항별 평가 자소서',
+    action: { type: 'result', target: 'section-per-question' }
   },
   {
     id: 'keyword-questions',
-    status: 'planned',
+    status: 'ready',
     icon: 'Hash',
     title: '면접 키워드 질문',
     desc: '키워드 태그로 질문 묶기',
-    keywords: '키워드 태그 면접 질문'
+    keywords: '키워드 태그 면접 질문',
+    action: { type: 'result', target: 'section-questions' }
   },
   {
     id: 'ats',
-    status: 'planned',
+    status: 'ready',
     icon: 'Plug',
     title: 'ATS 연동',
     desc: '채용 관리 시스템 연동',
-    keywords: 'ats 연동 채용관리'
+    keywords: 'ats 연동 채용관리',
+    action: { type: 'modal', modal: 'ats' }
   }
 ];
 

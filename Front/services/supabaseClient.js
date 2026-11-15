@@ -146,6 +146,64 @@ export async function syncTenantApplicantsToSupabase(tenantId, applicants = []) 
       .from('applicants')
       .upsert(rows, { onConflict: 'id,tenant_id' });
 
+    if (error) return false;
+
+    // 평가 결과가 있는 지원자는 evaluations 테이블에도 동기화
+    const evaluated = applicants.filter((app) => app.analysis?.summary);
+    for (const app of evaluated) {
+      const summary = app.analysis.summary || {};
+      const evalPayload = {
+        tenant_id: tenantId,
+        applicant_id: String(app.id),
+        total_score: Math.max(0, Math.min(100, Math.round(Number(summary.totalScore ?? 75)))),
+        decision: ['STRONG_PASS', 'INTERVIEW', 'HOLD', 'REJECT'].includes(summary.decision)
+          ? summary.decision
+          : 'HOLD',
+        decision_reason: summary.decisionReason || '',
+        ai_text_probability: Math.round(Number(summary.aiTextProbability ?? 0)),
+        competency_scores: app.analysis.competencyScores || {},
+        grounding_evidences: app.analysis.groundingEvidences || [],
+        interview_questions: app.analysis.interviewQuestions || [],
+        is_human_verified: Boolean(app.isHumanVerified),
+        reviewer_note: app.reviewerNote || null,
+        agent_audit_metadata: app.agentMetadata || null
+      };
+
+      const { data: existingEval } = await client
+        .from('evaluations')
+        .select('id')
+        .eq('tenant_id', tenantId)
+        .eq('applicant_id', String(app.id))
+        .limit(1);
+
+      if (existingEval && existingEval.length > 0) {
+        await client.from('evaluations').update(evalPayload).eq('id', existingEval[0].id);
+      } else {
+        await client.from('evaluations').insert(evalPayload);
+      }
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Deletes a tenant-scoped applicant from Supabase (cascades to evaluations).
+ * @param {string} tenantId
+ * @param {string} applicantId
+ */
+export async function deleteTenantApplicantFromSupabase(tenantId, applicantId) {
+  const client = getTenantScopedClient(tenantId);
+  if (!client || !applicantId) return false;
+
+  try {
+    const { error } = await client
+      .from('applicants')
+      .delete()
+      .eq('id', String(applicantId))
+      .eq('tenant_id', tenantId);
     return !error;
   } catch {
     return false;

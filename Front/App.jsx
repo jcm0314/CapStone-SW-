@@ -13,8 +13,10 @@ import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
 import TwoTrackPanel from './components/TwoTrackPanel';
+import PerQuestionEvaluation from './components/PerQuestionEvaluation';
 import CandidateFeedbackModal from './components/CandidateFeedbackModal';
 import MailModal from './components/MailModal';
+import AtsIntegrationModal from './components/AtsIntegrationModal';
 import Footer from './components/Footer';
 import { suggestTemplateId } from './services/notificationService';
 import SampleBadge from './components/SampleBadge';
@@ -36,7 +38,7 @@ import { useTheme } from './hooks/useTheme';
 import LandingPage from './components/LandingPage';
 
 export default function App() {
-  const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant, applicantsVersion } = useTenant();
+  const { currentTenant, getTenantApplicants, saveTenantApplicants, deleteTenantApplicant, switchTenant, applicantsVersion } = useTenant();
   const { currentUser, hasPermission } = useAuth();
 
   const [showLanding, setShowLanding] = useState(() => {
@@ -296,12 +298,25 @@ export default function App() {
     setToastMessage('서류·면접 2-Track 기록이 저장되었습니다.');
   };
 
+  // 지원자 삭제 (목록 + localStorage + Supabase)
+  const handleDeleteApplicant = (app) => {
+    if (!app) return;
+    const remaining = applicantList.filter((item) => item.id !== app.id);
+    setApplicantList(remaining);
+    deleteTenantApplicant(app.id, remaining);
+    if (selectedApplicant?.id === app.id) {
+      setSelectedApplicant(remaining[0] || null);
+    }
+    setToastMessage(`'${app.name}' 지원자가 삭제되었습니다.`);
+  };
+
   // ───────────────────────── 화면 이동 · 메뉴 · ⌘K 검색 (UI 전용 상태) ─────────────────────────
   const { theme, toggleTheme } = useTheme();
   const [evalView, setEvalView] = useState('list'); // 'list' | 'result' | 'new' (activeTab === 'evaluator' 일 때)
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSSOModal, setShowSSOModal] = useState(false);
+  const [showAtsModal, setShowAtsModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [inputTabRequest, setInputTabRequest] = useState(null);
   const analyzeStartIdRef = useRef(null);
@@ -388,6 +403,7 @@ export default function App() {
     switch (action.type) {
       case 'view':
         goView(action.view);
+        if (action.target) scrollToSection(action.target);
         break;
       case 'tab':
         goView(action.tab);
@@ -404,6 +420,7 @@ export default function App() {
         break;
       case 'modal':
         if (action.modal === 'profile') setShowSSOModal(true);
+        if (action.modal === 'ats') setShowAtsModal(true);
         if (action.modal === 'hitl') requireApplicant(() => setShowHITLEditor(true));
         if (action.modal === 'share') requireApplicant(() => setShowShareModal(true));
         if (action.modal === 'report') requireApplicant(() => setShowExportModal(true));
@@ -566,6 +583,7 @@ export default function App() {
                   setSelectedApplicant(app);
                   setShowExportModal(true);
                 }}
+                onDelete={handleDeleteApplicant}
               />
             )}
 
@@ -641,6 +659,9 @@ export default function App() {
                 </div>
                 <div id="section-evidence" className="scroll-mt-16">
                   <EvidenceViewer result={selectedApplicant} />
+                </div>
+                <div id="section-per-question" className="scroll-mt-16">
+                  <PerQuestionEvaluation applicant={selectedApplicant} />
                 </div>
                 <div id="section-collab" className="scroll-mt-16">
                   <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
@@ -732,6 +753,14 @@ export default function App() {
         initialTemplateId={mailTarget?.templateId}
         companyName={currentTenant?.name}
         onSent={handleMailSent}
+      />
+
+      <AtsIntegrationModal
+        isOpen={showAtsModal}
+        onClose={() => setShowAtsModal(false)}
+        tenant={currentTenant}
+        applicants={applicantList}
+        selectedApplicant={selectedApplicant}
       />
 
       <CandidateFeedbackModal

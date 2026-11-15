@@ -92,20 +92,22 @@ export default function Sidebar({
           ))}
         </div>
 
-        <div className="space-y-px pt-2 border-t border-line">
-          <GroupLabel>로드맵</GroupLabel>
-          {planned.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => onSelectFeature(f)}
-              title={`${f.desc} (준비 중)`}
-              className="w-full flex items-center pl-3 pr-2 h-7 rounded text-left text-[12px] text-fg-subtle hover:bg-subtle transition-colors"
-            >
-              <span className="truncate">{f.title}</span>
-            </button>
-          ))}
-        </div>
+        {planned.length > 0 && (
+          <div className="space-y-px pt-2 border-t border-line">
+            <GroupLabel>로드맵</GroupLabel>
+            {planned.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => onSelectFeature(f)}
+                title={`${f.desc} (준비 중)`}
+                className="w-full flex items-center pl-3 pr-2 h-7 rounded text-left text-[12px] text-fg-subtle hover:bg-subtle transition-colors"
+              >
+                <span className="truncate">{f.title}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="px-2 py-2 border-t border-line flex items-center justify-between gap-2">
