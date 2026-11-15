@@ -57,6 +57,7 @@ export function getTenantScopedClient(tenantId = 'toss-payments') {
 
 /**
  * Fetches tenant-scoped applicant evaluations from Supabase if configured and reachable.
+ * Maps `applicants` + `evaluations` tables from infra/supabase_schema.sql.
  * @param {string} tenantId
  * @returns {Promise<Array|null>}
  */
@@ -65,25 +66,57 @@ export async function fetchTenantApplicantsFromSupabase(tenantId) {
   if (!client) return null;
 
   try {
-    const { data, error } = await client
-      .from('applicants')
-      .select('*')
-      .eq('org_id', tenantId)
-      .order('created_at', { ascending: false });
+    const [{ data: applicantsData, error: appErr }, { data: evalsData }] = await Promise.all([
+      client
+        .from('applicants')
+        .select('id, tenant_id, job_id, name, raw_text, pii_masked_text, status, applied_at')
+        .eq('tenant_id', tenantId)
+        .order('applied_at', { ascending: false }),
+      client
+        .from('evaluations')
+        .select('*')
+        .eq('tenant_id', tenantId)
+    ]);
 
-    if (error || !Array.isArray(data) || data.length === 0) {
+    if (appErr || !Array.isArray(applicantsData) || applicantsData.length === 0) {
       return null;
     }
 
-    return data.map((row) => ({
-      ...(row.payload || {}),
-      id: row.id,
-      name: row.name,
-      orgId: row.org_id || tenantId,
-      applyJobId: row.apply_job_id || row.payload?.applyJobId || 'tech_backend',
-      rawText: row.raw_text || row.payload?.rawText || '',
-      analysis: row.analysis || row.payload?.analysis
-    }));
+    const evalByApplicant = new Map();
+    if (Array.isArray(evalsData)) {
+      for (const ev of evalsData) {
+        evalByApplicant.set(ev.applicant_id, ev);
+      }
+    }
+
+    return applicantsData.map((row) => {
+      const ev = evalByApplicant.get(row.id);
+      return {
+        id: row.id,
+        name: row.name,
+        orgId: row.tenant_id || tenantId,
+        applyJobId: row.job_id || 'tech_backend',
+        rawText: row.raw_text || '',
+        piiMaskedText: row.pii_masked_text || '',
+        appliedAt: row.applied_at,
+        analysis: ev
+          ? {
+              summary: {
+                totalScore: ev.total_score ?? 0,
+                decision: ev.decision || 'HOLD',
+                decisionReason: ev.decision_reason || '',
+                aiTextProbability: ev.ai_text_probability ?? 0
+              },
+              competencyScores: ev.competency_scores || {},
+              groundingEvidences: ev.grounding_evidences || [],
+              interviewQuestions: ev.interview_questions || [],
+              isHumanVerified: Boolean(ev.is_human_verified),
+              reviewerNote: ev.reviewer_note || '',
+              agentAuditMetadata: ev.agent_audit_metadata || null
+            }
+          : undefined
+      };
+    });
   } catch {
     return null;
   }
@@ -101,16 +134,18 @@ export async function syncTenantApplicantsToSupabase(tenantId, applicants = []) 
   try {
     const rows = applicants.map((app) => ({
       id: String(app.id),
-      org_id: tenantId,
+      tenant_id: tenantId,
+      job_id: app.applyJobId || 'tech_backend',
       name: app.name || '익명 지원자',
-      apply_job_id: app.applyJobId || 'tech_backend',
       raw_text: app.rawText || '',
-      analysis: app.analysis || {},
-      payload: app,
-      updated_at: new Date().toISOString()
+      pii_masked_text: app.piiMaskedText || app.rawText || '',
+      status: app.analysis ? 'COMPLETED' : 'PENDING'
     }));
 
-    const { error } = await client.from('applicants').upsert(rows, { onConflict: 'id' });
+    const { error } = await client
+      .from('applicants')
+      .upsert(rows, { onConflict: 'id,tenant_id' });
+
     return !error;
   } catch {
     return false;

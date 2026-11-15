@@ -9,6 +9,8 @@ substitutions:
   _REGION: asia-northeast3
   _VITE_API_GATEWAY_URL: 'https://hr-evaluator-api-gateway-pt3ki5ggua-du.a.run.app'
   _CORS_ALLOWED_ORIGINS: 'https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app'
+  _VITE_SUPABASE_URL: ''
+  _VITE_SUPABASE_ANON_KEY: ''
 
 steps:
   # Step 1: Build & push Express API Gateway image
@@ -34,13 +36,17 @@ steps:
       - '--allow-unauthenticated'
       - '--update-env-vars=NODE_ENV=production,CORS_ALLOWED_ORIGINS=${_CORS_ALLOWED_ORIGINS}'
 
-  # Step 3: Build & push frontend with the gateway URL baked in (필수 build-arg)
+  # Step 3: Build & push frontend with the gateway & Supabase config baked in
   - id: build-frontend
     name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
       - '--build-arg'
       - 'VITE_API_GATEWAY_URL=${_VITE_API_GATEWAY_URL}'
+      - '--build-arg'
+      - 'VITE_SUPABASE_URL=${_VITE_SUPABASE_URL}'
+      - '--build-arg'
+      - 'VITE_SUPABASE_ANON_KEY=${_VITE_SUPABASE_ANON_KEY}'
       - '-t'
       - 'gcr.io/$PROJECT_ID/hr-evaluator-frontend:latest'
       - '-f'
