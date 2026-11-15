@@ -78,4 +78,31 @@ describe('EvidenceViewer Memoization & Overlap Prevention (#39)', () => {
 
     spyFuzzy.mockRestore();
   });
+
+  it('자소서 전문은 기본으로 접혀 있고, 버튼이나 근거 카드를 누르면 펼쳐진다', () => {
+    const mockResult = {
+      id: 'app_toggle',
+      name: '테스트',
+      rawText: sampleRawText,
+      analysis: {
+        groundingEvidences: [
+          { id: 'ev_t', quote: 'Redis 캐싱을 도입하여', type: 'positive', scoreImpact: 5, title: '캐싱 카드', explanation: '설명' }
+        ]
+      }
+    };
+    const { getByRole, container, getByText } = render(<EvidenceViewer result={mockResult} />);
+    const toggle = getByRole('button', { name: /자소서 전문 보기/ });
+    const panel = container.querySelector('#evidence-fulltext');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(panel.getAttribute('aria-hidden')).toBe('true');
+
+    fireEvent.click(toggle);
+    expect(getByRole('button', { name: /자소서 전문 접기/ }).getAttribute('aria-expanded')).toBe('true');
+
+    fireEvent.click(getByRole('button', { name: /자소서 전문 접기/ }));
+    expect(panel.getAttribute('aria-hidden')).toBe('true');
+
+    fireEvent.click(getByText('캐싱 카드'));
+    expect(panel.getAttribute('aria-hidden')).toBe('false');
+  });
 });

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Search, ChevronRight } from 'lucide-react';
+import { Plus, Search, ChevronRight, Printer, UploadCloud, PenLine, Sparkles, FileSearch, MessagesSquare } from 'lucide-react';
 import { isSampleResult } from '../utils/sampleResult';
 
 export const DECISION = {
@@ -30,7 +30,7 @@ function rowData(app) {
 }
 
 /** 첫 화면: 지원자 목록 (행을 누르면 평가 결과로 이동) */
-export default function ApplicantList({ applicants, selectedId, onOpen, onNew, tenantName }) {
+export default function ApplicantList({ applicants, selectedId, onOpen, onNew, onUpload, onPaste, onOpenReport, tenantName }) {
   const [query, setQuery] = useState('');
   const [decisionFilter, setDecisionFilter] = useState('ALL');
 
@@ -98,13 +98,7 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
       )}
 
       {applicants.length === 0 ? (
-        <div className="card px-6 py-12 text-center">
-          <p className="text-sm text-fg">아직 평가한 지원자가 없습니다.</p>
-          <p className="mt-1 text-xs text-fg-muted">자기소개서를 붙여 넣거나 PDF·TXT 파일을 올려 첫 평가를 시작하세요.</p>
-          <button type="button" onClick={onNew} className="btn btn-primary btn-md mt-4">
-            <Plus className="w-4 h-4" /> 새 평가
-          </button>
-        </div>
+        <StartGuide onUpload={onUpload || onNew} onPaste={onPaste || onNew} />
       ) : (
         <div className="card overflow-hidden">
           {/* 데스크톱: 표 */}
@@ -118,6 +112,7 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
               <col className="w-[64px]" />
               <col className="w-[88px]" />
               <col className="w-[96px]" />
+              {onOpenReport && <col className="w-[84px]" />}
             </colgroup>
             <thead>
               <tr className="text-left text-xs text-fg-subtle border-b border-line bg-subtle/60">
@@ -129,6 +124,7 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
                 <th className="font-medium py-2 px-2 text-right">리스크</th>
                 <th className="font-medium py-2 px-2">상태</th>
                 <th className="font-medium py-2 pl-2 pr-4 text-right">평가일</th>
+                {onOpenReport && <th className="font-medium py-2 pr-4"><span className="sr-only">보고서</span></th>}
               </tr>
             </thead>
             <tbody>
@@ -167,6 +163,11 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
                       <span className="group-hover:hidden">{date || '-'}</span>
                       <ChevronRight className="w-4 h-4 hidden group-hover:inline text-fg-muted" />
                     </td>
+                    {onOpenReport && (
+                      <td className="py-1.5 pr-4 text-right">
+                        <ReportButton onClick={() => onOpenReport(app)} name={app.name} />
+                      </td>
+                    )}
                   </tr>
                 );
               })}
@@ -176,11 +177,11 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
           {/* 모바일: 목록 */}
           <ul className="md:hidden divide-y divide-line">
             {rows.map(({ app, score, decision, verifyCount, riskCount, isSample }) => (
-              <li key={app.id}>
+              <li key={app.id} className="flex items-stretch">
                 <button
                   type="button"
                   onClick={() => onOpen(app)}
-                  className={`w-full text-left px-3.5 py-3 flex items-center gap-3 relative ${app.id === selectedId ? 'bg-subtle' : ''}`}
+                  className={`flex-1 min-w-0 text-left px-3.5 py-3 flex items-center gap-3 relative ${app.id === selectedId ? 'bg-subtle' : ''}`}
                 >
                   {app.id === selectedId && <span className="absolute left-0 top-2 bottom-2 w-[3px] bg-accent" aria-hidden="true" />}
                   <span className="flex-1 min-w-0">
@@ -201,6 +202,11 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
                   <span className="text-lg font-semibold tabular-nums text-fg">{score ?? '-'}</span>
                   <ChevronRight className="w-4 h-4 text-fg-subtle" />
                 </button>
+                {onOpenReport && (
+                  <div className="flex items-center pr-2">
+                    <ReportButton onClick={() => onOpenReport(app)} name={app.name} compact />
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -208,5 +214,65 @@ export default function ApplicantList({ applicants, selectedId, onOpen, onNew, t
         </div>
       )}
     </section>
+  );
+}
+
+function ReportButton({ onClick, name, compact = false }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      onKeyDown={(e) => e.stopPropagation()}
+      className="btn btn-ghost btn-sm text-fg-muted hover:text-fg"
+      aria-label={`${name} 평가 보고서`}
+      title="평가 보고서"
+    >
+      <Printer className="w-3.5 h-3.5" />
+      {!compact && '보고서'}
+    </button>
+  );
+}
+
+const STEPS = [
+  { icon: UploadCloud, title: '자기소개서 올리기', desc: 'PDF·TXT 파일이나 본문 붙여넣기. 이름·학교·연락처는 AI로 보내기 전에 가려집니다.' },
+  { icon: FileSearch, title: 'AI 평가 (1분 안팎)', desc: '점수마다 근거가 된 문장에 형광펜. 과장이 의심되는 문장도 표시합니다.' },
+  { icon: MessagesSquare, title: '면접 질문 · 결과 메일', desc: '의심 문장을 확인하는 면접 질문과 합격·불합격 메일까지 바로.' }
+];
+
+/** 지원자가 0명일 때 첫 화면 */
+function StartGuide({ onUpload, onPaste }) {
+  return (
+    <div className="card px-5 py-8 sm:px-8 sm:py-10">
+      <div className="max-w-[560px] mx-auto text-center">
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-soft text-brand-fg">
+          <Sparkles className="w-5 h-5" />
+        </span>
+        <h2 className="mt-3 text-lg font-semibold text-fg">자기소개서를 올리면, AI가 점수와 근거 문장을 보여줍니다</h2>
+        <p className="mt-1.5 text-[13px] text-fg-muted">"82점"만 주는 대신, 왜 그 점수인지 원문에서 바로 확인할 수 있어요.</p>
+        <div className="mt-5 flex flex-col sm:flex-row justify-center gap-2">
+          <button type="button" onClick={onUpload} className="btn btn-primary btn-lg">
+            <UploadCloud className="w-4 h-4" /> PDF · TXT 올리기
+          </button>
+          <button type="button" onClick={onPaste} className="btn btn-secondary btn-lg">
+            <PenLine className="w-4 h-4" /> 직접 붙여넣기
+          </button>
+        </div>
+      </div>
+      <ol className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {STEPS.map((step, i) => (
+          <li key={step.title} className="rounded-lg border border-line bg-subtle/60 p-3.5">
+            <div className="flex items-center gap-2 text-[13px] font-medium text-fg">
+              <span className="tabular-nums text-fg-subtle">{i + 1}</span>
+              <step.icon className="w-4 h-4 text-fg-muted" aria-hidden="true" />
+              {step.title}
+            </div>
+            <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">{step.desc}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }

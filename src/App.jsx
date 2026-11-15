@@ -13,8 +13,11 @@ import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
 import CandidateFeedbackModal from './components/CandidateFeedbackModal';
+import MailModal from './components/MailModal';
+import Footer from './components/Footer';
+import { suggestTemplateId } from './services/notificationService';
 import SampleBadge from './components/SampleBadge';
-import { isSampleResult } from './utils/sampleResult';
+import { isSampleResult, isDemoMockResult } from './utils/sampleResult';
 
 import { JOB_TEMPLATES } from './data/jobTemplates';
 import { analyzeApplicant } from './services/aiEvaluator';
@@ -30,7 +33,6 @@ import CommandPalette from './components/CommandPalette';
 import { FEATURES, PLANNED_MESSAGE } from './data/featureCatalog';
 import { useTheme } from './hooks/useTheme';
 import LandingPage from './components/LandingPage';
-import { getDemoApplicants, buildDemoEvaluation } from './data/demoApplicants';
 
 export default function App() {
   const { currentTenant, getTenantApplicants, saveTenantApplicants, switchTenant, applicantsVersion } = useTenant();
@@ -52,6 +54,7 @@ export default function App() {
   const [showHITLEditor, setShowHITLEditor] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCandidateFeedback, setShowCandidateFeedback] = useState(false);
+  const [mailTarget, setMailTarget] = useState(null); // { applicant, templateId }
   const [activeShareId, setActiveShareId] = useState(null);
   const [sharedBannerInfo, setSharedBannerInfo] = useState(null);
 
@@ -85,18 +88,17 @@ export default function App() {
 
   // Sync state when Tenant switches (Multi-Tenancy Isolation) or Spring 목록이 합쳐졌을 때
   useEffect(() => {
-    let tenantApps = getTenantApplicants();
-    if (tenantApps.length === 0 && import.meta.env?.MODE !== 'test') {
-      tenantApps = getDemoApplicants(currentTenant.id);
-      saveTenantApplicants(tenantApps);
-    }
+    // 영상 촬영용으로 넣었던 목업 지원자·가짜 평가 결과(#104)가 브라우저에 남아 있으면 지움
+    const stored = getTenantApplicants();
+    const tenantApps = stored.filter((a) => !isDemoMockResult(a));
+    if (tenantApps.length !== stored.length) saveTenantApplicants(tenantApps);
     setApplicantList(tenantApps);
     if (!activeShareId) {
       setSelectedApplicant(prev => tenantApps.find(a => a.id === prev?.id) || tenantApps[0] || null);
     }
   }, [currentTenant.id, applicantsVersion]);
 
-  // Analysis via the API gateway (with temporary demo fallback for video recording when gateway key is absent)
+  // Analysis via the API gateway (server-side Claude API; no API key in the browser, no fake-score fallbacks)
   const handleAnalyze = async ({ name, rawText }) => {
     if (!hasPermission('RUN_EVALUATION')) {
       alert(`[권한 제한] 현재 계정(${currentUser.roleTitle})은 면접관(Interviewer) 권한으로, 서류 업로드 및 AI 평가 가동 권한이 없습니다. 상단 프로필에서 Recruiter 또는 Admin으로 전환해주세요.`);
@@ -107,32 +109,14 @@ export default function App() {
     setProgressState({ percent: 15, status: '🔒 7종 개인식별정보(PII) 로컬 마스킹 처리 중...' });
 
     try {
-      let newResult;
-      try {
-        newResult = await analyzeApplicant({
-          name,
-          applyJobId: currentJob.id,
-          rawText,
-          tenantId: currentTenant.id,
-          onProgress: (p) => setProgressState(p)
-        });
-      } catch (gatewayErr) {
-        if (import.meta.env?.MODE === 'test') {
-          throw gatewayErr;
-        }
-        // 영상 제작용 임시 Mock 시뮬레이션 폴백
-        setProgressState({ percent: 55, status: '🕵️ [2/4] Critic Agent: 과장 표현 및 논리 모순 교차 감사 중...' });
-        await new Promise((r) => setTimeout(r, 500));
-        setProgressState({ percent: 85, status: '⚖️ [4/4] Supervisor & Interviewer: 채점 및 압박 질문 도출 중...' });
-        await new Promise((r) => setTimeout(r, 500));
-        newResult = buildDemoEvaluation({
-          name,
-          applyJobId: currentJob.id,
-          rawText,
-          tenantId: currentTenant.id
-        });
-        setProgressState({ percent: 100, status: '✅ 4대 에이전트 교차 검증 완료' });
-      }
+      // 실패하면 가짜 점수로 대체하지 않고 오류를 그대로 보여줍니다
+      const newResult = await analyzeApplicant({
+        name,
+        applyJobId: currentJob.id,
+        rawText,
+        tenantId: currentTenant.id,
+        onProgress: (p) => setProgressState(p)
+      });
 
       // Attach tenant ID for RLS
       const tenantBoundResult = {
@@ -281,6 +265,23 @@ export default function App() {
     }
   };
 
+  // 결과 메일: 보낸 기록을 지원자에 남김 (브라우저 저장)
+  const openMail = (applicant, opts) => {
+    if (!applicant) return;
+    setMailTarget({ applicant, templateId: suggestTemplateId(applicant, opts) });
+  };
+
+  const handleMailSent = ({ applicantId, templateId, to, sentAt }) => {
+    const updatedList = applicantList.map((app) =>
+      app.id === applicantId ? { ...app, contactEmail: app.contactEmail || to, lastMail: { templateId, to, sentAt } } : app
+    );
+    setApplicantList(updatedList);
+    saveTenantApplicants(updatedList);
+    if (selectedApplicant?.id === applicantId) {
+      setSelectedApplicant(updatedList.find((a) => a.id === applicantId) || selectedApplicant);
+    }
+  };
+
   // ───────────────────────── 화면 이동 · 메뉴 · ⌘K 검색 (UI 전용 상태) ─────────────────────────
   const { theme, toggleTheme } = useTheme();
   const [evalView, setEvalView] = useState('list'); // 'list' | 'result' | 'new' (activeTab === 'evaluator' 일 때)
@@ -409,7 +410,7 @@ export default function App() {
   const paletteItems = [
     { id: 'nav-list', group: '화면', icon: 'Users', title: '지원자', desc: `${applicantList.length}명`, keywords: '홈 목록 지원자 리스트', action: { type: 'view', view: 'list' } },
     { id: 'nav-new', group: '화면', icon: 'Plus', title: '새 평가', desc: '자기소개서 입력', keywords: '평가 실행 입력 새로', action: { type: 'view', view: 'new' } },
-    { id: 'nav-comparison', group: '화면', icon: 'Columns3', title: '비교', desc: '순위, 표절 매트릭스', keywords: '비교 순위 지원자 비교', action: { type: 'tab', tab: 'comparison' } },
+    { id: 'nav-comparison', group: '화면', icon: 'Columns3', title: '평가 결과', desc: '순위, 컷오프, 표절, 결과 메일', keywords: '평가 결과 비교 순위 컷오프 표절 메일 발송', action: { type: 'tab', tab: 'comparison' } },
     ...(canSeeCredits
       ? [{ id: 'nav-credits', group: '화면', icon: 'Gauge', title: '크레딧', desc: '부서별 AI 사용량', keywords: '크레딧 비용 사용량 쿼터', action: { type: 'tab', tab: 'credits' } }]
       : []),
@@ -438,7 +439,7 @@ export default function App() {
   const MOBILE_TABS = [
     { id: 'list', label: '지원자' },
     { id: 'new', label: '새 평가' },
-    { id: 'comparison', label: '비교' },
+    { id: 'comparison', label: '평가 결과' },
     ...(canSeeCredits ? [{ id: 'credits', label: '크레딧' }] : [])
   ];
 
@@ -539,6 +540,18 @@ export default function App() {
                 onOpen={openApplicant}
                 onNew={() => goView('new')}
                 tenantName={currentTenant?.name}
+                onUpload={() => {
+                  setInputTabRequest({ tab: 'FILE', at: Date.now() });
+                  goView('new');
+                }}
+                onPaste={() => {
+                  setInputTabRequest({ tab: 'TEXT', at: Date.now() });
+                  goView('new');
+                }}
+                onOpenReport={(app) => {
+                  setSelectedApplicant(app);
+                  setShowExportModal(true);
+                }}
               />
             )}
 
@@ -598,18 +611,18 @@ export default function App() {
                     onOpenShareModal={() => setShowShareModal(true)}
                     onOpenCandidateFeedback={() => setShowCandidateFeedback(true)}
                     onOpenReport={() => setShowExportModal(true)}
+                    onOpenMail={() => openMail(selectedApplicant)}
                   />
+                </div>
+                {/* 순서: 요약 → 면접 질문 → 근거 문장(자소서 전문은 접힘) → 면접관 메모 */}
+                <div id="section-questions" className="scroll-mt-16">
+                  <InterviewQuestions result={selectedApplicant} />
                 </div>
                 <div id="section-evidence" className="scroll-mt-16">
                   <EvidenceViewer result={selectedApplicant} />
                 </div>
-                <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4 items-start">
-                  <div id="section-questions" className="scroll-mt-16">
-                    <InterviewQuestions result={selectedApplicant} />
-                  </div>
-                  <div id="section-collab" className="scroll-mt-16">
-                    <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
-                  </div>
+                <div id="section-collab" className="scroll-mt-16">
+                  <InterviewerCollaborationPanel applicant={selectedApplicant} shareId={activeShareId} />
                 </div>
               </div>
             )}
@@ -622,11 +635,13 @@ export default function App() {
                   setSelectedApplicant(app);
                   setShowExportModal(true);
                 }}
+                onSendMail={(app, opts) => openMail(app, opts)}
               />
             )}
 
             {activeTab === 'credits' && <DepartmentCreditDashboard />}
           </div>
+          <Footer />
         </main>
       </div>
 
@@ -688,6 +703,16 @@ export default function App() {
       />
 
       {/* Candidate Growth Feedback Modal (ESG / B2B2C) */}
+      {/* 지원자 결과 메일 (Resend) */}
+      <MailModal
+        isOpen={Boolean(mailTarget)}
+        onClose={() => setMailTarget(null)}
+        applicant={mailTarget?.applicant}
+        initialTemplateId={mailTarget?.templateId}
+        companyName={currentTenant?.name}
+        onSent={handleMailSent}
+      />
+
       <CandidateFeedbackModal
         isOpen={showCandidateFeedback}
         onClose={() => setShowCandidateFeedback(false)}

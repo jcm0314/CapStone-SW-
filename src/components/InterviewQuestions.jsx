@@ -2,7 +2,8 @@ import React from 'react';
 import { CheckSquare, Target } from 'lucide-react';
 
 export default function InterviewQuestions({ result }) {
-  if (!result || !result.analysis || !result.analysis.interviewQuestions) return null;
+  // 질문이 없으면(면접 질문 에이전트 실패 등) 빈 카드를 그리지 않음
+  if (!result?.analysis?.interviewQuestions?.length) return null;
 
   const { interviewQuestions } = result.analysis;
 
