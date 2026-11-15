@@ -58,11 +58,12 @@ export const FEATURES = [
   },
   {
     id: 'two-track',
-    status: 'planned',
+    status: 'ready',
     icon: 'Columns2',
     title: '서류·면접 2-Track',
     desc: '서류 평가와 면접 기록 나란히 보기',
-    keywords: '2트랙 서류 면접 투트랙'
+    keywords: '2트랙 서류 면접 투트랙',
+    action: { type: 'result', target: 'section-two-track' }
   },
   {
     id: 'tag-weights',

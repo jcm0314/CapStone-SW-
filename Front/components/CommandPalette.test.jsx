@@ -8,11 +8,11 @@ import { useTheme, THEME_STORAGE_KEY } from '../hooks/useTheme';
 const items = FEATURES.map((f) => ({ ...f, group: f.status === 'ready' ? '기능' : '준비 중' }));
 
 describe('기능 목록 (#29)', () => {
-  it('구현됨 6개, 준비 중 5개이며 구현된 기능은 모두 이동 동작을 가진다', () => {
+  it('구현됨 7개, 준비 중 4개이며 구현된 기능은 모두 이동 동작을 가진다', () => {
     const ready = FEATURES.filter((f) => f.status === 'ready');
     const planned = FEATURES.filter((f) => f.status === 'planned');
-    expect(ready).toHaveLength(6);
-    expect(planned).toHaveLength(5);
+    expect(ready).toHaveLength(7);
+    expect(planned).toHaveLength(4);
     ready.forEach((f) => expect(f.action).toBeTruthy());
     planned.forEach((f) => expect(f.action).toBeUndefined());
   });
