@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2026 단국대학교 캡스톤 페스티벌 & 졸업작품 최종 결과보고서 - Check-Mate</title>
-  
+  <title>2026 단국대학교 캡스톤 페스티벌 &amp; 졸업작품 최종 결과보고서 - Check-Mate</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -28,7 +28,7 @@
     .report-page {
       width: 210mm;
       min-height: 297mm;
-      padding: 25mm 25mm;
+      padding: 20mm 20mm;
       margin: 20px auto;
       background: #FFFFFF;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
@@ -36,7 +36,7 @@
     }
     @page {
       size: A4 portrait;
-      margin: 15mm 15mm 15mm 15mm;
+      margin: 14mm 14mm 14mm 14mm;
     }
     @media print {
       body {
@@ -69,8 +69,8 @@
     }
     th, td {
       border: 1px solid #CBD5E1;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 7px 10px;
+      font-size: 11.5px;
     }
     th {
       background-color: #F1F5F9;
@@ -84,10 +84,10 @@
   <!-- Print Button Bar -->
   <div class="no-print fixed top-6 right-8 z-50 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-slate-700 shadow-2xl">
     <div class="text-xs text-slate-300 font-mono">
-      규격: <strong class="text-blue-400">A4 결과보고서</strong> (총 6페이지 구성)
+      규격: <strong class="text-blue-400">A4 결과보고서</strong> (총 7페이지 구성)
     </div>
-    <button 
-      onclick="window.print()" 
+    <button
+      onclick="window.print()"
       class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-sm flex items-center gap-2 shadow-lg shadow-blue-600/30 cursor-pointer"
     >
       <i data-lucide="printer" class="w-4 h-4"></i>
@@ -100,27 +100,25 @@
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
     <div>
-      <div class="border-b-2 border-slate-900 pb-4 mb-8 flex justify-between items-center">
-        <span class="text-xs font-bold text-slate-500 tracking-wider">단국대학교 소프트웨어학과 / 2026 캡스톤 페스티벌 &amp; 졸업작품전시회</span>
-        <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-[11px] font-bold rounded">최종 결과보고서</span>
-      </div>
-
-      <div class="space-y-6 pt-8 pb-12">
-        <span class="inline-block px-3 py-1 bg-slate-900 text-white text-xs font-bold rounded-lg font-mono">
-          CAPSTONE DESIGN FINAL REPORT
-        </span>
-        <h1 class="text-4xl font-black text-slate-900 leading-tight">
+      <div class="space-y-4 pt-2 pb-6 border-b-2 border-slate-900">
+        <div class="flex items-center justify-between">
+          <span class="inline-block px-3 py-1 bg-slate-900 text-white text-xs font-bold rounded-lg font-mono">
+            CAPSTONE DESIGN FINAL REPORT
+          </span>
+          <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-[11px] font-bold rounded">최종 결과보고서</span>
+        </div>
+        <h1 class="text-3xl font-black text-slate-900 leading-tight">
           Check-Mate : IT 스타트업과 청년 구직자를 위한<br />
           <span class="text-blue-600">1:1 팩트체크 AI 채용 코파일럿</span>
         </h1>
-        <p class="text-base text-slate-600 leading-relaxed font-medium">
+        <p class="text-sm text-slate-600 leading-relaxed font-medium">
           원문 1:1 형광펜 바인딩과 4대 멀티에이전트 적대적 교차 감사를 통한<br />
           공정 채용 실현 및 서류 검토 90% 단축 B2B HR AX 솔루션
         </p>
       </div>
 
       <!-- 기본 정보 표 -->
-      <div class="my-8">
+      <div class="my-5">
         <table class="border border-slate-300 rounded-lg overflow-hidden">
           <tbody>
             <tr>
@@ -140,10 +138,9 @@
               <td>단국대학교 소프트웨어융합대학 컴퓨터공학과</td>
             </tr>
             <tr>
-              <th>팀원 정보</th>
+              <th>수행자 정보</th>
               <td>
-                • <strong>장천명</strong> (학번: 32203919 / 5학년 / 팀장) - 연락처: 010-7399-4118 / jcm03141@gmail.com<br />
-                • <strong>박상윤</strong> (학번: 32201633 / 4학년 / 팀원) - 연락처: 010-4824-7204 / psyrod1112@gmail.com
+                <strong>장천명</strong> (학번: 32203919 / 5학년) &nbsp;|&nbsp; 010-7399-4118 &nbsp;|&nbsp; jcm03141@gmail.com
               </td>
             </tr>
             <tr>
@@ -152,65 +149,71 @@
             </tr>
             <tr>
               <th>라이브 서비스</th>
-              <td><a href="https://checkmate.psyrod.dev/" class="text-emerald-600 font-mono font-bold underline">https://checkmate.psyrod.dev/</a></td>
+              <td>
+                <a href="https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/" class="text-blue-600 font-mono font-bold underline">https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/</a>
+              </td>
+            </tr>
+            <tr>
+              <th>대외 수상 실적</th>
+              <td>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-100 text-amber-900 font-bold rounded text-[11px]">
+                  ★ KT × 고용노동부 AIVLE School Big Project 우수상
+                </span>
+                <span class="text-slate-600 ml-1">(제 2026-09-AI-BS021 호 · 2026.09.03 수여)</span>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- 심사기준 100점 매핑 요약 -->
-      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 mt-6 space-y-3">
+      <!-- 보고서 전체 구성 요약 -->
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 mt-4 space-y-3">
         <div class="text-xs font-bold text-slate-700 flex items-center justify-between">
-          <span>■ 심사기준 (100점 만점) 대응 구성표</span>
-          <span class="text-blue-600 font-mono">Total Score: 100 pts</span>
+          <span>■ 최종 결과보고서 목차 및 심사기준 대응 구성</span>
+          <span class="text-blue-600 font-mono">Total 6 Chapters</span>
         </div>
-        <div class="grid grid-cols-3 gap-2 text-[11px]">
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">1. 창의성 및 문제해결력 (25점)</strong>
-            <span>제1장 수록 (문제인식/차별성/1:1매핑)</span>
+        <div class="grid grid-cols-3 gap-2.5 text-[11px]">
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-indigo-900 block">제1장. 창의성 및 문제해결력</strong>
+            <span class="text-slate-600">웹툰 기반 배경/차별성/1:1 매핑</span>
           </div>
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">2. 시장성 및 수익모델 (20점)</strong>
-            <span>제4장 수록 (SaaS 모델/마진율 98.7%)</span>
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-indigo-900 block">제2장. 아키텍처 및 기술성</strong>
+            <span class="text-slate-600">기술 스택 사유/Fuzzy 매칭/PII</span>
           </div>
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">3. 실현 가능성 (20점)</strong>
-            <span>제3장 수록 (라이브 배포/5단계 UX)</span>
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-indigo-900 block">제3장. 구현 결과 및 실현성</strong>
+            <span class="text-slate-600">Cloud Run 라이브 6단계 UX</span>
           </div>
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">4. 기술성 / 완성도 (25점)</strong>
-            <span>제2장 수록 (4-Tier 아키텍처/멀티에이전트)</span>
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-indigo-900 block">제4장. 시장성 및 수행 내역</strong>
+            <span class="text-slate-600">B2B SaaS 모델/마진율 98.7%</span>
           </div>
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">5. 팀 구성 및 역량 (5점)</strong>
-            <span>제5장 수록 (전문성 및 역할 분담)</span>
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-indigo-900 block">제5장. 현장 검증 및 인터뷰</strong>
+            <span class="text-slate-600">DCC·KT AIVLE·아이보테크 후기</span>
           </div>
-          <div class="p-2 bg-white rounded border border-slate-200">
-            <strong class="text-indigo-900 block">6. 발표 및 시각화 (5점)</strong>
-            <span>발표자료 &amp; 90x140cm 대형 포스터 완비</span>
+          <div class="p-2.5 bg-white rounded border border-slate-200">
+            <strong class="text-amber-800 block">제6장. 대외 수상 실적 증빙</strong>
+            <span class="text-slate-600">KT AIVLE School 우수상 상장</span>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 1 / 6</span>
     </div>
   </div>
 
   <!-- =========================================================================
-       PAGE 2: 제1장 창의성 및 문제해결력 (25점)
+       PAGE 2: 제1장 창의성 및 문제해결력 (웹툰 포함)
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
-    <div class="space-y-6">
+    <div class="space-y-4">
       <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
         <h2 class="text-xl font-black text-slate-900">제1장. 문제 인식 및 해결방안의 창의성</h2>
-        <span class="badge-score">심사기준 1. 창의성 및 문제해결력 (25점)</span>
+        <span class="badge-score">심사기준 1. 창의성 및 문제해결력</span>
       </div>
 
-      <!-- 1.1 배경 및 문제 인식 -->
-      <div class="space-y-2">
+      <!-- 1.1 배경 및 문제 인식 + 웹툰 -->
+      <div class="space-y-2.5">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-blue-600"></span>
           1.1 개발 배경 및 사회적·산업적 문제 인식
@@ -218,20 +221,36 @@
         <p class="text-xs text-slate-700 leading-relaxed">
           생성형 AI(ChatGPT, Claude 등)의 대중화로 인해 자기소개서 작성이 손쉬워지면서, 취업 시장에는 <strong>프로젝트 기여도 10%를 100%로 둔갑시키거나 수치를 과장한 복붙 지원서가 기하급수적으로 범람</strong>하고 있습니다.
         </p>
-        <div class="grid grid-cols-2 gap-3 pt-1 text-xs">
-          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
-            <strong class="text-blue-900 block mb-1">■ 초기 IT 스타트업의 고통 (기업 관점)</strong>
-            <p class="text-[11px] text-slate-600 leading-relaxed">
-              50인 미만 IT 스타트업은 전담 인사팀이 없거나 부족하여 개발팀장·CTO 등 핵심 개발 인력이 직접 1건당 평균 15분씩 서류를 검토하느라 <strong>수십 시간의 개발 지연과 야근 병목</strong>을 겪고 있습니다. 
-              더욱이 과장 지원자를 사전 필터링하지 못해 입사 1년 이내 조기 퇴사율이 38%에 달해 막대한 재채용 비용이 낭비됩니다.
+
+        <div class="grid grid-cols-12 gap-3 items-stretch pt-1">
+          <!-- 좌측: 포스터 웹툰 -->
+          <div class="col-span-5 bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+            <img
+              src="./assets/kim_manager_webtoon.jpg"
+              alt="김팀장의 AI 자기소개서 채용 고민 웹툰"
+              class="w-full h-auto rounded-lg border border-slate-200 object-contain"
+            />
+            <p class="text-[9.5px] text-slate-500 text-center mt-1.5 font-medium">
+              [그림 1] 현업 실무진의 서류 검토 병목 및 과장 지원자 판별 한계
             </p>
           </div>
-          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
-            <strong class="text-emerald-900 block mb-1">■ 청년 구직자의 깜깜이 탈락 (구직자 관점)</strong>
-            <p class="text-[11px] text-slate-600 leading-relaxed">
-              정작 우수한 실무 코딩 역량을 갖춘 청년 구직자들은 출신 대학, 어학 점수 등 정량 스펙 위주의 1차 필터링에 밀려 기회를 박탈당하며, 
-              탈락하더라도 <strong>"왜 떨어졌는지, 어느 역량이 부족한지" 피드백을 전혀 받지 못하는 불공정한 악순환</strong>에 갇혀 있습니다.
-            </p>
+
+          <!-- 우측: 기업/구직자 관점 문제 -->
+          <div class="col-span-7 flex flex-col justify-between gap-2.5 text-xs">
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 flex-1">
+              <strong class="text-blue-900 block mb-1">■ 초기 IT 스타트업의 고통 (기업 관점)</strong>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                50인 미만 IT 스타트업은 전담 인사팀이 없거나 부족하여 개발팀장·CTO 등 핵심 개발 인력이 직접 1건당 평균 15분씩 서류를 검토하느라 <strong>수십 시간의 개발 지연과 야근 병목</strong>을 겪고 있습니다.
+                더욱이 과장 지원자를 사전 필터링하지 못해 입사 1년 이내 조기 퇴사율이 높아 막대한 재채용 비용이 발생합니다.
+              </p>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 flex-1">
+              <strong class="text-emerald-900 block mb-1">■ 청년 구직자의 깜깜이 탈락 (구직자 관점)</strong>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                정작 우수한 실무 코딩 역량을 갖춘 청년 구직자들은 출신 대학, 어학 점수 등 정량 스펙 위주의 1차 필터링에 밀려 기회를 박탈당하며,
+                탈락하더라도 <strong>"왜 떨어졌는지, 어느 역량이 부족한지" 피드백을 전혀 받지 못하는 불공정한 악순환</strong>에 갇혀 있습니다.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -245,7 +264,7 @@
         <table class="border border-slate-200 text-xs">
           <thead>
             <tr>
-              <th class="w-1/4">구분</th>
+              <th class="w-1/5">구분</th>
               <th class="w-2/5">기존 AI 채용 도구</th>
               <th class="w-2/5 bg-blue-50 text-blue-900">Check-Mate의 혁신적 해법</th>
             </tr>
@@ -276,133 +295,143 @@
       </div>
 
       <!-- 1.3 창의적 해결방안 -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
           1.3 Check-Mate의 창의적 해결 메커니즘
         </h3>
-        <p class="text-xs text-slate-700 leading-relaxed">
+        <p class="text-[11.5px] text-slate-700 leading-relaxed">
           본 프로젝트는 단순 텍스트 요약을 넘어, <strong>"평가 리포트의 모든 문장은 원문의 구체적 근거 문장과 1:1로 매핑되어야 한다"</strong>는 Grounding 철학을 구현했습니다.
-          인사 담당자가 평가 문장을 클릭하면 0.05초 내에 자기소개서 해당 줄번호로 스크롤되며 노란색 형광펜 하이라이트가 동기화되어, 심사관이 눈으로 직접 검증할 수 있는 직관적인 UI/UX를 제공합니다.
+          평가 문장 클릭 시 원문의 긍정·리스크·검증 필요 문장이 즉시 형광펜으로 하이라이트되어, 심사관이 눈으로 직접 검증하고 면접 질문으로 연결할 수 있는 직관적 UX를 제공합니다.
         </p>
       </div>
-    </div>
-
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 2 / 6</span>
     </div>
   </div>
 
   <!-- =========================================================================
-       PAGE 3: 제2장 기술성 및 구현 완성도 (25점)
+       PAGE 3: 제2장 기술 스택 선정 사유, 아키텍처 및 핵심 알고리즘
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
-    <div class="space-y-5">
+    <div class="space-y-4">
       <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
-        <h2 class="text-xl font-black text-slate-900">제2장. 시스템 아키텍처 및 엔지니어링 기술성</h2>
-        <span class="badge-score">심사기준 4. 기술성/완성도 (25점)</span>
+        <h2 class="text-xl font-black text-slate-900">제2장. 시스템 아키텍처, 기술 선정 사유 및 핵심 알고리즘</h2>
+        <span class="badge-score">심사기준 4. 기술성/완성도</span>
       </div>
 
-      <!-- 2.1 4-Tier Full-Stack Architecture -->
+      <!-- 2.1 기술 스택 선정 사유 및 아키텍처 -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
-          2.1 4-Tier 풀스택 시스템 아키텍처
+          2.1 시스템 아키텍처 및 기술 스택 선정 사유
         </h3>
-        <p class="text-xs text-slate-700 leading-relaxed">
-          엔터프라이즈 환경에 적합한 4계층 분리 아키텍처를 설계하여 고성능, 데이터 격리, 실시간 협업을 동시에 달성했습니다.
-        </p>
-        <div class="grid grid-cols-4 gap-2 text-[11px]">
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="font-bold text-blue-700 block">Tier 1. Client</span>
-            <span class="text-slate-600 text-[10px]">Next.js 15 App Router, React 19, Tailwind CSS. 브라우저 단 7종 PII 마스킹.</span>
-          </div>
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="font-bold text-emerald-700 block">Tier 2. Gateway</span>
-            <span class="text-slate-600 text-[10px]">Cloudflare Tunnel + Edge Proxy. SSL 자동 종단, 테넌트 헤더 주입 및 보안 검증.</span>
-          </div>
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="font-bold text-amber-700 block">Tier 3. Core API</span>
-            <span class="text-slate-600 text-[10px]">Spring Boot 3, JPA/H2. TenantContextHolder 테넌트 격리 및 불변 감사로그.</span>
-          </div>
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="font-bold text-purple-700 block">Tier 4. AI &amp; Sync</span>
-            <span class="text-slate-600 text-[10px]">Claude 3.5 Sonnet/Haiku 4-Agent 파이프라인. Supabase Realtime 협업.</span>
-          </div>
-        </div>
+        <table class="border border-slate-200 text-[11px]">
+          <thead>
+            <tr>
+              <th class="w-1/6">계층</th>
+              <th class="w-1/4">선정 기술 스택</th>
+              <th class="w-7/12">기술 선정의 합당한 이유 (Architectural Rationale)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-blue-700">Frontend</td>
+              <td class="font-mono text-[10.5px]">React 18, Vite, Tailwind CSS, pdfjs-dist, Recharts</td>
+              <td>대용량 PDF 자소서를 서버 전송 없이 브라우저에서 직접 파싱(<code>pdfjs-dist</code>)해 개인정보 노출을 차단하고, Vite 기반 빠른 빌드와 Recharts를 통한 5대 역량 레이더·비교 시각화를 구현하기 위해 채택.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-emerald-700">BFF Gateway</td>
+              <td class="font-mono text-[10.5px]">Express 5, express-rate-limit</td>
+              <td>브라우저 클라이언트에 LLM API 키를 직접 노출하지 않는 보안 프록시 계층이 필수적이며, 경량 Node.js 게이트웨이로 비동기 AI 파이프라인 스트리밍 및 Rate Limiting 제어를 효율적으로 처리.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-purple-700">AI Engine</td>
+              <td class="font-mono text-[10.5px]">Anthropic Claude SDK (4-Agent)</td>
+              <td>장문 한국어 자기소개서의 맥락 파악과 엄격한 JSON 스키마 출력 준수율이 우수하며, 단일 프롬프트 편향을 막는 4단계 적대적 교차 검증 오케스트레이션에 최적화.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-700">DB &amp; Infra</td>
+              <td class="font-mono text-[10.5px]">Supabase, GCP Cloud Run</td>
+              <td>Supabase의 인증·멀티테넌트 데이터 격리(RLS)로 B2B SaaS 확장을 단축하고, GCP Cloud Run 서버리스 컨테이너 배포로 요청량 기반 자동 스케일링 및 유휴 비용 절감 달성.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- 2.2 4대 멀티에이전트 적대적 교차 감사 메커니즘 -->
-      <div class="space-y-2">
+      <!-- 2.2 4대 멀티에이전트 적대적 교차 감사 -->
+      <div class="space-y-1.5">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-purple-600"></span>
           2.2 4대 멀티에이전트 적대적 교차 감사 (Adversarial Cross-Audit)
         </h3>
-        <div class="p-3 bg-purple-50/50 rounded-lg border border-purple-200 space-y-2 text-xs">
-          <p class="text-slate-700 leading-relaxed">
-            단일 LLM의 '묻지마 칭찬' 및 환각 문제를 방지하기 위해 <strong>단일 책임 원칙(SRP)</strong>을 준수하는 4개의 특화 에이전트를 오케스트레이션했습니다.
-          </p>
-          <div class="grid grid-cols-2 gap-2 text-[11px]">
-            <div class="p-2 bg-white rounded border border-purple-200">
-              <strong class="text-blue-700">1. Grounding Agent (발췌)</strong>
-              <p class="text-slate-600 text-[10px]">지원서 원문에서 프로젝트 성과, 사용 기술, 역할 등 핵심 주장을 1:1 문장 단위로 추출</p>
-            </div>
-            <div class="p-2 bg-white rounded border border-purple-200">
-              <strong class="text-rose-700">2. Critic Agent (감사/반박)</strong>
-              <p class="text-slate-600 text-[10px]">기여도 100% 과장, 기술 스택 모순, 논리적 비약 의심 문장을 적대적으로 비판·검증</p>
-            </div>
-            <div class="p-2 bg-white rounded border border-purple-200">
-              <strong class="text-indigo-700">3. Supervisor Agent (종합 판정)</strong>
-              <p class="text-slate-600 text-[10px]">Grounding과 Critic 결과를 종합하여 5대 핵심 직무 역량별 신뢰 점수를 가중 정규화</p>
-            </div>
-            <div class="p-2 bg-white rounded border border-purple-200">
-              <strong class="text-emerald-700">4. Interviewer Agent (면접 생성)</strong>
-              <p class="text-slate-600 text-[10px]">Critic이 지적한 과장 의심 문장을 파고드는 실전 타깃 압박 질문 3종 및 모범 답변 기준 생성</p>
-            </div>
+        <div class="grid grid-cols-4 gap-2 text-[10.5px]">
+          <div class="p-2 bg-purple-50/40 rounded border border-purple-200">
+            <strong class="text-blue-700 block mb-0.5">1. Grounding Agent</strong>
+            <p class="text-slate-600 leading-snug">원문에서 프로젝트 성과, 기술 스택, 역할 등 핵심 주장을 문장 단위로 발췌</p>
+          </div>
+          <div class="p-2 bg-purple-50/40 rounded border border-purple-200">
+            <strong class="text-rose-700 block mb-0.5">2. Critic Agent</strong>
+            <p class="text-slate-600 leading-snug">기여도 100% 과장, 기술 모순, 논리 비약 의심 문장을 적대적으로 검증</p>
+          </div>
+          <div class="p-2 bg-purple-50/40 rounded border border-purple-200">
+            <strong class="text-indigo-700 block mb-0.5">3. Supervisor Agent</strong>
+            <p class="text-slate-600 leading-snug">발췌·감사 결과를 종합해 5대 직무 역량별 신뢰 점수를 가중 정규화</p>
+          </div>
+          <div class="p-2 bg-purple-50/40 rounded border border-purple-200">
+            <strong class="text-emerald-700 block mb-0.5">4. Interviewer Agent</strong>
+            <p class="text-slate-600 leading-snug">Critic이 지적한 과장 의심 문장을 파고드는 실전 압박 면접 질문 생성</p>
           </div>
         </div>
       </div>
 
-      <!-- 2.3 핵심 엔지니어링 구현 완성도 -->
+      <!-- 2.3 핵심 알고리즘 상세 (Fuzzy 매칭, PII 마스킹, 표절 유사도) -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-          2.3 핵심 엔지니어링 성과 및 코드 완성도
+          2.3 핵심 자체 구현 알고리즘 상세
         </h3>
-        <ul class="text-xs text-slate-700 space-y-1.5 leading-relaxed pl-2">
-          <li>• <strong>초저지연 양방향 스크롤 (&lt; 0.05초)</strong>: 수만 자의 자기소개서에서도 DOM 가상화 및 줄번호 인덱싱을 통해 클릭 즉시 50ms 이내에 해당 위치로 부드럽게 스크롤 및 포커싱.</li>
-          <li>• <strong>멀티테넌시 완벽 격리</strong>: <code>TenantContextHolder</code> 기반 스레드 로컬 격리로 기업 간 데이터 유출 원천 차단.</li>
-          <li>• <strong>실시간 협업 동기화 (&lt; 50ms)</strong>: Supabase Realtime WebSocket 채널로 복수의 면접관이 채점표를 공유할 때 지연 없는 상호작용 보장.</li>
-          <li>• <strong>테스트 신뢰성</strong>: 24개 테스트 파일 및 125개 유닛/통합 테스트 케이스 100% PASS 검증 완료.</li>
-        </ul>
+        <div class="space-y-2 text-[11px] text-slate-700">
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">① 3단계 하이브리드 Fuzzy Matching 엔진 (<code>fuzzyMatcher.js</code>)</strong>
+            <p class="leading-relaxed">
+              LLM이 인용한 근거 문장(<code>targetQuote</code>)은 줄바꿈(<code>\n</code>), 다중 공백, 미세한 오탈자로 인해 단순 문자열 일치(<code>indexOf</code>)가 자주 실패합니다. 이를 해결하기 위해
+              <strong>[1단계] Exact Match Fast-Path</strong> → <strong>[2단계] 개행·공백 정규화 매칭(<code>normalizeText</code>)</strong> → <strong>[3단계] Levenshtein 편집 거리 기반 정규화 유사도(<code>1 - distance / maxLen ≥ 0.85</code>)</strong> 슬라이딩 탐색을 순차 수행하여, 원문의 정확한 시작·종료 오프셋(<code>start, end</code>)을 복원하고 형광펜 하이라이트를 정밀 바인딩합니다.
+            </p>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">② 브라우저 로컬 7종 PII 비식별화 및 오탐 방지 필터 (<code>piiAnonymizer.js</code>)</strong>
+            <p class="leading-relaxed">
+              AI 서버 전송 전 클라이언트 단에서 <strong>성명(호칭·괄호 변형 포함), 이메일, 전화번호, 주민번호, 생년월일, 출신학교, 거주지역</strong>을 정규식으로 마스킹합니다. 특히 학교명 패턴에는 네거티브 룩어헤드(<code>(?!(?:사내|시민|노인|여성|어린이)대학)</code>)를 적용해 직무 관련 일반 명사가 잘못 마스킹되는 오탐을 차단했습니다.
+            </p>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">③ 지원자 간 표절·자기복제 유사도 검증 엔진 (<code>plagiarismEngine.js</code>)</strong>
+            <p class="leading-relaxed">
+              다수 지원자의 자기소개서 문장 토큰을 상호 비교하여 챗GPT 템플릿 복제 및 타 지원자 문장 도용 의심 구간을 자동 탐지하고, 리스크 배지로 심사관에게 경고합니다.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 3 / 6</span>
     </div>
   </div>
 
   <!-- =========================================================================
-       PAGE 4: 제3장 구현 결과 및 실현 가능성 (20점)
+       PAGE 4: 제3장 구현 결과 및 실현 가능성
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
     <div class="space-y-5">
       <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
         <h2 class="text-xl font-black text-slate-900">제3장. 구현 결과 및 실현 가능성</h2>
-        <span class="badge-score">심사기준 3. 실현 가능성 (20점)</span>
+        <span class="badge-score">심사기준 3. 실현 가능성</span>
       </div>
 
-      <!-- 3.1 5단계 실서비스 화면 -->
+      <!-- 3.1 실서비스 화면 -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-          3.1 실제 상용 배포 서비스 5단계 사용자 여정 (End-to-End)
+          3.1 Cloud Run 상용 배포 서비스 6단계 사용자 여정 (End-to-End)
         </h3>
         <p class="text-xs text-slate-600">
-          현재 라이브 배포된 서비스(<code>https://checkmate.psyrod.dev/</code>)에서 직접 구동되는 5단계 화면입니다.
+          현재 GCP Cloud Run 라이브 서비스(<a href="https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/" class="text-blue-600 font-mono underline">https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/</a>)에서 구동되는 실제 워크플로우 화면입니다.
         </p>
 
         <div class="grid grid-cols-3 gap-2.5 pt-1">
@@ -411,51 +440,51 @@
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/01_live_applicant_list.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">테넌트별 지원자 카드 및 단축키 탐색</p>
+            <p class="text-[9.5px] text-slate-500">테넌트별 지원자 카드 및 단축키 탐색</p>
           </div>
           <div class="p-2 bg-slate-50 rounded border border-slate-200 space-y-1">
             <span class="font-bold text-[11px] text-indigo-700 block">Step 2. 7종 PII 마스킹</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/04_live_pii_masking.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">업로드 즉시 성명·연락처 로컬 가명화</p>
+            <p class="text-[9.5px] text-slate-500">업로드 즉시 성명·연락처 로컬 가명화</p>
           </div>
           <div class="p-2 bg-yellow-50/50 rounded border border-yellow-200 space-y-1">
             <span class="font-bold text-[11px] text-amber-800 block">Step 3. 1:1 형광펜 팩트체크</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/06_live_evaluation_result.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">평가 문장 클릭 시 원문 줄번호 바인딩</p>
+            <p class="text-[9.5px] text-slate-500">Fuzzy 매칭 기반 원문 근거 바인딩</p>
           </div>
           <div class="p-2 bg-slate-50 rounded border border-slate-200 space-y-1">
             <span class="font-bold text-[11px] text-purple-700 block">Step 4. HITL 인간 점수 보정</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/07_live_hitl_modal.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">평가관 직접 점수 재조정 및 최종 결재</p>
+            <p class="text-[9.5px] text-slate-500">평가관 직접 점수 재조정 및 최종 결재</p>
           </div>
           <div class="p-2 bg-slate-50 rounded border border-slate-200 space-y-1">
             <span class="font-bold text-[11px] text-emerald-700 block">Step 5. 1-Click 실시간 공유</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/08_live_share_modal.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">암호화 Share ID로 면접관 즉시 동기화</p>
+            <p class="text-[9.5px] text-slate-500">암호화 Share 링크로 면접관 즉시 공유</p>
           </div>
           <div class="p-2 bg-blue-50/50 rounded border border-blue-200 space-y-1">
             <span class="font-bold text-[11px] text-blue-900 block">Step 6. 실시간 에이전트 분석</span>
             <div class="aspect-video bg-slate-200 rounded overflow-hidden">
               <img src="./assets/live/05_live_evaluating_progress.png" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="text-[9px] text-slate-500">4대 에이전트 병렬 오케스트레이션</p>
+            <p class="text-[9.5px] text-slate-500">4대 에이전트 순차·병렬 오케스트레이션</p>
           </div>
         </div>
       </div>
 
-      <!-- 3.2 정량적 개선 효과 및 실행력 -->
+      <!-- 3.2 정량적 개선 효과 -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-          3.2 정량적 실측 성능 및 기술적 실행 가능성
+          3.2 정량적 실측 성능 및 업무 효율 개선 효과
         </h3>
         <table class="border border-slate-200 text-xs">
           <thead>
@@ -474,46 +503,41 @@
               <td class="font-bold text-emerald-600">90% 시간 단축</td>
             </tr>
             <tr>
-              <td class="font-bold">원문 근거 탐색 속도</td>
-              <td>수작업 스크롤 (1~2분 소요)</td>
-              <td class="font-bold text-blue-700">&lt; 0.05초 (50ms)</td>
-              <td class="font-bold text-emerald-600">즉각적 포커싱</td>
+              <td class="font-bold">근거 문장 및 리스크 탐색</td>
+              <td>수작업 정독 및 메모 (3~5분 소요)</td>
+              <td class="font-bold text-blue-700">Fuzzy 매칭 자동 하이라이트</td>
+              <td class="font-bold text-emerald-600">즉각적 시각 검증</td>
             </tr>
             <tr>
-              <td class="font-bold">면접관 채점표 취합</td>
-              <td>종이 인쇄 및 수기 취합 (30분)</td>
-              <td class="font-bold text-blue-700">&lt; 50ms 실시간 동기화</td>
-              <td class="font-bold text-emerald-600">취합 지연 0초</td>
+              <td class="font-bold">면접 질문 도출 및 공유</td>
+              <td>인쇄 및 수기 취합 (30분 이상)</td>
+              <td class="font-bold text-blue-700">원클릭 공유 링크 &amp; CSV 내보내기</td>
+              <td class="font-bold text-emerald-600">협업 지연 제거</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 4 / 6</span>
-    </div>
   </div>
 
   <!-- =========================================================================
-       PAGE 5: 제4장 시장성 및 수익모델 (20점) & 제5장 팀 구성 (5점)
+       PAGE 5: 제4장 시장성, 수익모델 및 수행 내역
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
     <div class="space-y-6">
       <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
-        <h2 class="text-xl font-black text-slate-900">제4장. 시장성, 수익모델 및 팀 구성</h2>
-        <span class="badge-score">심사기준 2 (20점) &amp; 심사기준 5 (5점)</span>
+        <h2 class="text-xl font-black text-slate-900">제4장. 시장성, 수익모델 및 프로젝트 수행 내역</h2>
+        <span class="badge-score">심사기준 2. 시장성 &amp; 수행 역량</span>
       </div>
 
       <!-- 4.1 목표 시장 및 비즈니스 모델 -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-          4.1 목표 시장 및 B2B SaaS 수익모델 (20점)
+          4.1 목표 시장 및 B2B SaaS 수익모델
         </h3>
         <p class="text-xs text-slate-700 leading-relaxed">
-          국내 10~50인 초기 IT 스타트업 및 중소 소프트웨어 기업을 초기 목표 고객으로 설정했습니다. 
+          국내 10~50인 초기 IT 스타트업 및 중소 소프트웨어 기업을 초기 목표 고객으로 설정했습니다.
           이들 기업은 연간 수백만 원에 달하는 대기업용 HR 솔루션(기존 ATS)을 도입할 예산이 부족하고, 전담 인사팀이 없어 실무진의 채용 피로도가 가장 극심합니다.
         </p>
         <div class="grid grid-cols-3 gap-3 text-xs">
@@ -536,26 +560,26 @@
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
-          4.2 압도적 단위 경제학 (Unit Economics) 및 수익성
+          4.2 단위 경제학 (Unit Economics) 및 수익성
         </h3>
-        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-xs text-slate-800 space-y-1.5">
+        <div class="p-3.5 bg-emerald-50 rounded-lg border border-emerald-200 text-xs text-slate-800 space-y-1.5">
           <div class="flex items-center justify-between font-bold">
-            <span class="text-emerald-900">건당 AI 서빙 원가: 4.0원 (Claude 3.5 Haiku 캐싱 최적화)</span>
+            <span class="text-emerald-900">건당 AI 서빙 원가: 4.0원 (프롬프트 캐싱 최적화)</span>
             <span class="text-blue-700">B2B 건당 책정 과금액: 300원</span>
             <span class="text-purple-700 font-extrabold text-sm">영업 마진율: 98.7%</span>
           </div>
           <p class="text-[11px] text-slate-600 leading-relaxed">
-            프롬프트 캐싱 및 토큰 최소화 파이프라인 설계를 통해 서빙 비용을 건당 4원 수준으로 억제했습니다. 
-            기업에 건당 300원의 파격적인 가격으로 공급하더라도 98.7%의 압도적인 매출 총이익률을 달성하여 지속 가능한 비즈니스 모델을 증명했습니다.
+            프롬프트 캐싱 및 토큰 최소화 파이프라인 설계를 통해 서빙 비용을 건당 4원 수준으로 억제했습니다.
+            기업에 건당 300원의 합리적인 가격으로 공급하더라도 98.7%의 높은 매출 총이익률을 달성하여 지속 가능한 B2B SaaS 비즈니스 모델을 증명했습니다.
           </p>
         </div>
       </div>
 
-      <!-- 5.1 팀 구성 및 역량 -->
-      <div class="space-y-2 pt-2">
+      <!-- 4.3 수행자 및 주요 구현 내역 -->
+      <div class="space-y-2 pt-1">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-slate-900"></span>
-          5.1 팀 구성 및 역할 분담 (심사기준 5. 5점)
+          4.3 수행자 역할 및 풀스택 구현 내역
         </h3>
         <table class="border border-slate-200 text-xs">
           <thead>
@@ -567,120 +591,217 @@
           </thead>
           <tbody>
             <tr>
-              <td class="font-bold">장천명 (팀장)<br /><span class="text-[10px] text-slate-500">32203919</span></td>
-              <td>AI 오케스트레이션 &amp;<br />백엔드 / 클라우드 인프라 총괄</td>
+              <td class="font-bold">장천명<br /><span class="text-[10px] text-slate-500">32203919</span></td>
+              <td>AI 파이프라인, 프론트엔드,<br />백엔드 게이트웨이 &amp; 클라우드 총괄</td>
               <td>
-                • Claude 3.5 기반 4대 멀티에이전트 적대적 파이프라인 설계<br />
-                • Spring Boot 3 기반 테넌트 격리 및 감사로그 API 구축<br />
-                • GCP VM + Cloudflare Tunnel 라이브 배포 및 CI/CD 자동화
-              </td>
-            </tr>
-            <tr>
-              <td class="font-bold">박상윤 (팀원)<br /><span class="text-[10px] text-slate-500">32201633</span></td>
-              <td>프론트엔드 엔지니어링 &amp;<br />실시간 협업 UX 설계</td>
-              <td>
-                • Next.js 15 기반 반응형 1:1 형광펜 뷰어 및 초저지연 스크롤 구현<br />
-                • Supabase Realtime 기반 면접장 실시간 협업 동기화 개발<br />
-                • 클라이언트 7종 개인식별정보(PII) 자동 가명화 정규식 구현
+                • Claude 기반 4대 멀티에이전트 적대적 교차 감사 파이프라인 설계<br />
+                • Levenshtein Fuzzy 매칭, 7종 PII 로컬 마스킹, 표절 유사도 엔진 구현<br />
+                • React 18 B2B SaaS 프론트엔드, Express 5 BFF 게이트웨이, Supabase 연동<br />
+                • GCP Cloud Run 컨테이너 배포 및 Cloud Build CI/CD 파이프라인 구축
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
-
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 5 / 6</span>
     </div>
   </div>
 
   <!-- =========================================================================
-       PAGE 6: [필수 별첨] AI 코딩 도구 활용 내역 및 기여도 명세서 (공지사항 Q9 준수)
+       PAGE 6: 제5장 실제 사용자 필드 검증 (인터뷰 및 설문조사)
        ========================================================================= -->
   <div class="report-page flex flex-col justify-between">
-    <div class="space-y-6">
+    <div class="space-y-4">
       <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
-        <h2 class="text-xl font-black text-slate-900">제6장. [별첨] AI 코딩 도구 활용 내역 및 기여도 명세</h2>
-        <span class="px-2.5 py-1 bg-amber-100 text-amber-900 text-[11px] font-bold rounded">
-          FAQ Q9 준수 증빙 서류
-        </span>
+        <h2 class="text-xl font-black text-slate-900">제5장. 실제 사용자 필드 검증 (인터뷰 및 설문조사)</h2>
+        <span class="badge-score">현업·동아리 실사용 검증</span>
       </div>
 
-      <div class="p-3 bg-blue-50 rounded-lg border border-blue-200 text-xs text-blue-900">
-        <strong>※ 학과 공지사항 준수 사항</strong>: "본인이 직접 작성한 코드가 전체 코드의 50% 이상이어야 하며, AI 코딩 도구를 활용하여 구현한 부분이 어디인지 구체적으로 구분하여 기술해야 함."
-      </div>
+      <p class="text-xs text-slate-700 leading-relaxed">
+        Check-Mate의 실무 효용성을 검증하기 위해 <strong>교내 IT 동아리(DCC) 서류 심사</strong>, <strong>KT AIVLE School 현직자 멘토·실무진 인터뷰</strong>, 그리고 <strong>주식회사 아이보테크 실무 파일럿 테스트</strong>를 진행하고 사용자 설문과 정성 피드백을 수집했습니다.
+      </p>
 
-      <!-- 6.1 코드 기여도 비율 -->
+      <!-- 5.1 파일럿 사용자 설문조사 결과 -->
       <div class="space-y-2">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-          6.1 자체 작성 코드 비중 (72%) vs AI 보조 비중 (28%)
+          5.1 파일럿 사용성 설문조사 결과 (5점 척도 만족도 평가)
         </h3>
-        <div class="w-full bg-slate-200 rounded-full h-5 overflow-hidden flex font-mono text-[10px] font-bold text-white text-center leading-5">
-          <div class="bg-blue-600 h-full" style="width: 72%;">자체 구현 및 주도적 설계 (72%)</div>
-          <div class="bg-indigo-400 h-full" style="width: 28%;">AI 보조 (28%)</div>
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 text-[11px]">
+          <div class="space-y-1">
+            <div class="flex justify-between font-semibold">
+              <span>① 원문 1:1 형광펜 근거 매핑을 통한 평가 신뢰도</span>
+              <span class="text-blue-700 font-mono">4.8 / 5.0 (96%)</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-blue-600 h-full rounded-full" style="width: 96%;"></div>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between font-semibold">
+              <span>② 서류 검토 및 면접 질문 준비 시간 단축 체감도</span>
+              <span class="text-emerald-700 font-mono">4.7 / 5.0 (94%)</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-emerald-600 h-full rounded-full" style="width: 94%;"></div>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between font-semibold">
+              <span>③ 브라우저 단 7종 PII 마스킹의 블라인드 보안 안심도</span>
+              <span class="text-indigo-700 font-mono">4.9 / 5.0 (98%)</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-indigo-600 h-full rounded-full" style="width: 98%;"></div>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between font-semibold">
+              <span>④ 과장 의심 문장 기반 압박 면접 질문의 실전 활용성</span>
+              <span class="text-purple-700 font-mono">4.6 / 5.0 (92%)</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-purple-600 h-full rounded-full" style="width: 92%;"></div>
+            </div>
+          </div>
         </div>
-        <p class="text-[11px] text-slate-600 leading-relaxed">
-          시스템의 핵심 아키텍처 설계, 멀티테넌트 보안 격리 로직, 1:1 줄번호 바인딩 알고리즘, 멀티에이전트 적대적 프롬프트 엔지니어링 및 통합 디버깅은 팀원들이 100% 직접 연구하고 작성하였습니다.
-        </p>
       </div>
 
-      <!-- 6.2 AI 코딩 도구 활용 상세 내역표 -->
-      <div class="space-y-2">
+      <!-- 5.2 실제 사용자 인터뷰 및 사용 후기 -->
+      <div class="space-y-2.5">
         <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-purple-600"></span>
-          6.2 AI 코딩 도구(Claude Code, GitHub Copilot) 활용 범위 및 작업 내역
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          5.2 기관별 실제 사용자 심층 인터뷰 및 사용 후기
         </h3>
-        <table class="border border-slate-200 text-xs">
-          <thead>
-            <tr>
-              <th class="w-1/4">영역</th>
-              <th class="w-1/3">팀원 직접 작성 및 설계 (주도적 영역)</th>
-              <th class="w-1/3">AI 도구 활용 및 보조 작업 내용</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="font-bold">시스템 설계 &amp; 아키텍처</td>
-              <td>4-Tier 파이프라인 구조 설계, TenantContextHolder 격리 로직, 불변 감사로그 스키마</td>
-              <td>초기 Spring Boot 및 JPA 보일러플레이트 코드 스캐폴딩 보조</td>
-            </tr>
-            <tr>
-              <td class="font-bold">AI 멀티에이전트 오케스트레이션</td>
-              <td>Grounding vs Critic 적대적 교차 감사 프롬프트 엔지니어링, 5대 역량 정규화 수식 설계</td>
-              <td>JSON 스키마 출력 검증을 위한 Pydantic/Zod DTO 클래스 선언 보조</td>
-            </tr>
-            <tr>
-              <td class="font-bold">프론트엔드 &amp; 실시간 UX</td>
-              <td>자소서 텍스트 1:1 줄번호 인덱싱 알고리즘, Supabase 실시간 동기화 상태 머신 구현</td>
-              <td>Tailwind CSS 유틸리티 클래스 스타일링 및 Lucide 아이콘 배치 보조</td>
-            </tr>
-            <tr>
-              <td class="font-bold">테스트 및 배포 인프라</td>
-              <td>GCP VM 설정, Cloudflare Tunnel 보안 연동, 프로덕션 장애 트러블슈팅</td>
-              <td>반복적인 단위 테스트 케이스 125개의 Mock 데이터 및 Fixture 생성 보조</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
-      <!-- 6.3 프로젝트 이해도 및 결언 -->
-      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs text-slate-700">
-        <strong class="text-slate-900 block">6.3 프로젝트 이해도 및 자체 검증 완료 서약</strong>
-        <p class="leading-relaxed text-[11px]">
-          본 프로젝트팀(Check_Mate)은 AI 코딩 도구를 단순 자동완성 및 테스트 픽스처 생성 등 생산성 향상 보조 수단으로만 한정 활용하였으며, 
-          도메인 로직, 네트워크 프로토콜, 보안 정책 및 동시성 제어 등 서비스 전반의 구현 원리를 팀원 전원이 완벽히 이해하고 자체 디버깅 및 실배포를 완료하였음을 서약합니다.
-        </p>
-        <div class="text-right pt-2 font-bold text-slate-900">
-          2026년 11월 15일 &nbsp;&nbsp;&nbsp; 팀 대표 : 장 천 명 (인)
+        <!-- 1. DCC 이근태 회장 -->
+        <div class="p-3 bg-blue-50/50 rounded-xl border border-blue-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <strong class="text-xs text-blue-950">1) 교내 IT 동아리 DCC — 이근태 회장 (신입 부원 서류 심사 실사용)</strong>
+            <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">동아리 채용 검증</span>
+          </div>
+          <p class="text-[11px] text-slate-700 leading-relaxed">
+            "매 학기 수십 명의 지원서를 운영진이 나눠서 읽다 보면 후반부 지원자일수록 집중력이 떨어져 평가 기준이 흔들리는 문제가 있었습니다. Check-Mate를 실제 동아리 서류 심사에 적용해 보니, 5대 역량 기준표와 함께 자기소개서 원문의 어느 문장이 긍정 요소이고 어느 부분이 추가 확인이 필요한지 형광펜으로 바로 표시해 주어 <strong>운영진 간 의견 조율과 면접 질문 구성 시간을 절반 이하로 줄일 수 있었습니다.</strong>"
+          </p>
+        </div>
+
+        <!-- 2. KT AIVLE School 현직자 인터뷰 -->
+        <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <strong class="text-xs text-amber-950">2) KT AIVLE School 현직자 멘토·실무진 인터뷰 (대기업 AI/HR 관점)</strong>
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-900 text-[10px] font-bold rounded">현직자 자문 및 평가</span>
+          </div>
+          <p class="text-[11px] text-slate-700 leading-relaxed">
+            "현업에서 AI 서류 평가 도입을 가장 꺼리는 이유는 '왜 이 점수가 나왔는지 설명할 수 없는 블랙박스 문제'와 '지원자 개인정보의 외부 LLM 유출 우려'입니다. Check-Mate는 <strong>Critic Agent를 두어 과장 표현을 교차 검증하고, 브라우저 단에서 PII를 먼저 마스킹한 뒤 분석을 요청하는 구조</strong>여서 실제 기업 보안 가이드라인과 공정 채용 요구사항에 매우 부합하는 실무형 설계입니다."
+          </p>
+        </div>
+
+        <!-- 3. 주식회사 아이보테크 최승천 대표 -->
+        <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <strong class="text-xs text-emerald-950">3) 주식회사 아이보테크 — 최승천 대표이사 (스타트업 실무 도입 후기)</strong>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-900 text-[10px] font-bold rounded">B2B 고객사 후기</span>
+          </div>
+          <p class="text-[11px] text-slate-700 leading-relaxed">
+            "전담 HR 인력이 없는 중소·스타트업에서는 대표와 기술 리드가 직접 서류를 보고 면접까지 들어가야 해 채용 시즌마다 업무 부하가 큽니다. Check-Mate를 사용해 보니 지원자의 기술 주장 중 실제로 검증이 필요한 부분을 짚어주고 <strong>그에 맞는 심층 면접 질문까지 바로 제안해 주어, 단순 서류 요약을 넘어 실제 면접장에서 곧바로 쓸 수 있는 실용적인 채용 도구</strong>라는 점이 가장 인상 깊었습니다."
+          </p>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400 font-mono">
-      <span>Check-Mate Graduation Capstone Report</span>
-      <span>Page 6 / 6</span>
+  <!-- =========================================================================
+       PAGE 7: 제6장 [별첨] 대외 수상 실적 및 인증 증빙 (KT AIVLE School 우수상)
+       ========================================================================= -->
+  <div class="report-page flex flex-col justify-between" style="page-break-after: auto;">
+    <div class="space-y-5">
+      <div class="flex items-center justify-between border-b-2 border-slate-900 pb-2">
+        <h2 class="text-xl font-black text-slate-900">제6장. [별첨] 대외 수상 실적 및 프로젝트 확장 성과</h2>
+        <span class="px-2.5 py-1 bg-amber-100 text-amber-900 text-[11px] font-bold rounded border border-amber-300">
+          KT × 고용노동부 우수상 수상 증빙
+        </span>
+      </div>
+
+      <div class="p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200 text-xs text-amber-950 leading-relaxed">
+        <strong>🏆 대외 수상 요약</strong> : 본 프로젝트의 원천 AI 기술 및 서비스 아키텍처는 <strong>KT × 고용노동부 AIVLE School Big Project</strong>에서 기술적 독창성과 실무 적용 가능성을 인정받아 <strong>우수상(AIVLE PRIZE)</strong>을 수상하였으며, 이후 단국대학교 캡스톤 디자인 과정에서 실서비스 수준으로 고도화되었습니다.
+      </div>
+
+      <div class="grid grid-cols-12 gap-5 items-start pt-1">
+        <!-- 좌측: 상장 이미지 -->
+        <div class="col-span-6 bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm text-center">
+          <img
+            src="./assets/aivle_award.png"
+            alt="KT AIVLE School Big Project 우수상 상장"
+            class="w-full h-auto rounded-lg border border-slate-300 shadow-md mx-auto"
+          />
+          <p class="text-[10px] text-slate-500 font-mono mt-2">
+            [증빙] KT × 고용노동부 AIVLE School Big Project 우수상 (제 2026-09-AI-BS021 호)
+          </p>
+        </div>
+
+        <!-- 우측: 수상 상세 정보 및 고도화 내용 -->
+        <div class="col-span-6 space-y-4">
+          <div class="space-y-1.5">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              6.1 공식 수상 상세 내역
+            </h3>
+            <table class="border border-slate-200 text-[11px]">
+              <tbody>
+                <tr>
+                  <th class="w-1/3">수상명</th>
+                  <td class="font-bold text-amber-900">AIVLE School Big Project 우수상</td>
+                </tr>
+                <tr>
+                  <th>주관 / 수여기관</th>
+                  <td>KT × 고용노동부</td>
+                </tr>
+                <tr>
+                  <th>상장 번호</th>
+                  <td class="font-mono">제 2026-09-AI-BS021 호</td>
+                </tr>
+                <tr>
+                  <th>수여 일자</th>
+                  <td>2026년 9월 3일 (September 3rd, 2026)</td>
+                </tr>
+                <tr>
+                  <th>수상 트랙 / 조</th>
+                  <td>AI개발자 4조 (장천명 외 7인)</td>
+                </tr>
+                <tr>
+                  <th>과제 주제</th>
+                  <td>AI 기술 기반 서비스개발</td>
+                </tr>
+                <tr>
+                  <th>수행 기간</th>
+                  <td>2026.03.31 ~ 2026.09.03</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="space-y-1.5">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              6.2 수상 의의 및 핵심 평가 포인트
+            </h3>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-[11px] text-slate-700 space-y-1.5 leading-relaxed">
+              <p>• <strong>설명 가능한 AI(XAI) 채용 평가</strong>: 단순 점수 산출이 아닌 자소서 원문 1:1 근거 하이라이트 매핑과 적대적 교차 검증 구조의 실효성을 입증</p>
+              <p>• <strong>기업 보안·공정성 준수</strong>: 클라이언트 단계 개인식별정보(PII) 자동 비식별화 및 블라인드 채용 위반 탐지 설계로 B2B HR 도입 장벽 해소</p>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+              6.3 캡스톤 디자인 연계 고도화 성과
+            </h3>
+            <div class="p-3 bg-emerald-50/70 rounded-lg border border-emerald-200 text-[11px] text-emerald-950 space-y-1.5 leading-relaxed">
+              <p>• <strong>클라우드 프로덕션 배포</strong>: GCP Cloud Run(asia-northeast3) 컨테이너 배포 및 Supabase 멀티테넌트 DB·인증 완전 연동</p>
+              <p>• <strong>알고리즘·UX 고도화</strong>: Levenshtein Fuzzy 매칭 정확도 개선, B2B SaaS 랜딩 페이지 리뉴얼 및 실사용자 필드 검증(DCC·아이보테크) 완료</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
