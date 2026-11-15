@@ -16,15 +16,15 @@
 ## 🎓 2026 캡스톤 페스티벌 & 졸업작품전시회 제출 산출물
 
 > **단국대학교 소프트웨어학과 / 2026 캡스톤 페스티벌 및 졸업작품전시회**  
-> • **팀명**: Check_Mate (컴퓨터공학과 장천명 팀장, 박상윤)  
+> • **팀명**: Check_Mate (컴퓨터공학과 장천명)  
 > • **작품명**: Check-Mate (IT 스타트업과 청년 구직자를 위한 1:1 팩트체크 AI 채용 코파일럿)  
-> • **라이브 서비스**: [https://checkmate.psyrod.dev/](https://checkmate.psyrod.dev/)
+> • **라이브 서비스**: [https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/](https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/)
 
 | 제출 산출물 구분 | 파일 및 링크 | 주요 특징 및 규격 |
 | :--- | :--- | :--- |
 | **졸업작품 포스터 (PDF)** | [`poster_90x140.pdf`](poster_90x140.pdf) | **90 × 140cm 규격 인쇄용 벡터 PDF** (심사기준 100점 완벽 매핑) |
 | **졸업작품 포스터 (Image)** | [`poster_90x140.png`](poster_90x140.png) | **2700 × 4200px 초고해상도 이미지** |
-| **프로젝트 결과보고서 (PDF)** | [`FINAL_GRADUATION_REPORT.pdf`](FINAL_GRADUATION_REPORT.pdf) | **총 6페이지 학술/기술 보고서** (심사기준 100점 & AI 도구 활용 명세 수록) |
+| **프로젝트 결과보고서 (PDF)** | [`FINAL_GRADUATION_REPORT.pdf`](FINAL_GRADUATION_REPORT.pdf) | **총 7페이지 최종 결과보고서** (기술 선정 사유, 현장 인터뷰 & KT AIVLE 우수상 증빙 수록) |
 | **우수작품 발표자료 (PDF)** | [`presentation.pdf`](presentation.pdf) | **IR/전시용 공식 슬라이드 PDF** (시스템 아키텍처 및 라이브 스크린샷) |
 | **웹 인터랙티브 발표자료** | [`presentation.html`](presentation.html) | 반응형 웹 프레젠테이션 뷰어 |
 
@@ -32,8 +32,7 @@
 
 ## 🌐 프로덕션 서비스 링크
 
-- 🚀 **프론트엔드 웹 앱**: [https://checkmate.psyrod.dev/](https://checkmate.psyrod.dev/) (Cloudflare Tunnel + GCP VM)
-- ⚙️ **B2B API 게이트웨이**: [https://checkmate.psyrod.dev/gw/health](https://checkmate.psyrod.dev/gw/health)
+- 🚀 **프론트엔드 웹 앱**: [https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/](https://hr-evaluator-frontend-pt3ki5ggua-du.a.run.app/) (GCP Cloud Run `asia-northeast3`)
 - 🗄️ **Supabase Cloud DB**: `https://armqdmxzhnimjpnvoqin.supabase.co` (PostgreSQL RLS Active)
 
 ---
