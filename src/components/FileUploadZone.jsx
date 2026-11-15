@@ -7,6 +7,7 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
   const [parsedFiles, setParsedFiles] = useState([]);
   const [activeFileIndex, setActiveFileIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [failedFiles, setFailedFiles] = useState([]); // [{ filename, message }]
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -39,8 +40,11 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
 
   const processFiles = async (files) => {
     setIsLoading(true);
+    setFailedFiles([]);
     try {
-      const results = await parseCandidateFilesBatch(files);
+      const failures = [];
+      const results = await parseCandidateFilesBatch(files, failures);
+      setFailedFiles(failures);
       if (results.length > 0) {
         setParsedFiles(prev => [...results, ...prev]);
         // Auto select first file
@@ -86,7 +90,7 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
       <input
         ref={fileInputRef}
         type="file"
-        accept=".txt,.pdf,.docx,.doc"
+        accept=".txt,.pdf,.docx"
         multiple
         onChange={handleFileSelect}
         className="hidden"
@@ -116,6 +120,18 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
           </p>
         </div>
       </div>
+
+      {/* 읽지 못한 파일 */}
+      {failedFiles.length > 0 && (
+        <ul role="alert" className="space-y-1 rounded-md border border-bad-line bg-bad-soft px-3 py-2 text-[12px]">
+          {failedFiles.map((f) => (
+            <li key={f.filename}>
+              <span className="font-medium text-bad">{f.filename}</span>
+              <span className="text-fg-muted"> · {f.message}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/* Uploaded File List Preview */}
       {parsedFiles.length > 0 && (

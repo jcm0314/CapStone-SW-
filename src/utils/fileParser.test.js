@@ -64,3 +64,20 @@ describe('joinPdfTextItems (pdf.js 텍스트 조각 합치기)', () => {
     expect(joinPdfTextItems(items)).toBe('Redis 캐싱으로\n\nType 과 Length 단어도 남아야 함');
   });
 });
+
+describe('parseCandidateFile 실패 처리', () => {
+  it('구형 .doc 은 안내 문구를 본문으로 넘기지 않고 오류로 알린다', async () => {
+    const file = new File(['binary'], '지원서.doc', { type: 'application/msword' });
+    await expect(parseCandidateFile(file)).rejects.toThrow('.doc');
+  });
+
+  it('여러 파일 중 실패한 파일은 이유와 함께 따로 모은다', async () => {
+    const { parseCandidateFilesBatch } = await import('./fileParser');
+    const failures = [];
+    const ok = new File(['자기소개서 본문입니다. 충분히 긴 텍스트.'], 'a.txt', { type: 'text/plain' });
+    const bad = new File(['x'], 'b.doc');
+    const results = await parseCandidateFilesBatch([ok, bad], failures);
+    expect(results.map((r) => r.filename)).toEqual(['a.txt']);
+    expect(failures).toEqual([expect.objectContaining({ filename: 'b.doc' })]);
+  });
+});

@@ -22,3 +22,14 @@ describe('isSampleResult (샘플 데이터 판별)', () => {
     expect(isSampleResult(undefined)).toBe(false);
   });
 });
+
+describe('isDemoMockResult (#104 목업·가짜 결과 정리)', () => {
+  it('목업 지원자와 가짜 평가 결과만 골라낸다', async () => {
+    const { isDemoMockResult } = await import('./sampleResult');
+    expect(isDemoMockResult({ id: 'demo-kim-minjun' })).toBe(true);
+    expect(isDemoMockResult({ id: 'demo_1731234567890' })).toBe(true);
+    expect(isDemoMockResult({ id: 'app_1', mode: 'DEMO_MOCK_PREVIEW' })).toBe(true);
+    expect(isDemoMockResult({ id: 'app_1731234567890', mode: 'MULTI_AGENT_ENSEMBLE' })).toBe(false);
+    expect(isDemoMockResult(null)).toBe(false);
+  });
+});

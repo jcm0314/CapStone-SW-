@@ -166,6 +166,7 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
           <div className="px-4 py-3 md:border-r border-line">
             <p className="text-xs text-fg-subtle">판정 사유</p>
             <p className="mt-1 text-[13px] leading-relaxed text-fg">{decisionReason || '-'}</p>
+            <PenaltyBreakdown criticReport={result.agentMetadata?.criticReport} />
             {isMultiAgent && (
               <button type="button" onClick={() => setShowAuditModal(true)} className="mt-2 inline-flex items-center gap-1 text-xs text-fg-muted hover:text-fg underline-offset-2 hover:underline">
                 <Workflow className="w-3.5 h-3.5" /> AI 판단 과정
@@ -197,5 +198,50 @@ export default function DashboardSummary({ result, currentJob, onOpenHITLEditor,
         onClose={() => setShowAuditModal(false)}
       />
     </>
+  );
+}
+
+const SEVERITY = { HIGH: { label: '높음', cls: 'text-bad' }, MEDIUM: { label: '보통', cls: 'text-warn' }, LOW: { label: '낮음', cls: 'text-fg-muted' } };
+
+/**
+ * 감점 사유: Critic 에이전트가 찾은 추상적·과장 표현과 감점 권고.
+ * 최종 점수는 Supervisor 에이전트가 이 권고를 반영해 정하므로 단순 합산이 아님을 함께 안내합니다.
+ */
+export function PenaltyBreakdown({ criticReport }) {
+  if (!criticReport) return null;
+  const penalty = Number(criticReport.recommendedPenalty) || 0;
+  const flagged = Array.isArray(criticReport.flaggedQuotes) ? criticReport.flaggedQuotes.filter((f) => f?.quote) : [];
+  if (penalty === 0 && flagged.length === 0) return null;
+
+  return (
+    <details className="mt-3 rounded-md border border-line bg-subtle/60 group" aria-label="감점 사유">
+      <summary className="flex items-center justify-between gap-2 px-3 py-2 cursor-pointer text-[13px] list-none">
+        <span className="font-medium text-fg">
+          감점 사유 <span className="text-fg-subtle font-normal">· 추상적·과장 표현 {flagged.length}건</span>
+        </span>
+        <span className="tabular-nums text-bad font-medium">감점 권고 -{penalty}점</span>
+      </summary>
+      <div className="px-3 pb-3 space-y-2">
+        {flagged.length > 0 && (
+          <ul className="space-y-1.5">
+            {flagged.map((f, i) => {
+              const sev = SEVERITY[f.severity] || SEVERITY.MEDIUM;
+              return (
+                <li key={i} className="text-[12px] leading-snug">
+                  <p className="text-fg border-l-2 border-[rgb(var(--hl-bad))] pl-2">“{f.quote}”</p>
+                  <p className="mt-0.5 pl-2.5 text-fg-muted">
+                    {f.reason || '근거 부족'} <span className={sev.cls}>· 심각도 {sev.label}</span>
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <p className="text-[11px] text-fg-subtle leading-relaxed">
+          과장·추상 표현을 찾는 AI(Critic)가 감점을 권고하고, 최종 점수는 종합 판정 AI가 이 권고를 반영해 정합니다.
+          근거 카드의 점수를 더한 값과는 다를 수 있습니다.
+        </p>
+      </div>
+    </details>
   );
 }
