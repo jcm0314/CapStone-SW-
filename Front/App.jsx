@@ -12,6 +12,7 @@ import HITLEditorModal from './components/HITLEditorModal';
 import DepartmentCreditDashboard from './components/DepartmentCreditDashboard';
 import ShareModal from './components/ShareModal';
 import InterviewerCollaborationPanel from './components/InterviewerCollaborationPanel';
+import TwoTrackPanel from './components/TwoTrackPanel';
 import CandidateFeedbackModal from './components/CandidateFeedbackModal';
 import MailModal from './components/MailModal';
 import Footer from './components/Footer';
@@ -280,6 +281,19 @@ export default function App() {
     if (selectedApplicant?.id === applicantId) {
       setSelectedApplicant(updatedList.find((a) => a.id === applicantId) || selectedApplicant);
     }
+  };
+
+  // 서류·면접 2-Track 면접 기록 저장
+  const handleSaveTwoTrack = (applicantId, interviewTrack) => {
+    const updatedList = applicantList.map((app) =>
+      app.id === applicantId ? { ...app, interviewTrack } : app
+    );
+    setApplicantList(updatedList);
+    saveTenantApplicants(updatedList);
+    if (selectedApplicant?.id === applicantId) {
+      setSelectedApplicant(updatedList.find((a) => a.id === applicantId) || selectedApplicant);
+    }
+    setToastMessage('서류·면접 2-Track 기록이 저장되었습니다.');
   };
 
   // ───────────────────────── 화면 이동 · 메뉴 · ⌘K 검색 (UI 전용 상태) ─────────────────────────
@@ -614,9 +628,16 @@ export default function App() {
                     onOpenMail={() => openMail(selectedApplicant)}
                   />
                 </div>
-                {/* 순서: 요약 → 면접 질문 → 근거 문장(자소서 전문은 접힘) → 면접관 메모 */}
+                {/* 순서: 요약 → 면접 질문 → 서류·면접 2-Track → 근거 문장 → 면접관 메모 */}
                 <div id="section-questions" className="scroll-mt-16">
                   <InterviewQuestions result={selectedApplicant} />
+                </div>
+                <div id="section-two-track" className="scroll-mt-16">
+                  <TwoTrackPanel
+                    applicant={selectedApplicant}
+                    currentJob={currentJob}
+                    onSaveTwoTrack={handleSaveTwoTrack}
+                  />
                 </div>
                 <div id="section-evidence" className="scroll-mt-16">
                   <EvidenceViewer result={selectedApplicant} />
