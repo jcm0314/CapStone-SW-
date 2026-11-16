@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Check-Mate IR Pitch Deck — 정주영 창업경진대회 두들린(Greeting) 스타일</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    @page {
+      size: 1920px 1080px;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: #0d1117;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .bg-dark {
+      background: #141A24;
+      color: #ffffff;
+    }
+
+    .bg-white {
+      background: #FFFFFF;
+      color: #141A24;
+    }
+
+    .bg-qna {
+      background: linear-gradient(135deg, #2AF598 0%, #08AEEA 100%);
+      color: #ffffff;
+    }
+
+    /* Common Brand Logo (Greeting-style rounded blue icon + clean bold wordmark) */
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .brand-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 40px;
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.28);
+    }
+    .brand-wordmark {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #141A24;
+    }
+    .brand-wordmark.light {
+      color: #FFFFFF;
+    }
+
+    /* Slanted Doodlin-style Company Badge */
+    .slanted-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #0B0F17;
+      color: #FFFFFF;
+      padding: 14px 32px;
+      transform: skewY(-8deg);
+      border-top: 4px solid #fff;
+      border-bottom: 4px solid #fff;
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Top 5-Step Walkthrough Bar (Exact Doodlin Slides 9-14 style) */
+    .step-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 86px;
+      background: #141A24;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      z-index: 20;
+      padding: 0 60px;
+    }
+    .step-item {
+      font-size: 21px;
+      font-weight: 600;
+      color: #64748B;
+      padding: 10px 26px;
+      border-radius: 999px;
+      letter-spacing: -0.02em;
+    }
+    .step-item.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+    }
+    .step-arrow {
+      color: #475569;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .walkthrough-body {
+      margin-top: 86px;
+      height: calc(1080px - 86px);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 80px;
+    }
+
+    /* Vertical Step Pill Box (Doodlin Slide 2 & Slide 14 style) */
+    .v-flow-pill {
+      width: 310px;
+      padding: 22px 28px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.03);
+      color: #FFFFFF;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+    .v-flow-pill.active-blue {
+      background: #2563EB;
+      border-color: #3B82F6;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    }
+    .v-flow-arrow {
+      font-size: 26px;
+      color: #64748B;
+      margin: 12px 0;
+    }
+
+    /* Dark Rounded Task Pill (Doodlin Slide 3 style) */
+    .task-pill {
+      background: #232B3A;
+      color: #E2E8F0;
+      padding: 18px 34px;
+      border-radius: 14px;
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Floating App Icon Box */
+    .floating-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    /* News Headline Card (Doodlin Slide 4 style) */
+    .news-card {
+      background: #FFFFFF;
+      color: #141A24;
+      border-radius: 18px;
+      padding: 28px 36px;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .news-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #141A24;
+      letter-spacing: -0.02em;
+    }
+    .news-desc {
+      font-size: 18px;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .news-source {
+      font-size: 15px;
+      color: #94A3B8;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    /* UI Frame Card */
+    .ui-window {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .ui-window-bar {
+      height: 40px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 8px;
+    }
+    .ui-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    /* Subtle Logo Grid Watermark for Traction Charts (Doodlin Slides 24-26 style) */
+    .watermark-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 24px;
+      padding: 60px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .watermark-cell {
+      background: #ffffff;
+      border-radius: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       SLIDE 1: COVER (Doodlin 00:25 Style — Clean White + Center-Left Product + Bottom-Right Slanted Badge)
+       ===================================================================== -->
+  <section class="slide bg-white" style="padding: 0 160px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <div>
+        <div style="font-size: 32px; font-weight: 700; color: #334155; margin-bottom: 18px; letter-spacing: -0.02em;">
+          기업용 AI 채용 평가·검증 코파일럿
+        </div>
+        <div class="brand-logo">
+          <div class="brand-icon">✓</div>
+          <div class="brand-wordmark" style="font-size: 86px;">Check-Mate</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 220px; text-align: left;">
+        <div class="slanted-badge" style="margin-bottom: 24px;">Check-Mate</div>
+        <div style="font-size: 26px; font-weight: 800; color: #141A24; margin-bottom: 6px;">
+          팀 Check-Mate · 장천명
+        </div>
+        <div style="font-size: 20px; font-weight: 500; color: #64748B;">
+          github.com/jcm0314/CapStone-SW-
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 2: PROBLEM 1 — 채용 공고 배포 이후 쏟아지는 서류·면접 검증 병목 (Doodlin 00:33 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="flex-direction: row;">
+    <!-- Left Dark Flow Column -->
+    <div style="width: 44%; height: 100%; background: #141A24; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px; position: relative;">
+      <div style="font-size: 20px; font-weight: 700; color: #60A5FA; margin-bottom: 28px; letter-spacing: 0.04em;">
+        RECRUITING BOTTLENECK
+      </div>
+      <div class="v-flow-pill">채용 공고 배포</div>
+      <div class="v-flow-arrow">↓</div>
+      <div class="v-flow-pill">수백 장의 자소서 접수</div>
+      <div class="v-flow-arrow">↓</div>
+      <div class="v-flow-pill" style="border-color: #EF4444; color: #FCA5A5;">문항별 근거·진위 대조</div>
+      <div class="v-flow-arrow">↓</div>
+      <div class="v-flow-pill" style="border-color: #EF4444; color: #FCA5A5;">지원자별 면접 질문 추출</div>
+      <div style="font-size: 32px; color: #64748B; margin-top: 14px; font-weight: 900;">⋮</div>
+    </div>
+
+    <!-- Center Avatar Badge on Seam -->
+    <div style="position: absolute; left: 44%; top: 50%; transform: translate(-50%, -50%); z-index: 10; width: 132px; height: 132px; border-radius: 50%; background: #1E293B; border: 5px solid #FFFFFF; box-shadow: 0 16px 40px rgba(0,0,0,0.45); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+      <img src="docs/assets/poster_fresh/kim_manager_4cut_cropped.png" alt="HR 담당자" style="width: 220%; height: 220%; object-fit: cover; object-position: left top;" />
+    </div>
+
+    <!-- Right Messy Evaluation Spreadsheet -->
+    <div style="width: 56%; height: 100%; background: #F8FAFC; color: #0F172A; padding: 44px 52px; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 2px solid #E2E8F0; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="background: #16A34A; color: #fff; font-weight: 800; padding: 6px 14px; border-radius: 8px; font-size: 16px;">XLSX</span>
+          <span style="font-size: 22px; font-weight: 800; color: #1E293B;">2026_상반기_수시채용_서류평가_취합본_최종_진짜최종.xlsx</span>
+        </div>
+        <span style="font-size: 16px; color: #DC2626; font-weight: 700;">미검토 142건 · 기준 불일치</span>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 15.5px;">
+        <thead>
+          <tr style="background: #E2E8F0; color: #334155; text-align: left;">
+            <th style="padding: 12px;">지원자</th>
+            <th style="padding: 12px;">지원 직무</th>
+            <th style="padding: 12px;">자소서 분량</th>
+            <th style="padding: 12px;">평가자 A</th>
+            <th style="padding: 12px;">평가자 B</th>
+            <th style="padding: 12px;">검증 근거 / 면접 질문</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 13px 12px; font-weight: 700;">김*훈</td>
+            <td style="padding: 13px 12px;">백엔드 엔지니어</td>
+            <td style="padding: 13px 12px;">4,200자</td>
+            <td style="padding: 13px 12px; color: #16A34A; font-weight: 700;">88점 (추천)</td>
+            <td style="padding: 13px 12px; color: #DC2626; font-weight: 700;">62점 (비추천)</td>
+            <td style="padding: 13px 12px; color: #DC2626;">근거 메모 없음 (인상 평가)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0; background: #FFFBEB;">
+            <td style="padding: 13px 12px; font-weight: 700;">이*연</td>
+            <td style="padding: 13px 12px;">그로스 마케터</td>
+            <td style="padding: 13px 12px;">3,850자</td>
+            <td style="padding: 13px 12px;">75점</td>
+            <td style="padding: 13px 12px;">미입력</td>
+            <td style="padding: 13px 12px; color: #D97706;">ROAS 400% 수치 진위 확인 필요</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 13px 12px; font-weight: 700;">박*준</td>
+            <td style="padding: 13px 12px;">백엔드 엔지니어</td>
+            <td style="padding: 13px 12px;">5,100자</td>
+            <td style="padding: 13px 12px;">80점</td>
+            <td style="padding: 13px 12px;">79점</td>
+            <td style="padding: 13px 12px; color: #DC2626;">생성형 AI 대필 의심 (문체 천편일률)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 13px 12px; font-weight: 700;">최*아</td>
+            <td style="padding: 13px 12px;">B2B 세일즈</td>
+            <td style="padding: 13px 12px;">3,400자</td>
+            <td style="padding: 13px 12px;">90점</td>
+            <td style="padding: 13px 12px;">68점</td>
+            <td style="padding: 13px 12px; color: #64748B;">면접 질문 미작성 (면접 10분 전 열람)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0; background: #FEF2F2;">
+            <td style="padding: 13px 12px; font-weight: 700;">정*우</td>
+            <td style="padding: 13px 12px;">백엔드 엔지니어</td>
+            <td style="padding: 13px 12px;">4,600자</td>
+            <td style="padding: 13px 12px;">84점</td>
+            <td style="padding: 13px 12px;">82점</td>
+            <td style="padding: 13px 12px; color: #DC2626;">타 지원자 자소서와 문단 82% 일치 미발견</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 13px 12px; font-weight: 700;">한*희</td>
+            <td style="padding: 13px 12px;">HR 리크루터</td>
+            <td style="padding: 13px 12px;">3,920자</td>
+            <td style="padding: 13px 12px;">미열람</td>
+            <td style="padding: 13px 12px;">미열람</td>
+            <td style="padding: 13px 12px; color: #64748B;">서류 검토 지연 (리드타임 +5일 경과)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 13px 12px; font-weight: 700;">오*석</td>
+            <td style="padding: 13px 12px;">백엔드 엔지니어</td>
+            <td style="padding: 13px 12px;">4,120자</td>
+            <td style="padding: 13px 12px;">71점</td>
+            <td style="padding: 13px 12px;">89점</td>
+            <td style="padding: 13px 12px; color: #DC2626;">서류 점수 vs 1차 면접 평가 따로 관리됨</td>
+          </tr>
+          <tr>
+            <td style="padding: 13px 12px; font-weight: 700;">윤*진 외 135명</td>
+            <td style="padding: 13px 12px;">전 직무 수시채용</td>
+            <td style="padding: 13px 12px;">평균 4,100자</td>
+            <td style="padding: 13px 12px;" colspan="3">담당자 1인당 검토 시간 평균 12분 × 150명 = 30시간 수작업 소모</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 3: PROBLEM 2 — 파편화된 툴과 채용 담당자의 막대한 검증 공수 (Doodlin 00:40 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 80px 140px; justify-content: space-between;">
+    <!-- Top Scattered App Icons -->
+    <div style="position: relative; height: 420px; width: 100%;">
+      <div class="floating-icon" style="position: absolute; left: 8%; top: 30px; background: #FEE2E2; color: #DC2626;">
+        <span style="font-size: 32px;">📄</span><span>PDF</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; left: 4%; top: 240px; background: #DBEAFE; color: #1D4ED8;">
+        <span style="font-size: 32px;">📝</span><span>DOCX</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; left: 26%; top: 140px; width: 124px; height: 124px; background: #DCFCE7; color: #15803D; font-size: 24px;">
+        <span style="font-size: 42px;">📊</span><span>Excel</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; left: 48%; top: 20px; background: #F3E8FF; color: #7E22CE;">
+        <span style="font-size: 32px;">💬</span><span>Slack</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; left: 53%; top: 185px; width: 120px; height: 120px; background: #FEF3C7; color: #B45309; font-size: 22px;">
+        <span style="font-size: 40px;">🤖</span><span>LLM 복붙</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; right: 16%; top: 75px; background: #FEE2E2; color: #B91C1C;">
+        <span style="font-size: 32px;">✉️</span><span>Gmail</span>
+      </div>
+      <div class="floating-icon" style="position: absolute; right: 6%; top: 245px; background: #E0F2FE; color: #0369A1;">
+        <span style="font-size: 32px;">📅</span><span>Sheet</span>
+      </div>
+    </div>
+
+    <!-- Bottom 3 Rows of Painful Evaluation Tasks -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px;">
+      <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+        <div class="task-pill">지원자 자소서 전문 정독 (건당 12분)</div>
+        <div class="task-pill">이름·연락처·학력 개인정보 수작업 가림</div>
+        <div class="task-pill">생성형 AI 대필 여부 판별</div>
+      </div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+        <div class="task-pill">직무 역량별 가중치 계산</div>
+        <div class="task-pill">과장·모호한 문장 형광펜 표시</div>
+        <div class="task-pill">지원자별 압박 면접 질문 작성</div>
+        <div class="task-pill">문항별 평가 근거 정리</div>
+      </div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+        <div class="task-pill">면접관 평가 코멘트 취합</div>
+        <div class="task-pill">서류·면접 2-Track 점수 대조</div>
+        <div class="task-pill">합격·불합격 안내 메일 개별 발송</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 4: WHY NOW — 수시채용 일상화 + 생성형 AI 자소서 범람 (Doodlin 00:47 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="flex-direction: row; align-items: center; padding: 0 120px; gap: 80px;">
+    <!-- Left Donut Chart -->
+    <div style="width: 46%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="width: 520px; height: 520px; border-radius: 50%; background: conic-gradient(#2563EB 0% 78%, #334155 78% 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 24px 60px rgba(37, 99, 235, 0.25);">
+        <div style="width: 340px; height: 340px; border-radius: 50%; background: #141A24; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
+          <div style="font-size: 22px; color: #93C5FD; font-weight: 700; margin-bottom: 8px;">🇰🇷 국내 채용 시장</div>
+          <div style="font-size: 34px; font-weight: 800; color: #FFFFFF; line-height: 1.25;">
+            수시채용·AI 자소서<br /><span style="color: #3B82F6; font-size: 46px;">78% +</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right 3 News Cards -->
+    <div style="width: 54%; display: flex; flex-direction: column; gap: 28px;">
+      <div class="news-card">
+        <div class="news-title">기업 10곳 중 8곳 ‘수시채용’ 전환… 현업 팀장이 매주 서류 검토</div>
+        <div class="news-desc">대규모 정기 공채가 사라지고 직무별 수시채용이 정착되면서 인사팀뿐 아니라 현업 실무자의 서류 검토 피로도가 급증하고 있다.</div>
+        <div class="news-source">출처: 한국경영자총협회 · HR 리포트</div>
+      </div>
+      <div class="news-card">
+        <div class="news-title">취준생 73% “자소서 작성에 생성형 AI 활용”… 변별력 확보 비상</div>
+        <div class="news-desc">매끄럽게 포장된 AI 대필 자소서가 급증하면서 단순 요약이 아닌 ‘실제 경험 근거 문장’과 ‘압박 면접 검증 질문’의 중요성이 커졌다.</div>
+        <div class="news-source">출처: 채용 플랫폼 업계 실태조사</div>
+      </div>
+      <div class="news-card">
+        <div class="news-title">개인정보보호법·AI 기본법 강화… 이력서 원문 외부 LLM 입력 주의보</div>
+        <div class="news-desc">지원자의 이름·연락처·학력 등 민감 개인정보(PII)를 비식별화 없이 상용 AI에 업로드할 경우 기업 컴플라이언스 위반 위험이 발생한다.</div>
+        <div class="news-source">출처: 개인정보보호위원회 가이드라인</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 5: WHY EXISTING TOOLS FAIL — 기존 ATS & 범용 LLM의 한계 (Doodlin 00:59 Style)
+       ===================================================================== -->
+  <section class="slide bg-white" style="flex-direction: row;">
+    <!-- Left Dark Column -->
+    <div style="width: 34%; height: 100%; background: #141A24; color: #FFFFFF; padding: 80px 56px; display: flex; flex-direction: column; justify-content: center;">
+      <div style="font-size: 56px; font-weight: 900; color: #2563EB; letter-spacing: -0.03em; margin-bottom: 8px;">
+        ATS &amp; LLM
+      </div>
+      <div style="font-size: 20px; font-weight: 600; color: #60A5FA; margin-bottom: 72px;">
+        기존 채용 솔루션과 범용 AI의 한계
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 34px; font-size: 27px; font-weight: 700; letter-spacing: -0.02em;">
+        <div>기존 ATS는 자소서 정밀 평가 <span style="color: #EF4444; font-weight: 900;">불가</span></div>
+        <div>범용 LLM 원문 입력 시 개인정보 <span style="color: #EF4444; font-weight: 900;">유출</span></div>
+        <div>근거 문장 없는 단일 AI 점수 <span style="color: #EF4444; font-weight: 900;">불신</span></div>
+        <div>서류 평가와 면접 검증 기록 <span style="color: #EF4444; font-weight: 900;">단절</span></div>
+      </div>
+    </div>
+
+    <!-- Right White Ecosystem Map -->
+    <div style="width: 66%; height: 100%; background: #FFFFFF; padding: 80px 90px; display: flex; flex-direction: column; justify-content: center; position: relative;">
+      <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 40px;">
+        접수·일정 관리(ATS)는 보편화되었지만, <span style="color: #2563EB;">‘근거 기반 AI 서류 검증·면접 코파일럿’</span>은 비어 있습니다
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+        <div style="border: 2px solid #E2E8F0; border-radius: 24px; padding: 36px; background: #F8FAFC;">
+          <div style="font-size: 20px; font-weight: 800; color: #64748B; margin-bottom: 20px;">1세대 · 채용 관리 시스템 (ATS)</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 24px;">
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #0F172A; border: 1px solid #CBD5E1;">Greeting</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #16A34A; border: 1px solid #CBD5E1;">greenhouse</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #334155; border: 1px solid #CBD5E1;">LEVER</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #2563EB; border: 1px solid #CBD5E1;">Ninehire</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #0284C7; border: 1px solid #CBD5E1;">workday</span>
+          </div>
+          <div style="font-size: 19px; color: #475569; line-height: 1.6;">
+            • 공고 배포·지원서 취합·면접 일정 조율에 최적화<br />
+            • <strong>정작 수백 장의 자소서를 읽고 채점하는 일은 사람의 몫</strong>
+          </div>
+        </div>
+
+        <div style="border: 2px solid #E2E8F0; border-radius: 24px; padding: 36px; background: #F8FAFC;">
+          <div style="font-size: 20px; font-weight: 800; color: #64748B; margin-bottom: 20px;">범용 생성형 AI 채팅</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 24px;">
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #0F172A; border: 1px solid #CBD5E1;">ChatGPT</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #D97706; border: 1px solid #CBD5E1;">Claude Web</span>
+            <span style="padding: 12px 22px; background: #fff; border-radius: 12px; font-weight: 800; font-size: 22px; color: #2563EB; border: 1px solid #CBD5E1;">Gemini Web</span>
+          </div>
+          <div style="font-size: 19px; color: #475569; line-height: 1.6;">
+            • 지원자 개인정보(PII) 유출 및 컴플라이언스 위반 위험<br />
+            • <strong>원문 근거 없는 점수 환각(Hallucination) 및 팀 협업 불가</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 32px; background: #EFF6FF; border: 2px solid #93C5FD; border-radius: 20px; padding: 26px 36px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 23px; font-weight: 800; color: #1E3A8A;">
+          필요한 것: ATS와 연동되면서 개인정보를 보호하고 1:1 문장 근거로 검증하는 ‘AX 평가 코파일럿’
+        </div>
+        <span style="background: #2563EB; color: #fff; padding: 10px 24px; border-radius: 999px; font-weight: 800; font-size: 19px;">Check-Mate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 6: GLOBAL VALIDATION 1 — 글로벌 HR AI 도입 가속화 (Doodlin 01:15 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="flex-direction: row; align-items: center; padding: 0 150px; justify-content: space-between;">
+    <div style="width: 45%;">
+      <div style="font-size: 44px; margin-bottom: 14px;">🌐</div>
+      <div style="font-size: 68px; font-weight: 900; color: #FFFFFF; line-height: 1.18; letter-spacing: -0.03em;">
+        글로벌 기업 67%<br />
+        <span style="color: #2563EB;">AI 채용 검증 도입</span>
+      </div>
+      <div style="margin-top: 28px; font-size: 24px; color: #94A3B8; line-height: 1.6;">
+        단순 서류 접수를 넘어, 지원서 역량 검증과<br />
+        구조화 면접 질문 생성을 AI 코파일럿으로 전환 중
+      </div>
+    </div>
+
+    <!-- Right 67% Split Visual Graphic -->
+    <div style="width: 50%; height: 520px; border-radius: 32px; overflow: hidden; display: flex; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 28px 60px rgba(0,0,0,0.45);">
+      <div style="width: 67%; background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); padding: 48px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="font-size: 22px; font-weight: 700; color: #BFDBFE;">AI Recruiting Copilot Adoption</div>
+        <div>
+          <div style="font-size: 92px; font-weight: 900; color: #FFFFFF; line-height: 1;">67%</div>
+          <div style="font-size: 24px; font-weight: 700; color: #E0F2FE; margin-top: 12px;">
+            서류 스크리닝 · 역량 근거 추출 · 면접 가이드 자동화
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <span style="background: rgba(255,255,255,0.18); padding: 8px 16px; border-radius: 999px; font-size: 16px; font-weight: 700;">1:1 Evidence Grounding</span>
+          <span style="background: rgba(255,255,255,0.18); padding: 8px 16px; border-radius: 999px; font-size: 16px; font-weight: 700;">Human-in-the-Loop</span>
+        </div>
+      </div>
+      <div style="width: 33%; background: #CBD5E1; color: #334155; padding: 48px 32px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div style="font-size: 54px; font-weight: 900; color: #475569;">33%</div>
+        <div style="font-size: 20px; font-weight: 700; margin-top: 8px;">기존 수작업 검토 유지</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 7: GLOBAL VALIDATION 2 — AI 채용 평가 시장의 폭발적 성장 (Doodlin 01:20 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="align-items: center; justify-content: center; text-align: center;">
+    <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(37, 99, 235, 0.16) 0%, rgba(20, 26, 36, 0.96) 70%); pointer-events: none;"></div>
+    <div style="position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center;">
+      <div style="background: #FFFFFF; color: #141A24; padding: 28px 64px; border-radius: 24px; font-size: 48px; font-weight: 900; letter-spacing: 0.04em; box-shadow: 0 24px 60px rgba(0,0,0,0.45); margin-bottom: 42px;">
+        GLOBAL AI RECRUITING
+      </div>
+      <div style="font-size: 54px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.02em; margin-bottom: 20px;">
+        AI 인재 검증 코파일럿 시장 <span style="color: #60A5FA;">약 4.8조 원 규모</span> 💰
+      </div>
+      <div style="font-size: 26px; color: #94A3B8; margin-bottom: 28px;">
+        Mercor · Eightfold · Paradox 등 글로벌 AI 채용 검증 솔루션 대규모 투자 유치
+      </div>
+      <div style="font-size: 48px; letter-spacing: 16px;">💵 💵 💵</div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 8: SOLUTION REVEAL HERO — AX HR 코파일럿 Check-Mate (Doodlin 01:30 Style)
+       ===================================================================== -->
+  <section class="slide bg-white" style="flex-direction: row; align-items: center; padding: 0 110px; justify-content: space-between;">
+    <div style="width: 38%;">
+      <div class="brand-logo" style="margin-bottom: 44px;">
+        <div class="brand-icon" style="width: 64px; height: 64px; font-size: 34px;">✓</div>
+        <div class="brand-wordmark" style="font-size: 54px;">Check-Mate</div>
+      </div>
+      <div style="font-size: 48px; font-weight: 400; color: #334155; line-height: 1.32; letter-spacing: -0.03em;">
+        감(感)이 아닌<br />
+        1:1 문장 근거로,<br />
+        <strong style="font-weight: 900; color: #141A24;">AX 채용 코파일럿<br />체크메이트.</strong>
+      </div>
+    </div>
+
+    <!-- Right Dark-Bezel MacBook Frame with Real Product UI -->
+    <div style="width: 60%; background: #141A24; padding: 22px 22px 0 22px; border-radius: 28px 28px 0 0; box-shadow: 0 32px 80px rgba(20, 26, 36, 0.28); align-self: flex-end; height: 840px; display: flex; flex-direction: column;">
+      <div style="height: 24px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: #475569;"></div>
+      </div>
+      <div style="flex: 1; background: #FFFFFF; border-radius: 14px 14px 0 0; overflow: hidden;">
+        <img src="docs/assets/poster_fresh/02_report_highlight.png" alt="Check-Mate Product UI" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 9: WALKTHROUGH STEP 1 — 1. 직무·가중치 설정 (Doodlin 01:34 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item active">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="gap: 48px;">
+      <!-- Left: 태그형 역량 가중치 & 프롬프트 설정 -->
+      <div style="width: 48%; height: 820px; border: 2px solid #E2E8F0; border-radius: 22px; padding: 38px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 16px 40px rgba(15,23,42,0.06);">
+        <div>
+          <span style="display: inline-block; background: #141A24; color: #fff; font-weight: 800; font-size: 22px; padding: 10px 24px; border-radius: 10px; margin-bottom: 24px;">
+            태그형 역량 가중치 &amp; 직무 프리셋
+          </span>
+          <div style="font-size: 20px; color: #475569; margin-bottom: 24px; line-height: 1.5;">
+            직무별 5대 역량에 <strong>핵심(×1.5) · 기본(×1.0) · 참고(×0.5)</strong> 태그만 클릭하면 합계 100%로 자동 정규화되며, 핵심 키워드 태그를 지정할 수 있습니다.
+          </div>
+
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 800; font-size: 19px;">채용 직무: 소프트웨어 엔지니어 (백엔드)</span>
+              <span style="background: #DCFCE7; color: #15803D; font-weight: 800; padding: 6px 14px; border-radius: 999px; font-size: 15px;">합계 100% 완료</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; border-radius: 12px; border: 1px solid #E2E8F0;">
+              <span style="font-weight: 700; font-size: 18px;">● 문제 해결력 &amp; 논리성</span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #141A24; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 700;">핵심</span>
+                <span style="background: #F1F5F9; color: #64748B; padding: 4px 12px; border-radius: 6px; font-size: 14px;">기본</span>
+                <span style="font-weight: 800; color: #2563EB; font-size: 18px; margin-left: 8px;">30%</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; border-radius: 12px; border: 1px solid #E2E8F0;">
+              <span style="font-weight: 700; font-size: 18px;">● 직무 전문성 &amp; 기술 깊이</span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #141A24; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 700;">핵심</span>
+                <span style="background: #F1F5F9; color: #64748B; padding: 4px 12px; border-radius: 6px; font-size: 14px;">기본</span>
+                <span style="font-weight: 800; color: #2563EB; font-size: 18px; margin-left: 8px;">30%</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; border-radius: 12px; border: 1px solid #E2E8F0;">
+              <span style="font-weight: 700; font-size: 18px;">● 협업 &amp; 커뮤니케이션</span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #F1F5F9; color: #64748B; padding: 4px 12px; border-radius: 6px; font-size: 14px;">핵심</span>
+                <span style="background: #141A24; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 700;">기본</span>
+                <span style="font-weight: 800; color: #2563EB; font-size: 18px; margin-left: 8px;">20%</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; padding-top: 6px;">
+              <span style="background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 6px 14px; border-radius: 999px; font-size: 15px; font-weight: 700;">#대용량트래픽</span>
+              <span style="background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 6px 14px; border-radius: 999px; font-size: 15px; font-weight: 700;">#MSA아키텍처</span>
+              <span style="background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 6px 14px; border-radius: 999px; font-size: 15px; font-weight: 700;">#장애대응경험</span>
+              <span style="background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 6px 14px; border-radius: 999px; font-size: 15px; font-weight: 700;">#데이터기반</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 17px; color: #64748B; font-weight: 600;">
+          ✓ Custom HR Prompt Studio를 통해 기업별 인재상과 감점 규칙까지 즉시 반영
+        </div>
+      </div>
+
+      <!-- Right: 채용팀 RBAC 권한 및 테넌트 구성 -->
+      <div style="width: 48%; height: 820px; border: 2px solid #E2E8F0; border-radius: 22px; padding: 38px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 16px 40px rgba(15,23,42,0.06);">
+        <div>
+          <span style="display: inline-block; background: #141A24; color: #fff; font-weight: 800; font-size: 22px; padding: 10px 24px; border-radius: 10px; margin-bottom: 24px;">
+            채용팀 구성 (멀티테넌트 · 3단계 RBAC)
+          </span>
+          <div style="font-size: 20px; color: #475569; margin-bottom: 24px; line-height: 1.5;">
+            기업(테넌트)별 데이터가 완벽히 격리되며, <strong>HR 관리자 · 채용 담당자 · 실무 면접관</strong> 역할에 따라 조회·보정·설정 권한이 자동 제어됩니다.
+          </div>
+          <div style="border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0;">
+            <img src="docs/assets/poster_fresh/08_rbac_switcher_wide.png" alt="RBAC Role Switcher" style="width: 100%; height: 470px; object-fit: cover; object-position: center;" />
+          </div>
+        </div>
+        <div style="font-size: 17px; color: #64748B; font-weight: 600;">
+          ✓ 토스 · 당근 · 쿠팡 등 멀티테넌트 전환 및 역할별 최소 권한 원칙 적용
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 10: WALKTHROUGH STEP 2 — 2. 비식별 서류 접수 (Doodlin 01:39 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item active">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="padding: 0; height: calc(1080px - 86px);">
+      <!-- Left Dark Flow Diagram -->
+      <div style="width: 44%; height: 100%; background: #141A24; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px;">
+        <div style="font-size: 26px; font-weight: 800; color: #93C5FD; margin-bottom: 32px;">
+          Zero-Trust 브라우저 로컬 파싱 &amp; PII 마스킹
+        </div>
+        <div style="display: flex; align-items: center; gap: 28px;">
+          <div class="brand-icon" style="width: 88px; height: 88px; font-size: 44px;">✓</div>
+          <div style="font-size: 32px; color: #60A5FA;">➔</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="background: #FFFFFF; color: #141A24; padding: 16px 28px; border-radius: 14px; font-weight: 800; font-size: 20px; width: 280px; text-align: center;">
+              📄 PDF 이력서·자소서
+            </div>
+            <div style="background: #FFFFFF; color: #141A24; padding: 16px 28px; border-radius: 14px; font-weight: 800; font-size: 20px; width: 280px; text-align: center;">
+              📝 DOCX 워드 지원서
+            </div>
+            <div style="background: #FFFFFF; color: #141A24; padding: 16px 28px; border-radius: 14px; font-weight: 800; font-size: 20px; width: 280px; text-align: center;">
+              📋 TXT / 직접 붙여넣기
+            </div>
+            <div style="background: #2563EB; color: #FFFFFF; padding: 18px 28px; border-radius: 14px; font-weight: 800; font-size: 20px; width: 280px; text-align: center; box-shadow: 0 8px 24px rgba(37,99,235,0.4);">
+              🔒 6종 개인정보 99.8% 마스킹
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 36px; font-size: 19px; color: #94A3B8; text-align: center; line-height: 1.6;">
+          이름 · 전화번호 · 이메일 · 주민번호 · 주소 · 출신학교를<br />
+          외부 AI 전송 전에 브라우저에서 즉시 <strong style="color: #fff;">[NAME] · [PHONE] · [UNIV]</strong>로 치환
+        </div>
+      </div>
+
+      <!-- Right Real Screenshot -->
+      <div style="width: 56%; height: 100%; background: #F8FAFC; padding: 48px 60px; display: flex; flex-direction: column; justify-content: center; gap: 24px;">
+        <div class="ui-window" style="height: 410px;">
+          <div class="ui-window-bar">
+            <span class="ui-dot" style="background: #EF4444;"></span>
+            <span class="ui-dot" style="background: #F59E0B;"></span>
+            <span class="ui-dot" style="background: #10B981;"></span>
+            <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">PDF · DOCX 자동 텍스트 추출</span>
+          </div>
+          <img src="docs/assets/poster_fresh/07_pdf_upload.png" alt="PDF Upload" style="width: 100%; height: 370px; object-fit: cover; object-position: top;" />
+        </div>
+
+        <div class="ui-window" style="height: 410px;">
+          <div class="ui-window-bar">
+            <span class="ui-dot" style="background: #EF4444;"></span>
+            <span class="ui-dot" style="background: #F59E0B;"></span>
+            <span class="ui-dot" style="background: #10B981;"></span>
+            <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">실시간 PII 개인정보 마스킹 미리보기</span>
+          </div>
+          <img src="docs/assets/pii_masked_real_screen.png" alt="PII Masking" style="width: 100%; height: 370px; object-fit: cover; object-position: top;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 11: WALKTHROUGH STEP 3A — 3. 4-Agent 근거 평가 & 문항별 평가 (Doodlin 01:47 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item active">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="flex-direction: column; gap: 24px; padding: 36px 80px;">
+      <div style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 28px; font-weight: 800; color: #141A24;">
+          파일 다운로드 없이 한 화면에서 <span style="color: #2563EB;">1:1 문장 하이라이트 근거 · 역량 점수 · 문항별 평가</span>를 즉시 확인
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <span style="background: #DCFCE7; color: #15803D; font-weight: 800; padding: 8px 18px; border-radius: 999px; font-size: 16px;">■ 초록 형광펜: 우수 역량 근거</span>
+          <span style="background: #FEF3C7; color: #B45309; font-weight: 800; padding: 8px 18px; border-radius: 999px; font-size: 16px;">■ 노란 형광펜: 과장·면접 검증 필요</span>
+        </div>
+      </div>
+
+      <div class="ui-window" style="width: 100%; height: 820px;">
+        <div class="ui-window-bar">
+          <span class="ui-dot" style="background: #EF4444;"></span>
+          <span class="ui-dot" style="background: #F59E0B;"></span>
+          <span class="ui-dot" style="background: #10B981;"></span>
+          <span style="margin-left: 10px; font-size: 15px; font-weight: 700; color: #475569;">Check-Mate 4-Agent Grounding Viewer (Extractor → Critic → Scorer → Interviewer)</span>
+        </div>
+        <img src="docs/assets/poster_fresh/02_report_highlight.png" alt="Evidence Highlighting" style="width: 100%; height: 780px; object-fit: cover; object-position: top center;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 12: WALKTHROUGH STEP 3B — 키워드별 맞춤형 면접 질문 자동 생성 (Doodlin 01:53 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item active">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="gap: 44px;">
+      <!-- Left: 면접 키워드 태그 묶음 설명 -->
+      <div style="width: 38%; display: flex; flex-direction: column; gap: 24px;">
+        <span style="display: inline-block; width: fit-content; background: #2563EB; color: #fff; font-weight: 800; font-size: 18px; padding: 8px 20px; border-radius: 999px;">
+          Interviewer Agent · 면접 키워드 질문
+        </span>
+        <div style="font-size: 40px; font-weight: 900; color: #141A24; line-height: 1.25; letter-spacing: -0.03em;">
+          의심되는 자소서 문장마다<br />
+          <span style="color: #2563EB;">근거 인용 + 질문 의도 +<br />체크리스트</span>를 자동 생성
+        </div>
+        <div style="font-size: 20px; color: #475569; line-height: 1.6;">
+          면접관이 면접 5분 전에 들어와도 핵심을 찌를 수 있도록 <strong>#아키텍처·설계 #성능·트래픽 #문제해결 #협업·소통</strong> 키워드 태그별로 질문을 묶어서 제공합니다.
+        </div>
+        <div style="background: #F8FAFC; border-left: 5px solid #F59E0B; padding: 20px 24px; border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: 800; color: #B45309; margin-bottom: 6px;">자소서 원문 인용 예시</div>
+          <div style="font-size: 18px; color: #334155; font-weight: 600;">
+            “Redis 캐시와 Kafka 비동기 큐를 도입해 응답 속도를 40% 단축했습니다.”
+          </div>
+          <div style="font-size: 16px; color: #2563EB; font-weight: 700; margin-top: 10px;">
+            ➔ 캐시 정합성(Cache Invalidation) 장애 상황과 컨슈머 지연 대처법을 묻는 심층 질문 즉시 생성
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Real Interview Questions UI Screenshot -->
+      <div class="ui-window" style="width: 62%; height: 820px;">
+        <div class="ui-window-bar">
+          <span class="ui-dot" style="background: #EF4444;"></span>
+          <span class="ui-dot" style="background: #F59E0B;"></span>
+          <span class="ui-dot" style="background: #10B981;"></span>
+          <span style="margin-left: 10px; font-size: 15px; font-weight: 700; color: #475569;">지원자 맞춤형 면접 질문 &amp; 키워드 태그 필터</span>
+        </div>
+        <img src="docs/assets/poster_fresh/03_interview_questions.png" alt="Interview Questions" style="width: 100%; height: 780px; object-fit: cover; object-position: top center;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 13: WALKTHROUGH STEP 4 — 4. 인간 보정(HITL) & 면접관 실시간 협업 (Doodlin 02:01 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item active">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="gap: 40px;">
+      <!-- Left: HITL Modal -->
+      <div style="width: 50%; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <span style="background: #141A24; color: #fff; font-weight: 800; font-size: 18px; padding: 8px 18px; border-radius: 8px;">Human-in-the-Loop (HITL) 보정</span>
+          <span style="margin-left: 12px; font-size: 20px; font-weight: 800; color: #1E293B;">AI 초안 점수를 인사담당자가 직접 보정·롤백</span>
+        </div>
+        <div class="ui-window" style="height: 760px;">
+          <div class="ui-window-bar">
+            <span class="ui-dot" style="background: #EF4444;"></span>
+            <span class="ui-dot" style="background: #F59E0B;"></span>
+            <span class="ui-dot" style="background: #10B981;"></span>
+            <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">사람 검토(HITL) 점수 보정 &amp; 원본 복원</span>
+          </div>
+          <img src="docs/assets/poster_fresh/04_hitl_modal.png" alt="HITL Modal" style="width: 100%; height: 720px; object-fit: cover; object-position: center;" />
+        </div>
+      </div>
+
+      <!-- Right: Multi-Interviewer Share Modal -->
+      <div style="width: 50%; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <span style="background: #2563EB; color: #fff; font-weight: 800; font-size: 18px; padding: 8px 18px; border-radius: 8px;">면접관 실시간 공유 링크</span>
+          <span style="margin-left: 12px; font-size: 20px; font-weight: 800; color: #1E293B;">만료 시간(TTL) 보안 링크 &amp; 실시간 메모 동기화</span>
+        </div>
+        <div class="ui-window" style="height: 760px;">
+          <div class="ui-window-bar">
+            <span class="ui-dot" style="background: #EF4444;"></span>
+            <span class="ui-dot" style="background: #F59E0B;"></span>
+            <span class="ui-dot" style="background: #10B981;"></span>
+            <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">면접관 공유 링크 &amp; 협업 메모</span>
+          </div>
+          <img src="docs/assets/poster_fresh/05_share_modal.png" alt="Share Modal" style="width: 100%; height: 720px; object-fit: cover; object-position: center;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 14: WALKTHROUGH STEP 5 — 5. 서류·면접 2-Track · 통보 · ATS 연동 (Doodlin 02:05 Style)
+       ===================================================================== -->
+  <section class="slide bg-white">
+    <div class="step-topbar">
+      <div class="step-item">1. 직무·가중치 설정</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">2. 비식별 서류 접수</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">3. 4-Agent 근거 평가</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item">4. 인간 보정·협업</div>
+      <div class="step-arrow">&gt;</div>
+      <div class="step-item active">5. 면접·통보·ATS</div>
+    </div>
+
+    <div class="walkthrough-body" style="padding: 0; height: calc(1080px - 86px);">
+      <!-- Left Dark Flow Column (Exact Doodlin Slide 14 style) -->
+      <div style="width: 38%; height: 100%; background: #141A24; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px;">
+        <div class="v-flow-pill">서류·면접 2-Track 통합</div>
+        <div class="v-flow-arrow">↓</div>
+        <div class="v-flow-pill">컷오프 · 표절 유사도 검증</div>
+        <div class="v-flow-arrow">↓</div>
+        <div class="v-flow-pill">합격·불합격 메일 발송</div>
+        <div class="v-flow-arrow">↓</div>
+        <div class="v-flow-pill active-blue">ATS Webhook 실시간 연동</div>
+      </div>
+
+      <!-- Right Comparison & Notification UI -->
+      <div style="width: 62%; height: 100%; background: #F8FAFC; padding: 48px 56px; display: flex; flex-direction: column; justify-content: center; gap: 24px;">
+        <div style="font-size: 26px; font-weight: 800; color: #141A24;">
+          지원자 순위·컷오프 시뮬레이션부터 <span style="color: #2563EB;">Resend 결과 메일 발송 &amp; 그리팅·Greenhouse ATS 연동</span>까지 원클릭 완료
+        </div>
+        <div class="ui-window" style="height: 740px;">
+          <div class="ui-window-bar">
+            <span class="ui-dot" style="background: #EF4444;"></span>
+            <span class="ui-dot" style="background: #F59E0B;"></span>
+            <span class="ui-dot" style="background: #10B981;"></span>
+            <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">지원자 다중 비교 · 컷오프 · 표절 탐지 · 결과 메일 발송</span>
+          </div>
+          <img src="docs/assets/poster_fresh/06_comparison_dashboard.png" alt="Comparison Dashboard" style="width: 100%; height: 700px; object-fit: cover; object-position: top center;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 15: DIFFERENTIATOR — 테넌트 보안 격리 잠금 🔒 & 부서별 크레딧 대시보드 (Doodlin 02:31-02:38 Style)
+       ===================================================================== -->
+  <section class="slide bg-white" style="flex-direction: row;">
+    <!-- Left Dark Security Lock Panel -->
+    <div style="width: 44%; height: 100%; background: #141A24; color: #FFFFFF; padding: 72px 60px; display: flex; flex-direction: column; justify-content: center; gap: 32px;">
+      <div>
+        <div style="font-size: 52px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 12px;">
+          테넌트 데이터 잠금 🔒
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: #60A5FA; margin-bottom: 16px;">
+          Supabase PostgreSQL RLS &amp; 역할별 공개범위 설정
+        </div>
+        <div style="font-size: 19px; color: #94A3B8; line-height: 1.6;">
+          기업(테넌트) 간 지원자·평가 데이터가 DB 커널 레벨(Row-Level Security)에서 격리되어 외부 유출을 원천 차단합니다.
+        </div>
+      </div>
+      <div style="border-radius: 18px; overflow: hidden; border: 2px solid rgba(255,255,255,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
+        <img src="docs/assets/poster_fresh/09_supabase_schema_clean.png" alt="Supabase RLS Schema" style="width: 100%; height: 480px; object-fit: cover; object-position: center;" />
+      </div>
+    </div>
+
+    <!-- Right Analytics & Credit Governance Dashboard -->
+    <div style="width: 56%; height: 100%; background: #FFFFFF; padding: 72px 64px; display: flex; flex-direction: column; justify-content: center; gap: 28px;">
+      <div>
+        <div style="font-size: 40px; font-weight: 900; color: #141A24; letter-spacing: -0.03em; margin-bottom: 10px;">
+          채용 전반과 AI 비용을 한눈에 보는 대시보드 📊
+        </div>
+        <div style="font-size: 20px; color: #475569; line-height: 1.5;">
+          부서별 AI 크레딧 사용량, 4-Agent 단계별 지연 시간, 지원자 성장 피드백 리포트(ESG)까지 통합 관리합니다.
+        </div>
+      </div>
+      <div class="ui-window" style="height: 620px;">
+        <div class="ui-window-bar">
+          <span class="ui-dot" style="background: #EF4444;"></span>
+          <span class="ui-dot" style="background: #F59E0B;"></span>
+          <span class="ui-dot" style="background: #10B981;"></span>
+          <span style="margin-left: 10px; font-size: 14px; font-weight: 700; color: #64748B;">부서별 AI 크레딧 쿼터 &amp; 거버넌스 대시보드</span>
+        </div>
+        <img src="docs/assets/credit_governance_dashboard.png" alt="Credit Governance Dashboard" style="width: 100%; height: 580px; object-fit: cover; object-position: top center;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 16: LEAN VOC ENGINE — 현업 피드백 기반 린(Lean) 제품 고도화 (Doodlin 02:41 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="align-items: center; justify-content: center; padding: 60px 140px;">
+    <div style="text-align: center; margin-bottom: 36px;">
+      <div style="font-size: 26px; font-weight: 900; color: #FFFFFF;">MVP 0.1.0 ➔ Production v2.0</div>
+      <div style="font-size: 18px; color: #60A5FA; font-weight: 700; margin-top: 4px;">현업 HR 멘토링 &amp; 사용자 VOC 기반 11대 기능 100% 반영</div>
+    </div>
+
+    <!-- Center Vertical Line with Left VOC & Right Ship Bubbles -->
+    <div style="position: relative; width: 1380px; display: flex; flex-direction: column; gap: 28px;">
+      <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #2563EB; transform: translateX(-50%);"></div>
+
+      <!-- Row 1 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="width: 45%; background: #FFFFFF; color: #141A24; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+          <span style="font-size: 36px;">🙋🏻‍♂️</span>
+          <div style="font-size: 20px; font-weight: 700; line-height: 1.4;">“AI 점수를 왜 믿어야 하는지 자소서 원문 문장 근거가 바로 보이면 좋겠어요!”</div>
+        </div>
+        <div style="width: 18px; height: 18px; border-radius: 50%; background: #2563EB; border: 4px solid #141A24; z-index: 5;"></div>
+        <div style="width: 45%; background: #1E293B; border: 2px solid #2563EB; color: #FFFFFF; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px;">
+          <div class="brand-icon" style="width: 48px; height: 48px; font-size: 24px; flex-shrink: 0;">✓</div>
+          <div style="font-size: 20px; font-weight: 700; color: #93C5FD;">1:1 문장 형광펜 하이라이트 &amp; 문항별 평가 아코디언을 추가했습니다!</div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="width: 45%; background: #FFFFFF; color: #141A24; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+          <span style="font-size: 36px;">🙋🏻‍♀️</span>
+          <div style="font-size: 20px; font-weight: 700; line-height: 1.4;">“AI 평가가 현업 기준과 다를 때 담당자가 점수를 직접 수정할 수 있나요?”</div>
+        </div>
+        <div style="width: 18px; height: 18px; border-radius: 50%; background: #2563EB; border: 4px solid #141A24; z-index: 5;"></div>
+        <div style="width: 45%; background: #1E293B; border: 2px solid #2563EB; color: #FFFFFF; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px;">
+          <div class="brand-icon" style="width: 48px; height: 48px; font-size: 24px; flex-shrink: 0;">✓</div>
+          <div style="font-size: 20px; font-weight: 700; color: #93C5FD;">HITL 인간 보정 모달 &amp; AI 초안 원클릭 복원 기능을 반영했습니다!</div>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="width: 45%; background: #FFFFFF; color: #141A24; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+          <span style="font-size: 36px;">👨🏻‍💼</span>
+          <div style="font-size: 20px; font-weight: 700; line-height: 1.4;">“서류 점수랑 실제 면접관 평가 기록을 나란히 두고 괴리를 비교하고 싶어요!”</div>
+        </div>
+        <div style="width: 18px; height: 18px; border-radius: 50%; background: #2563EB; border: 4px solid #141A24; z-index: 5;"></div>
+        <div style="width: 45%; background: #1E293B; border: 2px solid #2563EB; color: #FFFFFF; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px;">
+          <div class="brand-icon" style="width: 48px; height: 48px; font-size: 24px; flex-shrink: 0;">✓</div>
+          <div style="font-size: 20px; font-weight: 700; color: #93C5FD;">서류·면접 2-Track 나란히 보기 &amp; 15점 편차 주의 배지를 추가했습니다!</div>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="width: 45%; background: #FFFFFF; color: #141A24; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+          <span style="font-size: 36px;">👩🏻‍💻</span>
+          <div style="font-size: 20px; font-weight: 700; line-height: 1.4;">“평가 완료 후 그리팅 같은 기존 ATS 연동이나 합격 통보 메일도 바로 되나요?”</div>
+        </div>
+        <div style="width: 18px; height: 18px; border-radius: 50%; background: #2563EB; border: 4px solid #141A24; z-index: 5;"></div>
+        <div style="width: 45%; background: #1E293B; border: 2px solid #2563EB; color: #FFFFFF; padding: 22px 28px; border-radius: 18px; display: flex; align-items: center; gap: 18px;">
+          <div class="brand-icon" style="width: 48px; height: 48px; font-size: 24px; flex-shrink: 0;">✓</div>
+          <div style="font-size: 20px; font-weight: 700; color: #93C5FD;">5대 ATS Webhook 실시간 연동 &amp; Resend 메일 발송을 구축했습니다!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 17: VERIFICATION PROOF WALL — 기술 완성도 & 검증 그리드 (Doodlin 03:03 Grid Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 72px 130px; align-items: center; justify-content: center;">
+    <div style="font-size: 34px; font-weight: 900; color: #FFFFFF; margin-bottom: 36px; text-align: center;">
+      아이디어 수준이 아닌, <span style="color: #60A5FA;">즉시 도입 가능한 엔터프라이즈 프로덕션 검증 완료</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; width: 100%;">
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">자동화 테스트 통과</div>
+        <div style="font-size: 40px; font-weight: 900; color: #2563EB; margin: 10px 0;">170 Tests</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">34개 테스트 스위트 100% Pass</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">제품 로드맵 달성률</div>
+        <div style="font-size: 40px; font-weight: 900; color: #16A34A; margin: 10px 0;">11 / 11</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">계획된 모든 기능 100% Ready</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">1인당 서류 검토 시간</div>
+        <div style="font-size: 40px; font-weight: 900; color: #2563EB; margin: 10px 0;">-93.7%</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">기존 12분 ➔ 평균 45초 단축</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">개인정보 비식별 차단율</div>
+        <div style="font-size: 40px; font-weight: 900; color: #16A34A; margin: 10px 0;">99.8%</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">6종 PII 로컬 정규식 마스킹</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">멀티에이전트 엔진</div>
+        <div style="font-size: 34px; font-weight: 900; color: #141A24; margin: 12px 0;">4-Stage AI</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">Extractor·Critic·Scorer·Interviewer</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">백엔드 아키텍처</div>
+        <div style="font-size: 32px; font-weight: 900; color: #141A24; margin: 12px 0;">Node + Spring</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">Express BFF + Spring Boot 3.3</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">멀티테넌트 DB 격리</div>
+        <div style="font-size: 34px; font-weight: 900; color: #2563EB; margin: 12px 0;">Supabase RLS</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">7개 테이블 커널 레벨 보안 격리</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">클라우드 무중단 인프라</div>
+        <div style="font-size: 34px; font-weight: 900; color: #141A24; margin: 12px 0;">Cloud Run</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">GCP Cloud Build 자동 배포</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">하이브리드 캐시</div>
+        <div style="font-size: 34px; font-weight: 900; color: #16A34A; margin: 12px 0;">SHA-256</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">IndexedDB 3-Tier 무결성 캐싱</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">외부 ATS 생태계</div>
+        <div style="font-size: 34px; font-weight: 900; color: #2563EB; margin: 12px 0;">5대 ATS</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">그리팅·나인하이어·Greenhouse 등</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">결과 메일 자동화</div>
+        <div style="font-size: 34px; font-weight: 900; color: #141A24; margin: 12px 0;">Resend API</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">합격·불합격·면접 안내 즉시 발송</div>
+      </div>
+
+      <div style="background: #FFFFFF; color: #141A24; border-radius: 22px; padding: 30px 26px; text-align: center; box-shadow: 0 14px 32px rgba(0,0,0,0.28);">
+        <div style="font-size: 17px; font-weight: 700; color: #64748B;">ESG 지원자 환류</div>
+        <div style="font-size: 34px; font-weight: 900; color: #16A34A; margin: 12px 0;">성장 리포트</div>
+        <div style="font-size: 16px; font-weight: 700; color: #334155;">강점·보완점 코칭 피드백 생성</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 18: BUSINESS MODEL — SaaS 구독 요금제 (Doodlin 03:16 3-Column Dark Pricing Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 80px 120px; position: relative;">
+    <div class="watermark-grid">
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+    </div>
+
+    <div style="position: relative; z-index: 5; display: grid; grid-template-columns: 1fr 1fr 1fr; height: 840px; border-top: 1px solid rgba(255,255,255,0.12);">
+      <!-- Column 1: Basic Plan -->
+      <div style="padding: 48px 52px; border-right: 1px solid rgba(255,255,255,0.14); display: flex; flex-direction: column;">
+        <div style="font-size: 38px; font-weight: 800; color: #FFFFFF;">Basic Plan</div>
+        <div style="font-size: 20px; color: #94A3B8; margin-top: 6px; margin-bottom: 56px;">스타트업 · 초기 채용팀</div>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.14); margin-bottom: 44px;">
+          <span style="font-size: 20px; color: #CBD5E1; font-weight: 600;">연간 결제</span>
+          <div>
+            <span style="font-size: 46px; font-weight: 900; color: #FFFFFF;">₩45,000</span>
+            <span style="font-size: 22px; color: #94A3B8;"> / 월</span>
+          </div>
+        </div>
+
+        <div style="font-size: 18px; color: #94A3B8; font-weight: 700; margin-bottom: 24px;">주요 기능</div>
+        <div style="display: flex; flex-direction: column; gap: 20px; font-size: 21px; font-weight: 600; color: #E2E8F0;">
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>월 100건 AI 4-Agent 서류 평가</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>6종 개인정보(PII) 자동 비식별화</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>1:1 문장 하이라이트 &amp; 문항별 평가</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>맞춤형 면접 키워드 질문 생성</div>
+        </div>
+      </div>
+
+      <!-- Column 2: Standard Plan -->
+      <div style="padding: 48px 52px; border-right: 1px solid rgba(255,255,255,0.14); display: flex; flex-direction: column;">
+        <div style="font-size: 38px; font-weight: 800; color: #FFFFFF;">Standard Plan</div>
+        <div style="font-size: 20px; color: #94A3B8; margin-top: 6px; margin-bottom: 56px;">수시채용 스케일업 기업</div>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.14); margin-bottom: 44px;">
+          <span style="font-size: 20px; color: #CBD5E1; font-weight: 600;">연간 결제</span>
+          <div>
+            <span style="font-size: 46px; font-weight: 900; color: #FFFFFF;">₩180,000</span>
+            <span style="font-size: 22px; color: #94A3B8;"> / 월</span>
+          </div>
+        </div>
+
+        <div style="font-size: 18px; color: #94A3B8; font-weight: 700; margin-bottom: 18px;">주요 기능</div>
+        <div style="font-size: 22px; font-weight: 800; color: #3B82F6; margin-bottom: 22px;">Basic의 모든 기능 +</div>
+        <div style="display: flex; flex-direction: column; gap: 20px; font-size: 21px; font-weight: 600; color: #E2E8F0;">
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>월 500건 평가 &amp; 태그형 가중치</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>사람 검토(HITL) 보정 &amp; 롤백</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>서류·면접 2-Track 통합 비교</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>면접관 공유 링크 &amp; 실시간 메모</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>합격·불합격 안내 메일 발송</div>
+        </div>
+      </div>
+
+      <!-- Column 3: Business Plan -->
+      <div style="padding: 48px 52px; display: flex; flex-direction: column;">
+        <div style="font-size: 38px; font-weight: 800; color: #FFFFFF;">Business Plan</div>
+        <div style="font-size: 20px; color: #94A3B8; margin-top: 6px; margin-bottom: 56px;">중견·대기업 엔터프라이즈</div>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.14); margin-bottom: 44px;">
+          <span style="font-size: 20px; color: #CBD5E1; font-weight: 600;">연간 결제</span>
+          <div>
+            <span style="font-size: 46px; font-weight: 900; color: #FFFFFF;">₩360,000~</span>
+            <span style="font-size: 22px; color: #94A3B8;"> / 월</span>
+          </div>
+        </div>
+
+        <div style="font-size: 18px; color: #94A3B8; font-weight: 700; margin-bottom: 18px;">주요 기능</div>
+        <div style="font-size: 22px; font-weight: 800; color: #3B82F6; margin-bottom: 22px;">Standard의 모든 기능 +</div>
+        <div style="display: flex; flex-direction: column; gap: 20px; font-size: 21px; font-weight: 600; color: #E2E8F0;">
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>무제한 평가 &amp; 부서별 크레딧 쿼터</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>그리팅·Greenhouse 등 ATS Webhook 연동</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>Custom HR 프롬프트 스튜디오</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>지원자 ESG 성장 피드백 리포트</div>
+          <div><span style="color: #10B981; margin-right: 12px;">✔</span>전용 Supabase RLS 테넌트 격리</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 19: TRACTION & EFFICIENCY METRICS — 검토 시간 93% 단축 & 평가 일관성 (Doodlin 03:19-03:35 Bar+Line Chart Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 80px 130px; position: relative; flex-direction: row; align-items: center; gap: 70px;">
+    <div class="watermark-grid">
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+      <div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div><div class="watermark-cell"></div>
+    </div>
+
+    <!-- Left: Bar Chart (Doodlin Slide 24 Style) -->
+    <div style="width: 50%; height: 780px; background: rgba(20, 26, 36, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 28px; padding: 48px; position: relative; z-index: 5; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="font-size: 20px; font-weight: 700; color: #94A3B8;">지원자 100명 서류 평가·면접 질문 도출 처리량 (시간당)</div>
+        <div style="font-size: 38px; font-weight: 900; color: #FFFFFF; margin-top: 8px;">
+          서류 검토 속도 <span style="color: #2563EB;">16배 향상 (93.7% 단축!)</span>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 480px; padding-top: 40px; border-bottom: 2px solid #475569;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <span style="font-size: 20px; font-weight: 700; color: #94A3B8;">5명/h</span>
+          <div style="width: 84px; height: 55px; background: #475569; border-radius: 8px 8px 0 0;"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <span style="font-size: 20px; font-weight: 700; color: #94A3B8;">12명/h</span>
+          <div style="width: 84px; height: 120px; background: #475569; border-radius: 8px 8px 0 0;"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <span style="font-size: 20px; font-weight: 700; color: #FFFFFF;">25명/h</span>
+          <div style="width: 84px; height: 220px; background: #FFFFFF; border-radius: 8px 8px 0 0;"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <span style="font-size: 20px; font-weight: 700; color: #94A3B8;">45명/h</span>
+          <div style="width: 84px; height: 310px; background: #475569; border-radius: 8px 8px 0 0;"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <span style="font-size: 26px; font-weight: 900; color: #3B82F6;">80명/h!</span>
+          <div style="width: 92px; height: 420px; background: #2563EB; border-radius: 8px 8px 0 0; box-shadow: 0 0 32px rgba(37, 99, 235, 0.6);"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-around; font-size: 17px; font-weight: 700; color: #CBD5E1; padding-top: 14px;">
+        <span>수작업 정독</span>
+        <span>엑셀 취합</span>
+        <span>범용 LLM</span>
+        <span>Check-Mate v1</span>
+        <span style="color: #60A5FA; font-weight: 900;">Check-Mate v2</span>
+      </div>
+    </div>
+
+    <!-- Right: Growth & Cost Optimization Curve (Doodlin Slide 25/26 Style) -->
+    <div style="width: 50%; height: 780px; background: rgba(20, 26, 36, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 28px; padding: 48px; position: relative; z-index: 5; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="font-size: 20px; font-weight: 700; color: #94A3B8;">반복 조회·협업 시 SHA-256 캐시 히트율 및 근거 정합성 📈</div>
+        <div style="font-size: 38px; font-weight: 900; color: #FFFFFF; margin-top: 8px;">
+          AI 토큰 비용 <span style="color: #2563EB;">68% 절감 · 정합성 94% 돌파!</span>
+        </div>
+      </div>
+
+      <div style="position: relative; height: 480px; border-bottom: 2px solid #475569; border-left: 2px solid #475569; display: flex; align-items: flex-end;">
+        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 28%; background: rgba(37, 99, 235, 0.18);"></div>
+        <svg viewBox="0 0 600 400" style="width: 100%; height: 100%; overflow: visible;">
+          <line x1="0" y1="100" x2="600" y2="100" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+          <line x1="0" y1="200" x2="600" y2="200" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+          <line x1="0" y1="300" x2="600" y2="300" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+          <polyline
+            fill="none"
+            stroke="#2563EB"
+            stroke-width="6"
+            points="20,360 110,330 200,280 290,240 380,180 470,110 570,35"
+          />
+          <circle cx="570" cy="35" r="9" fill="#60A5FA" />
+        </svg>
+        <div style="position: absolute; right: 24px; top: 18px; font-size: 32px; font-weight: 900; color: #FFFFFF;">
+          94.2%
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: 700; color: #CBD5E1; padding-top: 14px;">
+        <span>단일 프롬프트</span>
+        <span>2-Agent 분리</span>
+        <span>PII 마스킹</span>
+        <span>fuzzyMatcher 보정</span>
+        <span style="color: #60A5FA; font-weight: 900;">4-Agent + HITL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 20: TARGET MARKET EXPANSION — 스타트업 ➔ 30인 이상 기업 39만 곳 (Doodlin 04:01 Exact Homage)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 0; flex-direction: row; align-items: center; position: relative;">
+    <!-- Left Startup Visual Panel -->
+    <div style="width: 38%; height: 100%; background: linear-gradient(135deg, rgba(15,23,42,0.92), rgba(20,26,36,0.96)), url('docs/assets/poster_fresh/01_landing_hero.png') center/cover; display: flex; flex-direction: column; justify-content: center; padding-left: 140px; border-right: 1px solid rgba(255,255,255,0.08);">
+      <div style="font-size: 22px; color: #93C5FD; font-weight: 700; margin-bottom: 10px;">Phase 1 · 초기 진입 시장</div>
+      <div style="font-size: 56px; font-weight: 900; color: #FFFFFF; letter-spacing: -0.03em;">스타트업 · IT 기업</div>
+      <div style="font-size: 20px; color: #CBD5E1; margin-top: 14px;">수시채용 빈도가 높은 3,000개 혁신 기업</div>
+    </div>
+
+    <!-- Right Enterprise 39만 곳 Panel -->
+    <div style="width: 62%; height: 100%; background: radial-gradient(circle at 70% 50%, #1E3A8A 0%, #141A24 75%); display: flex; flex-direction: column; justify-content: center; padding-left: 180px; padding-right: 120px;">
+      <div style="font-size: 22px; color: #60A5FA; font-weight: 700; margin-bottom: 10px;">Phase 2–3 · 스케일업 타겟 시장</div>
+      <div style="font-size: 62px; font-weight: 900; color: #FFFFFF; letter-spacing: -0.03em; display: flex; align-items: center; gap: 18px;">
+        <span>30인 이상 기업 <span style="color: #3B82F6;">39만 곳</span></span>
+        <span style="font-size: 48px;">💰💰💰</span>
+      </div>
+      <div style="font-size: 23px; color: #CBD5E1; margin-top: 22px; line-height: 1.6;">
+        기존 ATS(그리팅·나인하이어·Greenhouse)를 이미 쓰거나 도입 중인 모든 기업 위에<br />
+        <strong style="color: #FFFFFF;">Webhook 하나로 즉시 결합되는 ‘AI 서류 검증·면접 코파일럿 레이어’</strong>
+      </div>
+    </div>
+
+    <!-- Long Connecting Arrow Across Seam (Exact Doodlin Slide 27 style) -->
+    <div style="position: absolute; left: 31%; top: 50%; width: 220px; height: 4px; background: #FFFFFF; transform: translateY(-50%); z-index: 10; display: flex; align-items: center; justify-content: flex-end;">
+      <div style="width: 16px; height: 16px; border-top: 4px solid #FFFFFF; border-right: 4px solid #FFFFFF; transform: rotate(45deg);"></div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 21: EXECUTION TIMELINE & TEAM — 실행력·기술력·허슬 (Doodlin 04:10 + 04:35 Style)
+       ===================================================================== -->
+  <section class="slide bg-dark" style="padding: 72px 130px; justify-content: space-between;">
+    <!-- Top Horizontal Execution Timeline (Doodlin Slide 28 Style) -->
+    <div>
+      <div style="font-size: 22px; font-weight: 800; color: #60A5FA; margin-bottom: 12px;">EXECUTION &amp; MILESTONES</div>
+      <div style="font-size: 38px; font-weight: 900; color: #FFFFFF; margin-bottom: 42px;">
+        사용자가 겪는 채용 검증 문제를 파악하고, 가장 빠른 실행력으로 해결합니다
+      </div>
+
+      <div style="position: relative; display: flex; justify-content: space-between; align-items: center; padding: 36px 0;">
+        <div style="position: absolute; left: 40px; right: 40px; top: 50%; height: 3px; background: #2563EB;"></div>
+
+        <div style="position: relative; z-index: 5; background: #1E293B; border: 2px solid #3B82F6; border-radius: 16px; padding: 18px 24px; width: 280px;">
+          <div style="font-size: 15px; color: #93C5FD; font-weight: 800;">STEP 01</div>
+          <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">HR 현업 문제 정의</div>
+          <div style="font-size: 15px; color: #94A3B8; margin-top: 6px;">인사담당자 심층 인터뷰 및 3대 병목 도출</div>
+        </div>
+
+        <div style="position: relative; z-index: 5; background: #1E293B; border: 2px solid #3B82F6; border-radius: 16px; padding: 18px 24px; width: 280px;">
+          <div style="font-size: 15px; color: #93C5FD; font-weight: 800;">STEP 02</div>
+          <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">Zero-Trust &amp; 4-Agent</div>
+          <div style="font-size: 15px; color: #94A3B8; margin-top: 6px;">로컬 PII 마스킹 + Claude 4-Stage 파이프라인</div>
+        </div>
+
+        <div style="position: relative; z-index: 5; background: #1E293B; border: 2px solid #3B82F6; border-radius: 16px; padding: 18px 24px; width: 280px;">
+          <div style="font-size: 15px; color: #93C5FD; font-weight: 800;">STEP 03</div>
+          <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">하이브리드 백엔드 &amp; RLS</div>
+          <div style="font-size: 15px; color: #94A3B8; margin-top: 6px;">Node BFF + Spring Boot 3.3 + Supabase DB</div>
+        </div>
+
+        <div style="position: relative; z-index: 5; background: #1E293B; border: 2px solid #3B82F6; border-radius: 16px; padding: 18px 24px; width: 280px;">
+          <div style="font-size: 15px; color: #93C5FD; font-weight: 800;">STEP 04</div>
+          <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">로드맵 11대 기능 완주</div>
+          <div style="font-size: 15px; color: #94A3B8; margin-top: 6px;">2-Track · 태그가중치 · 문항별평가 · ATS 연동</div>
+        </div>
+
+        <div style="position: relative; z-index: 5; background: #2563EB; border: 2px solid #60A5FA; border-radius: 16px; padding: 18px 24px; width: 280px; box-shadow: 0 12px 30px rgba(37,99,235,0.45);">
+          <div style="font-size: 15px; color: #DBEAFE; font-weight: 800;">STEP 05 · LIVE</div>
+          <div style="font-size: 20px; font-weight: 900; color: #fff; margin-top: 4px;">170 Tests &amp; 클라우드 배포</div>
+          <div style="font-size: 15px; color: #EFF6FF; margin-top: 6px;">GCP Cloud Run 무중단 배포 및 상용 검증</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Team & Competency Cards (Doodlin Slide 29 Style) -->
+    <div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
+        <div style="background: #232B3A; border-radius: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 26px; font-weight: 800; color: #FFFFFF;">장천명</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">Chunmyung Jang · 32203919</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 20px; font-weight: 700; color: #60A5FA;">Project Lead &amp; Architect</div>
+            <div style="font-size: 15px; color: #94A3B8; margin-top: 4px;">단국대학교 소프트웨어학과</div>
+          </div>
+        </div>
+
+        <div style="background: #232B3A; border-radius: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 24px; font-weight: 800; color: #FFFFFF;">AI Multi-Agent Engine</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">Claude Sonnet 4.5 · 1:1 Grounding</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 19px; font-weight: 700; color: #E2E8F0;">4-Stage 파이프라인 설계</div>
+            <div style="font-size: 15px; color: #94A3B8; margin-top: 4px;">PII Anonymizer · Fuzzy Matcher</div>
+          </div>
+        </div>
+
+        <div style="background: #232B3A; border-radius: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 24px; font-weight: 800; color: #FFFFFF;">Full-Stack &amp; Cloud Infra</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">React 19 · Node BFF · Spring Boot 3.3</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 19px; font-weight: 700; color: #E2E8F0;">Supabase RLS · Cloud Run</div>
+            <div style="font-size: 15px; color: #94A3B8; margin-top: 4px;">34 Test Suites · 170 Unit Tests</div>
+          </div>
+        </div>
+
+        <div style="background: #232B3A; border-radius: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 22px; font-weight: 800; color: #FFFFFF;">KT AIVLE School 빅프로젝트</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">생성형 AI 도메인 실전 역량</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 19px; font-weight: 700; color: #FBBF24;">우수상 수상 검증</div>
+            <div style="font-size: 15px; color: #94A3B8; margin-top: 4px;">실제 현업 문제 해결 경험</div>
+          </div>
+        </div>
+
+        <div style="background: #232B3A; border-radius: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 22px; font-weight: 800; color: #FFFFFF;">Product-Led Execution</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">기획 · 디자인 · 개발 · 배포 전 과정</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 19px; font-weight: 700; color: #10B981;">114 PRs Merged</div>
+            <div style="font-size: 15px; color: #94A3B8; margin-top: 4px;">빠른 VOC 반영 및 린 이터레이션</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 24px; padding: 16px;">
+          <div class="slanted-badge" style="font-size: 20px; padding: 10px 24px;">Check-Mate</div>
+          <div>
+            <div style="font-size: 22px; font-weight: 800; color: #FFFFFF;">AX HR 코파일럿 Check-Mate</div>
+            <div style="font-size: 16px; color: #94A3B8; margin-top: 4px;">github.com/jcm0314/CapStone-SW-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SLIDE 22: Q&A CLOSING SLIDE (Doodlin 05:09 Exact Homage — Mint-Blue Gradient + "이봐, 해봤어?")
+       ===================================================================== -->
+  <section class="slide bg-qna" style="align-items: center; justify-content: center;">
+    <div style="font-size: 128px; font-weight: 900; color: #FFFFFF; letter-spacing: -0.02em; text-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);">
+      Q&amp;A
+    </div>
+    <div style="font-size: 28px; font-weight: 700; color: rgba(255, 255, 255, 0.92); margin-top: 16px;">
+      AX HR 코파일럿 Check-Mate · 경청해 주셔서 감사합니다
+    </div>
+
+    <!-- Bottom Left: QR Codes for Live Demo & GitHub -->
+    <div style="position: absolute; left: 100px; bottom: 72px; display: flex; gap: 24px;">
+      <div style="background: rgba(255, 255, 255, 0.95); color: #141A24; padding: 16px 22px; border-radius: 18px; display: flex; align-items: center; gap: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.12);">
+        <img src="docs/assets/qr_live.svg" alt="Live Demo QR" style="width: 72px; height: 72px;" />
+        <div>
+          <div style="font-size: 18px; font-weight: 800;">실서비스 라이브 데모</div>
+          <div style="font-size: 14px; color: #475569; margin-top: 2px;">GCP Cloud Run 가동 중</div>
+        </div>
+      </div>
+      <div style="background: rgba(255, 255, 255, 0.95); color: #141A24; padding: 16px 22px; border-radius: 18px; display: flex; align-items: center; gap: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.12);">
+        <img src="docs/assets/qr_github.svg" alt="GitHub QR" style="width: 72px; height: 72px;" />
+        <div>
+          <div style="font-size: 18px; font-weight: 800;">GitHub 소스코드</div>
+          <div style="font-size: 14px; color: #475569; margin-top: 2px;">jcm0314/CapStone-SW-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Right: Exact Doodlin Homage Quote -->
+    <div style="position: absolute; right: 110px; bottom: 82px; text-align: right; color: rgba(255, 255, 255, 0.92);">
+      <div style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em;">이봐, 해봤어?</div>
+      <div style="font-size: 24px; font-weight: 500; margin-top: 4px; opacity: 0.85;">아산 정주영</div>
+    </div>
+  </section>
+
+</body>
+</html>
