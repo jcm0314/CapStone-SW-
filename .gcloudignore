@@ -9,3 +9,11 @@ presentation.pdf
 .DS_Store
 *.local
 build_out.txt
+
+# 비밀값·개인 파일은 Cloud Build 업로드에서 제외 (gcloud builds submit 은 폴더를 통째로 올림)
+#!include:.gitignore
+.env*
+checkmate-key.json
+*.mp4
+사업계획서*.md
+feedback.md
