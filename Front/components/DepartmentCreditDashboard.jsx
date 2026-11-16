@@ -19,17 +19,32 @@ import {
   ExternalLink
 } from 'lucide-react';
 
+const DEFAULT_DEPARTMENTS = [
+  { id: 'dept-eng', code: 'PLATFORM-DEV', name: '백엔드·플랫폼 개발본부', leadManager: '김서아 테크리크루터', allocatedUsd: 1200, usedUsd: 486.5, userCount: 18, autoLockEnabled: true },
+  { id: 'dept-mkt', code: 'GROWTH-MKT', name: '그로스·브랜드 마케팅팀', leadManager: '이도현 채용매니저', allocatedUsd: 800, usedUsd: 312.0, userCount: 12, autoLockEnabled: true },
+  { id: 'dept-biz', code: 'ENT-SALES', name: 'B2B 엔터프라이즈 사업본부', leadManager: '박지훈 세일즈리드', allocatedUsd: 600, usedUsd: 478.2, userCount: 9, autoLockEnabled: true }
+];
+
+const DEFAULT_USERS = [
+  { id: 'u-1', name: '김서아', email: 'seoa.kim@company.io', studentId: 'HR-101', deptId: 'dept-eng', deptName: '백엔드·플랫폼 개발본부', evalCount: 142, tokensUsed: 284000, spentUsd: 184.2, isLocked: false },
+  { id: 'u-2', name: '이도현', email: 'dohyun.lee@company.io', studentId: 'HR-104', deptId: 'dept-mkt', deptName: '그로스·브랜드 마케팅팀', evalCount: 96, tokensUsed: 192000, spentUsd: 128.5, isLocked: false },
+  { id: 'u-3', name: '박지훈', email: 'jihoon.park@company.io', studentId: 'BM-201', deptId: 'dept-biz', deptName: 'B2B 엔터프라이즈 사업본부', evalCount: 84, tokensUsed: 168000, spentUsd: 112.4, isLocked: false },
+  { id: 'u-4', name: '최유진', email: 'yujin.choi@company.io', studentId: 'DEV-302', deptId: 'dept-eng', deptName: '백엔드·플랫폼 개발본부', evalCount: 68, tokensUsed: 136000, spentUsd: 89.6, isLocked: false }
+];
+
 export default function DepartmentCreditDashboard() {
   // Department quotas state
   const [departments, setDepartments] = useState(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('dku_departments_quota') : null;
-    return saved ? JSON.parse(saved) : [];
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_DEPARTMENTS;
   });
 
   // Users state
   const [users, setUsers] = useState(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('dku_users_list') : null;
-    return saved ? JSON.parse(saved) : [];
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_USERS;
   });
 
   // Filters & Pagination
@@ -145,17 +160,17 @@ export default function DepartmentCreditDashboard() {
             <div className="flex items-center gap-2.5 mb-2">
               <span className="px-3 py-1 text-xs font-bold bg-brand-soft text-brand-fg border border-brand-line rounded-full flex items-center gap-1.5">
                 <ShieldAlert className="w-3.5 h-3.5 text-brand-fg" />
-                단국대학교 전사 거버넌스
+                엔터프라이즈 멀티테넌트 거버넌스
               </span>
               <span className="px-2.5 py-0.5 text-xs font-semibold bg-ok-soft text-ok border border-ok-line rounded-full">
-                2,048명 매핑 정상 작동
+                SHA-256 하이브리드 캐시 작동 중
               </span>
             </div>
             <h2 className="text-2xl lg:text-3xl font-semibold text-fg tracking-tight">
               부서별 AI 크레딧 쿼터 & 토큰 비용 관리 대시보드
             </h2>
             <p className="text-sm text-fg-muted mt-1 max-w-2xl">
-              무분별한 API 비용 폭증을 사전에 차단하고, 5개 단과대/센터별로 차등 배분된 크레딧 예산과 2,000명 이용자의 실시간 토큰 소진율을 통합 관제합니다.
+              무분별한 API 비용 폭증을 사전에 차단하고, 채용 본부/부서별로 차등 배분된 AI 크레딧 예산과 채용담당자·면접관의 실시간 토큰 소진율을 통합 관제합니다.
             </p>
           </div>
 
@@ -164,7 +179,7 @@ export default function DepartmentCreditDashboard() {
               <div className="text-[11px] text-fg-muted font-medium">메인 추론 엔진</div>
               <div className="text-sm font-bold text-brand-fg flex items-center justify-end gap-1.5 mt-0.5">
                 <Zap className="w-4 h-4 text-warn fill-warn" />
-                Gemini 2.5 Flash-Lite
+                Claude Sonnet 4.5 · 4-Agent
               </div>
             </div>
           </div>
@@ -213,7 +228,7 @@ export default function DepartmentCreditDashboard() {
         {/* 3. Cost Savings by Gemini Flash-Lite */}
         <div className="bg-ok-soft bg-subtle p-5 rounded-2xl border border-ok-line shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-ok font-semibold uppercase tracking-wider">Flash-Lite 누적 절감액</span>
+            <span className="text-xs text-ok font-semibold uppercase tracking-wider">SHA-256 캐시 절감액</span>
             <div className="p-2 rounded-xl bg-ok-soft text-ok border border-ok-line">
               <TrendingDown className="w-4 h-4" />
             </div>
@@ -223,7 +238,7 @@ export default function DepartmentCreditDashboard() {
               +${totalSavingsUsd.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-ok mt-1 font-medium">
-              GPT-4o 대비 88% 예산 절감 효과
+              반복 평가·조회 토큰 비용 68% 절감
             </div>
           </div>
         </div>

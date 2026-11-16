@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sprout, Workflow, Share2, Printer, Mail } from 'lucide-react';
+import { ShieldCheck, CheckCircle, HelpCircle, XCircle, SlidersHorizontal, Sprout, Workflow, Share2, Printer, Mail, UserCheck } from 'lucide-react';
 import MultiAgentAuditModal from './MultiAgentAuditModal';
 import SampleBadge from './SampleBadge';
 import { isSampleResult } from '../utils/sampleResult';
