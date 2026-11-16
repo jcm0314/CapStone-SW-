@@ -80,4 +80,58 @@ describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
 
     expect(() => anonymizePII('본문 a+b', 'a+b[')).not.toThrow();
   });
+
+  describe('변형 표기 (2026-11-16 실측 보완)', () => {
+    it('+82 국제번호 표기 전화번호를 마스킹해야 함', () => {
+      const out = anonymizePII('+82 10-2345-6789 로 연락주세요.').anonymizedText;
+      expect(out).not.toContain('2345-6789');
+      expect(out).toContain('[전화번호 익명화]');
+    });
+
+    it('YY년생 / YYYY년생 표기를 생년월일로 마스킹해야 함', () => {
+      expect(anonymizePII('저는 97년생입니다.').anonymizedText).toBe('저는 [생년월일 익명화]입니다.');
+      expect(anonymizePII('2002년생 신입').anonymizedText).toBe('[생년월일 익명화] 신입');
+    });
+
+    it('생년월일·생일·출생 단서 뒤의 숫자 날짜만 마스킹하고 단서는 남겨야 함', () => {
+      expect(anonymizePII('생년월일: 1999.07.21').anonymizedText).toBe('생년월일: [생년월일 익명화]');
+      expect(anonymizePII('생일은 2000-11-03 입니다.').anonymizedText).toBe('생일은 [생년월일 익명화] 입니다.');
+      expect(anonymizePII('출생: 1996/02/29').anonymizedText).toBe('출생: [생년월일 익명화]');
+    });
+
+    it('프로젝트·릴리스 날짜와 버전은 생년월일로 오탐하지 않아야 함', () => {
+      for (const t of ['2024.03.15에 정식 버전을 배포했습니다.', '2023-11-04 릴리스', '주문 번호 2023-1104-5521', 'v2.10.3 버전', '생일 이벤트를 2024.05.05에 열었다']) {
+        expect(anonymizePII(t).anonymizedText).toBe(t);
+      }
+    });
+
+    it('시·도 약칭 + 시/군/구 주소를 마스킹해야 함', () => {
+      expect(anonymizePII('서울 강남구에 살고 있습니다.').anonymizedText).toBe('[거주지역 익명화]에 살고 있습니다.');
+      expect(anonymizePII('경기 성남시 분당구').anonymizedText).toContain('[거주지역 익명화]');
+      expect(anonymizePII('부산 중구 거주').anonymizedText).toBe('[거주지역 익명화] 거주');
+    });
+
+    it('지역명이 들어가도 주소가 아닌 문장은 바꾸지 않아야 함', () => {
+      for (const t of ['서울에서 열린 해커톤', '경기 침체 속에서도', '부산 지사와 서울 본사 간 협업', '서울 도시 계획', '대전 유성구청과 협업']) {
+        expect(anonymizePII(t).anonymizedText).toBe(t);
+      }
+    });
+
+    it('포항공대·서울과기대 등 약칭을 학교명으로 마스킹하되 공대생 같은 일반 명사는 남겨야 함', () => {
+      expect(anonymizePII('포항공대에서 연구했습니다.').anonymizedText).toBe('[학교명 익명화]에서 연구했습니다.');
+      expect(anonymizePII('서울과기대 대학원').anonymizedText).not.toContain('서울과기대');
+      expect(anonymizePII('공대생 시절부터').anonymizedText).toBe('공대생 시절부터');
+    });
+
+    it('음절 사이를 띄어 쓴 성명도 마스킹해야 함', () => {
+      expect(anonymizePII('지원자 정 해 인 입니다.', '정해인').anonymizedText).toBe('지원자 [성명 익명화] 입니다.');
+    });
+
+    it('같은 카테고리의 여러 규칙이 걸려도 piiCount는 카테고리당 1회만 세야 함', () => {
+      const r = anonymizePII('1998년 5월 12일생, 97년생 표기');
+      expect(r.maskedCategories).toEqual(['생년월일']);
+      expect(r.piiCount).toBe(1);
+    });
+  });
 });
+

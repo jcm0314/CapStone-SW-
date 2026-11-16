@@ -13,7 +13,9 @@
     "build": "vite build --config config/vite.config.js",
     "preview": "vite preview --config config/vite.config.js",
     "test": "vitest run --config config/vite.config.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "bench:pii": "node scripts/bench/pii_bench.mjs && node scripts/bench/pii_holdout.mjs",
+    "bench:claude": "node --env-file=.env scripts/bench/claude_bench.mjs"
   },
   "lint-staged": {
     "*.{js,jsx}": [
