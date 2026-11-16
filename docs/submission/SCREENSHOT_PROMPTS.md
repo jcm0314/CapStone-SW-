@@ -128,3 +128,22 @@ B2B SaaS 영업 직무에 지원하는 최유나입니다. 이메일은 yuna.cho
 - 결과는 docs/submission/screens/01_landing.png ~ 07_feedback.png 로 저장해.
 - 끝나면 화면별로 "저장함 / 건너뜀(이유)" 표와, AI 평가를 몇 번 실행했는지 알려 줘.
 ```
+
+## 도표 (그림 1·2·6)
+
+사업계획서의 도표 3개는 `docs/submission/diagrams/diagrams.html` 한 파일에 있습니다.
+글자나 숫자를 고친 뒤 아래처럼 PNG로 다시 뽑으면 됩니다 (Chrome과 playwright-core 필요, 2배 해상도).
+
+```bash
+npm i --no-save playwright-core@1.48.2
+node -e "
+const {chromium}=require('playwright-core');
+(async()=>{const b=await chromium.launch({executablePath:'/usr/bin/google-chrome'});
+const p=await b.newPage({viewport:{width:1280,height:900},deviceScaleFactor:2});
+await p.goto('file://'+process.cwd()+'/docs/submission/diagrams/diagrams.html',{waitUntil:'networkidle'});
+for (const [id,f] of [['fig-problem','d1_problem'],['fig-solution','d2_structure'],['fig-roadmap','d3_roadmap']])
+  await p.locator('#'+id).screenshot({path:'docs/submission/diagrams/'+f+'.png'});
+await b.close();})()"
+```
+
+도표의 숫자는 실측값(`scripts/bench/`)과 사업계획서 로드맵에 있는 값만 씁니다.
