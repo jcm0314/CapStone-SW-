@@ -81,7 +81,7 @@ const SHOWCASE_CARDS = [
   },
   {
     tag: '7종 PII 로컬 마스킹',
-    title: '학벌·신상 100% 블라인드',
+    title: '학벌·신상 블라인드',
     subtitle: '프론트엔드 · 비식별화 완료',
     metric: '이메일·연락처·학교명 로컬 자동 치환',
     quote: '"[학교명 익명화] 컴퓨터공학과 졸업"',
@@ -200,7 +200,7 @@ export default function LandingPage({ onEnterWorkspace, onSelectApplicant }) {
           {/* 노란 형광펜 서브 카피 */}
           <div className="mt-6 flex justify-center">
             <p className="inline-block text-xl sm:text-2xl font-extrabold text-slate-900 bg-[#FDE047] px-3 py-0.5 rounded-sm shadow-xs">
-              서류 1건 검토, 1.5분이면 끝납니다.
+              AI 분석은 30초 안팎, 최종 판단은 사람이 합니다.
             </p>
           </div>
 
@@ -525,7 +525,7 @@ export default function LandingPage({ onEnterWorkspace, onSelectApplicant }) {
                 &quot;ChatGPT 복붙 자소서 300장, 언제 다 읽고 검증하죠?&quot;
               </h3>
               <p className="text-sm text-slate-500 leading-relaxed">
-                건당 15~20분씩 밤늦게 정독하다 보면 정작 중요한 핵심 역량과 수치 검증을 놓치기 쉽습니다.
+                한 건씩 밤늦게 정독하다 보면 정작 중요한 핵심 역량과 수치 검증을 놓치기 쉽습니다.
               </p>
             </div>
 
