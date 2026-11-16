@@ -199,7 +199,7 @@ export default function InterviewerCollaborationPanel({ applicant, shareId }) {
               <div className="flex items-center gap-1.5 flex-wrap min-w-0">
                 <span className="font-semibold text-fg">{note.author}</span>
                 <span className="chip chip-neutral !py-0">{ROLE_LABEL[note.role] || note.role}</span>
-                {note.scoreAdjustment !== 0 && (
+                {typeof note.scoreAdjustment === 'number' && note.scoreAdjustment !== 0 && (
                   <span className={`chip !py-0 ${note.scoreAdjustment > 0 ? 'chip-ok' : 'chip-bad'}`}>
                     {note.scoreAdjustment > 0 ? `+${note.scoreAdjustment}점 보정` : `${note.scoreAdjustment}점 감점`}
                   </span>
