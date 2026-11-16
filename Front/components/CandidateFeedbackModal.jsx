@@ -15,7 +15,7 @@ export default function CandidateFeedbackModal({ isOpen, onClose, result, curren
   const feedbackText = `안녕하세요, ${name} 지원자님.
 ${tenantName} [${applyJobTitle || currentJob?.title}] 채용 전형에 지원해 주셔서 진심으로 감사드립니다.
 
-본 전형은 채용절차의 공정화에 관한 법률에 의거하여 학력·출신지·연령·성별 등 7대 편향 요소를 100% 블라인드 마스킹한 후, 오직 직무 역량 근거만을 바탕으로 공정하게 심사되었습니다.
+본 전형은 채용절차의 공정화에 관한 법률에 의거하여 이름·출신 학교·연락처 등 개인정보를 가린 뒤 AI에 전달하여, 자기소개서에 쓴 직무 경험을 근거로 심사되었습니다.
 
 [1. 서류에서 확인된 ${name}님의 핵심 강점]
 ${strengths.length > 0
@@ -75,7 +75,7 @@ ${tenantName} 인재영입팀 드림`;
             <div>
               <p className="font-bold text-brand-fg">블라인드 평가</p>
               <p className="text-[11px] text-brand-fg mt-0.5">
-                지원서 내 학력·연령·성별·연락처 등 개인식별정보(PII)를 100% 비식별화한 상태에서 직무 역량 근거만으로 공정하게 평가되었습니다.
+                이름·출신 학교·연락처·이메일·생년월일·거주 지역 등 개인정보를 AI에 보내기 전에 가리고, 자기소개서에 쓴 경험을 근거로 평가했습니다.
               </p>
             </div>
           </div>
