@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Loader2, UploadCloud, PenLine } from 'lucide-react';
 import FileUploadZone from './FileUploadZone';
+import { guessApplicantName } from '../utils/nameGuesser';
 
 const CONSENT_KEY = 'checkmate_pii_consent_confirmed';
 
@@ -55,12 +56,9 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
   const handleOnFileSelected = (extractedText, filename) => {
     if (extractedText) {
       setRawText(extractedText);
-      if (filename) {
-        const cleanName = filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '');
-        if (cleanName && cleanName.length >= 2) {
-          setName(cleanName.slice(0, 4));
-        }
-      }
+      // 이름은 본문에서 먼저 찾고, 없으면 한글 이름이 든 파일 이름에서 찾음 (못 찾으면 직접 입력)
+      const guessed = guessApplicantName(extractedText, filename);
+      if (guessed) setName(guessed);
     }
   };
 

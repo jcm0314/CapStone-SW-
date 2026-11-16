@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { UploadCloud, FileText, CheckCircle2, Trash2, FileCheck, FileCode } from 'lucide-react';
 import { parseCandidateFilesBatch } from '../utils/fileParser';
+import { guessApplicantName } from '../utils/nameGuesser';
 
 export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnalyzing }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -143,8 +144,8 @@ export default function FileUploadZone({ onFileSelected, onBatchAnalyze, isAnaly
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => {
-                  const candidateBatch = parsedFiles.map(f => {
-                    const cleanName = f.filename.replace(/\.[^/.]+$/, '').replace(/[^가-힣a-zA-Z]/g, '').slice(0, 4) || '지원자';
+                  const candidateBatch = parsedFiles.map((f, idx) => {
+                    const cleanName = guessApplicantName(f.extractedText, f.filename) || `지원자 ${idx + 1}`;
                     return { name: cleanName, rawText: f.extractedText, filename: f.filename };
                   });
                   onBatchAnalyze(candidateBatch);

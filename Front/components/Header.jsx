@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, SlidersHorizontal, Building2, ChevronDown, Menu, Moon, Sun, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, Building2, ChevronDown, Menu, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
 import SSOProfileModal from './SSOProfileModal';
@@ -42,10 +42,10 @@ export default function Header({
 
           {/* Brand */}
           <a href="/" className="flex items-center gap-2 shrink-0" aria-label="Check-Mate 홈">
-            <span className="w-6 h-6 rounded bg-accent text-accent-ink flex items-center justify-center">
-              <Check className="w-3.5 h-3.5" strokeWidth={3} />
+            <span className="w-7 h-7 rounded-lg bg-accent text-accent-ink flex items-center justify-center font-black text-sm">
+              C
             </span>
-            <span className="text-sm font-semibold text-fg">Check-Mate</span>
+            <span className="text-base font-black tracking-tight text-fg">CHECK-MATE</span>
           </a>
 
           {/* Search (opens command palette) */}
