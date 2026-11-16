@@ -13,7 +13,7 @@ function NavItem({ active, icon: Icon, label, count, onClick }) {
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
       className={`relative w-full flex items-center gap-2.5 pl-3 pr-2 h-8 rounded text-[13px] transition-colors ${
-        active ? 'bg-muted text-fg font-medium' : 'text-fg-muted hover:text-fg hover:bg-subtle'
+        active ? 'bg-brand-soft text-brand-fg font-semibold' : 'text-fg-muted hover:text-fg hover:bg-subtle'
       }`}
     >
       {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-accent" aria-hidden="true" />}

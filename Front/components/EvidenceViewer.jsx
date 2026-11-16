@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { CheckCircle2, AlertTriangle, HelpCircle, ChevronDown, FileText } from 'lucide-react';
 import { List } from 'react-window';
 import { findFuzzyMatch } from '../utils/fuzzyMatcher';
+import { JUMP_TO_QUOTE_EVENT } from './InterviewQuestions';
 
 // react-window v2 rowComponent signature: ({ index, style, ariaAttributes, ...rowProps })
 const EvidenceCardRow = ({ index, style, filteredEvidences, activeQuoteId, setActiveQuoteId, onCardClick }) => {
@@ -79,15 +80,40 @@ function EvidenceViewerContent({ result }) {
 
   useEffect(() => {
     if (!jumpTarget || !showFullText || !textRef.current) return undefined;
-    // 펼침 애니메이션(300ms)이 끝난 뒤 스크롤
+    // 펼침 애니메이션(300ms)이 끝난 뒤 스크롤. id가 없으면(일치하는 근거 카드가 없을 때) 원문 영역으로만 이동
     const t = window.setTimeout(() => {
-      const mark = textRef.current?.querySelector(`[data-ev-id="${CSS.escape(jumpTarget.id)}"]`);
+      const mark = jumpTarget.id
+        ? textRef.current?.querySelector(`[data-ev-id="${CSS.escape(jumpTarget.id)}"]`)
+        : textRef.current;
       if (mark && typeof mark.scrollIntoView === 'function') {
         mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }, 320);
     return () => window.clearTimeout(t);
   }, [jumpTarget, showFullText]);
+
+  // 면접 질문 카드의 "근거 문장"을 누르면 같은 문장의 근거 카드를 찾아 원문에서 보여줌
+  useEffect(() => {
+    const normalize = (s) => String(s || '').replace(/[\s"'“”‘’.,]/g, '');
+    const onJump = (e) => {
+      const target = normalize(e.detail?.quote);
+      if (!target) return;
+      const ev = groundingEvidences.find((g) => {
+        const q = normalize(g?.quote);
+        return q && g.matched !== false && (q === target || q.includes(target) || target.includes(q));
+      });
+      setFilterType('ALL');
+      setShowFullText(true);
+      if (ev) {
+        setActiveQuoteId(ev.id);
+        setJumpTarget({ id: ev.id, at: Date.now() });
+      } else {
+        setJumpTarget({ id: null, at: Date.now() });
+      }
+    };
+    window.addEventListener(JUMP_TO_QUOTE_EVENT, onJump);
+    return () => window.removeEventListener(JUMP_TO_QUOTE_EVENT, onJump);
+  }, [groundingEvidences]);
 
   // Filtered evidences
   const filteredEvidences = groundingEvidences.filter(ev => {
