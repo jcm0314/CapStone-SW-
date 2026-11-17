@@ -163,7 +163,7 @@ export default function DepartmentCreditDashboard() {
                 엔터프라이즈 멀티테넌트 거버넌스
               </span>
               <span className="px-2.5 py-0.5 text-xs font-semibold bg-ok-soft text-ok border border-ok-line rounded-full">
-                SHA-256 하이브리드 캐시 작동 중
+                FNV-1a 하이브리드 캐시 작동 중 (시뮬레이션 예시)
               </span>
             </div>
             <h2 className="text-2xl lg:text-3xl font-semibold text-fg tracking-tight">
@@ -179,7 +179,7 @@ export default function DepartmentCreditDashboard() {
               <div className="text-[11px] text-fg-muted font-medium">메인 추론 엔진</div>
               <div className="text-sm font-bold text-brand-fg flex items-center justify-end gap-1.5 mt-0.5">
                 <Zap className="w-4 h-4 text-warn fill-warn" />
-                Claude Sonnet 4.5 · 4-Agent
+                Claude Haiku · 4-Agent
               </div>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function DepartmentCreditDashboard() {
         {/* 3. Cost Savings by Gemini Flash-Lite */}
         <div className="bg-ok-soft bg-subtle p-5 rounded-2xl border border-ok-line shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-ok font-semibold uppercase tracking-wider">SHA-256 캐시 절감액</span>
+            <span className="text-xs text-ok font-semibold uppercase tracking-wider">FNV-1a 캐시 예상 절감액</span>
             <div className="p-2 rounded-xl bg-ok-soft text-ok border border-ok-line">
               <TrendingDown className="w-4 h-4" />
             </div>
@@ -238,7 +238,7 @@ export default function DepartmentCreditDashboard() {
               +${totalSavingsUsd.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-ok mt-1 font-medium">
-              반복 평가·조회 토큰 비용 68% 절감
+              반복 평가·조회 토큰 비용 68% 절감 (예시)
             </div>
           </div>
         </div>
@@ -389,10 +389,10 @@ export default function DepartmentCreditDashboard() {
           <div>
             <h3 className="text-lg font-bold text-fg flex items-center gap-2">
               <Users className="w-5 h-5 text-brand-fg" />
-              2,000명 이용자별 토큰 및 크레딧 소진 현황
+              이용자별 토큰 및 크레딧 소진 현황 (시뮬레이션)
             </h3>
             <p className="text-xs text-fg-muted mt-0.5">
-              단국대 이메일 및 학번 기준으로 실시간 집계된 API 사용량과 예산 초과 잠금 상태를 개별 제어합니다.
+              사내 인사담당자·면접관 계정 기준으로 집계된 API 사용량과 예산 초과 잠금 상태를 개별 제어합니다.
             </p>
           </div>
 
@@ -403,7 +403,7 @@ export default function DepartmentCreditDashboard() {
               <Search className="w-3.5 h-3.5 text-fg-muted absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="이름, 이메일, 학번 검색..."
+                placeholder="이름, 이메일, 사번 검색..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -422,7 +422,7 @@ export default function DepartmentCreditDashboard() {
               }}
               className="px-3 py-1.5 bg-subtle border border-line-strong rounded-xl text-xs text-fg-muted focus:outline-none focus:border-brand"
             >
-              <option value="ALL">전체 부서/학과</option>
+              <option value="ALL">전체 부서·팀</option>
               {departments.map(d => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
