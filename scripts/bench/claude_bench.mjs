@@ -28,7 +28,10 @@ cc.__setClaudeClientForTests({
   } } }
 });
 
-const SAMPLES = JSON.parse(fs.readFileSync(new URL('./samples.json', import.meta.url)));
+// BENCH_SAMPLES=경로 로 다른 샘플 파일(예: samples_long.json)을 쓸 수 있음. 결과 파일 이름에 그 이름이 붙음.
+const SAMPLE_FILE = process.env.BENCH_SAMPLES || new URL('./samples.json', import.meta.url);
+const SAMPLE_TAG = process.env.BENCH_SAMPLES ? `.${process.env.BENCH_SAMPLES.split('/').pop().replace(/\.json$/, '')}` : '';
+const SAMPLES = JSON.parse(fs.readFileSync(SAMPLE_FILE));
 const rows = [];
 for (const s of SAMPLES) {
   calls = [];
@@ -57,7 +60,7 @@ for (const s of SAMPLES) {
     console.error(`✗ ${s.id} ${e.code} ${e.message}`);
   }
 }
-const outFile = new URL(`./claude_bench_result.${new Date().toISOString().slice(0, 10)}.json`, import.meta.url);
+const outFile = new URL(`./claude_bench_result${SAMPLE_TAG}.${new Date().toISOString().slice(0, 10)}.json`, import.meta.url);
 fs.writeFileSync(outFile, JSON.stringify(rows, null, 2));
 
 console.log('\n샘플\t글자\t시간(s)\t토큰(in/out)\t원\t인용(정확/퍼지/실패)\t점수\t판정');

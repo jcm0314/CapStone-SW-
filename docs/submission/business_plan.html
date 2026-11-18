@@ -1,18 +1,17 @@
 <!doctype html>
 <html lang="ko">
-
 <head>
 <meta charset="utf-8">
 <title>Check-Mate 사업계획서</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  @page { size: A4; margin: 12mm 13mm 13mm; }
+  @page { size: A4; margin: 14mm 14mm 16mm; }
   * { box-sizing: border-box; }
-  body { font-family: Pretendard, 'Malgun Gothic', sans-serif; font-size: 9.8pt; line-height: 1.56; color: #111; margin: 0; letter-spacing: -0.01em; }
+  body { font-family: Pretendard, 'Malgun Gothic', sans-serif; font-size: 10pt; line-height: 1.62; color: #111; margin: 0; letter-spacing: -0.01em; }
   .form-label { font-weight: 800; font-size: 12pt; margin-bottom: 6px; }
   .title-box { border: 1.6px solid #000; text-align: center; font-size: 16pt; font-weight: 800; padding: 8px 0; margin-bottom: 14px; }
   h2 { font-size: 13.5pt; font-weight: 800; margin: 16px 0 6px; break-after: avoid; }
-  .box { border: 1.4px solid #000; }
+  .box { border: 1.4px solid #000; margin-bottom: 4px; }
   .bar { background: #E7E7E7; border-bottom: 1px solid #000; padding: 4px 10px; font-weight: 600; break-after: avoid; }
   .box > .bar:not(:first-child) { border-top: 1px solid #000; }
   .in { padding: 8px 12px 10px; }
@@ -28,47 +27,30 @@
   .ov td { border-color: #000; }
   ol, ul { margin: 2px 0 8px; padding-left: 20px; }
   li { margin-bottom: 3px; }
+  td ul { margin: 0; padding-left: 14px; }
+  td li { margin-bottom: 1px; }
   figure { margin: 8px 0 12px; break-inside: avoid; text-align: center; }
   figure img { max-width: 100%; border: 1px solid #E5E7EB; }
-  figure img.tall { max-height: 118mm; }
-  figure img.mid { max-height: 92mm; }
   .two { display: flex; gap: 8px; align-items: flex-start; break-inside: avoid; }
   .two figure { flex: 1; margin: 6px 0 10px; }
   figcaption { font-size: 9pt; color: #374151; margin-top: 4px; text-align: center; }
   figcaption b { color: #111; }
   .note { font-size: 8.6pt; color: #4B5563; }
   .page-break { break-before: page; }
-  .keep { break-inside: avoid; }
-  td ul { margin: 0; padding-left: 14px; }
-  td li { margin-bottom: 1px; }
-  li ul { margin: 1px 0 2px; font-size: 9.2pt; }
-  li ul li { margin-bottom: 0; }
 </style>
 </head>
-
 <body>
 
-  <div class="form-label">【양식 2】 사업계획서</div>
-  <div class="title-box">2026 다이나믹 단국 창업 아이디어 경진대회 사업계획서</div>
+<div class="form-label">【양식 2】 사업계획서</div>
+<div class="title-box">2026 다이나믹 단국 창업 아이디어 경진대회 사업계획서</div>
 
-  <h2>0. 사업 아이템 개요</h2>
-  <table class="ov">
-    <tr>
-      <td>□ 팀명</td>
-      <td>Check-Mate</td>
-    </tr>
-    <tr>
-      <td>□ 아이템 개요<br>(아이템 한줄소개)</td>
-      <td>전담 인사팀이 없는 중소·스타트업이 자기소개서의 진짜 경험과 과장 문장을 원문 근거로 구분하고, 개인정보 유출 없이 면접 질문까지 만드는 AI 서류·면접 검증 도구</td>
-    </tr>
-    <tr>
-      <td>□ 창업 목표</td>
-      <td>고가의 기업용 AI 채용 솔루션과 전담 HR·보안 인력을 갖추기 어려운 영세 중소·스타트업에 저비용·비식별 서류 검증 인프라를 보급해 잘못된 채용으로 인한 손실과 보안 위험을 줄이고, 결과적으로
-        학벌이 아닌 실제 경험으로 평가받는 공정 채용 생태계를 만드는 것</td>
-    </tr>
-  </table>
-  <p>지원 분야는 SW 분야(LLM 기반 사회적 약자를 위한 서비스)입니다. 우리가 돕고자 하는 1차 대상은 전담 인사팀과 대기업형 고가 채용 솔루션·법무 보안 인프라에서 소외된 영세 중소기업(HR 디지털 격차
-    약자)입니다. 이들이 공정한 근거 검증을 도입하면, 학벌·스펙에 밀리던 청년 구직자도 실무 경험으로 평가받습니다. 회사와 청년이 함께 이익을 보는 구조입니다.</p>
+<h2>0. 사업 아이템 개요</h2>
+<table class="ov">
+  <tr><td>□ 팀명</td><td>Check-Mate</td></tr>
+  <tr><td>□ 아이템 개요<br>(아이템 한줄소개)</td><td>전담 인사팀이 없는 중소·스타트업이 자기소개서의 진짜 경험과 과장 문장을 원문 근거로 구분하고, 개인정보 유출 없이 면접 질문까지 만드는 AI 서류·면접 검증 도구</td></tr>
+  <tr><td>□ 창업 목표</td><td>고가의 기업용 AI 채용 솔루션과 전담 HR·보안 인력을 갖추기 어려운 영세 중소·스타트업에 저비용·비식별 서류 검증 인프라를 보급해 잘못된 채용으로 인한 손실과 보안 위험을 줄이고, 결과적으로 학벌이 아닌 실제 경험으로 평가받는 공정 채용 생태계를 만드는 것</td></tr>
+</table>
+<p>지원 분야는 SW 분야(LLM 기반 사회적 약자를 위한 서비스)입니다. 우리가 돕고자 하는 1차 대상은 전담 인사팀과 대기업형 고가 채용 솔루션·법무 보안 인프라에서 소외된 영세 중소기업(HR 디지털 격차 약자)입니다. 이들이 공정한 근거 검증을 도입하면, 학벌·스펙에 밀리던 청년 구직자도 실무 경험으로 평가받습니다. 회사와 청년이 함께 이익을 보는 구조입니다.</p>
 
 <h2>1. 문제 인식</h2>
 <div class="box">
@@ -89,11 +71,10 @@
   </div>
 </div>
 
-<!-- PAGE 2 -->
 <div class="box page-break">
   <div class="bar">□ 창업아이템의 목적 및 필요성</div>
   <div class="in">
-    <p class="lead" style="margin-top: 2px;">우리가 직접 확인한 것</p>
+    <p class="lead">우리가 직접 확인한 것</p>
     <ul>
       <li>주변 사용자에게 서비스를 써 보게 하고, 지원서를 읽고 고르는 사람의 의견으로 메뉴 구성·결과 화면 순서·결과 메일을 고쳤습니다.</li>
       <li>창업경진대회 세미나 멘토: "스타트업 채용에서는 걸러내는 것, 진짜인지 가짜인지 검증하는 것이 가장 중요하다."</li>
@@ -134,75 +115,22 @@
   </div>
 </div>
 
-<!-- PAGE 3 -->
 <div class="box page-break">
   <div class="bar">□ 동작 구조 · 실제 검증 화면(1/2) · 실측 지표</div>
   <div class="in">
     <figure>
-      <img src="diagrams/d2_structure.png" alt="동작 구조" style="max-height: 82mm;">
+      <img src="diagrams/d2_structure.png" alt="동작 구조" style="max-height: 70mm;">
       <figcaption><b>[그림 2] 동작 구조</b> — 개인정보를 가린 뒤 AI 네 단계가 근거를 붙이고, 원문 대조를 거친 결과를 사람이 확정합니다.</figcaption>
     </figure>
     <div class="two">
       <figure>
-        <img src="screens/02_highlight.png" alt="형광펜 결과" style="max-height: 62mm;">
+        <img src="screens/02_highlight.png" alt="형광펜 결과" style="max-height: 70mm;">
         <figcaption><b>[그림 3] 형광펜 결과 (실제 화면)</b> — 근거 카드를 누르면 원문의 해당 문장으로 이동합니다.</figcaption>
       </figure>
-      <p class="lead">진단·멘토링 권고와 반영 계획</p>
-      <table>
-        <tr>
-          <th style="width:36%">권고 (CEM파트너스 진단 11/15 등)</th>
-          <th style="width:14%">상태</th>
-          <th>반영</th>
-        </tr>
-        <tr>
-          <td>실제 기업 검증 부족</td>
-          <td>계획</td>
-          <td>단국대 BI·용인 초기 기업 10곳 무료 검증 (유료 2곳 전환 목표)</td>
-        </tr>
-        <tr>
-          <td>여러 지원서 한 번에 처리</td>
-          <td>완료</td>
-          <td>여러 파일을 한 번에 올리면 지원자별로 나눠 평가</td>
-        </tr>
-        <tr>
-          <td>비식별화 처리 증명</td>
-          <td>파일럿 전</td>
-          <td>무엇을 몇 개 가렸는지 처리 기록을 평가마다 남겨 회사가 확인할 수 있게 함</td>
-        </tr>
-        <tr>
-          <td>협업 도구로 결과 내보내기</td>
-          <td>파일럿 중</td>
-          <td>평가 보고서·안내 메일 초안 우선 지원, 파일럿 요청에 따라 협업 도구 내보내기 검토</td>
-        </tr>
-      </table>
-      <p class="lead">로드맵</p>
       <figure>
-        <img src="screens/04_pii_masked.png" alt="개인정보 가리기" style="max-height: 62mm;">
+        <img src="screens/04_pii_masked.png" alt="개인정보 가리기" style="max-height: 70mm;">
         <figcaption><b>[그림 4] 개인정보 가리기 (실제 화면)</b> — 이름·학교·연락처·이메일·거주 지역이 [익명화]로 바뀐 채 AI에 전달됩니다.</figcaption>
       </figure>
-      <p class="lead">지역 가치 및 ESG</p>
-      <table>
-        <tr>
-          <th style="width:22%">대상</th>
-          <th>만드는 가치</th>
-        </tr>
-        <tr>
-          <td>사회(S) — 중소·스타트업</td>
-          <td>대기업 위주였던 AI 채용 검증과 개인정보 보호를 1명당 약 7원의 원가로 보급합니다.</td>
-        </tr>
-        <tr>
-          <td>사회(S) — 청년 구직자</td>
-          <td>출신 학교·나이·지역을 가린 뒤 경험으로 평가받고, 탈락해도 "어느 문장이 강점이고 어떻게 고치면 좋은지"를 받습니다.</td>
-        </tr>
-        <tr>
-          <td>지역</td>
-          <td>단국대 창업보육센터 입주기업과 용인 지역 스타트업에 먼저 무료로 제공해 지역 청년과 지역 기업의 채용을 잇습니다.</td>
-        </tr>
-        <tr>
-          <td>환경(E)</td>
-          <td>서류와 채점표를 출력하지 않고 면접관끼리 링크로 공유합니다.</td>
-        </tr>
-      </table>
     </div>
     <p class="lead">지금까지 측정한 것</p>
     <table>
@@ -213,27 +141,26 @@
       <tr><td>개인정보 가리기</td><td>17/18 (94.4%)</td><td>규칙 수정에 쓰지 않은 가상 문장 (비개인정보 오탐 0/10)</td></tr>
       <tr><td>자동 테스트</td><td>183개 통과</td><td>2026년 11월 16일 기준</td></tr>
     </table>
-    <p class="note">가상 자소서 6건(118~740자) 기준 실측이며, 실제 3,000자 이상 장문에서는 AI 원가가 약 9~12원 수준입니다. 측정 스크립트는 저장소(scripts/bench/)에 있습니다.</p>
+    <p class="note">가상 자소서 6건(118~740자) 기준 실측입니다. 1,600~3,000자 장문 3건을 따로 측정했을 때 AI 원가는 8.3~10.4원이었습니다(2026년 11월 18일). 측정 스크립트는 저장소(scripts/bench/)에 있습니다.</p>
   </div>
 </div>
 
-<!-- PAGE 4 -->
 <div class="box page-break">
   <div class="bar">□ 실제 검증 화면(2/2) 및 시장분석 · 경쟁력 확보 방안</div>
   <div class="in">
     <div class="two">
       <figure>
-        <img src="screens/03_interview_question.png" alt="숫자 모순을 잡은 면접 질문" style="max-height: 66mm;">
+        <img src="screens/03_interview_question.png" alt="숫자 모순을 잡은 면접 질문" style="max-height: 80mm;">
         <figcaption><b>[그림 5] 숫자 모순을 잡은 면접 질문</b> — 60건과 56건 차이를 묻는 질문과 체크리스트</figcaption>
       </figure>
       <figure>
-        <img src="screens/05_hitl.png" alt="사람 검토" style="max-height: 66mm;">
+        <img src="screens/05_hitl.png" alt="사람 검토" style="max-height: 80mm;">
         <figcaption><b>[그림 6] 사람 검토 (실제 화면)</b> — 담당자가 판정·점수·근거를 고치고 사유를 기록</figcaption>
       </figure>
     </div>
     <div class="key">Check-Mate는 기존 도구를 대체하지 않고, 그 사이에 빈 "이 문장이 진짜인가"를 확인하는 단계를 맡습니다.</div>
     <table>
-      <tr><th style="width:19%">구분</th><th style="width:27%">강점</th><th style="width:31%">작은 회사에 맞지 않는 점</th><th>Check-Mate와의 관계</th></tr>
+      <tr><th style="width:19%">구분</th><th style="width:22%">강점</th><th style="width:31%">작은 회사에 맞지 않는 점</th><th>Check-Mate와의 관계</th></tr>
       <tr><td>수작업 정독<br>(대표·팀장 + 엑셀)</td><td>비용 없음</td><td>피로가 쌓이고, 기여도·숫자 모순 판단은 감에 의존</td><td>읽는 시간은 그대로 두고 판단 근거를 더함</td></tr>
       <tr><td>무하유<br>(프리즘·GPT킬러)</td><td>표절·AI 작성 문체 탐지</td><td>공채 등 기업 단위 도입 중심이라, 수시로 1~2명 뽑는 회사엔 부담</td><td>"베꼈나"가 아니라 "실제로 했나"를 확인</td></tr>
       <tr><td>마이다스인<br>(역검·inAIR)</td><td>역량검사·AI 영상면접</td><td>지원자가 별도로 검사에 응시해야 하고, 자소서 내용의 사실 확인 도구는 아님</td><td>제출된 자소서만으로 바로 검증</td></tr>
@@ -250,20 +177,16 @@
   </div>
 </div>
 
-<!-- PAGE 5 -->
 <h2 class="page-break" style="margin-top: 0;">3. 성장 전략</h2>
 <div class="box">
   <div class="bar">□ 시장진입 및 성과창출 전략 (1/2 · 타깃 고객 및 목표 시장)</div>
   <div class="in">
-    <div class="keep">
-      <p class="lead">처음 팔 고객</p>
-      <ul>
-        <li><b>실패에서 배운 세일즈 중심 실행력</b>: 골프예약플랫폼 창업에서 세일즈·마케팅 부족으로 실패한 뒤 '기술보다 고객 확보가 우선'이라는 교훈을 체득했습니다.</li>
-        <li><b>직접 발로 뛰는 현장 영업 증빙</b>: 스터디카페 랭킹 시스템 업주 설득(좌석 조건)·남한산성 현장 판매 경험과 DCC 실증을 결합해 BI·용인 10곳 무료 검증 → 유료 10곳 확보를
-          추진합니다.</li>
-        <li><b>외부 피드백 반영</b>: 멘토링(비용·정확도 실측) · CEM 진단(BI 10곳 무료 검증 계획) · 경진대회 세미나(진위 검증 집중)를 제품에 즉시 반영했습니다.</li>
-      </ul>
-    </div>
+    <p class="lead">처음 팔 고객</p>
+    <ul>
+      <li>따로 인사팀이 없고 대표나 팀장이 직접 뽑는 직원 10~50명 규모의 IT 스타트업·벤처기업</li>
+      <li>수시로 한두 명씩 뽑아서, 한 명의 채용 실패가 크게 다가오는 회사</li>
+      <li>채용 관리 도구를 쓰더라도, 지원서를 읽고 판단하는 일은 여전히 사람이 하는 회사</li>
+    </ul>
     <p class="lead">목표 시장 (TAM · SAM · SOM)</p>
     <figure>
       <img src="diagrams/d4_market.png" alt="목표 시장 TAM SAM SOM">
@@ -272,24 +195,23 @@
     <table>
       <tr><th style="width:12%">구분</th><th style="width:18%">규모</th><th>근거</th></tr>
       <tr><td>TAM</td><td>약 454억 원</td><td>국내 벤처기업 3만 8,216곳(평균 종사자 23.4명, 중소벤처기업부 2024년 기준 벤처기업 정밀실태조사) × 스타터 연 118.8만 원</td></tr>
-      <tr><td>SAM</td><td>약 71억 원</td><td>전국 약 290개 창업보육센터(BI) 입주기업 약 6,000곳(중소벤처기업부·한국창업보육협회) × 스타터 연 118.8만 원</td></tr>
+      <tr><td>SAM</td><td>약 71억 원</td><td>창업보육센터(BI) 입주기업 약 6,000곳(2022년 5월 기준 6,382개사, 창업진흥원·한국창업보육협회) × 스타터 연 118.8만 원</td></tr>
       <tr><td>SOM</td><td>연 1,876만 원</td><td>1년 내 유료 10곳(스타터 7곳 × 연 118.8만 원 + 프로 3곳 × 연 348만 원 = 1,875.6만 원, SAM의 약 0.17%)</td></tr>
     </table>
   </div>
 </div>
 
-<!-- PAGE 6 -->
 <div class="box page-break">
   <div class="bar">□ 시장진입 및 성과창출 전략 (2/2 · 수익 모델 · 권고 반영 · 로드맵)</div>
   <div class="in">
-    <p class="lead" style="margin-top: 2px;">수익 모델과 시장 진입</p>
+    <p class="lead">수익 모델과 시장 진입</p>
     <figure>
-      <img src="diagrams/d5_bm_gtm.png" alt="요금제와 시장 진입 3단계" style="max-height: 76mm;">
+      <img src="diagrams/d5_bm_gtm.png" alt="요금제와 시장 진입 3단계" style="max-height: 84mm;">
       <figcaption><b>[그림 8] 요금제와 시장 진입 3단계</b> — 월 구독에 추가 크레딧을 더하고, 캠퍼스·BI 무료 검증 10곳에서 시작합니다.</figcaption>
     </figure>
     <p class="lead">진단·멘토링 권고와 반영 계획</p>
     <table>
-      <tr><th style="width:36%">권고 (CEM파트너스 진단 11/15 등)</th><th style="width:14%">상태</th><th>반영</th></tr>
+      <tr><th style="width:36%">권고 (CEM파트너스 진단 11/15 등)</th><th style="width:12%">상태</th><th>반영</th></tr>
       <tr><td>실제 기업 검증 부족</td><td>계획</td><td>단국대 BI·용인 초기 기업 10곳 무료 검증 (유료 2곳 전환 목표)</td></tr>
       <tr><td>여러 지원서 한 번에 처리</td><td>완료</td><td>여러 파일을 한 번에 올리면 지원자별로 나눠 평가</td></tr>
       <tr><td>비식별화 처리 증명</td><td>파일럿 전</td><td>무엇을 몇 개 가렸는지 처리 기록을 평가마다 남겨 회사가 확인할 수 있게 함</td></tr>
@@ -303,7 +225,6 @@
   </div>
 </div>
 
-<!-- PAGE 7 -->
 <div class="box page-break">
   <div class="bar">□ 지역 가치 및 ESG</div>
   <div class="in">
@@ -315,29 +236,46 @@
       <tr><td>환경(E)</td><td>서류와 채점표를 출력하지 않고 면접관끼리 링크로 공유합니다.</td></tr>
     </table>
   </div>
+</div>
 
-  <h2 class="page-break">5. 제품 또는 아이디어 관련 이미지</h2>
-  <div class="box">
-    <div class="in">
-      <figure>
-        <img class="tall" src="screens/01_landing.png" alt="첫 화면">
-        <figcaption><b>[그림 10] 첫 화면</b> — 서비스 소개와 가입 없는 체험 영역</figcaption>
-      </figure>
-      <figure>
-        <img class="tall" src="screens/06_share.png" alt="면접관 공유">
-        <figcaption><b>[그림 11] 면접관 공유</b> — 링크로 연 화면에서 질문별 판정을 누르고 메모를 남깁니다. 메모는 같은 링크를 가진 면접관끼리 공유됩니다.</figcaption>
-      </figure>
-      <figure>
-        <img class="tall" src="screens/07_feedback.png" alt="지원자 피드백">
-        <figcaption><b>[그림 12] 지원자 피드백</b> — 탈락한 지원자에게도 자소서 문장을 근거로 강점과 보완점을 알려 줍니다.</figcaption>
-      </figure>
-    </div>
+<h2>4. 팀 구성</h2>
+<div class="box">
+  <div class="bar">□ 창업자의 역량</div>
+  <div class="in">
+    <div class="key">과거 골프예약플랫폼 공동 창업에서 세일즈·마케팅 부족으로 실패했던 경험을 복기하고, 직접 부딪히는 현장 영업 역량과 100% 자체 개발 역량을 결합한 원팀입니다.</div>
+    <table>
+      <tr><th style="width:9%">이름</th><th style="width:15%">역할</th><th>핵심 역량 및 실전 경험</th><th style="width:26%">이력</th></tr>
+      <tr><td>장천명</td><td>대표 · AI 아키텍트 · 현장 세일즈</td><td>
+        <ul>
+          <li>AI 4단계(4-Agent) 교차 검증 구조 설계 및 원문 대조 매칭(32/32)</li>
+          <li>실서비스 배포·운영 총괄 및 다중 면접관 공유·동기화 구현</li>
+          <li><b>B2B 직접 설득 경험</b>: 스터디카페 랭킹 시스템을 직접 제작해 동네 업주를 설득·도입(매장 좌석 제공 조건)</li>
+          <li><b>현장 세일즈 경험</b>: 남한산성 정상에서 아이스박스를 들고 아이스크림 직접 판매 완주</li>
+          <li><b>창업 실패 복기</b>: 골프예약플랫폼 공동 창업 후 세일즈·마케팅 부족 실패 경험 체득</li>
+        </ul></td><td>단국대 컴퓨터공학과 4학년<br>KT AIVLE School 9기 우수 수료(Dean's List), 9기 우수 프로젝트</td></tr>
+      <tr><td>박상윤</td><td>공동 창업 · 백엔드·보안·품질 총괄</td><td>
+        <ul>
+          <li>기업별 데이터 분리·로그인·역할별 권한 제어 구현(Spring 서버, 파일럿 때 적용) 및 서버 API 연동 구축</li>
+          <li>7종 개인정보 브라우저 가림 규칙 고도화(검출률 94.4%, 오탐 0건)</li>
+          <li>PDF·DOCX 로컬 파싱(한글 깨짐 해결), 183개 자동화 기능 검증(100% 통과) 및 비용 실측 체계 구축</li>
+          <li><b>창업 실패 복기</b>: 골프예약플랫폼 공동 창업 후 세일즈·마케팅 부족 실패 경험 체득</li>
+        </ul></td><td>단국대 컴퓨터공학과 4학년<br>2025 레인보우 페스티벌(캡스톤 대회) 우수상 입상</td></tr>
+    </table>
   </div>
+  <div class="bar">□ 팀 구성원 소개 및 역량 (실패 기반 차별화)</div>
+  <div class="in">
+    <ul>
+      <li><b>실패에서 배운 세일즈 중심 실행력</b>: 골프예약플랫폼 창업에서 세일즈·마케팅 부족으로 실패한 뒤 '기술보다 고객 확보가 우선'이라는 교훈을 체득했습니다.</li>
+      <li><b>직접 발로 뛰는 현장 영업 증빙</b>: 스터디카페 랭킹 시스템 업주 설득(좌석 조건)·남한산성 현장 판매 경험과 DCC 실증을 결합해 BI·용인 10곳 무료 검증 → 유료 10곳 확보를 추진합니다.</li>
+      <li><b>외부 피드백 반영</b>: 멘토링(비용·정확도 실측) · CEM 진단(BI 10곳 무료 검증 계획) · 경진대회 세미나(진위 검증 집중)를 제품에 즉시 반영했습니다.</li>
+    </ul>
+  </div>
+</div>
 
-<!-- PAGE 8 -->
 <h2 class="page-break" style="margin-top: 0;">5. 제품 또는 아이디어 관련 이미지</h2>
 <div class="box">
   <div class="in">
+    <p class="note">모든 화면은 실제 배포된 서비스에서 가상 자기소개서로 직접 평가해 캡처했습니다. 화면 상단의 회사명(토스페이먼츠 등)은 회사 전환 기능을 보여 주는 데모용 예시이며, 실제 고객사가 아닙니다.</p>
     <figure style="margin-top: 4px;">
       <img src="screens/01_landing.png" alt="첫 화면" style="max-height: 112mm;">
       <figcaption><b>[그림 10] 첫 화면</b> — 서비스 소개와 가입 없는 체험 영역</figcaption>
@@ -345,7 +283,7 @@
     <div class="two" style="margin-top: 10px;">
       <figure>
         <img src="screens/06_share.png" alt="면접관 공유" style="max-height: 92mm;">
-        <figcaption><b>[그림 11] 면접관 공유</b> — 링크 화면에서 질문별 판정·메모 실시간 동기화</figcaption>
+        <figcaption><b>[그림 11] 면접관 공유</b> — 링크 화면에서 질문별 판정·메모를 남기고, 메모는 10초 간격으로 동기화</figcaption>
       </figure>
       <figure>
         <img src="screens/07_feedback.png" alt="지원자 피드백" style="max-height: 92mm;">
@@ -355,4 +293,5 @@
   </div>
 </div>
 
+</body>
 </html>
