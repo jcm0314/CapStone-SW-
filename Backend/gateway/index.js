@@ -32,7 +32,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Enterprise-Client-Id', 'X-Tenant-Id']
 }));
 
-app.use(express.json({ limit: '10mb' }));
+// 요청 본문 상한: 자기소개서 텍스트(최대 EVALUATE_LIMITS.rawTextChars자)와 설정값이 넉넉히 들어가는 크기.
+// 상한이 크면 요청 한 번이 그만큼의 AI 입력 토큰(=비용)과 메모리를 쓰게 됩니다.
+app.use(express.json({ limit: '1mb' }));
 
 // Rate Limiter: Prevent DoS & Abuse (Max 200 requests per 15 mins per IP)
 const apiLimiter = rateLimit({
@@ -446,12 +448,30 @@ function upstreamHttpStatus(err) {
   return 502;
 }
 
+/** 평가 1건이 쓸 수 있는 입력 상한 (AI 4회 호출의 입력 토큰과 최악의 원가를 묶어 둠) */
+export const EVALUATE_LIMITS = {
+  rawTextChars: 30_000,
+  nameChars: 100
+};
+
 const handleEvaluation = async (req, res) => {
   try {
     const { name, applyJobId, rawText, promptSettings } = req.body || {};
 
     if (!rawText || !name) {
       return res.status(400).json({ error: 'Missing required parameters: name and rawText are required.' });
+    }
+    if (typeof rawText !== 'string' || typeof name !== 'string') {
+      return res.status(400).json({ error: 'INVALID_PARAMETERS', message: 'name 과 rawText 는 문자열이어야 합니다.' });
+    }
+    if (rawText.length > EVALUATE_LIMITS.rawTextChars) {
+      return res.status(413).json({
+        error: 'RAW_TEXT_TOO_LONG',
+        message: `자기소개서 본문은 ${EVALUATE_LIMITS.rawTextChars.toLocaleString()}자까지 평가할 수 있습니다. (현재 ${rawText.length.toLocaleString()}자)`
+      });
+    }
+    if (name.length > EVALUATE_LIMITS.nameChars) {
+      return res.status(400).json({ error: 'NAME_TOO_LONG', message: `이름은 ${EVALUATE_LIMITS.nameChars}자 이하로 입력하세요.` });
     }
 
     if (!isClaudeConfigured()) {
@@ -552,6 +572,24 @@ app.post('/api/v1/notifications/email', mailLimiter, async (req, res) => {
     console.warn('[메일 발송 실패]', err.message);
     return res.status(err.status || 500).json({ error: 'MAIL_SEND_FAILED', message: err.message });
   }
+});
+
+// JSON 본문 오류를 HTML 이 아니라 JSON 으로 응답 (클라이언트가 한국어 메시지를 그대로 표시함)
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  if (err?.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'PAYLOAD_TOO_LARGE', message: '요청 본문이 너무 큽니다. 문서를 줄여서 다시 시도하세요.' });
+  }
+  if (err?.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'INVALID_JSON', message: '요청 본문 형식(JSON)이 올바르지 않습니다.' });
+  }
+  const status = err?.status || err?.statusCode;
+  if (Number.isInteger(status) && status >= 400 && status < 500) {
+    // body-parser 의 기타 4xx (지원하지 않는 charset/encoding 등)는 500 으로 바꾸지 않음
+    return res.status(status).json({ error: 'BAD_REQUEST', message: '요청을 처리할 수 없습니다.' });
+  }
+  console.error('Unhandled gateway error:', err?.message);
+  return res.status(500).json({ error: 'GATEWAY_INTERNAL_ERROR', message: '서버 내부 오류가 발생했습니다.' });
 });
 
 // Only start server if not in test environment
