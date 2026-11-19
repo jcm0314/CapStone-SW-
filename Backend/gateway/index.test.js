@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import http from 'http';
-import app, { buildPromptAddendumFromSettings, isMailApiEnabled, isShareApiEnabled } from './index.js';
+import app, { buildPromptAddendumFromSettings, EVALUATE_LIMITS, isMailApiEnabled, isShareApiEnabled } from './index.js';
 import { __setClaudeClientForTests, createClaudeClient } from '../../Front/services/agents/claudeClient.js';
 
 let server;
@@ -334,6 +334,43 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(body.error).toBe('ANTHROPIC_AUTH_FAILED');
       expect(body.message).toContain('인증에 실패');
       expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    describe('입력 상한 (AI 호출 비용 상한)', () => {
+      it(`본문이 ${EVALUATE_LIMITS.rawTextChars}자를 넘으면 Claude 를 호출하지 않고 413 RAW_TEXT_TOO_LONG 이어야 한다`, async () => {
+        process.env.ANTHROPIC_API_KEY = 'test-key-not-real';
+        const create = vi.fn();
+        __setClaudeClientForTests({ beta: { messages: { create } } });
+
+        const res = await post({ ...sampleBody, rawText: '가'.repeat(EVALUATE_LIMITS.rawTextChars + 1) });
+        expect(res.status).toBe(413);
+        expect((await res.json()).error).toBe('RAW_TEXT_TOO_LONG');
+        expect(create).not.toHaveBeenCalled();
+      });
+
+      it('문자열이 아닌 본문은 400 INVALID_PARAMETERS 여야 한다', async () => {
+        process.env.ANTHROPIC_API_KEY = 'test-key-not-real';
+        const res = await post({ ...sampleBody, rawText: { injected: true } });
+        expect(res.status).toBe(400);
+        expect((await res.json()).error).toBe('INVALID_PARAMETERS');
+      });
+
+      it('1MB 를 넘는 요청 본문은 HTML 이 아니라 JSON 413 PAYLOAD_TOO_LARGE 여야 한다', async () => {
+        const res = await post({ ...sampleBody, rawText: 'a'.repeat(1_100_000) });
+        expect(res.status).toBe(413);
+        expect(res.headers.get('content-type')).toContain('application/json');
+        expect((await res.json()).error).toBe('PAYLOAD_TOO_LARGE');
+      });
+
+      it('깨진 JSON 은 400 INVALID_JSON 이어야 한다', async () => {
+        const res = await fetch(`${baseUrl}/api/v1/evaluate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{"name": "a", "rawText": '
+        });
+        expect(res.status).toBe(400);
+        expect((await res.json()).error).toBe('INVALID_JSON');
+      });
     });
   });
 
