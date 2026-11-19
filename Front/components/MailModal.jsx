@@ -95,7 +95,7 @@ function MailModalContent({ onClose, applicant, companyName, initialTemplateId, 
           {emailEnabled === false && (
             <p className="flex items-start gap-2 px-3 py-2 rounded-md border border-warn-line bg-warn-soft text-[13px] text-warn">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              서버에 메일 설정(RESEND_API_KEY, RESEND_FROM)이 없어 보낼 수 없습니다.
+              메일 발송 기능이 꺼져 있어 보낼 수 없습니다. 아래 내용을 복사해 직접 보내 주세요.
             </p>
           )}
 
