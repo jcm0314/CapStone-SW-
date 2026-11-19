@@ -30,6 +30,27 @@ describe('shareService (Multi-Interviewer Live Sync & Share ID)', () => {
     }
   };
 
+  it('generateShareId는 보안 난수 128비트(hex 32자) 식별자를 만들고 Math.random 을 쓰지 않아야 한다', () => {
+    const mathRandom = vi.spyOn(Math, 'random');
+    const id = generateShareId();
+    expect(id).toMatch(/^eval_[0-9a-f]{32}$/);
+    expect(mathRandom).not.toHaveBeenCalled();
+    mathRandom.mockRestore();
+  });
+
+  it('게이트웨이가 공유 기능을 꺼 두면(503 SHARES_DISABLED) 링크를 주지 않고 오류를 내야 한다', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      status: 503,
+      ok: false,
+      json: async () => ({ error: 'SHARES_DISABLED' })
+    }));
+
+    await expect(createSharedEvaluation(mockApplicant)).rejects.toMatchObject({ code: 'SHARES_DISABLED' });
+    const leftovers = Object.keys(localStorage).filter((k) => k.startsWith('checkmate_shared_eval_'));
+    expect(leftovers).toEqual([]);
+    expect(JSON.parse(localStorage.getItem('checkmate_shared_index') || '[]')).toEqual([]);
+  });
+
   it('generateShareId는 eval_ 접두사를 가진 고유 식별자를 생성해야 한다', () => {
     const id1 = generateShareId();
     const id2 = generateShareId();

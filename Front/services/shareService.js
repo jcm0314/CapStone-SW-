@@ -20,9 +20,13 @@ export function getApiBaseUrl() {
   return 'http://127.0.0.1:3001'; // 로컬 개발 전용
 }
 
-// Generate unique Share ID (e.g., eval_8f9a2b1c)
+export const SHARES_DISABLED_MESSAGE = '면접관 공유 링크 기능이 일시적으로 중지되어 있습니다.';
+
+// Generate unguessable Share ID with a CSPRNG (128 bits, hex): e.g. eval_3f9a…(32자)
 export function generateShareId() {
-  const randomPart = Math.random().toString(36).substring(2, 10);
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  const randomPart = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
   return `eval_${randomPart}`;
 }
 
@@ -86,9 +90,10 @@ export async function createSharedEvaluation(applicant, options = {}) {
   }
 
   // 2. Synchronize to Central Cloud Gateway (BFF Sync)
+  let gatewayResponse = null;
   try {
     const apiBase = getApiBaseUrl();
-    await fetch(`${apiBase}/api/v1/shares`, {
+    gatewayResponse = await fetch(`${apiBase}/api/v1/shares`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -105,6 +110,25 @@ export async function createSharedEvaluation(applicant, options = {}) {
     });
   } catch (cloudErr) {
     console.warn('[Cloud Sync Notice] Gateway sync deferred, saved in offline-first mode:', cloudErr.message);
+  }
+
+  // 서버가 공유 기능을 꺼 두었으면, 다른 사람은 열 수 없는 링크를 주지 않도록 실패로 알림
+  if (gatewayResponse && gatewayResponse.status === 503) {
+    const body = await gatewayResponse.json().catch(() => ({}));
+    if (body.error === 'SHARES_DISABLED') {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(`${STORAGE_PREFIX}${shareId}`);
+        try {
+          const index = JSON.parse(localStorage.getItem(SHARED_INDEX_KEY) || '[]');
+          localStorage.setItem(SHARED_INDEX_KEY, JSON.stringify(index.filter((e) => e.shareId !== shareId)));
+        } catch {
+          // ignore
+        }
+      }
+      const err = new Error(SHARES_DISABLED_MESSAGE);
+      err.code = 'SHARES_DISABLED';
+      throw err;
+    }
   }
 
   const shareUrl = typeof window !== 'undefined'

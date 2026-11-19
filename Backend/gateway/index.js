@@ -193,6 +193,33 @@ app.get('/health', (req, res) => {
 // [1] Multi-Interviewer Share & Live Collaboration Endpoints
 // -------------------------------------------------------------
 
+/**
+ * 이 게이트웨이에는 사용자 인증이 없고 저장소도 인스턴스 로컬 파일이라, 공유 API를 열어 두면
+ * 링크 ID를 아는 누구나 스냅샷(지원자 정보 포함)을 읽고 덮어쓸 수 있습니다. 그래서 기본값은 꺼짐이며,
+ * 서버가 토큰을 발급·검증하는 구조(Spring)로 옮기기 전까지 운영에서는 SHARE_API_ENABLED=true 로 켜지 마세요.
+ */
+export function isShareApiEnabled(env = process.env) {
+  return env.SHARE_API_ENABLED === 'true';
+}
+
+export const SHARE_LIMITS = {
+  idPattern: /^eval_[A-Za-z0-9_-]{8,64}$/,
+  maxExpiresHours: 168,
+  noteContent: 2000,
+  noteAuthor: 64,
+  scoreAdjustment: 20
+};
+
+app.use('/api/v1/shares', (req, res, next) => {
+  if (!isShareApiEnabled()) {
+    return res.status(503).json({
+      error: 'SHARES_DISABLED',
+      message: '면접관 공유 링크 기능이 일시적으로 중지되어 있습니다.'
+    });
+  }
+  return next();
+});
+
 // Create/Upload a Shared Evaluation Snapshot
 app.post('/api/v1/shares', (req, res) => {
   try {
@@ -201,9 +228,21 @@ app.post('/api/v1/shares', (req, res) => {
     if (!shareId || !applicantSnapshot) {
       return res.status(400).json({ error: 'shareId와 applicantSnapshot은 필수 항목입니다.' });
     }
+    if (typeof shareId !== 'string' || !SHARE_LIMITS.idPattern.test(shareId)) {
+      return res.status(400).json({ error: 'INVALID_SHARE_ID', message: 'shareId 형식이 올바르지 않습니다.' });
+    }
+    // 이미 있는 링크는 덮어쓰지 않습니다 (링크 ID만 아는 사람이 내용을 바꾸지 못하게)
+    if (sharedEvaluationsStore.has(shareId)) {
+      return res.status(409).json({ error: 'SHARE_ID_TAKEN', message: '이미 존재하는 공유 링크입니다.' });
+    }
+
+    const requestedHours = Number(expiresHours);
+    const ttlHours = Number.isFinite(requestedHours)
+      ? Math.min(Math.max(requestedHours, 1), SHARE_LIMITS.maxExpiresHours)
+      : 72;
 
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + expiresHours * 60 * 60 * 1000).toISOString();
+    const expiresAt = new Date(now.getTime() + ttlHours * 60 * 60 * 1000).toISOString();
 
     const record = {
       shareId,
@@ -262,22 +301,29 @@ app.post('/api/v1/shares/:shareId/notes', (req, res) => {
   const { shareId } = req.params;
   const { author, role, content, scoreAdjustment = 0 } = req.body;
 
-  if (!content) {
+  if (!content || typeof content !== 'string') {
     return res.status(400).json({ error: '메모 내용은 필수입니다.' });
+  }
+  if (content.trim().length > SHARE_LIMITS.noteContent) {
+    return res.status(400).json({ error: 'NOTE_TOO_LONG', message: `메모는 ${SHARE_LIMITS.noteContent}자 이하로 입력하세요.` });
   }
 
   const record = sharedEvaluationsStore.get(shareId);
   if (!record) {
     return res.status(404).json({ error: '해당 공유 평가서를 찾을 수 없습니다.' });
   }
+  if (record.expiresAt && new Date(record.expiresAt) < new Date()) {
+    return res.status(410).json({ error: '해당 면접관 공유 링크의 유효 기간(TTL)이 만료되었습니다.' });
+  }
 
+  const adjustment = Math.trunc(Number(scoreAdjustment)) || 0;
   const newNote = {
-    id: `note_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-    author: author || '기술면접관',
-    role: role || 'INTERVIEWER',
+    id: `note_${crypto.randomUUID()}`,
+    author: String(author || '기술면접관').slice(0, SHARE_LIMITS.noteAuthor),
+    role: role === 'RECRUITER' ? 'RECRUITER' : 'INTERVIEWER',
     timestamp: new Date().toISOString(),
     content: content.trim(),
-    scoreAdjustment: Number(scoreAdjustment) || 0
+    scoreAdjustment: Math.min(Math.max(adjustment, -SHARE_LIMITS.scoreAdjustment), SHARE_LIMITS.scoreAdjustment)
   };
 
   record.collaborativeNotes.push(newNote);

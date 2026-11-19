@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import http from 'http';
-import app, { buildPromptAddendumFromSettings, isMailApiEnabled } from './index.js';
+import app, { buildPromptAddendumFromSettings, isMailApiEnabled, isShareApiEnabled } from './index.js';
 import { __setClaudeClientForTests, createClaudeClient } from '../../Front/services/agents/claudeClient.js';
 
 let server;
@@ -34,7 +34,52 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
     expect(body.service).toBe('hr-evaluator-api-gateway');
   });
 
-  describe('Multi-Interviewer Share & Collaboration API', () => {
+  describe('Share API 기본값 꺼짐 (무인증 공유 저장소 노출 방지)', () => {
+    it('SHARE_API_ENABLED 가 없으면 생성·조회·메모가 모두 503 SHARES_DISABLED 여야 한다', async () => {
+      const saved = process.env.SHARE_API_ENABLED;
+      delete process.env.SHARE_API_ENABLED;
+      try {
+        const responses = await Promise.all([
+          fetch(`${baseUrl}/api/v1/shares`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shareId: 'eval_disabled_check', applicantSnapshot: {} })
+          }),
+          fetch(`${baseUrl}/api/v1/shares/eval_disabled_check`),
+          fetch(`${baseUrl}/api/v1/shares/eval_disabled_check/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: 'x' })
+          })
+        ]);
+        for (const res of responses) {
+          expect(res.status).toBe(503);
+          expect((await res.json()).error).toBe('SHARES_DISABLED');
+        }
+      } finally {
+        if (saved === undefined) delete process.env.SHARE_API_ENABLED;
+        else process.env.SHARE_API_ENABLED = saved;
+      }
+    });
+
+    it('isShareApiEnabled: 명시적으로 true 일 때만 켜져야 한다', () => {
+      expect(isShareApiEnabled({})).toBe(false);
+      expect(isShareApiEnabled({ SHARE_API_ENABLED: 'false' })).toBe(false);
+      expect(isShareApiEnabled({ SHARE_API_ENABLED: 'true' })).toBe(true);
+    });
+  });
+
+  describe('Multi-Interviewer Share & Collaboration API (SHARE_API_ENABLED=true)', () => {
+    let savedShareFlag;
+    beforeAll(() => {
+      savedShareFlag = process.env.SHARE_API_ENABLED;
+      process.env.SHARE_API_ENABLED = 'true';
+    });
+    afterAll(() => {
+      if (savedShareFlag === undefined) delete process.env.SHARE_API_ENABLED;
+      else process.env.SHARE_API_ENABLED = savedShareFlag;
+    });
+
     const sampleSharePayload = {
       shareId: 'eval_unit_test_999',
       tenantId: 'toss-payments',
@@ -97,6 +142,60 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(res.status).toBe(404);
       const body = await res.json();
       expect(body.error).toContain('찾을 수 없습니다');
+    });
+
+    const postShare = (body) => fetch(`${baseUrl}/api/v1/shares`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    it('POST /api/v1/shares: 이미 있는 shareId 는 덮어쓰지 않고 409 여야 한다', async () => {
+      const res = await postShare({
+        ...sampleSharePayload,
+        applicantSnapshot: { ...sampleSharePayload.applicantSnapshot, name: '덮어쓰기 시도' }
+      });
+      expect(res.status).toBe(409);
+      expect((await res.json()).error).toBe('SHARE_ID_TAKEN');
+
+      const stored = await (await fetch(`${baseUrl}/api/v1/shares/eval_unit_test_999`)).json();
+      expect(stored.applicantSnapshot.name).toBe('정지훈');
+    });
+
+    it('POST /api/v1/shares: 형식이 잘못된 shareId 는 400 이어야 한다', async () => {
+      const res = await postShare({ ...sampleSharePayload, shareId: '../etc/passwd' });
+      expect(res.status).toBe(400);
+      expect((await res.json()).error).toBe('INVALID_SHARE_ID');
+    });
+
+    it('POST /api/v1/shares: 만료 시간은 최대 168시간으로 제한돼야 한다', async () => {
+      const before = Date.now();
+      const res = await postShare({ ...sampleSharePayload, shareId: 'eval_ttl_cap_check', expiresHours: 24 * 365 * 100 });
+      expect(res.status).toBe(201);
+      const { expiresAt } = await res.json();
+      const hours = (new Date(expiresAt).getTime() - before) / 3_600_000;
+      expect(hours).toBeLessThanOrEqual(168.01);
+      expect(hours).toBeGreaterThan(167.9);
+    });
+
+    it('POST /api/v1/shares/:shareId/notes: 점수 보정은 ±20, 메모 길이는 2000자로 제한돼야 한다', async () => {
+      const clamped = await fetch(`${baseUrl}/api/v1/shares/eval_unit_test_999/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: '과도한 보정 시도', scoreAdjustment: 999, role: 'ADMIN' })
+      });
+      expect(clamped.status).toBe(200);
+      const { note } = await clamped.json();
+      expect(note.scoreAdjustment).toBe(20);
+      expect(note.role).toBe('INTERVIEWER');
+
+      const tooLong = await fetch(`${baseUrl}/api/v1/shares/eval_unit_test_999/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: 'a'.repeat(2001) })
+      });
+      expect(tooLong.status).toBe(400);
+      expect((await tooLong.json()).error).toBe('NOTE_TOO_LONG');
     });
   });
 
