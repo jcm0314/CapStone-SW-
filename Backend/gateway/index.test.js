@@ -1,7 +1,7 @@
 // @vitest-environment node
-import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import http from 'http';
-import app, { buildPromptAddendumFromSettings } from './index.js';
+import app, { buildPromptAddendumFromSettings, isMailApiEnabled } from './index.js';
 import { __setClaudeClientForTests, createClaudeClient } from '../../Front/services/agents/claudeClient.js';
 
 let server;
@@ -235,6 +235,57 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(body.error).toBe('ANTHROPIC_AUTH_FAILED');
       expect(body.message).toContain('인증에 실패');
       expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Mail API (기본값 꺼짐: 무인증 오픈 릴레이 방지)', () => {
+    const MAIL_ENV_KEYS = ['MAIL_API_ENABLED', 'RESEND_API_KEY', 'RESEND_FROM'];
+    let savedEnv;
+
+    beforeEach(() => {
+      savedEnv = Object.fromEntries(MAIL_ENV_KEYS.map((k) => [k, process.env[k]]));
+    });
+
+    afterEach(() => {
+      for (const k of MAIL_ENV_KEYS) {
+        if (savedEnv[k] === undefined) delete process.env[k];
+        else process.env[k] = savedEnv[k];
+      }
+    });
+
+    const mailBody = { to: 'someone@example.com', subject: '안내', text: '본문' };
+    const sendMailRequest = () => fetch(`${baseUrl}/api/v1/notifications/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mailBody)
+    });
+
+    it('Resend 키가 설정돼 있어도 MAIL_API_ENABLED 가 없으면 상태는 꺼짐이어야 한다', async () => {
+      process.env.RESEND_API_KEY = 'test-key';
+      process.env.RESEND_FROM = 'Check-Mate <noreply@example.com>';
+      delete process.env.MAIL_API_ENABLED;
+
+      const res = await fetch(`${baseUrl}/api/v1/notifications/status`);
+      expect(res.status).toBe(200);
+      expect((await res.json()).emailEnabled).toBe(false);
+    });
+
+    it('Resend 키가 설정돼 있어도 MAIL_API_ENABLED 가 없으면 발송 요청은 503 MAIL_DISABLED 여야 한다', async () => {
+      process.env.RESEND_API_KEY = 'test-key';
+      process.env.RESEND_FROM = 'Check-Mate <noreply@example.com>';
+      delete process.env.MAIL_API_ENABLED;
+
+      const res = await sendMailRequest();
+      expect(res.status).toBe(503);
+      expect((await res.json()).error).toBe('MAIL_DISABLED');
+    });
+
+    it('isMailApiEnabled: 명시적으로 켜고 Resend 설정이 있을 때만 true 여야 한다', () => {
+      const configured = { RESEND_API_KEY: 'k', RESEND_FROM: 'f' };
+      expect(isMailApiEnabled({ ...configured })).toBe(false);
+      expect(isMailApiEnabled({ ...configured, MAIL_API_ENABLED: 'false' })).toBe(false);
+      expect(isMailApiEnabled({ MAIL_API_ENABLED: 'true' })).toBe(false);
+      expect(isMailApiEnabled({ ...configured, MAIL_API_ENABLED: 'true' })).toBe(true);
     });
   });
 

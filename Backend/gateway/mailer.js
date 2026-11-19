@@ -1,5 +1,6 @@
 /**
  * 지원자 결과 메일 발송 (Resend REST API, SDK 없이 fetch 로 호출)
+ *   MAIL_API_ENABLED 'true' 일 때만 HTTP 발송 API 가 켜짐 (기본 꺼짐, index.js isMailApiEnabled 참고)
  *   RESEND_API_KEY   필수. 없으면 발송 기능 자체가 꺼짐 (GET /api/v1/notifications/status → emailEnabled:false)
  *   RESEND_FROM      필수. 예: "Check-Mate <noreply@psyrod.dev>" (Resend 에서 인증한 도메인이어야 함)
  *   RESEND_REPLY_TO  선택. 지원자가 답장하면 받을 주소

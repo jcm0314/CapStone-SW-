@@ -475,11 +475,27 @@ const mailLimiter = rateLimit({
   message: { error: 'MAIL_RATE_LIMITED', message: '메일은 1시간에 30통까지 보낼 수 있습니다. 잠시 후 다시 시도하세요.' }
 });
 
+/**
+ * 이 게이트웨이에는 사용자 인증이 없어서, 메일 API를 열어 두면 누구나 우리 인증 도메인 명의로
+ * 아무 주소에나 메일을 보낼 수 있습니다(오픈 릴레이). 그래서 기본값은 꺼짐이며,
+ * 인증과 수신자 제한이 있는 서버(Spring)로 옮기기 전까지는 MAIL_API_ENABLED=true 로도 운영에서 켜지 마세요.
+ */
+export function isMailApiEnabled(env = process.env) {
+  return env.MAIL_API_ENABLED === 'true' && isMailConfigured(env);
+}
+
 app.get('/api/v1/notifications/status', (req, res) => {
-  res.json({ emailEnabled: isMailConfigured() });
+  res.json({ emailEnabled: isMailApiEnabled() });
 });
 
 app.post('/api/v1/notifications/email', mailLimiter, async (req, res) => {
+  if (!isMailApiEnabled()) {
+    return res.status(503).json({
+      error: 'MAIL_DISABLED',
+      message: '메일 발송 기능이 일시적으로 꺼져 있습니다.'
+    });
+  }
+
   const { value, error } = validateMailRequest(req.body);
   if (error) return res.status(400).json({ error: 'INVALID_MAIL_REQUEST', message: error });
 

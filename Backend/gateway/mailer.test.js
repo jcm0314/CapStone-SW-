@@ -55,15 +55,16 @@ describe('sendMail', () => {
   });
 });
 
-describe('POST /api/v1/notifications/email', () => {
+describe('POST /api/v1/notifications/email (MAIL_API_ENABLED=true 로 명시적으로 켠 경우)', () => {
   let server;
   let baseUrl;
   const saved = {};
+  const ROUTE_ENV = { ...ENV, MAIL_API_ENABLED: 'true' };
 
   beforeAll(async () => {
-    for (const k of Object.keys(ENV)) {
+    for (const k of Object.keys(ROUTE_ENV)) {
       saved[k] = process.env[k];
-      process.env[k] = ENV[k];
+      process.env[k] = ROUTE_ENV[k];
     }
     __setMailFetchForTests(async () => ({ ok: true, json: async () => ({ id: 'email_route' }) }));
     await new Promise((resolve) => {
@@ -76,7 +77,7 @@ describe('POST /api/v1/notifications/email', () => {
 
   afterAll(async () => {
     __setMailFetchForTests(null);
-    for (const k of Object.keys(ENV)) {
+    for (const k of Object.keys(ROUTE_ENV)) {
       if (saved[k] === undefined) delete process.env[k];
       else process.env[k] = saved[k];
     }
