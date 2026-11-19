@@ -19,11 +19,13 @@ function ShareModalContent({ onClose, applicant, onShareCreated }) {
   const [expiresHours, setExpiresHours] = useState(72);
   const [isCopied, setIsCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [shareError, setShareError] = useState('');
 
   useEffect(() => {
     let isMounted = true;
     const generate = async () => {
       setIsGenerating(true);
+      setShareError('');
       try {
         const res = await createSharedEvaluation(applicant, {
           expiresHours,
@@ -40,6 +42,11 @@ function ShareModalContent({ onClose, applicant, onShareCreated }) {
         }
       } catch (err) {
         console.error('Failed to create share link:', err);
+        if (isMounted) {
+          setShareUrl('');
+          setShareId('');
+          setShareError(err?.message || '공유 링크를 만들지 못했습니다.');
+        }
       } finally {
         if (isMounted) setIsGenerating(false);
       }
@@ -107,6 +114,12 @@ function ShareModalContent({ onClose, applicant, onShareCreated }) {
             <label className="text-xs font-bold text-fg-muted uppercase tracking-wider block mb-2">
               공유 링크
             </label>
+            {shareError && (
+              <p role="alert" className="flex items-start gap-2 mb-2 px-3 py-2 rounded-md border border-warn-line bg-warn-soft text-[13px] text-warn">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                {shareError}
+              </p>
+            )}
             <div className="flex items-center gap-2">
               <input
                 type="text"
