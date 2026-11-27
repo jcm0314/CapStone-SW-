@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { anonymizePII, hasPII } from './piiAnonymizer';
+import { anonymizePII, hasPII, detectSuspiciousPII, applyManualMasks } from './piiAnonymizer';
 
 describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
   it('이메일 주소를 [이메일 익명화]로 마스킹해야 함', () => {
@@ -131,6 +131,43 @@ describe('Client-side PII Anonymizer Filter (Blind Recruitment)', () => {
       const r = anonymizePII('1998년 5월 12일생, 97년생 표기');
       expect(r.maskedCategories).toEqual(['생년월일']);
       expect(r.piiCount).toBe(1);
+    });
+  });
+
+  describe('2차 Selective HITL 의심 개인정보 추출 (detectSuspiciousPII & applyManualMasks)', () => {
+    it('1차 정규식이 보수적으로 남긴 SNS ID·비정형 출생·학번·상세주소를 1줄 스니펫으로 추출해야 함', () => {
+      const raw = [
+        '카톡 아이디 jiwoo99 / 메일 jiwoo99@outlook.kr',
+        '만 25세 (2001-04-17), 학번 32201234',
+        '거주지: 범어동 123-4 래미안아파트 102동'
+      ].join('\n');
+
+      const stage1 = anonymizePII(raw);
+      const suspicious = detectSuspiciousPII(stage1.anonymizedText);
+
+      const matches = suspicious.map((s) => s.match);
+      expect(matches).toContain('jiwoo99');
+      expect(matches).toContain('2001-04-17');
+      expect(matches).toContain('32201234');
+      expect(matches.some((m) => m.includes('범어동 123-4'))).toBe(true);
+      expect(suspicious.every((s) => s.snippet.length > 0 && s.snippet.length <= 92)).toBe(true);
+    });
+
+    it('일반 기술·실적 문장에서는 의심 항목이 0건이어야 담당자 확인 없이 바로 통과됨', () => {
+      const clean = [
+        '2024.03.15에 v3.0을 출시했습니다.',
+        'Redis 캐싱 도입으로 API 응답 시간을 3.2초에서 0.42초로 86.8% 단축했습니다.',
+        '생산 라인 불량률을 1.2%로 낮추고 분기 매출 2024-Q3 목표를 달성했습니다.'
+      ].join('\n');
+
+      const stage1 = anonymizePII(clean);
+      expect(detectSuspiciousPII(stage1.anonymizedText)).toEqual([]);
+    });
+
+    it('applyManualMasks가 담당자가 선택한 토큰만 [추가 비식별화]로 치환해야 함', () => {
+      const text = '카톡 아이디 jiwoo99, 출생일 2001-04-17, 경력 3년';
+      const masked = applyManualMasks(text, ['jiwoo99', '2001-04-17']);
+      expect(masked).toBe('카톡 아이디 [추가 비식별화], 출생일 [추가 비식별화], 경력 3년');
     });
   });
 });

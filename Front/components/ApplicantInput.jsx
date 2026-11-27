@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Loader2, UploadCloud, PenLine } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Loader2, UploadCloud, PenLine, ShieldCheck, AlertTriangle, EyeOff, Check } from 'lucide-react';
 import FileUploadZone from './FileUploadZone';
 import { guessApplicantName } from '../utils/nameGuesser';
+import { anonymizePII, detectSuspiciousPII, applyManualMasks } from '../utils/piiAnonymizer';
 
 const CONSENT_KEY = 'checkmate_pii_consent_confirmed';
 
@@ -25,6 +26,44 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
     }
   });
   const [consentMissing, setConsentMissing] = useState(false);
+  // 2차 Selective HITL: 담당자가 원클릭으로 추가 가림 승인한 토큰 & 무시한 항목
+  const [manualMaskedTokens, setManualMaskedTokens] = useState([]);
+  const [ignoredSuspiciousIds, setIgnoredSuspiciousIds] = useState([]);
+
+  const piiPreview = useMemo(() => {
+    if (!rawText.trim()) return null;
+    const stage1 = anonymizePII(rawText, name);
+    const afterManual = applyManualMasks(stage1.anonymizedText, manualMaskedTokens);
+    const suspicious = detectSuspiciousPII(afterManual).filter(
+      (item) => !ignoredSuspiciousIds.includes(item.match)
+    );
+    return {
+      piiCount: stage1.piiCount,
+      maskedCategories: stage1.maskedCategories,
+      suspicious
+    };
+  }, [rawText, name, manualMaskedTokens, ignoredSuspiciousIds]);
+
+  useEffect(() => {
+    if (!rawText.trim()) {
+      setManualMaskedTokens([]);
+      setIgnoredSuspiciousIds([]);
+    }
+  }, [rawText]);
+
+  const handleMaskSuspicious = (token) => {
+    setManualMaskedTokens((prev) => (prev.includes(token) ? prev : [...prev, token]));
+  };
+
+  const handleMaskAllSuspicious = () => {
+    if (!piiPreview?.suspicious?.length) return;
+    const tokens = piiPreview.suspicious.map((s) => s.match);
+    setManualMaskedTokens((prev) => [...new Set([...prev, ...tokens])]);
+  };
+
+  const handleIgnoreSuspicious = (token) => {
+    setIgnoredSuspiciousIds((prev) => (prev.includes(token) ? prev : [...prev, token]));
+  };
 
   const updateConsent = (checked) => {
     setConsent(checked);
@@ -65,7 +104,10 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
   const handleRun = () => {
     if (!rawText.trim()) return;
     if (!requireConsent()) return;
-    onAnalyze({ name, rawText });
+    const preparedText = manualMaskedTokens.length > 0
+      ? applyManualMasks(rawText, manualMaskedTokens)
+      : rawText;
+    onAnalyze({ name, rawText: preparedText });
   };
 
   const percent = progressState ? progressState.percent : (isAnalyzing ? 50 : 0);
@@ -127,6 +169,75 @@ export default function ApplicantInput({ onAnalyze, onBatchAnalyze, isAnalyzing,
             className="field leading-[1.75] resize-y min-h-[220px]"
           />
         </div>
+      )}
+
+      {/* 2차 Selective HITL 개인정보 점검 요약 (본문 전체 열람 대신 의심 1~2줄만 3초 확인) */}
+      {piiPreview && (
+        piiPreview.suspicious.length === 0 ? (
+          <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-md border border-ok-line bg-ok-soft/60 text-xs">
+            <span className="flex items-center gap-1.5 font-medium text-ok">
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+              1차 자동 가림 완료
+              {piiPreview.maskedCategories.length > 0
+                ? ` (${piiPreview.maskedCategories.join('·')})`
+                : ' (개인정보 미검출)'}
+              {manualMaskedTokens.length > 0 ? ` + 추가 가림 ${manualMaskedTokens.length}건` : ''}
+            </span>
+            <span className="text-ok/90 font-semibold shrink-0">의심 항목 0건 · 바로 분석 가능</span>
+          </div>
+        ) : (
+          <div className="rounded-lg border border-warn-line bg-warn-soft/50 p-3 space-y-2.5" role="region" aria-label="2차 선택적 개인정보 확인">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-warn">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                비정형 개인정보 의심 {piiPreview.suspicious.length}건만 빠르게 확인하세요 (전체 열람 불필요)
+              </div>
+              <button
+                type="button"
+                onClick={handleMaskAllSuspicious}
+                className="btn btn-primary btn-sm text-xs"
+              >
+                <EyeOff className="w-3 h-3" /> 모두 가리기
+              </button>
+            </div>
+            <div className="space-y-1.5">
+              {piiPreview.suspicious.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-md bg-surface border border-line text-xs"
+                >
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="px-1.5 py-0.5 rounded bg-warn-soft text-warn font-semibold text-[11px]">
+                        {item.category}
+                      </span>
+                      <code className="px-1.5 py-0.5 rounded bg-subtle text-fg font-bold">{item.match}</code>
+                    </div>
+                    <p className="text-[11px] text-fg-muted truncate" title={item.snippet}>
+                      {item.snippet}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleMaskSuspicious(item.match)}
+                      className="btn btn-secondary btn-sm text-[11px]"
+                    >
+                      <Check className="w-3 h-3" /> 가리기
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleIgnoreSuspicious(item.match)}
+                      className="btn btn-ghost btn-sm text-[11px] text-fg-muted"
+                    >
+                      무시
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
       )}
 
       {/* 개인정보 수집·이용 동의 확인 */}

@@ -86,4 +86,32 @@ describe('TenantContext & Multi-Tenancy Isolation', () => {
     const saved = result.current.getTenantApplicants();
     expect(saved[0].orgId).toBe('woowa');
   });
+
+  it('실제 기업 워크스페이스 생성 시 allTenants에 추가되고 해당 기업으로 즉시 전환되어야 한다', async () => {
+    const { result } = renderHook(() => useTenant(), { wrapper });
+
+    await act(async () => {
+      await result.current.createWorkspace({
+        name: '(주)성운이엔지',
+        industry: '엔지니어링 · 제조',
+        plan: 'Starter',
+        adminName: '한상혁 과장',
+        adminEmail: 'hr@sungwoon.co.kr'
+      });
+    });
+
+    expect(result.current.currentTenant.name).toBe('(주)성운이엔지');
+    expect(result.current.currentTenant.plan).toBe('Starter');
+    expect(result.current.currentTenant.totalCredit).toBe(50);
+    expect(result.current.allTenants.some((t) => t.name === '(주)성운이엔지')).toBe(true);
+    expect(result.current.getTenantApplicants()).toEqual([]);
+
+    act(() => {
+      result.current.saveTenantApplicants([{ id: 'sw_01', name: '김지원' }]);
+    });
+
+    const saved = result.current.getTenantApplicants();
+    expect(saved).toHaveLength(1);
+    expect(saved[0].orgId).toBe(result.current.currentTenant.id);
+  });
 });

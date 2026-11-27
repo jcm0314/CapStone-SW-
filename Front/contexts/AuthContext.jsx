@@ -84,12 +84,48 @@ export function AuthProvider({ children }) {
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [authToken, setAuthToken] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('checkmate_auth_token') || null;
+    }
+    return null;
+  });
 
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('checkmate_auth_user', JSON.stringify(currentUser));
     }
   }, [currentUser]);
+
+  // Register/Login real workspace user (non-demo)
+  const loginWorkspaceUser = ({
+    id,
+    name,
+    email,
+    role = 'ADMIN',
+    roleTitle = '대표 / 채용 총괄',
+    provider = 'Check-Mate Workspace',
+    token = null
+  }) => {
+    const nextUser = {
+      id: id || `usr_${Date.now()}`,
+      name: String(name || '채용 담당자').trim().slice(0, 30),
+      email: String(email || '').trim().slice(0, 254),
+      avatar: DEFAULT_USERS[role]?.avatar || DEFAULT_USERS.ADMIN.avatar,
+      role,
+      roleTitle: String(roleTitle || '대표 / 채용 총괄').trim().slice(0, 40),
+      provider,
+      isDemo: false
+    };
+    setCurrentUser(nextUser);
+    setIsAuthenticated(true);
+    if (token) {
+      setAuthToken(token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('checkmate_auth_token', token);
+      }
+    }
+  };
 
   // Quick switch role (for evaluation demos and RBAC testing)
   const switchRole = (roleKey) => {
@@ -161,8 +197,10 @@ export function AuthProvider({ children }) {
       value={{
         currentUser,
         isAuthenticated,
+        authToken,
         switchRole,
         loginWithSSO,
+        loginWorkspaceUser,
         updateProfile,
         logout,
         hasPermission,

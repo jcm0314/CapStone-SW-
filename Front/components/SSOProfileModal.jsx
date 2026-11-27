@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { X, Building2, UserCheck, ShieldCheck, CheckCircle2, Info, Pencil, Check } from 'lucide-react';
+import { X, Building2, UserCheck, ShieldCheck, CheckCircle2, Info, Pencil, Check, Plus, Sparkles } from 'lucide-react';
 import { useAuth, ROLES } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
+
+const WORKSPACE_PLANS = [
+  { id: 'Starter', label: 'Starter', price: '월 9.9만 원', quota: '월 50건' },
+  { id: 'Pro', label: 'Pro', price: '월 29만 원', quota: '월 150건' },
+  { id: 'Season Credit', label: '시즌 크레딧', price: '건별 과금', quota: '기본 20건' }
+];
 
 // Guard wrapper: keeps hook call order stable in the content component (Rules of Hooks)
 export default function SSOProfileModal({ isOpen, onClose }) {
@@ -10,9 +16,20 @@ export default function SSOProfileModal({ isOpen, onClose }) {
 }
 
 function SSOProfileModalContent({ onClose }) {
-  const { currentUser, switchRole, updateProfile } = useAuth();
+  const { currentUser, switchRole, updateProfile, loginWorkspaceUser } = useAuth();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState({ name: '', roleTitle: '', email: '' });
+  const [creatingWorkspace, setCreatingWorkspace] = useState(false);
+  const [workspaceForm, setWorkspaceForm] = useState({
+    name: '',
+    industry: '중소 · 벤처기업',
+    plan: 'Starter',
+    adminName: '',
+    roleTitle: '대표 / 채용 총괄',
+    adminEmail: ''
+  });
+  const [workspaceError, setWorkspaceError] = useState('');
+  const [creatingLoading, setCreatingLoading] = useState(false);
 
   const startEdit = () => {
     setDraft({ name: currentUser.name || '', roleTitle: currentUser.roleTitle || '', email: currentUser.email || '' });
@@ -25,7 +42,37 @@ function SSOProfileModalContent({ onClose }) {
     updateProfile(draft);
     setEditing(false);
   };
-  const { currentTenant, allTenants, switchTenant } = useTenant();
+  const { currentTenant, allTenants, switchTenant, createWorkspace } = useTenant();
+
+  const handleCreateWorkspace = async (e) => {
+    e.preventDefault();
+    setWorkspaceError('');
+    setCreatingLoading(true);
+    try {
+      const result = await createWorkspace(workspaceForm);
+      loginWorkspaceUser({
+        id: result.user?.sub,
+        name: workspaceForm.adminName,
+        email: workspaceForm.adminEmail,
+        role: 'ADMIN',
+        roleTitle: workspaceForm.roleTitle,
+        token: result.token
+      });
+      setCreatingWorkspace(false);
+      setWorkspaceForm({
+        name: '',
+        industry: '중소 · 벤처기업',
+        plan: 'Starter',
+        adminName: '',
+        roleTitle: '대표 / 채용 총괄',
+        adminEmail: ''
+      });
+    } catch (err) {
+      setWorkspaceError(err?.message || '워크스페이스 생성 중 오류가 발생했습니다.');
+    } finally {
+      setCreatingLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
@@ -101,7 +148,10 @@ function SSOProfileModalContent({ onClose }) {
                 </div>
                 <p className="text-xs text-fg-muted mt-0.5">{currentUser.roleTitle} • {currentUser.email}</p>
                 <p className="text-[11px] text-fg-subtle mt-1 flex items-center gap-1">
-                  <Info className="w-3 h-3" /> 데모 계정입니다. 실제 로그인 없이 이 브라우저에만 저장됩니다.
+                  <Info className="w-3 h-3" />{' '}
+                  {currentUser?.isDemo === false
+                    ? '기업 워크스페이스 계정으로 접속 중 · 회사별 데이터 격리 적용'
+                    : '데모 계정입니다. 새 기업 워크스페이스를 만들면 우리 회사 공간으로 전환됩니다.'}
                 </p>
               </div>
             </div>
@@ -111,18 +161,137 @@ function SSOProfileModalContent({ onClose }) {
           </div>
           )}
 
-          {/* Section 2: Multi-Tenancy Enterprise Switcher */}
+          {/* Section 2: Multi-Tenancy Enterprise Switcher & New Workspace Registration */}
           <div>
-            <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center justify-between mb-2.5 gap-2 flex-wrap">
               <label className="text-xs font-bold text-fg-muted uppercase tracking-wider flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-brand-fg" /> 소속 기업 선택 (Multi-Tenancy 격리)
               </label>
-              <span className="text-[11px] text-fg-muted">클릭 시 해당 기업의 지원서 DB만 즉시 로드됩니다</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setCreatingWorkspace((v) => !v);
+                  setWorkspaceError('');
+                }}
+                className="btn btn-primary btn-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {creatingWorkspace ? '목록으로 돌아가기' : '새 기업 워크스페이스 만들기'}
+              </button>
             </div>
 
+            {creatingWorkspace ? (
+              <form
+                onSubmit={handleCreateWorkspace}
+                className="p-4 rounded-xl bg-subtle border border-brand-line space-y-3"
+                aria-label="새 기업 워크스페이스 만들기"
+              >
+                <div className="flex items-center gap-2 text-xs font-semibold text-brand-fg">
+                  <Sparkles className="w-4 h-4" />
+                  우리 회사 전용 공간을 만들고 바로 시작하세요 (타 기업 데이터와 100% 분리)
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label className="space-y-1">
+                    <span className="label">회사명 *</span>
+                    <input
+                      className="field"
+                      placeholder="예: (주)성운이엔지"
+                      value={workspaceForm.name}
+                      maxLength={64}
+                      required
+                      onChange={(e) => setWorkspaceForm({ ...workspaceForm, name: e.target.value })}
+                    />
+                  </label>
+                  <label className="space-y-1">
+                    <span className="label">업종</span>
+                    <input
+                      className="field"
+                      placeholder="예: 엔지니어링 · 제조"
+                      value={workspaceForm.industry}
+                      maxLength={80}
+                      onChange={(e) => setWorkspaceForm({ ...workspaceForm, industry: e.target.value })}
+                    />
+                  </label>
+                  <label className="space-y-1">
+                    <span className="label">담당자 이름 *</span>
+                    <input
+                      className="field"
+                      placeholder="예: 한상혁"
+                      value={workspaceForm.adminName}
+                      maxLength={40}
+                      required
+                      onChange={(e) => setWorkspaceForm({ ...workspaceForm, adminName: e.target.value })}
+                    />
+                  </label>
+                  <label className="space-y-1">
+                    <span className="label">담당자 이메일 *</span>
+                    <input
+                      className="field"
+                      type="email"
+                      placeholder="예: hr@sungwoon.co.kr"
+                      value={workspaceForm.adminEmail}
+                      maxLength={254}
+                      required
+                      onChange={(e) => setWorkspaceForm({ ...workspaceForm, adminEmail: e.target.value })}
+                    />
+                  </label>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="label">요금제 선택</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {WORKSPACE_PLANS.map((p) => {
+                      const active = workspaceForm.plan === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => setWorkspaceForm({ ...workspaceForm, plan: p.id })}
+                          className={`p-2.5 rounded-lg border text-left transition-all ${
+                            active
+                              ? 'bg-brand-soft border-brand-line ring-1 ring-brand/30'
+                              : 'bg-surface border-line hover:border-line-strong'
+                          }`}
+                        >
+                          <div className="text-xs font-bold text-fg">{p.label}</div>
+                          <div className="text-[11px] text-fg-muted mt-0.5">{p.price} · {p.quota}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {workspaceError && (
+                  <p className="text-xs text-bad font-medium">{workspaceError}</p>
+                )}
+
+                <div className="flex justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setCreatingWorkspace(false)}
+                    className="btn btn-secondary btn-md"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={creatingLoading}
+                    className="btn btn-primary btn-md"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    {creatingLoading ? '생성 중...' : '기업 워크스페이스 생성 및 시작'}
+                  </button>
+                </div>
+              </form>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {allTenants.map((tenant) => {
                 const isSelected = tenant.id === currentTenant.id;
+                const remaining = Math.max(0, (tenant.totalCredit ?? 0) - (tenant.usedCredit ?? 0));
+                const creditDisplay = tenant.isCustom
+                  ? `${remaining}건 남음`
+                  : `${(remaining / 1000).toFixed(0)}k P`;
                 return (
                   <button
                     key={tenant.id}
@@ -134,25 +303,26 @@ function SSOProfileModalContent({ onClose }) {
                     }`}
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-sm font-bold text-fg">{tenant.name}</span>
+                      <div className="flex items-center justify-between mb-1.5 gap-1">
+                        <span className="text-sm font-bold text-fg truncate">{tenant.name}</span>
                         {isSelected && (
-                          <CheckCircle2 className="w-4 h-4 text-brand-fg" />
+                          <CheckCircle2 className="w-4 h-4 text-brand-fg shrink-0" />
                         )}
                       </div>
-                      <p className="text-[11px] text-fg-muted">{tenant.industry}</p>
+                      <p className="text-[11px] text-fg-muted truncate">{tenant.industry}</p>
                     </div>
 
                     <div className="mt-3 pt-2.5 border-t border-line-strong flex items-center justify-between text-[11px]">
                       <span className="text-fg-muted">{tenant.plan}</span>
                       <span className="font-semibold text-ok">
-                        {((tenant.totalCredit - tenant.usedCredit) / 1000).toFixed(0)}k P
+                        {creditDisplay}
                       </span>
                     </div>
                   </button>
                 );
               })}
             </div>
+            )}
           </div>
 
           {/* Section 3: RBAC Role Switcher */}

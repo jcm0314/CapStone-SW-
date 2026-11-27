@@ -440,4 +440,55 @@ describe('Check-Mate Express API Gateway Endpoints', () => {
       expect(buildPromptAddendumFromSettings(null)).toBe('');
     });
   });
+
+  describe('POST /api/v1/tenants/register (실제 기업 워크스페이스 가입)', () => {
+    it('회사명·담당자·이메일로 새 워크스페이스를 생성하고 서명된 토큰과 쿼터를 반환해야 한다', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/tenants/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: '(주)성운이엔지',
+          industry: '엔지니어링 · 제조',
+          plan: 'Starter',
+          adminName: '한상혁',
+          adminEmail: 'hr@sungwoon.co.kr'
+        })
+      });
+
+      expect(res.status).toBe(201);
+      const body = await res.json();
+      expect(body.tenant.name).toBe('(주)성운이엔지');
+      expect(body.tenant.plan).toBe('Starter');
+      expect(body.tenant.totalCredit).toBe(50);
+      expect(body.user.role).toBe('ADMIN');
+      expect(body.user.isDemo).toBe(false);
+      expect(body.token).toMatch(/^chk_sso_/);
+
+      const listRes = await fetch(`${baseUrl}/api/v1/tenants`);
+      expect(listRes.status).toBe(200);
+      const listBody = await listRes.json();
+      expect(listBody.tenants.some((t) => t.id === body.tenant.id)).toBe(true);
+
+      const verifyRes = await fetch(`${baseUrl}/api/v1/auth/verify`, {
+        headers: { Authorization: `Bearer ${body.token}` }
+      });
+      expect(verifyRes.status).toBe(200);
+      const verifyBody = await verifyRes.json();
+      expect(verifyBody.valid).toBe(true);
+      expect(verifyBody.user.tenantId).toBe(body.tenant.id);
+    });
+
+    it('이메일 형식이 올바르지 않으면 400을 반환해야 한다', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/tenants/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: '아이보테크',
+          adminName: '최승천',
+          adminEmail: 'invalid-email'
+        })
+      });
+      expect(res.status).toBe(400);
+    });
+  });
 });

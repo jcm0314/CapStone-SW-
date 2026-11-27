@@ -116,7 +116,7 @@ export default function Header({
               <span className="hidden lg:flex flex-col items-end leading-tight">
                 <span className="text-[13px] font-semibold text-fg">{currentUser?.name?.split(' ')[0]}</span>
                 <span className="text-[11px] text-fg-subtle">
-                  {ROLE_LABEL[roleKey] || roleKey} · 데모
+                  {ROLE_LABEL[roleKey] || roleKey} · {currentUser?.isDemo === false ? currentTenant.plan : '데모'}
                 </span>
               </span>
               <img
