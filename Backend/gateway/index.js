@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3001;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, 'data');
 const STORE_FILE = path.join(DATA_DIR, 'shared_evaluations.json');
+const TENANTS_STORE_FILE = path.join(DATA_DIR, 'tenants.json');
 const SSO_SECRET = process.env.SSO_TOKEN_SECRET || 'checkmate-enterprise-hmac-default-secret-2026';
 
 // Enable Trust Proxy for Load Balancers (Nginx / Cloud Run / K8s Ingress)
@@ -156,6 +157,56 @@ const tenantsStore = new Map([
     industry: 'Food Delivery / Mobility Tech'
   }]
 ]);
+
+const PLAN_PRESETS = {
+  Starter: { plan: 'Starter', totalCredit: 50 },
+  Pro: { plan: 'Pro', totalCredit: 150 },
+  'Season Credit': { plan: 'Season Credit', totalCredit: 20 }
+};
+
+function loadPersistedTenants() {
+  if (process.env.NODE_ENV === 'test') return;
+  try {
+    if (fs.existsSync(TENANTS_STORE_FILE)) {
+      const raw = fs.readFileSync(TENANTS_STORE_FILE, 'utf8');
+      const entries = JSON.parse(raw);
+      if (Array.isArray(entries)) {
+        for (const tenant of entries) {
+          if (tenant?.id && tenant?.name) {
+            tenantsStore.set(tenant.id, tenant);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[TenantStore] Failed to load persisted tenants:', err.message);
+  }
+}
+
+function persistTenants() {
+  if (process.env.NODE_ENV === 'test') return;
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const customList = Array.from(tenantsStore.values()).filter((t) => t.isCustom);
+    fs.writeFileSync(TENANTS_STORE_FILE, JSON.stringify(customList, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('[TenantStore] Failed to persist tenants:', err.message);
+  }
+}
+
+function buildTenantSlug(name) {
+  const ascii = String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 28);
+  const suffix = crypto.randomBytes(3).toString('hex');
+  return ascii ? `${ascii}-${suffix}` : `org-${suffix}`;
+}
+
+loadPersistedTenants();
 
 // Root Service Information Endpoint
 app.get('/', (req, res) => {
@@ -384,6 +435,80 @@ app.get('/api/v1/auth/verify', (req, res) => {
 app.get('/api/v1/tenants', (req, res) => {
   const list = Array.from(tenantsStore.values());
   return res.status(200).json({ tenants: list });
+});
+
+// Register New Enterprise Workspace & Admin Account
+app.post('/api/v1/tenants/register', (req, res) => {
+  const {
+    name,
+    industry = '중소 · 벤처기업',
+    plan = 'Starter',
+    adminName,
+    adminEmail,
+    roleTitle = '대표 / 채용 총괄',
+    domain
+  } = req.body || {};
+
+  const cleanName = String(name || '').trim().slice(0, 64);
+  const cleanAdminName = String(adminName || '').trim().slice(0, 40);
+  const cleanEmail = String(adminEmail || '').trim().toLowerCase().slice(0, 254);
+
+  if (!cleanName) {
+    return res.status(400).json({ error: '회사명을 입력해 주세요.' });
+  }
+  if (!cleanAdminName) {
+    return res.status(400).json({ error: '담당자 이름을 입력해 주세요.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    return res.status(400).json({ error: '올바른 이메일 주소를 입력해 주세요.' });
+  }
+
+  let tenantId = buildTenantSlug(cleanName);
+  while (tenantsStore.has(tenantId)) {
+    tenantId = buildTenantSlug(cleanName);
+  }
+
+  const preset = PLAN_PRESETS[plan] || PLAN_PRESETS.Starter;
+  const derivedDomain = String(domain || cleanEmail.split('@')[1] || `${tenantId}.local`)
+    .trim()
+    .toLowerCase()
+    .slice(0, 128);
+
+  const newTenant = {
+    id: tenantId,
+    name: cleanName,
+    domain: derivedDomain,
+    plan: preset.plan,
+    totalCredit: preset.totalCredit,
+    usedCredit: 0,
+    industry: String(industry || '중소 · 벤처기업').trim().slice(0, 80),
+    isCustom: true,
+    createdAt: new Date().toISOString()
+  };
+
+  tenantsStore.set(tenantId, newTenant);
+  persistTenants();
+
+  const userPayload = {
+    sub: `usr_${crypto.randomBytes(6).toString('hex')}`,
+    tenantId: newTenant.id,
+    tenantName: newTenant.name,
+    role: 'ADMIN',
+    name: cleanAdminName,
+    roleTitle: String(roleTitle || '대표 / 채용 총괄').trim().slice(0, 40),
+    email: cleanEmail,
+    provider: 'Check-Mate Workspace',
+    isDemo: false,
+    issuedAt: new Date().toISOString()
+  };
+
+  const token = signSsoToken(userPayload);
+
+  return res.status(201).json({
+    tenant: newTenant,
+    user: userPayload,
+    token
+  });
 });
 
 // Retrieve Tenant Credit Quota (FinOps Governance)

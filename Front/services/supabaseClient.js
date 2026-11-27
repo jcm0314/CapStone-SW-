@@ -252,3 +252,58 @@ export function subscribeCollaborationNotes(shareId, onRemoteChange) {
     return () => {};
   }
 }
+
+/**
+ * Fetches custom tenant workspaces from Supabase `tenants` table when configured.
+ * @returns {Promise<Array>}
+ */
+export async function fetchTenantsFromSupabase() {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from('tenants')
+      .select('id, name, domain, plan, total_credit, used_credit, industry, created_at')
+      .order('created_at', { ascending: false });
+
+    if (error || !Array.isArray(data)) return [];
+    return data.map((row) => ({
+      id: row.id,
+      name: row.name,
+      domain: row.domain || '',
+      plan: row.plan || 'Starter',
+      totalCredit: row.total_credit ?? 50,
+      usedCredit: row.used_credit ?? 0,
+      industry: row.industry || '중소 · 벤처기업',
+      isCustom: true,
+      defaultApplicants: []
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Upserts a newly registered tenant workspace into Supabase `tenants` table.
+ * @param {object} tenant
+ * @returns {Promise<boolean>}
+ */
+export async function upsertTenantToSupabase(tenant) {
+  if (!supabase || !tenant?.id || !tenant?.name) return false;
+  try {
+    const { error } = await supabase.from('tenants').upsert(
+      {
+        id: tenant.id,
+        name: tenant.name,
+        domain: tenant.domain || `${tenant.id}.local`,
+        plan: tenant.plan || 'Starter',
+        total_credit: tenant.totalCredit ?? 50,
+        used_credit: tenant.usedCredit ?? 0,
+        industry: tenant.industry || '중소 · 벤처기업'
+      },
+      { onConflict: 'id' }
+    );
+    return !error;
+  } catch {
+    return false;
+  }
+}

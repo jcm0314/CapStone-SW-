@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check-Mate — 소프트웨어학과 캡스톤 디자인 10분 발표자료</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: #0B1120;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+    }
+    @page { size: 1920px 1080px; margin: 0; }
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: #FFFFFF;
+      margin: 0 auto 24px auto;
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+      break-after: page;
+    }
+    @media print {
+      html, body { background: #FFFFFF; }
+      .slide { margin: 0; }
+    }
+
+    /* Header & Footer */
+    .slide-header {
+      padding: 48px 80px 24px 80px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #E2E8F0;
+      flex-shrink: 0;
+    }
+    .eyebrow {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 8px;
+    }
+    .slide-title {
+      font-size: 46px;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -0.025em;
+      line-height: 1.18;
+    }
+    .part-pill {
+      padding: 9px 20px;
+      border-radius: 999px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: #1D4ED8;
+      font-size: 16px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .slide-body {
+      flex: 1;
+      padding: 40px 80px 32px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+      min-height: 0;
+    }
+    .slide-footer {
+      height: 54px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #E2E8F0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748B;
+      background: #F8FAFC;
+      flex-shrink: 0;
+    }
+    .slide-dark {
+      background: linear-gradient(135deg, #0B1120 0%, #111C38 55%, #172554 100%);
+      color: #FFFFFF;
+    }
+    .slide-dark .slide-footer {
+      background: rgba(15, 23, 42, 0.72);
+      border-top-color: rgba(148, 163, 184, 0.2);
+      color: #94A3B8;
+    }
+
+    /* Grids & Cards */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .card {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 28px 30px;
+    }
+    .card-white {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .card-dark {
+      background: #0F172A;
+      border: 1.5px solid #1E293B;
+      border-radius: 18px;
+      padding: 28px 30px;
+      color: #F8FAFC;
+    }
+    .card-blue {
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 18px;
+      padding: 26px 28px;
+    }
+    .card-green {
+      background: #ECFDF5;
+      border: 1.5px solid #A7F3D0;
+      border-radius: 18px;
+      padding: 26px 28px;
+    }
+    .card-amber {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 18px;
+      padding: 26px 28px;
+    }
+    .card-red {
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+      border-radius: 18px;
+      padding: 26px 28px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 800;
+      width: fit-content;
+    }
+    .b-blue { background: #DBEAFE; color: #1D4ED8; }
+    .b-green { background: #DCFCE7; color: #15803D; }
+    .b-amber { background: #FEF3C7; color: #B45309; }
+    .b-red { background: #FEE2E2; color: #B91C1C; }
+    .b-slate { background: #E2E8F0; color: #334155; }
+    .b-dark { background: #1E293B; color: #93C5FD; border: 1px solid #334155; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+    /* Tables */
+    table.eng-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 19px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1.5px solid #E2E8F0;
+    }
+    table.eng-table th {
+      background: #0F172A;
+      color: #F8FAFC;
+      font-weight: 800;
+      text-align: left;
+      padding: 16px 22px;
+      font-size: 17.5px;
+    }
+    table.eng-table td {
+      padding: 16px 22px;
+      border-bottom: 1px solid #E2E8F0;
+      color: #0F172A;
+      line-height: 1.4;
+      vertical-align: middle;
+    }
+    table.eng-table tr:last-child td { border-bottom: none; }
+    table.eng-table tr:nth-child(even) td { background: #F8FAFC; }
+
+    /* UI Window */
+    .ui-win {
+      border: 1.5px solid #CBD5E1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+    }
+    .ui-bar {
+      height: 38px;
+      background: #F1F5F9;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
+    .ui-title { margin-left: 8px; font-size: 15px; font-weight: 800; color: #1E293B; }
+
+    /* Key Message Strip */
+    .strip-dark {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: 14px;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    /* Editorial Cover & Closing Themes (Zero-Blue Crafted Design) */
+    .slide-editorial-cover {
+      background-color: #F6F3EC;
+      background-image:
+        linear-gradient(to right, rgba(20, 20, 19, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(20, 20, 19, 0.045) 1px, transparent 1px);
+      background-size: 64px 64px;
+      color: #141413;
+    }
+    .slide-editorial-dark {
+      background-color: #141413;
+      background-image:
+        radial-gradient(circle at 86% 14%, rgba(217, 119, 6, 0.14), transparent 38%),
+        radial-gradient(circle at 12% 88%, rgba(22, 163, 74, 0.11), transparent 40%),
+        linear-gradient(to right, rgba(246, 243, 236, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(246, 243, 236, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+      color: #F6F3EC;
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================================================================
+     SLIDE 1: TITLE (00:00 ~ 00:20) — Swiss Editorial × Architectural Grid
+     ========================================================================= -->
+<section class="slide slide-editorial-cover">
+  <!-- Left Signature 3-Color Highlighter Accent Spine -->
+  <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 14px; display: flex; flex-direction: column;">
+    <div style="flex: 1; background: #15803D;"></div>
+    <div style="flex: 1; background: #D97706;"></div>
+    <div style="flex: 1; background: #BE123C;"></div>
+  </div>
+
+  <!-- Top-Right Subtle Architectural 4-Agent Geometry SVG -->
+  <svg viewBox="0 0 640 520" style="position: absolute; right: 56px; top: 116px; width: 580px; height: 470px; pointer-events: none; opacity: 0.94;">
+    <defs>
+      <radialGradient id="warmGlow" cx="65%" cy="35%" r="55%">
+        <stop offset="0%" stop-color="#D97706" stop-opacity="0.16" />
+        <stop offset="60%" stop-color="#BE123C" stop-opacity="0.06" />
+        <stop offset="100%" stop-color="#F6F3EC" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <circle cx="390" cy="210" r="230" fill="url(#warmGlow)" />
+    <circle cx="390" cy="210" r="195" fill="none" stroke="#141413" stroke-opacity="0.12" stroke-width="1.2" stroke-dasharray="6 8" />
+    <circle cx="390" cy="210" r="132" fill="none" stroke="#141413" stroke-opacity="0.18" stroke-width="1.2" />
+    <line x1="258" y1="210" x2="522" y2="210" stroke="#141413" stroke-opacity="0.15" stroke-width="1.2" />
+    <line x1="390" y1="78" x2="390" y2="342" stroke="#141413" stroke-opacity="0.15" stroke-width="1.2" />
+    <!-- 4-Agent Nodes -->
+    <circle cx="390" cy="78" r="10" fill="#15803D" />
+    <circle cx="522" cy="210" r="10" fill="#BE123C" />
+    <circle cx="390" cy="342" r="10" fill="#D97706" />
+    <circle cx="258" cy="210" r="10" fill="#141413" />
+    <polygon points="390,94 506,210 390,326 274,210" fill="none" stroke="#141413" stroke-opacity="0.28" stroke-width="1.5" />
+    <!-- Center Checkmark Emblem -->
+    <circle cx="390" cy="210" r="38" fill="#141413" />
+    <path d="M374 211 L385 222 L408 197" fill="none" stroke="#F6F3EC" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Tiny Mono Labels -->
+    <text x="410" y="83" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#15803D">01 GROUNDING</text>
+    <text x="458" y="192" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#BE123C">02 CRITIC</text>
+    <text x="410" y="348" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#B45309">03 SUPERVISOR</text>
+    <text x="128" y="215" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#44403C">04 INTERVIEWER</text>
+  </svg>
+
+  <!-- Top Editorial Meta Bar -->
+  <div style="padding: 52px 96px 0 108px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: #141413; color: #F6F3EC; font-weight: 900; font-size: 20px;">C</span>
+      <span class="mono" style="font-size: 15px; font-weight: 800; letter-spacing: 0.14em; color: #44403C;">DANKOOK UNIV · SOFTWARE ENGINEERING</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="mono" style="padding: 8px 18px; border: 1.5px solid #141413; border-radius: 999px; font-size: 14px; font-weight: 800; color: #141413; background: rgba(246, 243, 236, 0.9);">
+        2026 CAPSTONE DESIGN · FINAL
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Centerpiece -->
+  <div style="flex: 1; padding: 36px 96px 40px 108px; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 2;">
+    <div style="margin-top: 34px; max-width: 1120px;">
+      <div style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;">
+        <span style="width: 10px; height: 10px; border-radius: 999px; background: #15803D;"></span>
+        <span style="width: 10px; height: 10px; border-radius: 999px; background: #D97706;"></span>
+        <span style="width: 10px; height: 10px; border-radius: 999px; background: #BE123C;"></span>
+        <span style="font-size: 17px; font-weight: 800; color: #57534E; letter-spacing: 0.04em; margin-left: 4px;">
+          TRUSTWORTHY MULTI-AGENT AI SYSTEM
+        </span>
+      </div>
+
+      <h1 style="font-size: 116px; font-weight: 900; line-height: 1.02; letter-spacing: -0.045em; color: #141413; margin-bottom: 34px;">
+        Check-Mate<span style="color: #C2410C;">.</span>
+      </h1>
+
+      <div style="font-size: 52px; font-weight: 800; line-height: 1.3; color: #292524; letter-spacing: -0.025em;">
+        <span style="background: #FEF3C7; color: #78350F; padding: 4px 16px; border-radius: 10px;">AI 채용 평가 시스템</span>
+      </div>
+    </div>
+
+    <!-- Bottom Asymmetric Editorial Bar -->
+    <div style="border-top: 2px solid #141413; padding-top: 30px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+      <div style="display: flex; align-items: flex-end; gap: 64px;">
+        <div>
+          <div class="mono" style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #78716C; margin-bottom: 8px;">PRESENTER</div>
+          <div style="font-size: 34px; font-weight: 900; color: #141413; letter-spacing: -0.02em;">장천명</div>
+          <div style="font-size: 17px; font-weight: 600; color: #57534E; margin-top: 4px;">단국대학교 소프트웨어학과</div>
+        </div>
+        <div style="height: 68px; width: 1.5px; background: #D6D3CD;"></div>
+        <div>
+          <div class="mono" style="font-size: 13px; font-weight: 800; letter-spacing: 0.14em; color: #78716C; margin-bottom: 8px;">CORE ARCHITECTURE</div>
+          <div style="font-size: 18px; font-weight: 700; color: #292524; line-height: 1.55;">
+            Selective HITL PII 차단 · 3단계 Fuzzy 바인딩<br />
+            감사 추적(Auditability) · PostgreSQL RLS 격리
+          </div>
+        </div>
+      </div>
+
+      <!-- Crafted Dark Charcoal QR Dock -->
+      <div style="background: #141413; color: #F6F3EC; border-radius: 20px; padding: 18px 22px; display: flex; align-items: center; gap: 18px;">
+        <div style="background: #FFFFFF; border-radius: 12px; padding: 10px; text-align: center;">
+          <img src="docs/assets/qr_live.svg" alt="Live QR" style="width: 100px; height: 100px; display: block;" />
+          <div style="font-size: 12px; font-weight: 800; color: #141413; margin-top: 6px;">Live Service</div>
+        </div>
+        <div style="background: #FFFFFF; border-radius: 12px; padding: 10px; text-align: center;">
+          <img src="docs/assets/qr_github.svg" alt="GitHub QR" style="width: 100px; height: 100px; display: block;" />
+          <div style="font-size: 12px; font-weight: 800; color: #141413; margin-top: 6px;">GitHub Repo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer" style="background: #EFECE4; border-top: 1px solid #DFDAD0; color: #57534E; padding-left: 108px;">
+    <span>Check-Mate · Dankook University Department of Software Engineering</span>
+    <span class="mono" style="font-weight: 800; color: #141413;">01 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 2: PROBLEM & REQUIREMENTS (00:20 ~ 01:00)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 1 · REQUIREMENTS ENGINEERING</div>
+      <h2 class="slide-title">문제 정의 및 요구사항 명세 (FR / NFR)</h2>
+    </div>
+    <span class="part-pill">01 · 문제 &amp; 요구공학</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="grid-3">
+      <div class="card-red" style="border-top: 6px solid #EF4444;">
+        <span class="badge b-red">난제 1 · 신뢰성</span>
+        <h3 style="font-size: 28px; font-weight: 900; margin: 14px 0 8px 0;">단일 LLM 환각 · 블랙박스</h3>
+        <p style="font-size: 19px; color: #334155;">취준생 <strong>91%</strong> AI 자소서 · 점수 근거 검증 불가</p>
+      </div>
+      <div class="card-amber" style="border-top: 6px solid #F59E0B;">
+        <span class="badge b-amber">난제 2 · 보안</span>
+        <h3 style="font-size: 28px; font-weight: 900; margin: 14px 0 8px 0;">개인정보(PII) 외부 유출</h3>
+        <p style="font-size: 19px; color: #334155;">이력서 <strong>7종 개인정보</strong> 상용 AI 복붙 시 법 위반</p>
+      </div>
+      <div class="card-blue" style="border-top: 6px solid #2563EB;">
+        <span class="badge b-blue">난제 3 · 단절</span>
+        <h3 style="font-size: 28px; font-weight: 900; margin: 14px 0 8px 0;">30시간 수작업 · 면접 단절</h3>
+        <p style="font-size: 19px; color: #334155;">성운이엔지·아이보테크·DCC 현장 실사 확인</p>
+      </div>
+    </div>
+
+    <table class="eng-table">
+      <thead>
+        <tr>
+          <th style="width: 15%;">분류</th>
+          <th style="width: 25%;">요구사항 항목</th>
+          <th style="width: 38%;">핵심 설계 명세</th>
+          <th style="width: 22%;">검증 지표</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge b-blue">FR-1</span></td>
+          <td><strong>원문 근거 교차 검증</strong></td>
+          <td>모든 AI 판정에 원문 1:1 형광펜 좌표 연결</td>
+          <td>원문 일치 <strong>100% (32/32)</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge b-blue">FR-2</span></td>
+          <td><strong>면접 연계 · HITL 보정</strong></td>
+          <td>기여도 질문 · 점수 보정 이력 · 면접관 공유</td>
+          <td><strong>15점 편차</strong> 자동 경고</td>
+        </tr>
+        <tr>
+          <td><span class="badge b-green">NFR-1</span></td>
+          <td><strong>보안 · 테넌트 격리</strong></td>
+          <td>로컬 2중 PII 차단 · Zero-Key · 기업별 RLS</td>
+          <td>PII 오탐 <strong>0건</strong> · HMAC 토큰</td>
+        </tr>
+        <tr>
+          <td><span class="badge b-green">NFR-2</span></td>
+          <td><strong>결함 허용 · 비용 효율</strong></td>
+          <td>장애 시 가짜 점수 금지 · FNV-1a 해시 캐시</td>
+          <td><strong>31.4초 · ~7원</strong> · 68%↓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 1. 문제 정의 &amp; 요구공학</span>
+    <span>02 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 3: COMPARISON & QUALITY ATTRIBUTES (01:00 ~ 01:40)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 1 · ISO/IEC 25010 QUALITY GOALS</div>
+      <h2 class="slide-title">기존 도구 비교 및 4대 소프트웨어 품질 속성</h2>
+    </div>
+    <span class="part-pill">01 · 기존 비교 &amp; 품질 목표</span>
+  </div>
+
+  <div class="slide-body">
+    <table class="eng-table">
+      <thead>
+        <tr>
+          <th style="width: 18%;">비교 축</th>
+          <th style="width: 20%;">상용 LLM (챗GPT)</th>
+          <th style="width: 20%;">1세대 ATS</th>
+          <th style="width: 19%;">대기업용 AI</th>
+          <th style="width: 23%; background: #1D4ED8;">Check-Mate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>추론 신뢰성</strong></td>
+          <td>단일 프롬프트 · 환각</td>
+          <td>일정 관리 위주</td>
+          <td>판정 근거 비공개</td>
+          <td style="background: #EFF6FF; font-weight: 800; color: #1E3A8A;">4-Agent + 원문 1:1 매핑</td>
+        </tr>
+        <tr>
+          <td><strong>개인정보 보호</strong></td>
+          <td>원문 유출 · 학습 위험</td>
+          <td>수동 블라인드</td>
+          <td>고비용 폐쇄 구축</td>
+          <td style="background: #EFF6FF; font-weight: 800; color: #1E3A8A;">로컬 자동 + Selective HITL</td>
+        </tr>
+        <tr>
+          <td><strong>감사 추적</strong></td>
+          <td>이력 휘발</td>
+          <td>AI 근거 미연계</td>
+          <td>보정 추적 제한</td>
+          <td style="background: #EFF6FF; font-weight: 800; color: #1E3A8A;">에이전트 로그 + HITL 이력</td>
+        </tr>
+        <tr>
+          <td><strong>운영 원가</strong></td>
+          <td>매번 수작업</td>
+          <td>시스템 전환 필요</td>
+          <td>연 수백~수천만 원</td>
+          <td style="background: #EFF6FF; font-weight: 800; color: #1E3A8A;">PDF 30초 · 건당 ~7원</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-4">
+      <div class="card-blue" style="padding: 24px;">
+        <div style="font-size: 14px; font-weight: 800; color: #2563EB;">01 · RELIABILITY</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0 6px 0;">신뢰성 · 결함 허용</div>
+        <p style="font-size: 17px; color: #334155;">결정적 Fuzzy 검증 · 가짜 점수 0</p>
+      </div>
+      <div class="card-green" style="padding: 24px;">
+        <div style="font-size: 14px; font-weight: 800; color: #059669;">02 · SECURITY</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0 6px 0;">Privacy-by-Design</div>
+        <p style="font-size: 17px; color: #334155;">Zero-Key · 2중 PII · RLS 격리</p>
+      </div>
+      <div class="card-amber" style="padding: 24px;">
+        <div style="font-size: 14px; font-weight: 800; color: #D97706;">03 · AUDITABILITY</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0 6px 0;">설명 가능 · 감사</div>
+        <p style="font-size: 17px; color: #334155;">중간 추론 + 인간 보정 사유 보존</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <div style="font-size: 14px; font-weight: 800; color: #475569;">04 · EFFICIENCY</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0 6px 0;">비동기 · 캐싱</div>
+        <p style="font-size: 17px; color: #334155;">Web Worker · FNV-1a 비용 68%↓</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 1. 기존 접근법 비교 &amp; ISO/IEC 25010 품질 속성</span>
+    <span>03 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 4: SYSTEM ARCHITECTURE (01:40 ~ 02:15)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 2 · SYSTEM ARCHITECTURE</div>
+      <h2 class="slide-title">3계층 시스템 아키텍처 (Zero-Key BFF &amp; Web Worker)</h2>
+    </div>
+    <span class="part-pill">02 · 시스템 아키텍처</span>
+  </div>
+
+  <div class="slide-body">
+    <div style="display: grid; grid-template-columns: 1fr 44px 1fr 44px 1fr; align-items: stretch; gap: 6px; flex: 1;">
+      <!-- Layer 1 -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 18px; border-top: 6px solid #2563EB;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-blue">1. Client SPA</span>
+          <span class="mono" style="font-size: 15px; color: #64748B;">React 18 · Vite</span>
+        </div>
+        <div class="card-white">
+          <div style="font-size: 21px; font-weight: 900;">로컬 PDF · DOCX 파싱</div>
+          <div style="font-size: 16px; color: #475569; margin-top: 4px;">서버 전송 전 브라우저 텍스트 추출</div>
+        </div>
+        <div class="card-white" style="background: #EFF6FF; border-color: #93C5FD;">
+          <div style="font-size: 21px; font-weight: 900; color: #1E3A8A;">Web Worker 오프로딩</div>
+          <div style="font-size: 16px; color: #334155; margin-top: 4px;">PII · Fuzzy 매칭 · 표절 비동기 연산</div>
+        </div>
+        <div class="card-white">
+          <div style="font-size: 21px; font-weight: 900;">FNV-1a 64bit 캐시</div>
+          <div style="font-size: 16px; color: #475569; margin-top: 4px;">중복 분석 API 비용 <strong>68% 절감</strong></div>
+        </div>
+        <div style="margin-top: auto; background: #DCFCE7; border: 1px solid #86EFAC; border-radius: 12px; padding: 14px 18px; font-size: 16px; font-weight: 800; color: #166534;">
+          🔒 Zero-Key: 브라우저 AI 키 0개
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #2563EB;">➜</div>
+
+      <!-- Layer 2 -->
+      <div class="card-dark" style="display: flex; flex-direction: column; gap: 18px; border-top: 6px solid #38BDF8;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-dark">2. Express BFF</span>
+          <span class="mono" style="font-size: 15px; color: #94A3B8;">Node 22 · Cloud Run</span>
+        </div>
+        <div style="background: #1E293B; border: 1px solid #334155; border-radius: 14px; padding: 20px 24px;">
+          <div style="font-size: 21px; font-weight: 900;">보안 · 인증 게이트웨이</div>
+          <div style="font-size: 16px; color: #CBD5E1; margin-top: 4px;">Rate Limit · CORS · HMAC-SHA256</div>
+        </div>
+        <div style="background: rgba(37, 99, 235, 0.25); border: 1px solid rgba(96, 165, 250, 0.5); border-radius: 14px; padding: 20px 24px;">
+          <div style="font-size: 21px; font-weight: 900; color: #93C5FD;">단일 평가 경로</div>
+          <div style="font-size: 16px; color: #E2E8F0; margin-top: 4px;"><code>/api/v1/evaluate</code> · 4-Agent 실행</div>
+        </div>
+        <div style="background: #1E293B; border: 1px solid #334155; border-radius: 14px; padding: 20px 24px;">
+          <div style="font-size: 21px; font-weight: 900;">가입 · 공유 · 메일 API</div>
+          <div style="font-size: 16px; color: #CBD5E1; margin-top: 4px;"><code>/tenants/register</code> · CSPRNG 링크</div>
+        </div>
+        <div style="margin-top: auto; background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(251, 191, 36, 0.45); border-radius: 12px; padding: 14px 18px; font-size: 16px; font-weight: 800; color: #FDE68A;">
+          ⚡ Feature Flag로 미인증 릴레이 차단
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #2563EB;">➜</div>
+
+      <!-- Layer 3 -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 18px; border-top: 6px solid #10B981;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-green">3. AI &amp; Data</span>
+          <span class="mono" style="font-size: 15px; color: #64748B;">Claude · Supabase</span>
+        </div>
+        <div class="card-white">
+          <div style="font-size: 21px; font-weight: 900;">Anthropic Claude API</div>
+          <div style="font-size: 16px; color: #475569; margin-top: 4px;"><code>claude-haiku-5-5</code> · 학습 미사용</div>
+        </div>
+        <div class="card-white" style="background: #ECFDF5; border-color: #86EFAC;">
+          <div style="font-size: 21px; font-weight: 900; color: #065F46;">Supabase PostgreSQL</div>
+          <div style="font-size: 16px; color: #334155; margin-top: 4px;">7-Table RLS 격리 · Realtime 협업</div>
+        </div>
+        <div class="card-white">
+          <div style="font-size: 21px; font-weight: 900;">Offline-First 폴백</div>
+          <div style="font-size: 16px; color: #475569; margin-top: 4px;">로컬 캐시 + 10초 폴링 무중단</div>
+        </div>
+        <div style="margin-top: auto; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 18px; font-size: 16px; font-weight: 800; color: #1E40AF;">
+          📦 Docker · Cloud Run · K8s / Terraform
+        </div>
+      </div>
+    </div>
+
+    <div class="strip-dark">
+      <span>핵심 설계: <span style="color: #60A5FA;">민감 데이터 처리(로컬)</span>와 <span style="color: #34D399;">비밀키 통제(서버)</span>의 물리적 분리</span>
+      <span class="mono" style="font-size: 15px; color: #94A3B8;">docs/ARCHITECTURE.md</span>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 2. 시스템 아키텍처</span>
+    <span>04 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 5: ADR & SDLC (02:15 ~ 02:50)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 2 · ADR &amp; SOFTWARE ENGINEERING PROCESS</div>
+      <h2 class="slide-title">설계 의사결정(ADR) 및 자동화 품질 프로세스</h2>
+    </div>
+    <span class="part-pill">02 · ADR &amp; SDLC</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="grid-2" style="align-items: stretch;">
+      <!-- Left: ADR -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-blue">ADR-AI-01</span>
+          <span class="mono" style="font-size: 14px; color: #64748B;">docs/adr/ADR-AI-01_api-vs-mcp.md</span>
+        </div>
+        <h3 style="font-size: 30px; font-weight: 900;">왜 MCP 대신 Direct SDK를 채택했는가?</h3>
+        <table class="eng-table" style="font-size: 18px;">
+          <thead>
+            <tr>
+              <th style="width: 24%;">기준</th>
+              <th style="width: 38%;">MCP 서버</th>
+              <th style="width: 38%; background: #1D4ED8;">Direct SDK (채택)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>용도</strong></td>
+              <td>외부 툴 표준 연동</td>
+              <td style="background: #EFF6FF; font-weight: 800;">고정 4-Agent 파이프라인</td>
+            </tr>
+            <tr>
+              <td><strong>지연</strong></td>
+              <td>JSON-RPC 홉 추가</td>
+              <td style="background: #EFF6FF; font-weight: 800;">서버 내 직접 비동기 호출</td>
+            </tr>
+            <tr>
+              <td><strong>통제</strong></td>
+              <td>권한 경계 추가 필요</td>
+              <td style="background: #EFF6FF; font-weight: 800;">스키마·살균·오류 100% 통제</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card-blue" style="padding: 18px 22px; margin-top: auto; font-size: 18px; font-weight: 700; color: #1E3A8A;">
+          결론: 핵심 평가 경로는 Direct SDK · 향후 외부 ATS 연동만 MCP 확장
+        </div>
+      </div>
+
+      <!-- Right: SDLC -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-green">SDLC · 3중 품질 게이트</span>
+          <span class="mono" style="font-size: 14px; color: #64748B;">159+ Merged PRs</span>
+        </div>
+        <h3 style="font-size: 30px; font-weight: 900;">추적성 · 회귀 차단 · 배포 전 자가진단</h3>
+
+        <div class="card-white" style="padding: 22px 26px;">
+          <div style="font-size: 22px; font-weight: 900; color: #0F172A;">① 30개 태스크 추적 (<code>tasks/01~30</code>)</div>
+          <div style="font-size: 17.5px; color: #475569; margin-top: 6px;">결함 단위 문서화 + 회귀 방지 단위 테스트 작성</div>
+        </div>
+        <div class="card-white" style="padding: 22px 26px;">
+          <div style="font-size: 22px; font-weight: 900; color: #0F172A;">② Husky Pre-Commit &amp; PR 브랜치 보호</div>
+          <div style="font-size: 17.5px; color: #475569; margin-top: 6px;">커밋 시 <code>vitest related</code> 실행 · <code>main</code> 직접 푸시 차단</div>
+        </div>
+        <div class="card-white" style="padding: 22px 26px;">
+          <div style="font-size: 22px; font-weight: 900; color: #0F172A;">③ 8단계 자가진단 (<code>scripts/doctor.mjs</code>)</div>
+          <div style="font-size: 17.5px; color: #475569; margin-top: 6px;">환경 → 의존성 → 정적분석 → 테스트 → 런타임 → 인프라 자동 점검</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 2. 아키텍처 의사결정(ADR) &amp; 소프트웨어공학 프로세스</span>
+    <span>05 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 6: MULTI-TENANT DB & ISOLATION (02:50 ~ 03:20)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 2 · INFORMATION ARCHITECTURE &amp; MULTI-TENANCY</div>
+      <h2 class="slide-title">멀티테넌트 데이터 모델 (7-Table RLS) &amp; 보안 격리</h2>
+    </div>
+    <span class="part-pill">02 · DB 설계 &amp; 격리</span>
+  </div>
+
+  <div class="slide-body">
+    <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: stretch;">
+      <!-- Left: 7-Table Grid -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-blue">PostgreSQL 7-Table Schema</span>
+          <span class="mono" style="font-size: 14px; color: #64748B;">Infra/supabase_schema.sql</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+          <div class="card-white" style="border-top: 4px solid #2563EB; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #1D4ED8;">1. tenants</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">기업 ID · 요금제 · 크레딧</div>
+          </div>
+          <div class="card-white" style="border-top: 4px solid #2563EB; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #1D4ED8;">2. users</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">테넌트 소속 · RBAC 권한</div>
+          </div>
+          <div class="card-white" style="border-top: 4px solid #2563EB; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #1D4ED8;">3. job_postings</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">채용 공고 · 역량 가중치</div>
+          </div>
+          <div class="card-white" style="border-top: 4px solid #10B981; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #059669;">4. applicants</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">원문 · 비식별 본문</div>
+          </div>
+          <div class="card-white" style="border-top: 4px solid #10B981; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #059669;">5. evaluations</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">근거 JSONB · 감사 로그</div>
+          </div>
+          <div class="card-white" style="border-top: 4px solid #F59E0B; padding: 18px;">
+            <div class="mono" style="font-size: 16px; font-weight: 900; color: #D97706;">6~7. shares/collab</div>
+            <div style="font-size: 15px; color: #475569; margin-top: 6px;">128-bit 링크 · 실시간 메모</div>
+          </div>
+        </div>
+        <div style="background: #0F172A; color: #E2E8F0; border-radius: 14px; padding: 20px 24px; font-family: ui-monospace, monospace; font-size: 16px; line-height: 1.6; margin-top: auto;">
+          <span style="color: #60A5FA;">CREATE POLICY</span> tenant_isolation <span style="color: #60A5FA;">ON</span> evaluations<br />
+          <span style="color: #60A5FA;">USING</span> (tenant_id = current_setting('request.headers')::json-&gt;&gt;'x-tenant-id');
+        </div>
+      </div>
+
+      <!-- Right: Security 3 Points -->
+      <div class="card-dark" style="display: flex; flex-direction: column; gap: 20px;">
+        <span class="badge b-dark">실제 기업 가입 · 이중 격리</span>
+        <div style="background: #1E293B; border-radius: 14px; padding: 22px 24px;">
+          <div style="font-size: 21px; font-weight: 900; color: #34D399;">① 동적 기업 가입 API</div>
+          <div style="font-size: 16.5px; color: #CBD5E1; margin-top: 6px;"><code>POST /api/v1/tenants/register</code><br />가입 즉시 독립 공간 · ADMIN 발급</div>
+        </div>
+        <div style="background: #1E293B; border-radius: 14px; padding: 22px 24px;">
+          <div style="font-size: 21px; font-weight: 900; color: #60A5FA;">② HMAC-SHA256 서명 토큰</div>
+          <div style="font-size: 16.5px; color: #CBD5E1; margin-top: 6px;"><code>crypto.timingSafeEqual()</code> 검증<br />위변조 · 타이밍 공격 차단</div>
+        </div>
+        <div style="background: #1E293B; border-radius: 14px; padding: 22px 24px;">
+          <div style="font-size: 21px; font-weight: 900; color: #FBBF24;">③ 캐시 · 스토리지 격리</div>
+          <div style="font-size: 16.5px; color: #CBD5E1; margin-top: 6px;">모든 지원자·캐시에 <code>tenant_id</code> 강제<br />타사 데이터 혼선 0건 보장</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 2. 멀티테넌트 정보 아키텍처 &amp; 보안 격리</span>
+    <span>06 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 7: CORE 1 - 4-AGENT DAG (03:20 ~ 04:05)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 3 · CORE DESIGN 01</div>
+      <h2 class="slide-title">자율형 4-Agent 적대적 교차 검증 파이프라인 (DAG)</h2>
+    </div>
+    <span class="part-pill">03 · 4-Agent DAG</span>
+  </div>
+
+  <div class="slide-body">
+    <div style="display: grid; grid-template-columns: 1fr 38px 1fr 38px 1fr 38px 1fr; align-items: stretch; gap: 6px;">
+      <div class="card-blue" style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-blue">Stage 1</span>
+          <span class="mono" style="font-size: 15px; font-weight: 800; color: #1D4ED8;">~10.6s</span>
+        </div>
+        <h3 style="font-size: 26px; font-weight: 900;">Grounding</h3>
+        <div style="font-size: 18px; color: #334155; font-weight: 600;">원문 Exact 문장 발췌<br />3색 유형 분류</div>
+        <div class="mono" style="margin-top: auto; font-size: 14px; background: #FFF; padding: 10px 12px; border-radius: 10px; border: 1px solid #BFDBFE; color: #1E3A8A;">
+          groundingEvidences[]
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; color: #2563EB;">➜</div>
+
+      <div class="card-red" style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-red">Stage 2 · 반박</span>
+          <span class="mono" style="font-size: 15px; font-weight: 800; color: #B91C1C;">~8.8s</span>
+        </div>
+        <h3 style="font-size: 26px; font-weight: 900;">Critic</h3>
+        <div style="font-size: 18px; color: #334155; font-weight: 600;">과장 · 수치 모순<br />AI 대필 · 인젝션 적발</div>
+        <div class="mono" style="margin-top: auto; font-size: 14px; background: #FFF; padding: 10px 12px; border-radius: 10px; border: 1px solid #FECACA; color: #991B1B;">
+          aiProb · risk · penalty
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; color: #2563EB;">➜</div>
+
+      <div class="card-green" style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge b-green">Stage 3</span>
+          <span class="mono" style="font-size: 15px; font-weight: 800; color: #15803D;">~6.2s</span>
+        </div>
+        <h3 style="font-size: 26px; font-weight: 900;">Supervisor</h3>
+        <div style="font-size: 18px; color: #334155; font-weight: 600;">직무 5대 가중치 합산<br />최종 점수 · 판정</div>
+        <div class="mono" style="margin-top: auto; font-size: 14px; background: #FFF; padding: 10px 12px; border-radius: 10px; border: 1px solid #A7F3D0; color: #065F46;">
+          totalScore · decision
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; color: #2563EB;">➜</div>
+
+      <div class="card" style="display: flex; flex-direction: column; gap: 14px; background: #F5F3FF; border-color: #DDD6FE;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="badge" style="background: #EDE9FE; color: #6D28D9;">Stage 4</span>
+          <span class="mono" style="font-size: 15px; font-weight: 800; color: #6D28D9;">~12.4s</span>
+        </div>
+        <h3 style="font-size: 26px; font-weight: 900;">Interviewer</h3>
+        <div style="font-size: 18px; color: #334155; font-weight: 600;">허점 타깃 압박 질문<br />체크리스트 생성</div>
+        <div class="mono" style="margin-top: auto; font-size: 14px; background: #FFF; padding: 10px 12px; border-radius: 10px; border: 1px solid #DDD6FE; color: #5B21B6;">
+          interviewQuestions[]
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card-dark" style="padding: 26px 30px;">
+        <div style="font-size: 15px; font-weight: 800; color: #F87171;">FAULT TOLERANCE · 결함 허용</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0;">가짜 점수 미생성 · 부분 장애 <code>DEGRADED</code></div>
+        <div style="font-size: 17.5px; color: #CBD5E1;">1~3단계 실패 시 명확한 오류 반환 · 4단계만 실패 시 점수 보존</div>
+      </div>
+      <div class="card" style="padding: 26px 30px;">
+        <div style="font-size: 15px; font-weight: 800; color: #2563EB;">SECURITY &amp; COST</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0;">인젝션 방어 · 경량 모델 건당 ~7원</div>
+        <div style="font-size: 17.5px; color: #334155;">역할 분업으로 <code>Haiku</code>에서도 높은 변별력과 초저원가 달성</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 3. 핵심 설계 ① — 4-Agent 적대적 교차 검증(DAG)</span>
+    <span>07 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 8: CORE 2 - PII & SELECTIVE HITL (04:05 ~ 04:45)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 3 · CORE DESIGN 02</div>
+      <h2 class="slide-title">2단계 PII 차단 : 오탐 0건과 Selective HITL 병목 해결</h2>
+    </div>
+    <span class="part-pill">03 · PII &amp; Selective HITL</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="strip-dark" style="background: linear-gradient(90deg, #0F172A 0%, #1E3A8A 100%);">
+      <span>전수 확인 병목 해결: <span style="color: #6EE7B7;">정상 문서 0초 통과</span> · <span style="color: #FDE68A;">의심 토큰 1줄만 3초 원클릭 가림</span></span>
+    </div>
+
+    <div class="grid-3">
+      <div class="card-blue" style="display: flex; flex-direction: column; gap: 14px;">
+        <span class="badge b-blue">Tier 1 · 자동 차단 (&lt;5ms)</span>
+        <h3 style="font-size: 25px; font-weight: 900;">7종 정규식 + 문맥 규칙</h3>
+        <div style="font-size: 18px; color: #1E293B; line-height: 1.6;">
+          • 개발셋: <strong>50/50 (100%) · 오탐 0</strong><br />
+          • Holdout: <strong>17/18 (94.4%) · 오탐 0</strong><br />
+          • 직무 수치(<code>0.42초로 86.8%</code>) 100% 보존
+        </div>
+      </div>
+
+      <div class="card-amber" style="display: flex; flex-direction: column; gap: 14px;">
+        <span class="badge b-amber">Tier 2 · Selective HITL (구현 완료)</span>
+        <h3 style="font-size: 25px; font-weight: 900;">의심 1줄 추출 &amp; 원클릭 가림</h3>
+        <div style="font-size: 18px; color: #1E293B; line-height: 1.6;">
+          • 대상: <strong>SNS ID · 학번 · 비정형 출생 · 상세주소</strong><br />
+          • 의심 0건 → <strong>확인 없이 즉시 분석</strong><br />
+          • 의심 1건+ → <strong>1줄 스니펫만 원클릭 차단</strong>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; flex-direction: column; gap: 14px; border-style: dashed; border-color: #94A3B8;">
+        <span class="badge b-slate">Tier 1.5 · 향후 고도화</span>
+        <h3 style="font-size: 25px; font-weight: 900;">로컬 경량 NER 결합</h3>
+        <div style="font-size: 18px; color: #1E293B; line-height: 1.6;">
+          • 로컬 <strong>KoELECTRA / ONNX</strong> 내재화<br />
+          • 자동 검출률 <strong>94.4% → 99%+</strong><br />
+          • 사람 개입 비율 <strong>1~2% 미만</strong>으로 축소
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card-green" style="padding: 20px 26px;">
+        <div style="font-size: 14px; font-weight: 800; color: #15803D; margin-bottom: 10px;">CASE A · 대다수 일반 지원서 (확인 0초)</div>
+        <div style="background: #FFFFFF; border: 1px solid #86EFAC; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; font-size: 16.5px; font-weight: 800; color: #166534;">
+          <span>✔ 1차 자동 가림 완료 (성명·전화·이메일·학교)</span>
+          <span>의심 0건 · 바로 분석</span>
+        </div>
+      </div>
+      <div class="card-amber" style="padding: 20px 26px;">
+        <div style="font-size: 14px; font-weight: 800; color: #B45309; margin-bottom: 10px;">CASE B · 비정형 예외 포함 시 (1줄만 3초)</div>
+        <div style="background: #FFFFFF; border: 1px solid #FCD34D; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
+          <span><span class="badge b-amber" style="font-size: 12px; padding: 3px 8px;">SNS ID</span> <strong style="margin: 0 6px;">jiwoo99</strong> "카톡 아이디 jiwoo99"</span>
+          <span style="background: #2563EB; color: #FFF; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 14px;">모두 가리기</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 3. 핵심 설계 ② — Precision–Recall 트레이드오프 &amp; Selective HITL</span>
+    <span>08 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 9: CORE 3 - 3-STAGE FUZZY BINDING (04:45 ~ 05:25)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 3 · CORE DESIGN 03</div>
+      <h2 class="slide-title">3단계 퍼지(Fuzzy) 원문 오프셋 바인딩 알고리즘</h2>
+    </div>
+    <span class="part-pill">03 · 원문 매칭 검증</span>
+  </div>
+
+  <div class="slide-body">
+    <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: stretch;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div class="card-green" style="padding: 24px 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="badge b-green">Stage 1 · Exact Substring</span>
+            <span class="mono" style="font-size: 16px; font-weight: 800; color: #15803D;">O(N) · 실측 32/32</span>
+          </div>
+          <div style="font-size: 20px; font-weight: 700; margin-top: 10px;"><code>indexOf()</code> 완전 일치 탐색 → 좌표 즉시 확정</div>
+        </div>
+
+        <div class="card-blue" style="padding: 24px 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="badge b-blue">Stage 2 · Normalized Index Map</span>
+            <span class="mono" style="font-size: 16px; font-weight: 800; color: #1D4ED8;">PDF 공백·줄바꿈 보정</span>
+          </div>
+          <div style="font-size: 20px; font-weight: 700; margin-top: 10px;">정규화 탐색 후 <strong>원본 인덱스 역매핑</strong>으로 좌표 복원</div>
+        </div>
+
+        <div class="card-amber" style="padding: 24px 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="badge b-amber">Stage 3 · Token Jaccard</span>
+            <span class="mono" style="font-size: 16px; font-weight: 800; color: #B45309;">Threshold ≥ 0.65</span>
+          </div>
+          <div style="font-size: 20px; font-weight: 700; margin-top: 10px;">임계치 미달 시 <strong>하이라이트 금지</strong> (환각·오매칭 차단)</div>
+        </div>
+      </div>
+
+      <div class="card-dark" style="display: flex; flex-direction: column; gap: 20px;">
+        <span class="badge b-dark">3색 형광펜 동적 바인딩</span>
+        <div style="background: #FFFFFF; color: #0F172A; border-radius: 16px; padding: 24px; font-size: 19px; line-height: 1.85; font-weight: 500;">
+          "APM으로 쿼리를 추적해
+          <span style="background: #DCFCE7; color: #14532D; padding: 3px 8px; border-radius: 6px; font-weight: 800;">[초록: 실적] 응답 시간 3.2초 → 0.42초 단축</span>했습니다.
+          <span style="background: #FFEDD5; color: #9A3412; padding: 3px 8px; border-radius: 6px; font-weight: 800;">[주황: 검증] 협업 시간을 절반 줄였습니다.</span>
+          <span style="background: #FCE7F3; color: #9D174D; padding: 3px 8px; border-radius: 6px; font-weight: 800;">[분홍: 과장] 백엔드 100% 단독 3일 완성.</span>"
+        </div>
+        <div style="background: #1E293B; border-radius: 14px; padding: 18px 22px; font-size: 17px; color: #CBD5E1; line-height: 1.6; margin-top: auto;">
+          • 겹침 구간 우선순위: <strong style="color: #F87171;">risk &gt; verify &gt; positive</strong><br />
+          • 연산 위치: <code>evaluatorWorker.js</code> (Web Worker)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 3. 핵심 설계 ③ — 3단계 퍼지 원문 오프셋 바인딩</span>
+    <span>09 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 10: CORE 4 - AUDITABILITY & HITL (05:25 ~ 06:00)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 3 · CORE DESIGN 04</div>
+      <h2 class="slide-title">감사 추적(Auditability) · Human-in-the-Loop · 편차 경고</h2>
+    </div>
+    <span class="part-pill">03 · 감사 추적 &amp; HITL</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="grid-2" style="flex: 1;">
+      <div class="card-blue" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+        <span class="badge b-blue">01 · Explainable AI</span>
+        <h3 style="font-size: 28px; font-weight: 900;">4-Agent 중간 추론 감사 로그</h3>
+        <p style="font-size: 19px; color: #334155; line-height: 1.55;">
+          에이전트별 감점 사유 · AI 대필 확률 · 소요 시간을<br /><code>agent_audit_metadata</code> JSONB로 영구 보존
+        </p>
+      </div>
+
+      <div class="card-green" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+        <span class="badge b-green">02 · Human Control</span>
+        <h3 style="font-size: 28px; font-weight: 900;">HITL 점수 보정 · 사유 기록 · 원복</h3>
+        <p style="font-size: 19px; color: #334155; line-height: 1.55;">
+          AI는 보조(Copilot), 최종 결정은 인간<br />보정자(<code>calibrated_by</code>) · 시각 · 사유 의무 기록
+        </p>
+      </div>
+
+      <div class="card-red" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+        <span class="badge b-red">03 · Discrepancy Alert</span>
+        <h3 style="font-size: 28px; font-weight: 900;">서류–면접 15점 편차 자동 경고</h3>
+        <p style="font-size: 19px; color: #334155; line-height: 1.55;">
+          <code>|서류 점수 - 면접 점수| ≥ 15</code> 감지 시 경고 점등<br />AI 자소서 과장·위장 지원자 자동 필터링
+        </p>
+      </div>
+
+      <div class="card-amber" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+        <span class="badge b-amber">04 · Collaboration &amp; Integrity</span>
+        <h3 style="font-size: 28px; font-weight: 900;">면접관 실시간 공유 &amp; 표절 매트릭스</h3>
+        <p style="font-size: 19px; color: #334155; line-height: 1.55;">
+          128-bit CSPRNG 공유 링크 · 실시간 메모 동기화<br />지원자 간 N-gram Jaccard 표절 유사도 검사
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 3. 핵심 설계 ④ — 설명 가능성 · 감사 추적 · Human-in-the-Loop</span>
+    <span>10 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 11: PRODUCTION UI I (06:00 ~ 06:45)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 4 · PRODUCTION IMPLEMENTATION I</div>
+      <h2 class="slide-title">프로덕션 구현 ① : 비식별 원문 · 3색 근거 · 질문 · HITL</h2>
+    </div>
+    <span class="part-pill">04 · 라이브 UI</span>
+  </div>
+
+  <div class="slide-body" style="padding-top: 28px; padding-bottom: 24px;">
+    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; flex: 1; min-height: 0;">
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">① 7종 PII 비식별 + 3색 형광펜 원문 매핑</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/04_pii_and_evidence_current.png" alt="PII and Evidence" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 18px; min-height: 0;">
+        <div class="ui-win" style="flex: 1.05; min-height: 0;">
+          <div class="ui-bar">
+            <span class="dot" style="background: #EF4444;"></span>
+            <span class="dot" style="background: #F59E0B;"></span>
+            <span class="dot" style="background: #10B981;"></span>
+            <span class="ui-title">② 기여도 팩트체크 압박 질문</span>
+          </div>
+          <div style="flex: 1; overflow: hidden;">
+            <img src="docs/assets/current_ir/06_keyword_questions_current.png" alt="Questions" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 0.95; min-height: 0;">
+          <div class="ui-win" style="height: 100%;">
+            <div class="ui-bar">
+              <span class="dot" style="background: #EF4444;"></span>
+              <span class="dot" style="background: #F59E0B;"></span>
+              <span class="dot" style="background: #10B981;"></span>
+              <span class="ui-title">③ HITL 보정·감사</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <img src="docs/assets/current_ir/07_hitl_modal_current.png" alt="HITL" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+            </div>
+          </div>
+          <div class="ui-win" style="height: 100%;">
+            <div class="ui-bar">
+              <span class="dot" style="background: #EF4444;"></span>
+              <span class="dot" style="background: #F59E0B;"></span>
+              <span class="dot" style="background: #10B981;"></span>
+              <span class="ui-title">④ 면접관 실시간 공유</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <img src="docs/assets/current_ir/08_share_modal_current.png" alt="Share" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 4. 프로덕션 구현 결과 ① — GCP Cloud Run 실제 배포 화면</span>
+    <span>11 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 12: PRODUCTION UI II & E2E FLOW (06:45 ~ 07:30)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 4 · PRODUCTION IMPLEMENTATION II &amp; E2E DEMO</div>
+      <h2 class="slide-title">프로덕션 구현 ② : 통합 비교 및 5단계 E2E 시연</h2>
+    </div>
+    <span class="part-pill">04 · E2E 시연</span>
+  </div>
+
+  <div class="slide-body" style="padding-top: 26px; padding-bottom: 24px; gap: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 01</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">기업 가입 · 격리</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 02</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">PDF · Selective PII</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 03</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">4-Agent 31.4초 분석</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 04</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">면접 공유 · HITL</div>
+      </div>
+      <div class="card-green" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #059669;">STEP 05</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">15점 경고 · 합불 통보</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="flex: 1; min-height: 0;">
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">서류·면접 Two-Track 비교 (15점 편차 자동 경고)</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/09_two_track_panel_current.png" alt="Two-Track" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">다차원 비교 · 컷오프 시뮬레이션 · N-gram 표절 매트릭스</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/10_comparison_current.png" alt="Comparison" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 4. 프로덕션 구현 결과 ② — E2E 통합 워크플로우</span>
+    <span>12 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 13: QUANTITATIVE QA & BENCHMARKS (07:30 ~ 08:20)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 5 · QUALITY ASSURANCE &amp; BENCHMARKS</div>
+      <h2 class="slide-title">정량적 품질 검증 (QA) 및 5대 유형별 변별력 실험</h2>
+    </div>
+    <span class="part-pill">05 · 정량 실험 &amp; QA</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="grid-4">
+      <div class="card-green" style="padding: 20px 24px;">
+        <div style="font-size: 15px; font-weight: 800; color: #059669;">자동화 테스트</div>
+        <div style="font-size: 44px; font-weight: 900; margin: 4px 0;">204 / 204</div>
+        <div style="font-size: 15px; color: #334155;">35 Suites · 100% 통과</div>
+      </div>
+      <div class="card-blue" style="padding: 20px 24px;">
+        <div style="font-size: 15px; font-weight: 800; color: #2563EB;">PII Holdout</div>
+        <div style="font-size: 44px; font-weight: 900; margin: 4px 0;">94.4%</div>
+        <div style="font-size: 15px; color: #334155;">개발 100% · <strong>오탐 0건</strong></div>
+      </div>
+      <div class="card" style="padding: 20px 24px;">
+        <div style="font-size: 15px; font-weight: 800; color: #475569;">원문 인용 일치</div>
+        <div style="font-size: 44px; font-weight: 900; margin: 4px 0;">32 / 32</div>
+        <div style="font-size: 15px; color: #334155;">Exact 100% · Fail 0건</div>
+      </div>
+      <div class="card-amber" style="padding: 20px 24px;">
+        <div style="font-size: 15px; font-weight: 800; color: #B45309;">속도 · 건당 원가</div>
+        <div style="font-size: 44px; font-weight: 900; margin: 4px 0;">31.4s · ~7원</div>
+        <div style="font-size: 15px; color: #334155;">검토 <strong>16배</strong> · 캐시 68%↓</div>
+      </div>
+    </div>
+
+    <table class="eng-table" style="font-size: 18px;">
+      <thead>
+        <tr>
+          <th style="width: 20%;">실측 유형</th>
+          <th style="width: 10%;">점수</th>
+          <th style="width: 13%;">판정</th>
+          <th style="width: 11%;">AI 의심</th>
+          <th style="width: 12%;">원문 일치</th>
+          <th style="width: 34%;">4-Agent 핵심 탐지 결과</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>S1. 정량형 백엔드</strong></td>
+          <td><strong>80점</strong></td>
+          <td><span class="badge b-green">INTERVIEW</span></td>
+          <td>20%</td>
+          <td><strong>6/6 Exact</strong></td>
+          <td>APM·Redis 3.2s→0.42s 정량 실적 인정</td>
+        </tr>
+        <tr>
+          <td><strong>S2. AI 미사여구형</strong></td>
+          <td><strong style="color: #DC2626;">47점</strong></td>
+          <td><span class="badge b-red">REJECT</span></td>
+          <td><strong style="color: #DC2626;">78%</strong></td>
+          <td><strong>5/5 Exact</strong></td>
+          <td>“100% 단독 3일 완성” 과장 적발 (33점 변별)</td>
+        </tr>
+        <tr>
+          <td><strong>S3. 기여도 모호형</strong></td>
+          <td><strong>70점</strong></td>
+          <td><span class="badge b-amber">HOLD</span></td>
+          <td>18%</td>
+          <td><strong>6/6 Exact</strong></td>
+          <td>개인 역할 모호 → 기여도 압박 질문 생성</td>
+        </tr>
+        <tr>
+          <td><strong>S4. 장문 B2B 영업</strong></td>
+          <td><strong>73점</strong></td>
+          <td><span class="badge b-amber">HOLD</span></td>
+          <td>28%</td>
+          <td><strong>7/7 Exact</strong></td>
+          <td><strong>연간 목표 60건 vs 합계 56건 수치 모순 적발</strong></td>
+        </tr>
+        <tr>
+          <td><strong>S5. 프롬프트 인젝션</strong></td>
+          <td><strong style="color: #DC2626;">64점</strong></td>
+          <td><span class="badge b-red">REJECT</span></td>
+          <td>25%</td>
+          <td><strong>4/4 Exact</strong></td>
+          <td>본문 내 만점 강제 명령 공격 무력화</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 5. 정량적 QA &amp; Claude Haiku 4-Agent 실측 벤치마크</span>
+    <span>13 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 14: FIELD VALIDATION & ITERATION (08:20 ~ 09:00)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 5 · FIELD VALIDATION &amp; ITERATIVE IMPROVEMENT</div>
+      <h2 class="slide-title">현장 실증 및 피드백 기반 반복 개선 (v1.0 → v2.0)</h2>
+    </div>
+    <span class="part-pill">05 · 현장 실증</span>
+  </div>
+
+  <div class="slide-body">
+    <div class="grid-3">
+      <div class="card-green" style="padding: 24px 28px;">
+        <span class="badge b-green">✔ 실증 완료</span>
+        <h3 style="font-size: 26px; font-weight: 900; margin: 12px 0 6px 0;">교내 동아리 DCC</h3>
+        <p style="font-size: 18px; color: #1E293B;">신입 서류심사 실사용 · 준비 시간 <strong>50%↓</strong></p>
+      </div>
+      <div class="card-blue" style="padding: 24px 28px;">
+        <span class="badge b-blue">🔄 v2.0 테스트 중</span>
+        <h3 style="font-size: 26px; font-weight: 900; margin: 12px 0 6px 0;">(주)성운이엔지</h3>
+        <p style="font-size: 18px; color: #1E293B;">엔지니어링 현장 v2.0 실무 검증 · 표본 확대</p>
+      </div>
+      <div class="card" style="padding: 24px 28px;">
+        <span class="badge b-slate">📌 파일럿 의향</span>
+        <h3 style="font-size: 26px; font-weight: 900; margin: 12px 0 6px 0;">아이보테크</h3>
+        <p style="font-size: 18px; color: #1E293B;">개발자 채용 시 파일럿 도입 의향 확인</p>
+      </div>
+    </div>
+
+    <table class="eng-table" style="font-size: 18.5px;">
+      <thead>
+        <tr>
+          <th style="width: 24%;">현장 · 멘토링 피드백</th>
+          <th style="width: 34%;">v1.0 한계 (As-Is)</th>
+          <th style="width: 42%; background: #1D4ED8;">v2.0 엔지니어링 개선 (To-Be)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① PII 확인 병목</strong></td>
+          <td>전수 수동 확인 시 150명 병목</td>
+          <td style="background: #EFF6FF; font-weight: 800;">Selective HITL (정상 0초 · 의심 1줄 3초)</td>
+        </tr>
+        <tr>
+          <td><strong>② 서류–면접 괴리</strong></td>
+          <td>서류 점수만 제공, 면접 미연계</td>
+          <td style="background: #EFF6FF; font-weight: 800;">Two-Track 15점 편차 경고 · 실시간 공유</td>
+        </tr>
+        <tr>
+          <td><strong>③ 데모 기업 고정</strong></td>
+          <td>하드코딩 3개 기업만 전환</td>
+          <td style="background: #EFF6FF; font-weight: 800;">실제 기업 가입 API · 워크스페이스 격리</td>
+        </tr>
+        <tr>
+          <td><strong>④ 보안 · 장애 신뢰성</strong></td>
+          <td>클라이언트 키 노출 · 폴백 혼선</td>
+          <td style="background: #EFF6FF; font-weight: 800;">Zero-Key BFF · 가짜 점수 0 (<code>DEGRADED</code>)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="strip-dark" style="font-size: 18px; padding: 15px 26px;">
+      <span>사업화 연계: Starter(9.9만) · Pro(29만) · 시즌 크레딧 · 서버 고정비 월 5만 원 미만 → <strong style="color: #34D399;">유료 1곳부터 BEP</strong></span>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 5. 현장 실증 및 피드백 기반 반복 개선</span>
+    <span>14 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 15: LIMITATIONS, FUTURE RESEARCH & Q&A (09:00 ~ 10:00) — Matte Obsidian × Warm Editorial
+     ========================================================================= -->
+<section class="slide slide-editorial-dark">
+  <!-- Left Signature 3-Color Highlighter Spine (Matches Cover) -->
+  <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 14px; display: flex; flex-direction: column;">
+    <div style="flex: 1; background: #15803D;"></div>
+    <div style="flex: 1; background: #D97706;"></div>
+    <div style="flex: 1; background: #BE123C;"></div>
+  </div>
+
+  <div class="slide-header" style="padding-left: 108px; border-bottom-color: rgba(246, 243, 236, 0.14);">
+    <div>
+      <div class="eyebrow" style="color: #E5A96D;">PART 6 · LIMITATIONS &amp; FUTURE RESEARCH</div>
+      <h2 class="slide-title" style="color: #F6F3EC;">기술적 한계점 및 향후 연구 방향</h2>
+    </div>
+    <span class="mono" style="padding: 9px 20px; border-radius: 999px; background: rgba(246, 243, 236, 0.07); border: 1px solid rgba(229, 169, 109, 0.45); color: #E5A96D; font-size: 15px; font-weight: 800;">
+      06 · CONCLUSION &amp; Q&amp;A
+    </span>
+  </div>
+
+  <div class="slide-body" style="padding: 36px 80px 28px 108px; gap: 26px;">
+    <div style="display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 30px; align-items: stretch;">
+      <!-- Left: 3 Honest Limitations (Warm Stone Outline) -->
+      <div style="background: rgba(246, 243, 236, 0.045); border: 1.5px solid rgba(246, 243, 236, 0.14); border-radius: 20px; padding: 28px 30px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 13.5px; font-weight: 800; letter-spacing: 0.12em; color: #FB7185;">HONEST LIMITATIONS</span>
+          <span style="font-size: 14px; font-weight: 700; color: #A8A29E;">현재 시스템의 3대 과제</span>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.72); border-radius: 14px; padding: 20px 22px; border: 1px solid rgba(251, 113, 133, 0.25); display: flex; gap: 16px; align-items: flex-start;">
+          <span class="mono" style="font-size: 20px; font-weight: 900; color: #FB7185; line-height: 1.2;">01</span>
+          <div>
+            <div style="font-size: 20px; font-weight: 900; color: #F6F3EC;">벤치마크 표본 규모</div>
+            <div style="font-size: 16px; color: #D6D3CD; margin-top: 5px;">32건 → 다양한 직군 <strong style="color: #F6F3EC;">500건</strong>으로 확대 진행 중</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.72); border-radius: 14px; padding: 20px 22px; border: 1px solid rgba(245, 158, 11, 0.25); display: flex; gap: 16px; align-items: flex-start;">
+          <span class="mono" style="font-size: 20px; font-weight: 900; color: #F59E0B; line-height: 1.2;">02</span>
+          <div>
+            <div style="font-size: 20px; font-weight: 900; color: #F6F3EC;">문서 파싱 범위 확장</div>
+            <div style="font-size: 16px; color: #D6D3CD; margin-top: 5px;">스캔 이미지 PDF(OCR) · 한글(HWP) 파서 추가 필요</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.72); border-radius: 14px; padding: 20px 22px; border: 1px solid rgba(214, 211, 205, 0.22); display: flex; gap: 16px; align-items: flex-start;">
+          <span class="mono" style="font-size: 20px; font-weight: 900; color: #D6D3CD; line-height: 1.2;">03</span>
+          <div>
+            <div style="font-size: 20px; font-weight: 900; color: #F6F3EC;">완전 분산 DB · 실 OAuth 통합</div>
+            <div style="font-size: 16px; color: #D6D3CD; margin-top: 5px;">로컬 JSON 폴백 제거 → PostgreSQL 단일 원천 통합</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: 3 Future Research Directions (Warm Gold / Emerald / Coral) -->
+      <div style="background: linear-gradient(145deg, rgba(229, 169, 109, 0.09) 0%, rgba(20, 20, 19, 0.4) 100%); border: 1.5px solid rgba(229, 169, 109, 0.35); border-radius: 20px; padding: 28px 30px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 13.5px; font-weight: 800; letter-spacing: 0.12em; color: #4ADE80;">FUTURE RESEARCH ROADMAP</span>
+          <span style="font-size: 14px; font-weight: 700; color: #E5A96D;">신뢰 인프라 · 자율형 SW 진화</span>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.82); border-left: 5px solid #22C55E; border-radius: 14px; padding: 20px 22px;">
+          <div style="font-size: 21px; font-weight: 900; color: #86EFAC;">① 블록체인 해시 앵커링 기반 평가 무결성</div>
+          <div style="font-size: 16.5px; color: #E7E5E4; margin-top: 5px;">Off-chain DB + SHA-256 해시 온체인 기록 → <strong style="color: #FFFFFF;">사후 점수 조작 불가</strong></div>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.82); border-left: 5px solid #F59E0B; border-radius: 14px; padding: 20px 22px;">
+          <div style="font-size: 21px; font-weight: 900; color: #FDE68A;">② 1.5차 로컬 경량 NER (KoELECTRA / ONNX)</div>
+          <div style="font-size: 16.5px; color: #E7E5E4; margin-top: 5px;">규칙 + 로컬 NER + Selective HITL → 자동 차단율 <strong style="color: #FFFFFF;">99%+</strong></div>
+        </div>
+
+        <div style="background: rgba(20, 20, 19, 0.82); border-left: 5px solid #FB7185; border-radius: 14px; padding: 20px 22px;">
+          <div style="font-size: 21px; font-weight: 900; color: #FECDD3;">③ 수습 3개월 피드백 기반 직무 온톨로지 진화</div>
+          <div style="font-size: 16.5px; color: #E7E5E4; margin-top: 5px;">입사 후 성과와 평가 가중치를 연결하는 <strong style="color: #FFFFFF;">자율형 HR 소프트웨어</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-Width Warm Ivory Signature Closing Bar (Echoes Slide 1 Cover) -->
+    <div style="background: #F6F3EC; color: #141413; border-radius: 18px; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; align-items: center; gap: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 4px; width: 8px; height: 64px;">
+          <span style="flex: 1; background: #15803D; border-radius: 4px;"></span>
+          <span style="flex: 1; background: #D97706; border-radius: 4px;"></span>
+          <span style="flex: 1; background: #BE123C; border-radius: 4px;"></span>
+        </div>
+        <div>
+          <div style="font-size: 32px; font-weight: 900; letter-spacing: -0.025em; color: #141413;">
+            경청해 주셔서 감사합니다 <span style="color: #C2410C;">· Q&amp;A</span>
+          </div>
+          <div style="font-size: 16.5px; font-weight: 700; color: #57534E; margin-top: 3px;">
+            Check-Mate &nbsp;|&nbsp; 장천명 (단국대학교 소프트웨어학과)
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1.5px solid #DFDAD0; border-radius: 12px; padding: 8px 14px 8px 8px;">
+          <img src="docs/assets/qr_live.svg" alt="Live QR" style="width: 66px; height: 66px; display: block;" />
+          <div>
+            <div style="font-size: 13.5px; font-weight: 900; color: #141413;">Live Demo</div>
+            <div style="font-size: 11.5px; color: #78716C;">Cloud Run</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1.5px solid #DFDAD0; border-radius: 12px; padding: 8px 14px 8px 8px;">
+          <img src="docs/assets/qr_github.svg" alt="GitHub QR" style="width: 66px; height: 66px; display: block;" />
+          <div>
+            <div style="font-size: 13.5px; font-weight: 900; color: #141413;">GitHub Repo</div>
+            <div style="font-size: 11.5px; color: #78716C;">Source Code</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer" style="background: rgba(20, 20, 19, 0.9); border-top: 1px solid rgba(246, 243, 236, 0.12); color: #A8A29E; padding-left: 108px;">
+    <span>Part 6. 한계점 분석 및 향후 연구 — Tamper-Evident Audit · Local NER · Self-Evolving Ontology</span>
+    <span class="mono" style="font-weight: 800; color: #F6F3EC;">15 / 15</span>
+  </div>
+</section>
+
+</body>
+</html>

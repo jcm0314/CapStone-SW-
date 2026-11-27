@@ -134,3 +134,99 @@ export function hasPII(text) {
   if (!text) return false;
   return MASKING_RULES.some(rule => matches(REGEX_PATTERNS[rule.key], text));
 }
+
+// Stage 2 (Selective HITL): Borderline/unstructured PII patterns that are NOT auto-masked
+// to preserve 0 false positives (100% precision), and instead surfaced as 1-line review cards.
+const SUSPICIOUS_PII_RULES = [
+  {
+    key: 'messenger_sns',
+    category: 'SNS · 메신저 ID',
+    reason: '메신저 또는 SNS 계정 아이디로 의심되는 표현',
+    regex: /(?:카톡|카카오톡|인스타(?:그램)?|텔레그램|디스코드|트위터|SNS|아이디|ID)\s*(?:[:：는은]|\s)\s*@?([a-zA-Z][a-zA-Z0-9._-]{2,24})/gi,
+    extractGroup: 1
+  },
+  {
+    key: 'unstructured_dob',
+    category: '비정형 출생 표기',
+    reason: '1차 규칙 외 출생·나이 관련 숫자 표기 의심',
+    regex: /(?:출생연도|태어난\s*해|만\s*\d{2}세|생년|born\s*in)\s*[:：은는이가(\s]{0,3}((?:19|20)\d{2}[.\-/]\s?\d{1,2}[.\-/]\s?\d{1,2})/gi,
+    extractGroup: 1
+  },
+  {
+    key: 'student_or_account_id',
+    category: '학번 · 식별번호',
+    reason: '학번·수험번호 또는 계좌번호로 의심되는 숫자열',
+    regex: /(?:학번|수험번호|사번|계좌(?:번호)?)\s*[:：은는]?\s*(\d[\d-]{5,18}\d)/gi,
+    extractGroup: 1
+  },
+  {
+    key: 'detailed_address',
+    category: '상세 주소',
+    reason: '도로명·지번·아파트 등 상세 거주지 의심',
+    regex: /(?<![0-9가-힣.])([가-힣]{2,8}(?:동|읍|면)\s+\d{1,4}(?:-\d{1,4})?(?:\s*번지)?|[가-힣]{2,8}(?:대로|로|길)\s+\d{1,4}(?:-\d{1,4})?(?![.\d%])|[가-힣]{2,10}아파트(?:\s*\d{1,4}동)?)/g,
+    extractGroup: 1
+  }
+];
+
+function extractLineSnippet(text, index, matchLen) {
+  const lineStart = text.lastIndexOf('\n', index) + 1;
+  const rawEnd = text.indexOf('\n', index + matchLen);
+  const lineEnd = rawEnd === -1 ? text.length : rawEnd;
+  const line = text.slice(lineStart, lineEnd).trim();
+  if (line.length <= 90) return line;
+  const rel = Math.max(0, index - lineStart);
+  const start = Math.max(0, rel - 30);
+  const end = Math.min(line.length, rel + matchLen + 40);
+  return `${start > 0 ? '…' : ''}${line.slice(start, end)}${end < line.length ? '…' : ''}`;
+}
+
+/**
+ * Selective HITL detector: runs on 1st-stage anonymized text and returns only borderline
+ * 1-line snippets so reviewers inspect suspicious tokens in ~3s instead of reading full resumes.
+ * @param {string} anonymizedText
+ * @returns {Array<{ id: string, category: string, match: string, snippet: string, reason: string }>}
+ */
+export function detectSuspiciousPII(anonymizedText) {
+  if (!anonymizedText) return [];
+  const findings = [];
+  const seen = new Set();
+
+  for (const rule of SUSPICIOUS_PII_RULES) {
+    rule.regex.lastIndex = 0;
+    let m;
+    while ((m = rule.regex.exec(anonymizedText)) !== null) {
+      const token = (rule.extractGroup ? m[rule.extractGroup] : m[0] || '').trim();
+      if (!token || token.includes('익명화')) continue;
+      const dedupKey = `${rule.key}:${token}`;
+      if (seen.has(dedupKey)) continue;
+      seen.add(dedupKey);
+      findings.push({
+        id: `${rule.key}_${findings.length}`,
+        category: rule.category,
+        match: token,
+        snippet: extractLineSnippet(anonymizedText, m.index, m[0].length),
+        reason: rule.reason
+      });
+    }
+    rule.regex.lastIndex = 0;
+  }
+
+  return findings;
+}
+
+/**
+ * Applies reviewer-approved manual masks from Selective HITL before external AI submission.
+ * @param {string} text
+ * @param {string[]} selectedTokens
+ * @returns {string}
+ */
+export function applyManualMasks(text, selectedTokens = []) {
+  if (!text || !Array.isArray(selectedTokens) || selectedTokens.length === 0) return text || '';
+  let result = text;
+  const sorted = [...new Set(selectedTokens.filter(Boolean))].sort((a, b) => b.length - a.length);
+  for (const token of sorted) {
+    const regex = new RegExp(escapeRegExp(token), 'g');
+    result = result.replace(regex, '[추가 비식별화]');
+  }
+  return result;
+}
