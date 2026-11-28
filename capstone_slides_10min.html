@@ -523,15 +523,155 @@
 </section>
 
 <!-- =========================================================================
-     SLIDE 4: SYSTEM ARCHITECTURE (01:40 ~ 02:15)
+     SLIDE 4: PRODUCTION UI I (06:00 ~ 06:45)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 2 · SYSTEM ARCHITECTURE</div>
+      <div class="eyebrow">PART 2 · PRODUCTION IMPLEMENTATION I</div>
+      <h2 class="slide-title">프로덕션 구현 ① : 비식별 원문 · 3색 근거 · 질문 · HITL</h2>
+    </div>
+    <span class="part-pill">02 · 프로덕션 구현</span>
+  </div>
+
+  <div class="slide-body" style="padding-top: 28px; padding-bottom: 24px;">
+    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; flex: 1; min-height: 0;">
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">① 7종 PII 비식별 + 3색 형광펜 원문 매핑</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/04_pii_and_evidence_current.png" alt="PII and Evidence" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 18px; min-height: 0;">
+        <div class="ui-win" style="flex: 1.05; min-height: 0;">
+          <div class="ui-bar">
+            <span class="dot" style="background: #EF4444;"></span>
+            <span class="dot" style="background: #F59E0B;"></span>
+            <span class="dot" style="background: #10B981;"></span>
+            <span class="ui-title">② 기여도 팩트체크 압박 질문</span>
+          </div>
+          <div style="flex: 1; overflow: hidden;">
+            <img src="docs/assets/current_ir/06_keyword_questions_current.png" alt="Questions" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 0.95; min-height: 0;">
+          <div class="ui-win" style="height: 100%;">
+            <div class="ui-bar">
+              <span class="dot" style="background: #EF4444;"></span>
+              <span class="dot" style="background: #F59E0B;"></span>
+              <span class="dot" style="background: #10B981;"></span>
+              <span class="ui-title">③ HITL 보정·감사</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <img src="docs/assets/current_ir/07_hitl_modal_current.png" alt="HITL" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+            </div>
+          </div>
+          <div class="ui-win" style="height: 100%;">
+            <div class="ui-bar">
+              <span class="dot" style="background: #EF4444;"></span>
+              <span class="dot" style="background: #F59E0B;"></span>
+              <span class="dot" style="background: #10B981;"></span>
+              <span class="ui-title">④ 면접관 실시간 공유</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <img src="docs/assets/current_ir/08_share_modal_current.png" alt="Share" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 2. 프로덕션 구현 결과 ① — GCP Cloud Run 실제 배포 화면</span>
+    <span>04 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 5: PRODUCTION UI II & E2E FLOW (06:45 ~ 07:30)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 2 · PRODUCTION IMPLEMENTATION II &amp; E2E DEMO</div>
+      <h2 class="slide-title">프로덕션 구현 ② : 통합 비교 및 5단계 E2E 시연</h2>
+    </div>
+    <span class="part-pill">02 · E2E 시연</span>
+  </div>
+
+  <div class="slide-body" style="padding-top: 26px; padding-bottom: 24px; gap: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 01</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">기업 가입 · 격리</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 02</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">PDF · Selective PII</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 03</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">4-Agent 31.4초 분석</div>
+      </div>
+      <div class="card-blue" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 04</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">면접 공유 · HITL</div>
+      </div>
+      <div class="card-green" style="padding: 14px 18px;">
+        <div style="font-size: 13px; font-weight: 800; color: #059669;">STEP 05</div>
+        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">15점 경고 · 합불 통보</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="flex: 1; min-height: 0;">
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">서류·면접 Two-Track 비교 (15점 편차 자동 경고)</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/09_two_track_panel_current.png" alt="Two-Track" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+      <div class="ui-win" style="height: 100%;">
+        <div class="ui-bar">
+          <span class="dot" style="background: #EF4444;"></span>
+          <span class="dot" style="background: #F59E0B;"></span>
+          <span class="dot" style="background: #10B981;"></span>
+          <span class="ui-title">다차원 비교 · 컷오프 시뮬레이션 · N-gram 표절 매트릭스</span>
+        </div>
+        <div style="flex: 1; overflow: hidden;">
+          <img src="docs/assets/current_ir/10_comparison_current.png" alt="Comparison" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Part 2. 프로덕션 구현 결과 ② — E2E 통합 워크플로우</span>
+    <span>05 / 15</span>
+  </div>
+</section>
+
+<!-- =========================================================================
+     SLIDE 6: SYSTEM ARCHITECTURE (01:40 ~ 02:15)
+     ========================================================================= -->
+<section class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="eyebrow">PART 3 · SYSTEM ARCHITECTURE</div>
       <h2 class="slide-title">3계층 시스템 아키텍처 (Zero-Key BFF &amp; Web Worker)</h2>
     </div>
-    <span class="part-pill">02 · 시스템 아키텍처</span>
+    <span class="part-pill">03 · 시스템 아키텍처</span>
   </div>
 
   <div class="slide-body">
@@ -617,21 +757,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 2. 시스템 아키텍처</span>
-    <span>04 / 15</span>
+    <span>Part 3. 시스템 아키텍처</span>
+    <span>06 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 5: ADR & SDLC (02:15 ~ 02:50)
+     SLIDE 7: ADR & SDLC (02:15 ~ 02:50)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 2 · ADR &amp; SOFTWARE ENGINEERING PROCESS</div>
+      <div class="eyebrow">PART 3 · ADR &amp; SOFTWARE ENGINEERING PROCESS</div>
       <h2 class="slide-title">설계 의사결정(ADR) 및 자동화 품질 프로세스</h2>
     </div>
-    <span class="part-pill">02 · ADR &amp; SDLC</span>
+    <span class="part-pill">03 · ADR &amp; SDLC</span>
   </div>
 
   <div class="slide-body">
@@ -699,21 +839,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 2. 아키텍처 의사결정(ADR) &amp; 소프트웨어공학 프로세스</span>
-    <span>05 / 15</span>
+    <span>Part 3. 아키텍처 의사결정(ADR) &amp; 소프트웨어공학 프로세스</span>
+    <span>07 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 6: MULTI-TENANT DB & ISOLATION (02:50 ~ 03:20)
+     SLIDE 8: MULTI-TENANT DB & ISOLATION (02:50 ~ 03:20)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 2 · INFORMATION ARCHITECTURE &amp; MULTI-TENANCY</div>
+      <div class="eyebrow">PART 3 · INFORMATION ARCHITECTURE &amp; MULTI-TENANCY</div>
       <h2 class="slide-title">멀티테넌트 데이터 모델 (7-Table RLS) &amp; 보안 격리</h2>
     </div>
-    <span class="part-pill">02 · DB 설계 &amp; 격리</span>
+    <span class="part-pill">03 · DB 설계 &amp; 격리</span>
   </div>
 
   <div class="slide-body">
@@ -776,21 +916,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 2. 멀티테넌트 정보 아키텍처 &amp; 보안 격리</span>
-    <span>06 / 15</span>
+    <span>Part 3. 멀티테넌트 정보 아키텍처 &amp; 보안 격리</span>
+    <span>08 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 7: CORE 1 - 4-AGENT DAG (03:20 ~ 04:05)
+     SLIDE 9: CORE 1 - 4-AGENT DAG (03:20 ~ 04:05)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 3 · CORE DESIGN 01</div>
+      <div class="eyebrow">PART 4 · CORE DESIGN 01</div>
       <h2 class="slide-title">자율형 4-Agent 적대적 교차 검증 파이프라인 (DAG)</h2>
     </div>
-    <span class="part-pill">03 · 4-Agent DAG</span>
+    <span class="part-pill">04 · 4-Agent DAG</span>
   </div>
 
   <div class="slide-body">
@@ -865,21 +1005,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 3. 핵심 설계 ① — 4-Agent 적대적 교차 검증(DAG)</span>
-    <span>07 / 15</span>
+    <span>Part 4. 핵심 설계 ① — 4-Agent 적대적 교차 검증(DAG)</span>
+    <span>09 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 8: CORE 2 - PII & SELECTIVE HITL (04:05 ~ 04:45)
+     SLIDE 10: CORE 2 - PII & SELECTIVE HITL (04:05 ~ 04:45)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 3 · CORE DESIGN 02</div>
+      <div class="eyebrow">PART 4 · CORE DESIGN 02</div>
       <h2 class="slide-title">2단계 PII 차단 : 오탐 0건과 Selective HITL 병목 해결</h2>
     </div>
-    <span class="part-pill">03 · PII &amp; Selective HITL</span>
+    <span class="part-pill">04 · PII &amp; Selective HITL</span>
   </div>
 
   <div class="slide-body">
@@ -938,21 +1078,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 3. 핵심 설계 ② — Precision–Recall 트레이드오프 &amp; Selective HITL</span>
-    <span>08 / 15</span>
+    <span>Part 4. 핵심 설계 ② — Precision–Recall 트레이드오프 &amp; Selective HITL</span>
+    <span>10 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 9: CORE 3 - 3-STAGE FUZZY BINDING (04:45 ~ 05:25)
+     SLIDE 11: CORE 3 - 3-STAGE FUZZY BINDING (04:45 ~ 05:25)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 3 · CORE DESIGN 03</div>
+      <div class="eyebrow">PART 4 · CORE DESIGN 03</div>
       <h2 class="slide-title">3단계 퍼지(Fuzzy) 원문 오프셋 바인딩 알고리즘</h2>
     </div>
-    <span class="part-pill">03 · 원문 매칭 검증</span>
+    <span class="part-pill">04 · 원문 매칭 검증</span>
   </div>
 
   <div class="slide-body">
@@ -1000,21 +1140,21 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 3. 핵심 설계 ③ — 3단계 퍼지 원문 오프셋 바인딩</span>
-    <span>09 / 15</span>
+    <span>Part 4. 핵심 설계 ③ — 3단계 퍼지 원문 오프셋 바인딩</span>
+    <span>11 / 15</span>
   </div>
 </section>
 
 <!-- =========================================================================
-     SLIDE 10: CORE 4 - AUDITABILITY & HITL (05:25 ~ 06:00)
+     SLIDE 12: CORE 4 - AUDITABILITY & HITL (05:25 ~ 06:00)
      ========================================================================= -->
 <section class="slide">
   <div class="slide-header">
     <div>
-      <div class="eyebrow">PART 3 · CORE DESIGN 04</div>
+      <div class="eyebrow">PART 4 · CORE DESIGN 04</div>
       <h2 class="slide-title">감사 추적(Auditability) · Human-in-the-Loop · 편차 경고</h2>
     </div>
-    <span class="part-pill">03 · 감사 추적 &amp; HITL</span>
+    <span class="part-pill">04 · 감사 추적 &amp; HITL</span>
   </div>
 
   <div class="slide-body">
@@ -1036,7 +1176,7 @@
       </div>
 
       <div class="card-red" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-        <span class="badge b-red">03 · Discrepancy Alert</span>
+        <span class="badge b-red">04 · Discrepancy Alert</span>
         <h3 style="font-size: 28px; font-weight: 900;">서류–면접 15점 편차 자동 경고</h3>
         <p style="font-size: 19px; color: #334155; line-height: 1.55;">
           <code>|서류 점수 - 면접 점수| ≥ 15</code> 감지 시 경고 점등<br />AI 자소서 과장·위장 지원자 자동 필터링
@@ -1054,147 +1194,7 @@
   </div>
 
   <div class="slide-footer">
-    <span>Part 3. 핵심 설계 ④ — 설명 가능성 · 감사 추적 · Human-in-the-Loop</span>
-    <span>10 / 15</span>
-  </div>
-</section>
-
-<!-- =========================================================================
-     SLIDE 11: PRODUCTION UI I (06:00 ~ 06:45)
-     ========================================================================= -->
-<section class="slide">
-  <div class="slide-header">
-    <div>
-      <div class="eyebrow">PART 4 · PRODUCTION IMPLEMENTATION I</div>
-      <h2 class="slide-title">프로덕션 구현 ① : 비식별 원문 · 3색 근거 · 질문 · HITL</h2>
-    </div>
-    <span class="part-pill">04 · 라이브 UI</span>
-  </div>
-
-  <div class="slide-body" style="padding-top: 28px; padding-bottom: 24px;">
-    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; flex: 1; min-height: 0;">
-      <div class="ui-win" style="height: 100%;">
-        <div class="ui-bar">
-          <span class="dot" style="background: #EF4444;"></span>
-          <span class="dot" style="background: #F59E0B;"></span>
-          <span class="dot" style="background: #10B981;"></span>
-          <span class="ui-title">① 7종 PII 비식별 + 3색 형광펜 원문 매핑</span>
-        </div>
-        <div style="flex: 1; overflow: hidden;">
-          <img src="docs/assets/current_ir/04_pii_and_evidence_current.png" alt="PII and Evidence" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
-        </div>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 18px; min-height: 0;">
-        <div class="ui-win" style="flex: 1.05; min-height: 0;">
-          <div class="ui-bar">
-            <span class="dot" style="background: #EF4444;"></span>
-            <span class="dot" style="background: #F59E0B;"></span>
-            <span class="dot" style="background: #10B981;"></span>
-            <span class="ui-title">② 기여도 팩트체크 압박 질문</span>
-          </div>
-          <div style="flex: 1; overflow: hidden;">
-            <img src="docs/assets/current_ir/06_keyword_questions_current.png" alt="Questions" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 0.95; min-height: 0;">
-          <div class="ui-win" style="height: 100%;">
-            <div class="ui-bar">
-              <span class="dot" style="background: #EF4444;"></span>
-              <span class="dot" style="background: #F59E0B;"></span>
-              <span class="dot" style="background: #10B981;"></span>
-              <span class="ui-title">③ HITL 보정·감사</span>
-            </div>
-            <div style="flex: 1; overflow: hidden;">
-              <img src="docs/assets/current_ir/07_hitl_modal_current.png" alt="HITL" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-            </div>
-          </div>
-          <div class="ui-win" style="height: 100%;">
-            <div class="ui-bar">
-              <span class="dot" style="background: #EF4444;"></span>
-              <span class="dot" style="background: #F59E0B;"></span>
-              <span class="dot" style="background: #10B981;"></span>
-              <span class="ui-title">④ 면접관 실시간 공유</span>
-            </div>
-            <div style="flex: 1; overflow: hidden;">
-              <img src="docs/assets/current_ir/08_share_modal_current.png" alt="Share" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Part 4. 프로덕션 구현 결과 ① — GCP Cloud Run 실제 배포 화면</span>
-    <span>11 / 15</span>
-  </div>
-</section>
-
-<!-- =========================================================================
-     SLIDE 12: PRODUCTION UI II & E2E FLOW (06:45 ~ 07:30)
-     ========================================================================= -->
-<section class="slide">
-  <div class="slide-header">
-    <div>
-      <div class="eyebrow">PART 4 · PRODUCTION IMPLEMENTATION II &amp; E2E DEMO</div>
-      <h2 class="slide-title">프로덕션 구현 ② : 통합 비교 및 5단계 E2E 시연</h2>
-    </div>
-    <span class="part-pill">04 · E2E 시연</span>
-  </div>
-
-  <div class="slide-body" style="padding-top: 26px; padding-bottom: 24px; gap: 20px;">
-    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
-      <div class="card-blue" style="padding: 14px 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 01</div>
-        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">기업 가입 · 격리</div>
-      </div>
-      <div class="card-blue" style="padding: 14px 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 02</div>
-        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">PDF · Selective PII</div>
-      </div>
-      <div class="card-blue" style="padding: 14px 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 03</div>
-        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">4-Agent 31.4초 분석</div>
-      </div>
-      <div class="card-blue" style="padding: 14px 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #2563EB;">STEP 04</div>
-        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">면접 공유 · HITL</div>
-      </div>
-      <div class="card-green" style="padding: 14px 18px;">
-        <div style="font-size: 13px; font-weight: 800; color: #059669;">STEP 05</div>
-        <div style="font-size: 18px; font-weight: 900; margin-top: 2px;">15점 경고 · 합불 통보</div>
-      </div>
-    </div>
-
-    <div class="grid-2" style="flex: 1; min-height: 0;">
-      <div class="ui-win" style="height: 100%;">
-        <div class="ui-bar">
-          <span class="dot" style="background: #EF4444;"></span>
-          <span class="dot" style="background: #F59E0B;"></span>
-          <span class="dot" style="background: #10B981;"></span>
-          <span class="ui-title">서류·면접 Two-Track 비교 (15점 편차 자동 경고)</span>
-        </div>
-        <div style="flex: 1; overflow: hidden;">
-          <img src="docs/assets/current_ir/09_two_track_panel_current.png" alt="Two-Track" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
-        </div>
-      </div>
-      <div class="ui-win" style="height: 100%;">
-        <div class="ui-bar">
-          <span class="dot" style="background: #EF4444;"></span>
-          <span class="dot" style="background: #F59E0B;"></span>
-          <span class="dot" style="background: #10B981;"></span>
-          <span class="ui-title">다차원 비교 · 컷오프 시뮬레이션 · N-gram 표절 매트릭스</span>
-        </div>
-        <div style="flex: 1; overflow: hidden;">
-          <img src="docs/assets/current_ir/10_comparison_current.png" alt="Comparison" style="width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="slide-footer">
-    <span>Part 4. 프로덕션 구현 결과 ② — E2E 통합 워크플로우</span>
+    <span>Part 4. 핵심 설계 ④ — 설명 가능성 · 감사 추적 · Human-in-the-Loop</span>
     <span>12 / 15</span>
   </div>
 </section>
